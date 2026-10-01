@@ -1,0 +1,3208 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A1120">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="version" content="V0.31-TwelveData-TQQQ-VolOpt">
+<meta name="release-date" content="261001">
+<title>TQQQ 무한매수 AI (V0.37 - 261001)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<style>
+  /* ===================== 디자인 시스템 (QLD 평생매수 V0.12 구조 이식) ===================== */
+  :root{
+    --bg:#080D18;
+    --panel:#0F182A;
+    --panel-2:#0B1322;
+    --panel-3:#131F36;
+    --border:#1C2842;
+    --border-soft:#162137;
+    --text:#E9EDF7;
+    --text-dim:#8E9AB0;
+    --text-faint:#5E6B84;
+    --teal:#2FD9C4;   /* 기초지수 ETF */
+    --amber:#F5A524;  /* 레버리지 ETF */
+    --violet:#9B8CFF;
+    --slate:#4B5A73;
+    --up:#38D98C;
+    --down:#F0475A;
+    --glow:#5EEAD4;
+    --radius:18px;
+    font-size:16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  html{scroll-behavior:smooth;scroll-padding-top:110px;}
+  body{
+    background:
+      radial-gradient(900px 520px at 85% -8%, rgba(94,234,212,0.10) 0%, transparent 60%) fixed,
+      radial-gradient(900px 600px at -10% 10%, rgba(155,140,255,0.08) 0%, transparent 55%) fixed,
+      var(--bg);
+    color:var(--text);
+    font-family:'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:56px;
+    letter-spacing:-0.005em;
+  }
+  .mono{font-family:'JetBrains Mono', ui-monospace, monospace;font-variant-numeric:tabular-nums;}
+  .app{max-width:540px;margin:0 auto;padding:18px 16px 0;}
+  b{font-weight:800;}
+
+  /* ---------- Topbar ---------- */
+  .topbar{
+    background:linear-gradient(155deg, #17264A 0%, #0F1A30 55%, #0C1528 100%);
+    border:1px solid #22325A;border-radius:22px;padding:22px 20px 18px;position:relative;overflow:hidden;
+    box-shadow:0 18px 50px -24px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+  .topbar::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(260px 180px at 92% -12%, rgba(94,234,212,0.22), transparent 70%),
+      radial-gradient(220px 160px at 0% 110%, rgba(245,165,36,0.10), transparent 70%);
+    pointer-events:none;
+  }
+  .topbar > *{position:relative;}
+  .topbar-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:10px;}
+  .topbar-eyebrow{font-size:11.5px;color:var(--text-dim);letter-spacing:0.02em;margin:0;display:flex;align-items:center;gap:6px;}
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--up);box-shadow:0 0 0 3px rgba(56,217,140,0.18);flex:none;}
+  .version-badge{
+    font-size:11px;font-weight:800;color:var(--glow);
+    background:rgba(94,234,212,0.12);border:1px solid rgba(94,234,212,0.32);
+    padding:3px 8px;border-radius:7px;font-family:'JetBrains Mono',monospace;white-space:nowrap;
+  }
+  .topbar-title{font-size:26px;font-weight:900;margin:0 0 18px;line-height:1.25;letter-spacing:-0.02em;}
+  .topbar-title .accent{background:linear-gradient(90deg,var(--glow),#8BD8FF);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .quote-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;}
+  .quote{background:rgba(8,13,24,0.55);border:1px solid var(--border);border-radius:16px;padding:14px 14px 12px;min-width:0;}
+  .quote.lev{border-color:rgba(245,165,36,0.35);background:linear-gradient(160deg, rgba(245,165,36,0.08), rgba(8,13,24,0.55) 60%);}
+  .quote-tk{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:6px;}
+  .tk{font-size:12px;font-weight:800;letter-spacing:0.04em;display:inline-flex;align-items:center;gap:6px;}
+  .tk::before{content:"";width:8px;height:8px;border-radius:3px;background:currentColor;}
+  .tk.base{color:var(--teal);} .tk.lev{color:var(--amber);}
+  .price-main{font-size:26px;font-weight:800;line-height:1.05;}
+  .quote.lev .price-main{color:var(--amber);}
+  .price-sub{font-size:11.5px;color:var(--text-faint);margin-top:6px;line-height:1.45;}
+  .dd-pill{
+    padding:3px 8px;border-radius:999px;font-size:11.5px;font-weight:800;
+    background:rgba(240,71,90,0.12);color:var(--down);border:1px solid rgba(240,71,90,0.35);white-space:nowrap;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .dd-pill.flat{background:rgba(75,90,115,0.18);color:var(--text-dim);border-color:var(--border);}
+  .cci-line{display:flex;align-items:baseline;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);}
+  .cci-label{font-size:11.5px;color:var(--text-dim);}
+  .cci-main{font-size:20px;font-weight:800;line-height:1;}
+  .cci-main.pos{color:var(--down);}
+  .cci-main.neg{color:var(--up);}
+  .topbar-meta{display:flex;justify-content:space-between;gap:10px;margin-top:14px;font-size:11.5px;color:var(--text-faint);line-height:1.5;}
+  .refresh-btn{
+    margin-top:14px;width:100%;min-height:56px;padding:16px;border-radius:14px;border:none;
+    background:linear-gradient(90deg,#2BCDB8,#5EEAD4 60%,#8BD8FF);color:#04211C;font-weight:900;font-size:15px;
+    cursor:pointer;letter-spacing:-0.01em;box-shadow:0 10px 26px -12px rgba(94,234,212,0.7);font-family:inherit;
+  }
+  .refresh-btn:active{transform:scale(0.99);}
+  .refresh-btn[disabled]{opacity:0.6;cursor:progress;}
+
+  /* ---------- Quick nav (탭) ---------- */
+  .quicknav{
+    position:sticky;top:0;z-index:30;margin:14px -16px 0;padding:7px 0 0;
+    background:rgba(8,13,24,0.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border-soft);
+  }
+  .quicknav-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:0 16px 9px;}
+  .qn{
+    display:flex;align-items:center;justify-content:center;gap:4px;
+    font-family:inherit;font-size:12.5px;font-weight:700;color:var(--text-dim);
+    background:var(--panel);border:1px solid var(--border);border-radius:11px;
+    padding:0 3px;height:38px;min-width:0;cursor:pointer;letter-spacing:-0.03em;
+    transition:background .18s ease,color .18s ease,border-color .18s ease,transform .12s ease;
+  }
+  .qn .ic{font-size:14px;line-height:1;}
+  .qn .tx{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .qn:active{transform:scale(0.96);}
+  .qn.active{color:#04211C;background:linear-gradient(90deg,#2BCDB8,#5EEAD4);border-color:transparent;box-shadow:0 6px 18px -9px rgba(94,234,212,0.9);}
+  .qn-top{color:var(--glow);background:rgba(94,234,212,0.10);border-color:rgba(94,234,212,0.32);}
+  .qn-progress{height:2px;background:rgba(28,40,66,0.7);}
+  .qn-progress i{display:block;height:2px;width:0;border-radius:0 2px 2px 0;background:linear-gradient(90deg,var(--glow),#8BD8FF);transition:width .12s linear;}
+
+  /* ---------- Streak banner (topbar) ---------- */
+  .soxl-streak-banner{margin-top:12px;padding:14px;border-radius:16px;background:rgba(8,13,24,0.55);border:1px solid var(--border);}
+  .ssb-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;}
+  .ssb-badge{font-size:12px;font-weight:800;padding:5px 11px;border-radius:999px;border:1px solid;white-space:nowrap;}
+  .ssb-rate{font-size:19px;font-weight:800;}
+  .ssb-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .ssb-item{background:var(--bg);border:1px solid var(--border-soft);border-radius:11px;padding:9px 11px;}
+  .ssb-label{font-size:11.5px;color:var(--text-faint);margin-bottom:4px;}
+  .ssb-value{font-size:12.5px;font-weight:700;color:var(--text);}
+  .ssb-sub{font-size:11.5px;color:var(--text-dim);margin-top:2px;}
+
+  .banner{margin-top:12px;padding:11px 14px;border-radius:12px;font-size:12.5px;line-height:1.5;
+    background:rgba(240,71,90,0.1);border:1px solid rgba(240,71,90,0.3);color:#FFB4BE;}
+  .banner.ok{background:rgba(56,217,140,0.08);border-color:rgba(56,217,140,0.28);color:#9CF0C6;}
+  .hidden{display:none !important;}
+
+  /* ---------- Section shell ---------- */
+  .group-label{margin:26px 4px 2px;font-size:11.5px;font-weight:800;letter-spacing:0.14em;color:var(--text-faint);text-transform:uppercase;display:flex;align-items:center;gap:10px;}
+  .group-label::after{content:"";flex:1;height:1px;background:var(--border);}
+  section.card{
+    margin-top:14px;background:linear-gradient(180deg,var(--panel) 0%, #0D1526 100%);border:1px solid var(--border);
+    border-radius:var(--radius);padding:18px 18px 20px;position:relative;overflow:hidden;
+    box-shadow:0 14px 40px -28px rgba(0,0,0,0.9);
+  }
+  section.card::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--c,var(--glow)),transparent 70%);opacity:0.9;}
+  .card-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .card-icon{width:40px;height:40px;flex:none;border-radius:12px;display:grid;place-items:center;font-size:19px;
+    background:color-mix(in srgb, var(--c,var(--glow)) 14%, transparent);border:1px solid color-mix(in srgb, var(--c,var(--glow)) 35%, transparent);}
+  .card-kicker{font-size:11.5px;font-weight:800;letter-spacing:0.1em;color:var(--c,var(--glow));font-family:'JetBrains Mono',monospace;margin-bottom:2px;}
+  .card h2{font-size:18px;margin:0;font-weight:800;letter-spacing:-0.015em;line-height:1.3;}
+  .card .desc{font-size:13.5px;color:var(--text-dim);margin:0 0 16px;line-height:1.75;}
+  .card .desc b{color:var(--text);}
+  .buysim-sub-title{display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:800;color:var(--text);margin:20px 0 10px;}
+  .buysim-sub-title::before{content:"≡";width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:11px;font-family:'JetBrains Mono',monospace;background:rgba(94,234,212,0.14);color:var(--glow);flex:none;}
+
+  /* ---------- Meta tiles ---------- */
+  .fg-header-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px;}
+  .fg-score{font-size:36px;font-weight:800;line-height:1;letter-spacing:-0.02em;}
+  .fg-badge{padding:6px 12px;border-radius:999px;font-size:12.5px;font-weight:800;border:1px solid;white-space:nowrap;}
+  .fg-meta-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 14px;}
+  .fg-meta-item{background:var(--panel-2);border:1px solid var(--border-soft);border-radius:12px;padding:12px 8px;text-align:center;min-width:0;}
+  .fg-meta-item .fg-meta-label{font-size:12px;color:var(--text-faint);margin-bottom:5px;line-height:1.4;}
+  .fg-meta-item .fg-meta-value{font-size:15.5px;font-weight:800;font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;}
+  .fg-empty{font-size:13.5px;color:var(--text-faint);text-align:center;padding:26px 12px;border:1px dashed var(--border);border-radius:14px;line-height:1.6;}
+
+  /* ---------- Tables (테두리 박스형) ---------- */
+  table.stat-table{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;margin-top:4px;
+    border:1px solid var(--border-soft);border-radius:14px;background:var(--panel-2);overflow:hidden;}
+  table.stat-table th{text-align:left;font-size:12px;color:var(--text-faint);font-weight:700;padding:11px 8px;border-bottom:1px solid var(--border);background:rgba(8,13,24,0.5);}
+  table.stat-table td{padding:12px 8px;border-bottom:1px solid var(--border-soft);vertical-align:middle;}
+  table.stat-table tbody tr:nth-child(even) td{background:rgba(255,255,255,0.012);}
+  table.stat-table tr:last-child td{border-bottom:none;}
+  table.stat-table td.num, table.stat-table th.num{text-align:right;font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;}
+  table.stat-table.even-cols{table-layout:fixed;}
+  table.stat-table.even-cols th, table.stat-table.even-cols td{width:25%;padding:12px 3px;text-align:center;line-height:1.45;}
+  table.stat-table.even-cols th.num, table.stat-table.even-cols td.num{text-align:center;}
+  table.stat-table.detail-table th, table.stat-table.detail-table td{padding:12px 10px;font-size:14px;white-space:nowrap;}
+  table.stat-table td .sub-price{display:block;color:var(--text-faint);font-size:12px;margin-top:3px;}
+
+  /* ---------- Key-Value rows ---------- */
+  .kv-row{display:flex;justify-content:space-between;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--border-soft);font-size:14px;gap:12px;}
+  .kv-row:last-child{border-bottom:none;}
+  .kv-row .k{color:var(--text-dim);}
+  .kv-row .v{font-weight:800;font-family:'JetBrains Mono',monospace;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;}
+
+  .bk-panel{margin:0 0 14px;padding:12px 14px;border-radius:14px;background:var(--panel-2);border:1px solid var(--border);color:var(--text-dim);}
+  .bk-title{font-size:13.5px;font-weight:800;color:var(--text);margin-bottom:4px;}
+  .bk-desc{font-size:12px;line-height:1.6;margin-bottom:8px;}
+  .bk-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .bk-btn{min-height:40px;border-radius:10px;border:1px solid var(--border);background:var(--panel-3);color:var(--text);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .bk-btn:active{transform:scale(0.98);}
+  .bk-btn.warn{border-color:var(--amber);color:var(--amber);}
+  .bk-text{width:100%;box-sizing:border-box;min-height:64px;margin:8px 0;padding:8px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11.5px;resize:vertical;}
+  .bk-msg{font-size:12px;min-height:1.2em;margin-top:6px;}
+  .bk-msg.ok{color:var(--glow);} .bk-msg.err{color:#FF8A9A;}
+  footer{max-width:540px;margin:26px auto 0;padding:0 16px;font-size:12.5px;color:var(--text-faint);line-height:1.8;}
+  footer code{background:var(--panel-2);padding:1px 6px;border-radius:5px;border:1px solid var(--border-soft);}
+  .dl-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;margin:0 0 14px;min-height:48px;padding:13px 16px;border-radius:12px;border:1px solid rgba(94,234,212,0.35);background:rgba(94,234,212,0.08);color:var(--glow);font-weight:800;font-size:13.5px;cursor:pointer;font-family:inherit;max-width:100%;overflow-wrap:anywhere;}
+
+  /* ---------- 입력 필드 (나의 매수 기록 · 시뮬레이션) ---------- */
+  .form-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-bottom:10px;}
+  .form-grid.three{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .field{background:var(--panel-2);border:1px solid var(--border-soft);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:0;}
+  .field.full{grid-column:1 / -1;}
+  .field label{font-size:12px;font-weight:700;color:var(--text-dim);}
+  .field input{background:transparent;border:none;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;padding:0;min-width:0;width:100%;color-scheme:dark;outline:none;}
+  .field input::placeholder{color:var(--text-faint);font-weight:500;font-size:13px;}
+  .field:focus-within{border-color:rgba(94,234,212,0.55);box-shadow:0 0 0 3px rgba(94,234,212,0.12);}
+  .field input::-webkit-calendar-picker-indicator{filter:invert(0.8);cursor:pointer;}
+  .buysim-actions{display:flex;gap:8px;margin-bottom:4px;}
+  .buysim-btn{flex:1;min-height:52px;padding:14px 12px;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer;border:1px solid transparent;font-family:inherit;}
+  .buysim-btn.save{background:linear-gradient(90deg,#2BCDB8,#5EEAD4);color:#04211C;}
+  .buysim-actions > .buysim-btn.save:first-child:not(:only-child){flex:2;}
+  .buysim-btn.reset{background:rgba(75,90,115,0.14);border-color:var(--border);color:var(--text-dim);}
+  .buysim-btn.amber{background:rgba(245,165,36,0.14);border-color:rgba(245,165,36,0.45);color:var(--amber);}
+  .buysim-btn:active{transform:scale(0.98);}
+
+  /* ---------- 평단 히어로 ---------- */
+  .hold-hero{display:grid;grid-template-columns:1.2fr 1fr;gap:8px;margin:16px 0 4px;}
+  .hold-main{border-radius:16px;padding:14px;background:linear-gradient(140deg, rgba(245,165,36,0.16), rgba(245,165,36,0.03));border:1px solid rgba(245,165,36,0.35);min-width:0;}
+  .hold-main .l{font-size:12px;color:var(--text-dim);font-weight:700;}
+  .hold-main .v{font-size:28px;font-weight:800;color:var(--amber);font-family:'JetBrains Mono',monospace;margin-top:4px;line-height:1.1;overflow-wrap:anywhere;}
+  .hold-main .s{font-size:12px;color:var(--text-faint);margin-top:6px;line-height:1.5;}
+  .hold-side{display:grid;grid-template-rows:1fr 1fr;gap:8px;min-width:0;}
+  .hold-mini{border-radius:14px;padding:10px 12px;background:var(--panel-2);border:1px solid var(--border-soft);min-width:0;}
+  .hold-mini .l{font-size:12px;color:var(--text-faint);}
+  .hold-mini .v{font-size:17px;font-weight:800;font-family:'JetBrains Mono',monospace;margin-top:3px;overflow-wrap:anywhere;}
+  .sub-price.auto-tag{color:var(--glow) !important;}
+  /* 오늘의 LOC 주문 히어로 */
+  section.card.today-card{border:1.5px solid rgba(94,234,212,0.55);background:linear-gradient(160deg, rgba(94,234,212,0.10), #0D1526 55%);box-shadow:0 0 0 3px rgba(94,234,212,0.07), 0 18px 44px -26px rgba(94,234,212,0.55);}
+  section.card.today-card .loc-grid{margin-top:4px;}
+  section.card.today-card .loc-price{font-size:clamp(22px, 7vw, 30px);}
+  .cycle-alert{margin:0 0 12px;padding:14px;border-radius:14px;background:linear-gradient(135deg, rgba(245,165,36,0.22), rgba(245,165,36,0.06));border:1.5px solid var(--amber);box-shadow:0 0 0 3px rgba(245,165,36,0.12);}
+  .cycle-alert.first{animation:caPulse 1.6s ease-in-out infinite;}
+  @keyframes caPulse{0%,100%{box-shadow:0 0 0 3px rgba(245,165,36,0.12);}50%{box-shadow:0 0 0 7px rgba(245,165,36,0.28);}}
+  .ca-title{font-size:16px;font-weight:900;color:var(--amber);margin-bottom:6px;}
+  .ca-body{font-size:14.5px;color:var(--text);}
+  .ca-body b{font-family:'JetBrains Mono',monospace;color:var(--glow);}
+  .ca-sub{font-size:12px;color:var(--text-dim);margin-top:6px;line-height:1.5;}
+  .cycle-wait{margin:0 0 12px;padding:12px 14px;border-radius:14px;background:var(--panel-2);border:1px solid var(--border);}
+  .cw-top{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;color:var(--text-dim);font-weight:700;}
+  .cw-top b{font-size:16px;color:var(--amber);font-family:'JetBrains Mono',monospace;}
+  .cw-bar{height:8px;border-radius:99px;background:var(--bg);border:1px solid var(--border-soft);margin:8px 0 6px;overflow:hidden;}
+  .cw-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--amber),#FFD37A);border-radius:99px;}
+  .cw-sub{font-size:12px;color:var(--text-faint);line-height:1.5;}
+  .cw-sub b{color:var(--text);}
+  .loc-moved-note{font-size:12.5px;color:var(--text-dim);background:var(--panel-2);border:1px dashed var(--border);border-radius:10px;padding:9px 12px;margin-bottom:10px;}
+  /* 적용 규칙 칩 */
+  .rule-chip{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 12px;}
+  .rule-chip:empty{display:none;}
+  .rc-mode{font-size:12.5px;font-weight:900;padding:5px 11px;border-radius:999px;border:1.5px solid;}
+  .rc-mode.rc-rule{color:#1A1203;background:var(--amber);border-color:var(--amber);box-shadow:0 0 0 3px rgba(245,165,36,0.18);}
+  .rc-mode.rc-bt{color:#04211C;background:var(--glow);border-color:var(--glow);box-shadow:0 0 0 3px rgba(94,234,212,0.18);}
+  .rc-mode.rc-manual{color:var(--text);background:rgba(75,90,115,0.25);border-color:var(--border);}
+  .rc-val{font-size:12.5px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--text);}
+  .rc-note{font-size:12px;color:var(--text-faint);}
+  .buysim-btn.is-active{outline:2px solid currentColor;outline-offset:2px;font-weight:900;}
+  .buysim-btn.amber.is-active{background:var(--amber);color:#1A1203;}
+  .buysim-btn.save.is-active{box-shadow:0 0 0 2px var(--glow);}
+  .auto-info{margin:12px 0 0;padding:10px 12px;border-radius:12px;background:var(--panel-2);border:1px solid var(--border-soft);font-size:12.5px;color:var(--text-dim);line-height:1.6;}
+  .verify-note{margin-top:12px;padding:13px 14px;border-radius:12px;background:var(--panel-2);border:1px solid var(--border-soft);font-size:12.5px;line-height:1.75;color:var(--text-dim);}
+  .verify-note b{color:var(--text);}
+
+  /* ---------- 기존 컴포넌트 (매매 표·LOC·AI 엔진) ---------- */
+  table.stat-table.detail-table td.buy-events-cell{white-space:normal;}
+  table.stat-table.detail-table td.buy-events-cell .buy-event{white-space:nowrap;font-size:12.5px;line-height:1.6;}
+  table.stat-table.detail-table td.buy-events-cell .sub-price{white-space:nowrap;margin-top:4px;}
+
+  table.stat-table.detail-table.sim-table{width:100%;}
+  table.stat-table.detail-table.sim-table th, table.stat-table.detail-table.sim-table td{padding:8px 3px;font-size:11.5px;white-space:normal;}
+  table.stat-table.detail-table.sim-table th{font-size:10px;}
+  table.stat-table.detail-table.sim-table td.num{white-space:nowrap;}
+  table.stat-table.detail-table.sim-table td.buy-events-cell .buy-event{font-size:11px;}
+  table.stat-table.detail-table.sim-table td .sub-price{font-size:10.5px;}
+
+  .hl-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 4px;}
+  .hl-item{border-radius:12px;padding:12px 12px;border:1px solid;text-align:center;}
+  .hl-item.line{background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.45);}
+  .hl-item.star{background:rgba(94,234,212,0.12);border-color:rgba(94,234,212,0.5);}
+  .hl-label{font-size:11px;color:var(--text-dim);margin-bottom:6px;}
+  .hl-value{font-size:22px;font-weight:800;font-family:'JetBrains Mono',monospace;}
+  .hl-item.line .hl-value{color:var(--down);}
+  .hl-item.star .hl-value{color:var(--glow);}
+  .hl-value{font-size:clamp(17px, 5vw, 22px);}
+
+  /* ---------- 나의 매수 기록 관리 ---------- */
+  .buy-del-btn{
+    background:rgba(240,71,90,0.12);border:1px solid rgba(240,71,90,0.35);color:var(--down);
+    font-size:11.5px;font-weight:700;padding:6px 10px;border-radius:8px;cursor:pointer;white-space:nowrap;
+  }
+  .buy-del-btn:active{transform:scale(0.97);}
+  table.stat-table.detail-table td.buyrec-del-cell{white-space:nowrap;text-align:right;}
+
+  /* ---------- 📌 LOC 매수/매도 예약 가이드 ---------- */
+  .loc-status-badge{
+    display:inline-block;font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:999px;
+    border:1px solid;margin-bottom:12px;
+  }
+  .loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  .loc-box{border-radius:14px;padding:14px 12px;border:1px solid;text-align:center;}
+  .loc-box.buy{background:rgba(94,234,212,0.10);border-color:rgba(94,234,212,0.4);}
+  .loc-box.sell{background:rgba(56,217,140,0.10);border-color:rgba(56,217,140,0.4);}
+  .loc-box.off{background:rgba(75,90,115,0.10);border-color:var(--border-soft);}
+  .loc-tag{font-size:11px;color:var(--text-dim);margin-bottom:8px;font-weight:700;letter-spacing:0.01em;}
+  .loc-price{font-size:25px;font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1.15;}
+  .loc-box.buy .loc-price{color:var(--glow);}
+  .loc-box.sell .loc-price{color:var(--up);}
+  .loc-qty{font-size:15.5px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text);margin-top:6px;}
+  .loc-sub{font-size:10.5px;color:var(--text-dim);margin-top:6px;line-height:1.5;}
+
+  /* ---------- 🤖 TQQQ 변동성 최적화 AI 엔진 ---------- */
+  .engine-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 12px;}
+  .engine-box{border-radius:14px;padding:12px;border:1px solid;}
+  .engine-box.rule{background:rgba(245,165,36,0.08);border-color:rgba(245,165,36,0.35);}
+  .engine-box.bt{background:rgba(94,234,212,0.08);border-color:rgba(94,234,212,0.4);}
+  .engine-box .eb-tag{font-size:11px;font-weight:700;margin-bottom:8px;}
+  .engine-box.rule .eb-tag{color:var(--amber);}
+  .engine-box.bt .eb-tag{color:var(--glow);}
+  .engine-box .eb-line{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;gap:6px;}
+  .engine-box .eb-line span:first-child{color:var(--text-dim);}
+  .engine-box .eb-line span:last-child{font-family:'JetBrains Mono',monospace;font-weight:700;}
+  .engine-box .eb-ret{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace;margin-top:6px;text-align:right;}
+  /* ===================== 모바일 가독성 레이어 (갤럭시 S23 Ultra 384px 기준 · 360~430px 대응) ===================== */
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+  .app, section.card, header.topbar{min-width:0;}
+  /* 최소 글자 크기 11.5px 이상 확보 (기존 10~11px 라벨 상향) */
+  .fg-meta-item .fg-meta-label, .ssb-label, .ssb-sub, .loc-sub, .loc-tag, .hl-label, .eb-tag,
+  table.stat-table th, table.stat-table td .sub-price, .version-badge{font-size:12px;}
+  table.stat-table.even-cols th{font-size:11.5px;}
+  /* 값이 길면 줄바꿈 (잘림 방지) */
+  .kv-row{flex-wrap:wrap;row-gap:2px;}
+  .kv-row .k{flex:1 1 auto;min-width:0;}
+  .kv-row .v{white-space:normal;overflow-wrap:anywhere;margin-left:auto;min-width:0;max-width:100%;}
+  .ssb-value, .ssb-sub, .fg-meta-value, .loc-price, .loc-qty, .hl-value, .sr-now-value{overflow-wrap:anywhere;}
+  .loc-grid, .engine-grid, .hl-grid, .ssb-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
+  .loc-box, .engine-box, .hl-item, .ssb-item{min-width:0;}
+  .loc-price{font-size:clamp(19px, 5.6vw, 25px);}
+  .hl-value{font-size:clamp(17px, 5vw, 22px);}
+  .buysim-label{white-space:normal;}
+  .buysim-num{width:44%;max-width:150px;font-size:15px;}
+  .buysim-date{font-size:14px;}
+  /* 요약 타일: 2열 고정 그리드 */
+  .fg-meta-item{min-width:0;}
+  .fg-meta-row > .fg-meta-item:last-child:nth-child(odd){grid-column:1 / -1;}  /* 홀수 개일 때 마지막 타일은 전체 폭 */
+  .unres-note{display:block;font-size:11.5px;color:var(--text-faint);white-space:nowrap;}
+  /* 4열 통계표: 셀 줄바꿈 허용 */
+  table.stat-table.even-cols td{overflow-wrap:anywhere;}
+  /* 매매 내역 표 (3열, 카드 폭 100%) */
+  table.stat-table.trade-table{table-layout:fixed;width:100%;}
+  table.stat-table.trade-table th, table.stat-table.trade-table td{padding:9px 4px;vertical-align:top;font-size:13px;}
+  table.stat-table.trade-table th:nth-child(1){width:52%;}
+  table.stat-table.trade-table th:nth-child(2){width:22%;}
+  table.stat-table.trade-table th:nth-child(3){width:26%;}
+  table.stat-table.trade-table td .sub-price{display:block;color:var(--text-faint);margin-top:2px;overflow-wrap:anywhere;}
+  table.stat-table.trade-table .buy-event{font-size:12px;line-height:1.65;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;}
+  table.stat-table.trade-table .buy-event b{color:var(--text-dim);font-weight:700;}
+  table.stat-table.trade-table td.num{text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700;overflow-wrap:anywhere;}
+  /* 매수 기록 표: 카드 폭에 맞춤 (6열 고정 비율, 숫자는 한 줄 유지) */
+  table.stat-table.detail-table.sim-table{table-layout:fixed;width:100%;}
+  /* 매수 기록 표: 회차·매수일·수량·매수가·누적평단·삭제 — 균일 간격(모두 가운데 정렬) */
+  table.stat-table.detail-table.sim-table th:nth-child(1){width:9%;}
+  table.stat-table.detail-table.sim-table th:nth-child(2){width:20%;}
+  table.stat-table.detail-table.sim-table th:nth-child(3){width:18%;}
+  table.stat-table.detail-table.sim-table th:nth-child(4){width:20%;}
+  table.stat-table.detail-table.sim-table th:nth-child(5){width:20%;}
+  table.stat-table.detail-table.sim-table th:nth-child(6){width:13%;}
+  table.stat-table.detail-table.sim-table th, table.stat-table.detail-table.sim-table td,
+  table.stat-table.detail-table.sim-table th.num, table.stat-table.detail-table.sim-table td.num,
+  table.stat-table.detail-table.sim-table td.buyrec-del-cell{text-align:center !important;}
+  table.stat-table.detail-table.sim-table td:nth-child(1){color:var(--text-faint);font-weight:700;}
+  table.stat-table.detail-table.sim-table th, table.stat-table.detail-table.sim-table td{padding:8px 2px !important;font-size:11.5px !important;white-space:nowrap;}
+  table.stat-table.detail-table.sim-table td .sub-price{white-space:nowrap;}
+  table.stat-table.detail-table.sim-table td.buyrec-del-cell{text-align:right;}
+  table.stat-table.detail-table.sim-table .buy-del-btn{padding:5px 7px;font-size:12px;}
+  table.stat-table.detail-table.sim-table td .sub-price{font-size:12px;}
+  .engine-box .eb-tag{font-size:12px;}
+  @media (max-width: 430px){
+    .kv-row{font-size:14px;}
+    .loc-box{padding:12px 8px;}
+    .engine-box{padding:10px;}
+    .engine-box .eb-line{font-size:12.5px;flex-wrap:wrap;}
+    .engine-box .eb-line span:last-child{margin-left:auto;}
+    .buysim-btn{font-size:14px;padding:12px 8px;}
+    table.stat-table.even-cols th, table.stat-table.even-cols td{padding:9px 2px;font-size:12.5px;}
+    table.stat-table.even-cols th{font-size:11.5px;}
+    table.stat-table.detail-table.sim-table th, table.stat-table.detail-table.sim-table td{padding:8px 3px;}
+    footer{padding:0 12px;}
+  }
+  @media (max-width: 370px){
+    .loc-grid, .engine-grid{grid-template-columns:minmax(0,1fr);}
+    .fg-meta-item .fg-meta-value{font-size:13px;}
+  }
+  /* ---------- 숫자 탭 복사 ---------- */
+  .copyable{cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;
+    border-radius:8px;padding:2px 4px;margin:0 -4px;position:relative;transition:background .15s;}
+  .copyable::after{content:"⧉";font-size:0.5em;vertical-align:super;margin-left:3px;opacity:0.55;}
+  .copyable:active{background:rgba(255,255,255,0.08);}
+  .copyable.copied{background:rgba(56,217,140,0.18);}
+  .copyable.copied::after{content:"✓";opacity:1;color:var(--up);}
+  .copyable.copy-fail{background:rgba(240,71,90,0.18);}
+  .export-loc-btn{width:100%;margin-top:4px;font-size:14px;}
+  .export-loc-btn[disabled]{opacity:0.45;cursor:not-allowed;}
+  .copy-hint{font-size:12px;color:var(--text-dim);margin:-4px 0 10px;text-align:center;}
+  .copy-toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%, 20px);
+    background:#0E2A22;color:#9CF0C6;border:1px solid rgba(56,217,140,0.45);padding:11px 18px;border-radius:999px;
+    font-size:14px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s, transform .2s;z-index:50;
+    max-width:calc(100% - 32px);text-align:center;box-shadow:0 8px 24px rgba(0,0,0,0.4);}
+  .copy-toast.show{opacity:1;transform:translate(-50%, 0);}
+  .copy-toast.fail{background:#2A0E14;color:#FFB4BE;border-color:rgba(240,71,90,0.45);}
+
+  /* ---------- 반응형 (QLD 구조 기준) ---------- */
+  body{padding-bottom:calc(56px + env(safe-area-inset-bottom));}
+  @media (max-width:430px){
+    .app{padding:16px 12px 0;}
+    .quicknav{margin:14px -12px 0;}
+    .quicknav-inner{padding:2px 10px 10px;gap:5px;}
+    .qn{font-size:12px;height:38px;}
+    .qn .ic{font-size:13.5px;}
+    section.card{padding:16px 14px 18px;border-radius:16px;}
+    .topbar{padding:20px 16px 16px;}
+    .topbar-title{font-size:24px;}
+    .price-main{font-size:clamp(19px, 6vw, 23px);}
+    .card h2{font-size:17px;}
+    .hold-main .v{font-size:clamp(21px, 6.4vw, 28px);}
+  }
+  @media (max-width:360px){
+    .quote-grid{grid-template-columns:minmax(0,1fr);}
+    .hold-hero{grid-template-columns:minmax(0,1fr);}
+    .form-grid.three{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
+    .form-grid.three .field:first-child{grid-column:1 / -1;}
+  }
+
+  /* ===== 하단 탭바 (Bottom Navigation) ===== */
+  .page{display:none;}
+  .page.on{display:block;animation:pgIn .18s ease-out;}
+  @keyframes pgIn{from{opacity:.4;transform:translateY(4px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion: reduce){.page.on{animation:none;}}
+  .page > .card:first-child{margin-top:14px;}
+  body{padding-bottom:calc(84px + env(safe-area-inset-bottom)) !important;}
+  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:grid;grid-template-columns:repeat(6,1fr);
+    padding:6px 6px calc(6px + env(safe-area-inset-bottom));background:rgba(10,17,32,0.94);
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-top:1px solid var(--border);}
+  .tb{min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+    border:0;background:none;color:var(--text-faint);font-family:inherit;cursor:pointer;border-radius:12px;position:relative;
+    -webkit-tap-highlight-color:transparent;}
+  .tb .ic{font-size:19px;line-height:1;filter:grayscale(0.7);opacity:0.75;}
+  .tb .tx{font-size:11.5px;font-weight:700;letter-spacing:-0.2px;white-space:nowrap;}
+  .tb.on{color:var(--glow);background:rgba(94,234,212,0.10);}
+  .tb.on .ic{filter:none;opacity:1;}
+  .tb:focus-visible{outline:2px solid var(--glow);outline-offset:-2px;}
+  .tb.alert::after{content:"";position:absolute;top:6px;right:calc(50% - 16px);width:8px;height:8px;border-radius:50%;
+    background:var(--amber);box-shadow:0 0 0 2px var(--bg);}
+  .copy-toast{bottom:calc(88px + env(safe-area-inset-bottom)) !important;}
+  .page-foot{max-width:none !important;margin:16px 0 0 !important;padding:0 4px !important;}
+  .help-group{margin:16px 2px 6px;font-size:12px;font-weight:800;letter-spacing:0.08em;color:var(--text-faint);}
+  .help-group:first-of-type{margin-top:4px;}
+  .help-item{border:1px solid var(--border);border-radius:12px;background:var(--panel-2);margin-bottom:8px;}
+  .help-item summary{list-style:none;cursor:pointer;padding:11px 12px;font-size:14px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px;}
+  .help-item summary::-webkit-details-marker{display:none;}
+  .help-item summary::after{content:"▾";margin-left:auto;color:var(--text-faint);transition:transform .15s;}
+  .help-item:not([open]) summary::after{transform:rotate(-90deg);}
+  .help-item p{margin:0;padding:0 12px 12px;font-size:13px;line-height:1.75;color:var(--text-dim);}
+  .help-item .help-dyn p{padding-top:0;margin:0 !important;border-top:1px dashed var(--border);padding-top:10px;}
+  .help-dyn:empty{display:none;}
+  .page-foot .dl-btn{display:block !important;width:100%;text-align:center;line-height:1.5;padding:12px 14px;word-break:break-all;}
+  .page-foot .dl-btn span{display:inline !important;}
+  .help-item:not(:has(p)){display:none;}
+
+  /* ===== 상단 시세 영역: 접힘(기본) ===== */
+  .hdr-toggle{margin-left:auto;min-height:30px;padding:0 10px;border-radius:99px;border:1px solid var(--border);background:var(--panel-2);
+    color:var(--text-dim);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;}
+  .hdr-toggle:focus-visible{outline:2px solid var(--glow);outline-offset:2px;}
+  .topbar-header .topbar-eyebrow{min-width:0;}
+  .topbar.compact{padding:12px 14px 12px !important;}
+  .topbar.compact .topbar-header{margin-bottom:6px;}
+  .topbar.compact .topbar-eyebrow{display:none;}
+  .topbar.compact .topbar-title{font-size:19px !important;margin:0 0 10px;}
+  .topbar.compact .topbar-header{position:relative;}
+  .topbar.compact .quote-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;gap:8px;}
+  .topbar.compact .quote{padding:9px 10px 9px;border-radius:12px;}
+  .topbar.compact .quote-tk{margin-bottom:4px;}
+  .topbar.compact .price-main{font-size:clamp(17px, 5.2vw, 21px) !important;}
+  .topbar.compact .price-sub,.topbar.compact .cci-line,.topbar.compact .topbar-meta,
+  .topbar.compact .soxl-streak-banner{display:none !important;}
+  .topbar.compact .refresh-btn{margin-top:10px;min-height:42px;padding:10px 12px;font-size:14px;}
+
+  /* ===== 앱 설치 ===== */
+  .ins-state{font-size:13px;line-height:1.6;color:var(--text-dim);padding:10px 12px;border-radius:12px;background:var(--panel-2);border:1px solid var(--border);margin-bottom:10px;}
+  .ins-state.ok{color:var(--glow);border-color:rgba(94,234,212,0.4);}
+  .ins-state.warn{color:var(--amber);border-color:rgba(245,165,36,0.4);}
+  .ins-btn{width:100%;min-height:52px;border-radius:12px;border:0;background:linear-gradient(90deg,#2BCDB8,#5EEAD4);color:#04211C;font-weight:900;font-size:15.5px;cursor:pointer;font-family:inherit;}
+  .ins-btn:active{transform:scale(0.98);}
+  .ins-btn.ghost{background:var(--panel-3, var(--panel-2));color:var(--text);border:1px solid var(--border);}
+  .ins-btn[disabled]{opacity:0.45;cursor:not-allowed;}
+  .ins-steps{margin-top:10px;display:grid;gap:6px;}
+  .ins-steps[hidden]{display:none;}
+  .hub-link{display:flex;align-items:center;justify-content:center;min-height:46px;margin-top:14px;border-radius:12px;border:1px solid var(--border);background:var(--panel-2);color:var(--text-dim);font-weight:700;font-size:13.5px;text-decoration:none;}
+  .ins-step{font-size:13px;line-height:1.6;color:var(--text-dim);padding:9px 12px;border-radius:10px;background:var(--panel-2);border:1px dashed var(--border);}
+  .ins-step b{color:var(--text);}
+
+  /* ===== ☁️ 기기 간 동기화 ===== */
+  .sync-chip{min-height:30px;padding:0 10px;border-radius:99px;border:1px solid var(--border);background:var(--panel-2);color:var(--text-faint);
+    font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;margin-left:auto;}
+  .sync-chip[hidden]{display:none;}
+  .sync-chip + .hdr-toggle{margin-left:6px;}
+  .sync-chip.ok{color:var(--glow);border-color:rgba(94,234,212,0.4);}
+  .sync-chip.busy{color:var(--text-dim);}
+  .sync-chip.err{color:var(--amber);border-color:rgba(245,165,36,0.45);}
+  .sync-state{font-size:13px;line-height:1.6;color:var(--text-dim);padding:10px 12px;border-radius:12px;background:var(--panel-2);border:1px solid var(--border);margin-bottom:10px;}
+  .sync-state.ok{color:var(--glow);border-color:rgba(94,234,212,0.4);}
+  .sync-state.err{color:var(--amber);border-color:rgba(245,165,36,0.45);}
+  .sync-label{display:block;font-size:12px;font-weight:700;color:var(--text-dim);margin:0 2px 6px;}
+  .sync-input{width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);
+    color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;margin-bottom:8px;}
+  .sync-input:focus{outline:none;border-color:rgba(94,234,212,0.55);}
+  .sync-main{width:100%;min-height:46px;background:linear-gradient(90deg,#2BCDB8,#5EEAD4) !important;color:#04211C !important;border:0 !important;font-weight:900 !important;font-size:14.5px !important;}
+  #syncSetup[hidden],#syncOn[hidden]{display:none;}
+
+  /* ===== 매도 · 수익 ===== */
+  .pl-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+  .pl-tile{background:var(--panel-2);border:1px solid var(--border-soft);border-radius:12px;padding:10px 8px;text-align:center;min-width:0;}
+  .pl-tile .l{font-size:11.5px;color:var(--text-faint);font-weight:700;}
+  .pl-tile .v{font-size:clamp(14px,4.3vw,17px);font-weight:800;font-family:'JetBrains Mono',monospace;margin-top:4px;font-variant-numeric:tabular-nums;}
+  .pl-tile .s{font-size:11.5px;color:var(--text-faint);margin-top:2px;}
+  .trade-table{table-layout:fixed;width:100%;}
+  .trade-table td,.trade-table th{text-align:center !important;white-space:normal !important;overflow-wrap:anywhere;padding-left:2px !important;padding-right:2px !important;}
+  .trade-table .sub-price,.trade-table .sell-tag{display:block;white-space:nowrap;}
+  .trade-table .pl{font-weight:800;}
+  .sell-tag{display:block;font-size:11.5px;color:var(--text-faint);font-weight:600;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar compact" id="topbar">
+    <div class="topbar-header">
+      <p class="topbar-eyebrow"><span class="live-dot"></span>Finnhub 실시간 · Twelve Data 확정 종가</p>
+      <button class="sync-chip" id="syncChip" type="button" data-goto="pg-backup" hidden>☁ 동기화</button>
+      <button class="hdr-toggle" id="hdrToggle" type="button" aria-expanded="false">상세 ▾</button>
+      <span class="version-badge" id="appVersionBadge">V0.31</span>
+    </div>
+    <h1 class="topbar-title">TQQQ 무한매수 <span class="accent">AI</span></h1>
+
+    <div class="quote-grid">
+      <div class="quote">
+        <div class="quote-tk"><span class="tk base">QQQ</span><span class="dd-pill flat" id="ddPill">-- %</span></div>
+        <div class="price-main mono" id="qqqPriceDisplay">--</div>
+        <div class="price-sub">전고점(200봉 종가) <span id="athDisplay" class="mono">--</span></div>
+        <div class="cci-line"><span class="cci-label">CCI(20)</span><span class="cci-main mono" id="qqqCciBigDisplay">--</span></div>
+      </div>
+      <div class="quote lev">
+        <div class="quote-tk"><span class="tk lev">TQQQ</span><span class="dd-pill flat" id="tqqqDdPill">-- %</span></div>
+        <div class="price-main mono" id="tqqqPriceDisplay">--</div>
+        <div class="price-sub">전고점(200봉 종가) <span id="tqqqAthDisplay" class="mono">--</span></div>
+        <div class="cci-line"><span class="cci-label">CCI(20)</span><span class="cci-main mono" id="tqqqCciBigDisplay">--</span></div>
+      </div>
+    </div>
+
+    <div class="soxl-streak-banner hidden" id="tqqqStreakBanner"></div>
+
+    <div class="topbar-meta">
+      <span id="lastUpdated">아직 조회 전</span>
+      <span id="athDateMeta" style="text-align:right;"></span>
+    </div>
+
+    <button class="refresh-btn" id="fetchBtn">QQQ · TQQQ 시세 불러오기</button>
+  </header>
+
+  <div id="errorBanner" class="banner hidden"></div>
+
+
+
+  <div class="page on" id="pg-order" role="tabpanel" aria-label="주문">
+  <section class="card today-card" id="card-today" style="--c:var(--glow);">
+    <div class="card-head">
+      <div class="card-icon">⚡</div>
+      <div><div class="card-kicker">00 · TODAY'S LOC</div><h2>오늘의 LOC 주문</h2></div>
+    </div>
+    <div class="rule-chip" data-rule-chip></div>
+    <div id="locHeroContent">
+      <div class="fg-empty">상단 '시세 불러오기'를 누르면 오늘 걸어 둘 LOC 매수·매도 가격과 수량이 표시됩니다.</div>
+    </div>
+  </section>
+  <section class="card" id="card-records" style="--c:var(--amber);">
+    <div class="card-head">
+      <div class="card-icon">📒</div>
+      <div><div class="card-kicker">01 · MY RECORDS</div><h2>나의 매수 기록</h2></div>
+    </div>
+    <div class="rule-chip" data-rule-chip></div>
+    <div class="form-grid">
+      <div class="field full"><label for="buyRecDate">최근 매수 날짜</label><input type="date" id="buyRecDate"></div>
+      <div class="field"><label for="buyRecQty">매수 수량 (주)</label><input type="number" id="buyRecQty" min="1" step="1" inputmode="numeric" placeholder="비우면 자동"></div>
+      <div class="field"><label for="buyRecPrice">매수가 ($, 선택)</label><input type="number" id="buyRecPrice" min="0" step="any" inputmode="decimal" placeholder="비우면 종가"></div>
+    </div>
+    <div class="buysim-actions">
+      <button class="buysim-btn save" id="buyRecSaveBtn" type="button">＋ 매수 기록 저장</button>
+      <button class="buysim-btn reset" id="buyRecResetBtn" type="button">초기화</button>
+    </div>
+    <div id="buyRecMsg" class="banner hidden" style="margin-top:10px;"></div>
+    <div id="buyRecordContent"></div>
+  </section>
+  <section class="card" id="card-trades" style="--c:var(--up);">
+    <div class="card-head">
+      <div class="card-icon">💰</div>
+      <div><div class="card-kicker">02 · SELL &amp; P/L</div><h2>나의 매도 · 수익 기록</h2></div>
+    </div>
+    <div id="tradeSummary"></div>
+    <div class="form-grid" style="margin-top:12px;">
+      <div class="field"><label for="sellRecDate">매도 날짜</label><input type="date" id="sellRecDate"></div>
+      <div class="field"><label for="sellRecPrice">매도가 ($, 선택)</label><input type="number" id="sellRecPrice" min="0" step="any" inputmode="decimal" placeholder="비우면 종가"></div>
+    </div>
+    <div class="buysim-actions">
+      <button class="buysim-btn save" id="sellRecSaveBtn" type="button">＋ 보유 전량 매도 기록</button>
+    </div>
+    <div id="sellRecMsg" class="banner hidden" style="margin-top:10px;"></div>
+    <div id="tradeContent"></div>
+  </section>
+  </div>
+
+  <div class="page" id="pg-backup" role="tabpanel" aria-label="백업">
+  <section class="card" id="card-sync" style="--c:var(--glow);">
+    <div class="card-head">
+      <div class="card-icon">☁️</div>
+      <div><div class="card-kicker">SYNC · PC ↔ MOBILE</div><h2>PC · 모바일 기록 동기화</h2></div>
+    </div>
+    <div class="sync-state" id="syncState">동기화 꺼짐 · 이 기기에만 저장 중</div>
+    <div id="syncSetup">
+      <label class="sync-label" for="syncToken">GitHub 토큰 (gist 권한만)</label>
+      <input class="sync-input" type="password" id="syncToken" placeholder="ghp_로 시작하는 토큰 붙여넣기" autocomplete="off" spellcheck="false">
+      <button class="bk-btn sync-main" id="syncConnectBtn" type="button">☁️ 연결하고 동기화 시작</button>
+    </div>
+    <div id="syncOn" hidden>
+      <div class="bk-row">
+        <button class="bk-btn" id="syncNowBtn" type="button">↻ 지금 동기화</button>
+        <button class="bk-btn" id="syncOffBtn" type="button">연결 해제</button>
+      </div>
+    </div>
+  </section>
+  <section class="card" id="card-backup" style="--c:var(--glow);">
+    <div class="card-head">
+      <div class="card-icon">💾</div>
+      <div><div class="card-kicker">BACKUP</div><h2>기록 백업 · 복원</h2></div>
+    </div>
+  <div class="bk-panel" id="backupPanel" style="margin:0;border:0;padding:0;background:none;">
+    <div class="bk-row">
+      <button class="bk-btn" id="bkCopyBtn" type="button">📋 백업 복사</button>
+      <button class="bk-btn" id="bkRestoreBtn" type="button">📥 복원</button>
+    </div>
+    <textarea class="bk-text" id="bkText" placeholder="여기에 백업 텍스트를 붙여넣은 뒤 [복원]을 누르세요" spellcheck="false"></textarea>
+    <div class="bk-msg" id="bkMsg"></div>
+  </div>
+  </section>
+  <section class="card" id="card-excel" style="--c:var(--up);">
+    <div class="card-head">
+      <div class="card-icon">📊</div>
+      <div><div class="card-kicker">EXPORT · EXCEL</div><h2>엑셀로 내보내기</h2></div>
+    </div>
+    <button class="bk-btn sync-main" id="xlsxBtn" type="button">📊 매수 · 매도 · 수익 기록 엑셀 다운로드</button>
+    <div class="bk-msg" id="xlsxMsg"></div>
+  </section>
+  <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
+  <footer class="page-foot">
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">TQQQ무한매수_V0_37_261001.HTML</span>)</button>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V0.37 (261001)</code> · SOXL판(V0.48)과 동일 기능 · TQQQ 변동성 최적화판</div>
+  </footer>
+
+  </div>
+
+  <div class="page" id="pg-engine" role="tabpanel" aria-label="AI엔진">
+  <section class="card" id="card-engine" style="--c:var(--violet);">
+    <div class="card-head">
+      <div class="card-icon">🤖</div>
+      <div><div class="card-kicker">02 · AI ENGINE</div><h2>TQQQ 변동성 최적화 AI 엔진</h2></div>
+    </div>
+    <div id="tqqqEngineContent">
+      <div class="fg-empty">데이터를 불러오면 TQQQ 최적 파라미터가 계산됩니다.</div>
+    </div>
+  </section>
+  <section class="card" id="card-vol" style="--c:var(--teal);">
+    <div class="card-head">
+      <div class="card-icon">🌊</div>
+      <div><div class="card-kicker">05 · VOLATILITY</div><h2>TQQQ·QQQ 변동성 프로파일</h2></div>
+    </div>
+    <div id="tqqqVolContent">
+      <div class="fg-empty">데이터를 불러오면 변동성 프로파일이 표시됩니다.</div>
+    </div>
+  </section>
+  </div>
+
+  <div class="page" id="pg-guide" role="tabpanel" aria-label="가이드">
+  <section class="card" id="card-loc" style="--c:var(--glow);">
+    <div class="card-head">
+      <div class="card-icon">🎯</div>
+      <div><div class="card-kicker">03 · LOC ORDER</div><h2>LOC 매수/매도 예약 가이드</h2></div>
+    </div>
+    <div class="rule-chip" data-rule-chip></div>
+    <div id="locGuideContent">
+      <div class="fg-empty">데이터를 불러오면 LOC 예약 가이드가 표시됩니다.</div>
+    </div>
+  </section>
+  <section class="card" id="card-sim" style="--c:var(--amber);">
+    <div class="card-head">
+      <div class="card-icon">🧪</div>
+      <div><div class="card-kicker">04 · BACKTEST</div><h2>시드 분할매수 시뮬레이션 [평단&amp;전일종가 이하] (최근 200봉)</h2></div>
+    </div>
+    <div class="rule-chip" data-rule-chip></div>
+    <div class="form-grid three">
+      <div class="field"><label for="seedSimSeed1">시드 ($)</label><input type="number" id="seedSimSeed1" min="1" step="any" inputmode="decimal" value="36000"></div>
+      <div class="field"><label for="seedSimSplits1">분할 수</label><input type="number" id="seedSimSplits1" min="1" step="1" inputmode="numeric" value="6"></div>
+      <div class="field"><label for="seedSimCycle1">2단계 주기(일)</label><input type="number" id="seedSimCycle1" min="1" step="1" inputmode="numeric" value="14"></div>
+    </div>
+    <div id="seedSimContent1">
+      <div class="fg-empty">데이터를 불러오면 시드 시뮬레이션 결과가 표시됩니다.</div>
+    </div>
+  </section>
+  </div>
+
+  <div class="page" id="pg-stats" role="tabpanel" aria-label="통계">
+  <section class="card" id="card-down" style="--c:var(--down);">
+    <div class="card-head">
+      <div class="card-icon">📉</div>
+      <div><div class="card-kicker">06 · DOWN STREAK</div><h2>TQQQ 연속 하락 통계 (최근 200봉)</h2></div>
+    </div>
+    <div id="tqqqStreakContent">
+      <div class="fg-empty">데이터를 불러오면 연속 하락 확률과 평균 수익률이 표시됩니다.</div>
+    </div>
+  </section>
+  <section class="card" id="card-up" style="--c:var(--up);">
+    <div class="card-head">
+      <div class="card-icon">📈</div>
+      <div><div class="card-kicker">07 · UP STREAK</div><h2>TQQQ 연속 상승 통계 (최근 200봉)</h2></div>
+    </div>
+    <div id="tqqqUpStreakStatsContent">
+      <div class="fg-empty">데이터를 불러오면 연속 상승 확률과 평균 상승률이 표시됩니다.</div>
+    </div>
+  </section>
+  </div>
+
+  <div class="page" id="pg-help" role="tabpanel" aria-label="설명">
+  <section class="card" id="card-help" style="--c:var(--text-dim);">
+    <div class="card-head">
+      <div class="card-icon">📖</div>
+      <div><div class="card-kicker">GUIDE</div><h2>설명 · 규칙</h2></div>
+    </div>
+    <div class="help-group">⚡ 주문 탭</div>
+      <details class="help-item" open>
+        <summary><span class="hi-ic">⚡</span>오늘의 LOC 주문</summary>
+        
+        <div class="help-dyn" data-for="card-today"></div>
+      </details>
+      <details class="help-item" open>
+        <summary><span class="hi-ic">📒</span>나의 매수 기록</summary>
+        <p>실제 매수 내역을 입력해 누적 평단가를 계산합니다. 매수 수량을 비워두면 1분할 금액(시드 ÷ 분할 수) ÷ 매수가를 5주 단위로 내림한 수량(LOC 가이드와 같은 공식)이 자동으로 들어갑니다. 매수 날짜는 어제(가장 최근 확정 종가일)가 기본으로 들어갑니다. 시세를 불러왔을 때 어제 종가가 LOC 매수가 이하였으면(체결 조건 충족) 저장 버튼을 누르지 않아도 그 매수가 자동으로 기록됩니다. 매수가를 비워두면 입력한 매수일의 TQQQ 종가를 자동으로 채웁니다(주말·휴장일은 직전 거래일 종가, 오늘 장중이면 실시간 현재가). 이 기록은 이 브라우저(로컬 저장소)에만 저장되며 서버로 전송되지 않으므로, 다른 기기·브라우저에서는 보이지 않습니다.</p>
+        <div class="help-dyn" data-for="card-records"></div>
+      </details>
+      <details class="help-item" open>
+        <summary><span class="hi-ic">💰</span>나의 매도 · 수익 기록</summary>
+        <p><b>자동 매도 기록:</b> 시세를 불러올 때 마지막 매수 다음 거래일부터 어제까지 하루씩 다시 계산해, 그날 종가가 LOC 매도 예약가(평단 × (1 + AI 익절%) 센트 올림) 이상이면 LOC 매도가 체결된 것으로 보고 <b>보유 전량을 그날 종가로 매도 기록</b>합니다. 예: 평단 $78.62, 익절 +9.5% → 매도 예약가 $86.09, 종가 $87.10 → 170주 × $87.10 = $14,807 매도, 수익금 +$441.6, 수익률 +10.79%.</p>
+        <p>매도되면 그 사이클의 매수 기록은 매도 기록 안으로 옮겨지고(엑셀에 사이클별로 남음), 매수 기록은 비워져 다음 거래일부터 신규 진입(전일 종가 이하 LOC)을 다시 자동 기록합니다. 손절·수동 매도는 매도 날짜와 매도가를 넣고 [보유 전량 매도 기록]을 누르세요(매도가를 비우면 그날 종가).</p>
+        <p><b>계산:</b> 수익금 = 수량 × 매도가 − 매수금액, 수익률 = 매도가 ÷ 평단 − 1, 실현 수익률 = 수익금 합계 ÷ 매수금액 합계. 수수료·세금·환율은 반영하지 않습니다. 자동 판정은 현재 AI 익절%를 쓰므로 실제 체결과 다르면 ✕로 지우세요. 가장 최근 매도를 지우면 그 사이클의 매수 기록이 되살아납니다.</p>
+        <div class="help-dyn" data-for="card-trades"></div>
+      </details>
+    <div class="help-group">💾 백업 탭</div>
+      <details class="help-item" open>
+        <summary><span class="hi-ic">☁️</span>PC · 모바일 기록 동기화</summary>
+        <p>매수·매도·수익 기록을 내 GitHub 계정의 <b>비공개(secret) Gist</b> 한 곳에 저장해 PC와 폰이 같은 기록을 씁니다. 화면을 열 때, 기록을 저장·삭제할 때(1.5초 뒤), 다른 앱에서 돌아올 때, 열어둔 동안 90초마다 자동으로 맞춥니다.</p>
+        <p><b>토큰 만들기 (한 번만):</b> github.com → 오른쪽 위 프로필 → Settings → 맨 아래 Developer settings → Personal access tokens → <b>Tokens (classic)</b> → Generate new token (classic) → Note: 무한매수 동기화, Expiration: No expiration(또는 1년), 권한은 <b>gist 하나만</b> 체크 → Generate → <b>ghp_…</b> 복사. 같은 토큰을 PC와 폰의 이 카드에 각각 한 번씩 붙여넣고 [연결]을 누르면 끝입니다. SOXL에서 연결하면 같은 기기의 TQQQ도 자동으로 연결됩니다.</p>
+        <p><b>합치는 규칙:</b> 처음 연결하면 PC 기록과 폰 기록을 합칩니다(백업 복원으로 옮긴 같은 기록은 1건으로 인식). 한쪽에서 지운 기록은 다른 쪽에서도 지워지고, 두 기기가 같은 날 자동 저장한 체결은 1건으로 합칩니다. 양쪽에 같은 매수를 손으로 따로 입력했다면 2건이 되니 하나를 지우세요. 인터넷이 끊겨도 이 기기에 먼저 저장되고, 연결되면 자동으로 올라갑니다.</p>
+        <p><b>보안:</b> 토큰은 이 기기 브라우저에만 저장되며 백업 텍스트에도 포함되지 않습니다. gist 권한만 있어 저장소·계정은 건드릴 수 없습니다. 비공개 Gist는 검색되지 않지만 주소를 아는 사람은 볼 수 있으니 Gist 주소는 공유하지 마세요. 폰을 잃어버리면 GitHub에서 토큰을 삭제(Revoke)하면 됩니다.</p>
+        <div class="help-dyn" data-for="card-sync"></div>
+      </details>
+      <details class="help-item" open>
+        <summary><span class="hi-ic">💾</span>기록 백업 · 복원</summary>
+        <p>매수 기록·설정은 이 브라우저에만 저장됩니다. 다른 폰·브라우저·주소(파일 → 온라인)로 옮길 때 <b>백업 복사</b> → 새 곳에서 붙여넣고 <b>복원</b>하세요.</p>
+        <div class="help-dyn" data-for="card-backup"></div>
+      </details>
+      <details class="help-item" open>
+        <summary><span class="hi-ic">📊</span>엑셀로 내보내기</summary>
+        <p>버튼을 누르면 <b>TQQQ_매매기록_날짜.xlsx</b> 파일이 다운로드됩니다. 시트 3개: ① 요약(실현 수익금·실현 수익률·승률·현재 보유·평가손익), ② 매도·수익(거래별 첫 매수일·매도일·수량·평단·매도가·수익금·수익률, 맨 아래 합계는 엑셀 수식), ③ 매수기록(사이클별 모든 매수, 보유 중인 현재 사이클 포함). 날짜는 엑셀 날짜, 금액은 $ 서식, 수익률은 % 서식이라 바로 정렬·필터·차트에 쓸 수 있습니다. 인터넷 없이도 이 기기에서 만들어집니다.</p>
+        <div class="help-dyn" data-for="card-excel"></div>
+      </details>
+    <div class="help-group">🤖 AI엔진 탭</div>
+      <details class="help-item" open>
+        <summary><span class="hi-ic">🤖</span>TQQQ 변동성 최적화 AI 엔진</summary>
+        <p>기본 파라미터(6분할 · 2단계 주기 14일 · 손절모드 -12%)는 TQQQ 평상시 일간σ 약 3.6%에 맞춰져 있습니다. 이 엔진은 조회 시점 TQQQ의 실제 일간σ를 측정해 ① 변동성 배율로 파라미터를 환산한 "규칙 기반 추천"과 ② 분할 수 × 매수 주기 조합을 최근 200봉에 전수 백테스트해 인접 조합 평균(과최적화 완화)이 가장 높은 "백테스트 최적"을 함께 제시합니다. 백테스트는 아래 시뮬레이션과 같은 "평단&amp;전일종가 이하" 매수 규칙을 사용하며, 버튼을 누르면 시뮬레이션과 LOC 가이드에 바로 적용됩니다.</p>
+        <div class="help-dyn" data-for="card-engine"></div>
+      </details>
+      <details class="help-item" open>
+        <summary><span class="hi-ic">🌊</span>TQQQ·QQQ 변동성 프로파일</summary>
+        <p>최근 200봉 TQQQ 일간 수익률의 변동성(표준편차)과 최근 20봉 변동성을 비교해 현재 변동성 국면을 진단합니다. 손절모드 기준선을 변동성 국면에 맞게 보정한 참고선과, 오늘 종가 기준 1σ 예상 등락 범위도 함께 제시합니다.</p>
+        <div class="help-dyn" data-for="card-vol"></div>
+      </details>
+    <div class="help-group">🎯 가이드 탭</div>
+      <details class="help-item" open>
+        <summary><span class="hi-ic">🎯</span>LOC 매수/매도 예약 가이드</summary>
+        <p>다음 LOC(지정가-종가) 매수/매도 예약 가격과 수량을 계산합니다. 매수 예약가는 <b>"평단 &amp; 전일종가 이하"</b> 기준(시드 분할매수 시뮬레이션의 매수 조건)으로, 평단가와 전일 확정 종가 중 더 낮은 값을 사용합니다. 두 가격 이하로 마감해야만 체결되므로 평단 위에서 물타기가 되는 일을 막아줍니다. 보유 수량이 없는 신규 진입 시에는 평단가가 없어 전일 확정 종가만 적용합니다. 시드·분할 수·2단계 매수 주기는 시뮬레이션의 입력값을, 매수 회차·단계 판정은 "나의 매수 기록"의 실제 내역을 사용합니다.</p>
+        <div class="help-dyn" data-for="card-loc"></div>
+      </details>
+      <details class="help-item" open>
+        <summary><span class="hi-ic">🧪</span>시드 분할매수 시뮬레이션 [평단&amp;전일종가 이하] (최근 200봉)</summary>
+        <p>시드를 N분할해 최근 200봉에 적용한 시뮬레이션입니다. 매수 규칙: ① 종가가 전일 종가보다 낮은 날 1분할 최초 매수, ② AI 추천 분할매수 회차까지는 이후 종가가 현재 평단보다 낮으면서 전일 종가보다도 낮은 날마다 1분할씩 추가 매수, ③ AI 추천 회차를 초과하면 그 이후부터는 입력한 매수 주기(N일)마다 한 번만, 종가가 현재 평단보다 낮으면서 전일 종가보다도 낮은 날에 1분할씩 추가 매수(입력한 분할 수까지). 매도 규칙: 평단가 대비 목표% 도달 시 익절, 입력한 분할 수만큼 모두 매수한 뒤 손절선에 닿으면 손절합니다. 포지션은 한 번에 하나만 운용하며 청산 다음 거래일부터 새 진입을 탐색합니다.</p>
+        <div class="help-dyn" data-for="card-sim"></div>
+      </details>
+    <div class="help-group">📊 통계 탭</div>
+      <details class="help-item" open>
+        <summary><span class="hi-ic">📉</span>TQQQ 연속 하락 통계 (최근 200봉)</summary>
+        <p>최근 200봉 종가 기준 연속 하락 일수별 발생 확률과, 연속 하락 시마다 종가로 1주씩 매수하여 하락 전 고점 가격에 도달했을 때 전량 매도했다고 가정한 구간별 평균 수익률입니다. 상단 요약의 평균 연속일수·평균 하락률·최대 하락률은 실제 발생한 모든 연속 하락 구간을 집계한 값이며, 평균 하락률은 최대·최소 각 1건을 제외하고 계산합니다.</p>
+        <div class="help-dyn" data-for="card-down"></div>
+      </details>
+      <details class="help-item" open>
+        <summary><span class="hi-ic">📈</span>TQQQ 연속 상승 통계 (최근 200봉)</summary>
+        <p>최근 200봉 종가 기준 연속 상승 일수별 발생 확률과, 연속 상승 구간별 평균 상승률입니다. 상승률은 상승 시작 전 종가(직전 저점) 대비 상승 종료일 종가의 변화율입니다. 상단 요약의 평균 연속일수·평균 상승률·최대 상승률은 실제 발생한 모든 연속 상승 구간을 집계한 값이며, 평균 상승률은 최대·최소 각 1건을 제외하고 계산합니다.</p>
+        <div class="help-dyn" data-for="card-up"></div>
+      </details>
+    <div class="help-group">📡 데이터</div>
+      <details class="help-item" open>
+        <summary><span class="hi-ic">📡</span>데이터 출처</summary>
+        <p>데이터 출처: 실시간 시세 = Finnhub API (무료), 과거 일별 종가(전고점·추이) = Twelve Data API (무료, Finnhub 무료 티어는 캔들 엔드포인트를 지원하지 않음).</p>
+      </details>
+  </section>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+<nav class="tabbar" id="tabbar" role="tablist" aria-label="화면 전환">
+  <button class="tb on" type="button" role="tab" data-p="pg-order" aria-selected="true"><span class="ic">⚡</span><span class="tx">주문</span></button>
+  <button class="tb" type="button" role="tab" data-p="pg-backup" aria-selected="false"><span class="ic">💾</span><span class="tx">백업</span></button>
+  <button class="tb" type="button" role="tab" data-p="pg-engine" aria-selected="false"><span class="ic">🤖</span><span class="tx">AI엔진</span></button>
+  <button class="tb" type="button" role="tab" data-p="pg-guide" aria-selected="false"><span class="ic">🎯</span><span class="tx">가이드</span></button>
+  <button class="tb" type="button" role="tab" data-p="pg-stats" aria-selected="false"><span class="ic">📊</span><span class="tx">통계</span></button>
+  <button class="tb" type="button" role="tab" data-p="pg-help" aria-selected="false"><span class="ic">📖</span><span class="tx">설명</span></button>
+</nav>
+
+<script>
+/* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
+const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+const APP_VERSION = "V0.37";
+const RELEASE_DATE = "261001";
+
+/* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
+const FINNHUB_API_KEY = "daik4m9r01qr9o8hnfj0daik4m9r01qr9o8hnfjg";
+const FINNHUB_BASE_URL = "https://finnhub.io/api/v1";
+
+/* Twelve Data: 일별 과거 시세(캔들) 전용 — Finnhub 무료 티어는 /stock/candle을 지원하지 않음 */
+const TWELVE_DATA_API_KEY = "7382ca9c267944f49ae850dbbdb7545f";
+const TWELVE_DATA_BASE_URL = "https://api.twelvedata.com";
+
+const BASE_TICKER = "QQQ";   // 기초지수 ETF
+const LEV_TICKER = "TQQQ";    // 3배 레버리지 ETF
+
+const LOOKBACK_CANDLES = 200;          // 전고점·추이·CCI 등 모든 분석 기준 봉 수
+const STREAK_LOOKBACK_CANDLES = 200;   // 연속 하락/상승 통계 기준 봉 수 (동일 200봉)
+const CCI_PERIOD = 20;
+
+/* ===================== TQQQ 변동성 최적화 파라미터 =====================
+   TQQQ 일간σ는 통상 3.5~4.0%로, 이 파일의 기준값(REF_SIGMA 3.6%)이 곧 TQQQ 자신의 평상시 변동성이다.
+   따라서 기본 파라미터(6분할 · 2단계 주기 14일 · 손절모드 -12%)를 그대로 쓰고,
+   AI 엔진이 조회 시점의 실제 σ를 재서 k = σ ÷ 3.6 만큼 다시 환산한다.
+   SOXL판(일간σ 약 5.8%, k≈1.6)과 비교하면 TQQQ는 같은 %를 움직이는 데 시간이 더 걸리므로
+   ① 매도 목표를 낮고 촘촘하게, ② 손절선을 얕게, ③ 매수 주기를 길게 잡는다.
+   ① 매도 목표 스윕: 0.5~10%, 0.25%p 간격 (SOXL판 1~15% / 0.5%p)
+   ② 손절모드 기준선: 평단 -12% (평단×0.88) (SOXL판 -20%)
+   ③ 분할 수 기본값: 6분할 (SOXL판 8분할)
+   ④ 2단계 매수 주기: 14일 — 같은 % 이동에 걸리는 시간 ∝ 1/σ² (SOXL판 5일)
+   ⑤ 변동성 보정계수 범위: 0.8~1.3 — TQQQ는 국면 전환 폭이 SOXL보다 작다 (SOXL판 0.8~1.5) */
+const SELL_SWEEP_MIN = 0.5, SELL_SWEEP_MAX = 10, SELL_SWEEP_STEP = 0.25;
+const STRAT2_MODE_RATIO = 0.88;           // 손절모드/일반모드 전환 기준(평단가 대비 -12%)
+const VOL_FACTOR_MIN = 0.8, VOL_FACTOR_MAX = 1.3;
+const REF_SIGMA = 3.6;                    // 기본 파라미터가 맞춰진 기준 일간σ(%) = TQQQ 평상시 변동성
+const BASE_PARAMS = { splits: 6, cycle: 14, stopModePct: 12 };
+const ENGINE_SPLITS_GRID = [4, 5, 6, 7, 8, 10, 12];
+const ENGINE_CYCLE_GRID = [5, 8, 10, 14, 20, 28];
+
+const BASE_FETCH_CANDLES = LOOKBACK_CANDLES + CCI_PERIOD;
+const LEV_FETCH_CANDLES = STREAK_LOOKBACK_CANDLES + CCI_PERIOD;
+
+let liveAth = null;
+let liveAthDate = "";
+let lastTqqqHist = null;
+let lastTqqqPrice = null;
+let lastTqqqPriceDate = "";
+let sellAnalysisCache = { hist: null, result: null };
+
+const usd = (n) => (n === null || n === undefined || isNaN(n)) ? "--" : "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const pct = (n) => (n === null || n === undefined || isNaN(n)) ? "--" : n.toFixed(2) + "%";
+const fmtNum = (n, digits = 2) => (n === null || n === undefined || isNaN(n)) ? "--" : n.toFixed(digits);
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+function showBanner(msg, ok) {
+  const el = document.getElementById("errorBanner");
+  el.textContent = msg;
+  el.classList.remove("hidden");
+  el.classList.toggle("ok", !!ok);
+}
+function hideBanner() {
+  document.getElementById("errorBanner").classList.add("hidden");
+}
+
+/* ---------- Finnhub: 실시간 시세(quote) 전용 ---------- */
+async function fhFetch(endpoint, params = {}) {
+  const url = new URL(`${FINNHUB_BASE_URL}${endpoint}`);
+  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+  url.searchParams.set("token", FINNHUB_API_KEY);
+  const res = await fetch(url.toString());
+  if (!res.ok) throw new Error(`HTTP 오류 (${res.status})`);
+  const data = await res.json();
+  if (data.error) throw new Error(data.error);
+  return data;
+}
+
+async function fetchQuote(symbol) {
+  const data = await fhFetch("/quote", { symbol });
+  if (!data || data.c === undefined || data.c === 0) {
+    throw new Error(`${symbol} 시세를 가져오지 못했습니다.`);
+  }
+  return data.c;
+}
+
+/* ---------- Twelve Data: 일별 과거 시세(캔들) 전용 ---------- */
+async function tdFetchTimeSeries(symbol, outputsize) {
+  const url = new URL(`${TWELVE_DATA_BASE_URL}/time_series`);
+  url.searchParams.set("symbol", symbol);
+  url.searchParams.set("interval", "1day");
+  url.searchParams.set("outputsize", outputsize);
+  url.searchParams.set("apikey", TWELVE_DATA_API_KEY);
+  const res = await fetch(url.toString());
+  if (!res.ok) throw new Error(`HTTP 오류 (${res.status})`);
+  const data = await res.json();
+  if (data.status === "error" || !data.values) {
+    throw new Error(`${symbol} 과거 시세를 가져오지 못했습니다: ${data.message || "알 수 없는 오류"}`);
+  }
+  // Twelve Data는 최신순(내림차순)으로 반환하므로 오래된순으로 뒤집는다.
+  const bars = data.values
+    .map(v => ({
+      d: String(v.datetime).slice(0, 10),
+      x: new Date(v.datetime).getTime(),
+      o: parseFloat(v.open),
+      h: parseFloat(v.high),
+      l: parseFloat(v.low),
+      y: parseFloat(v.close)
+    }))
+    .reverse();
+  return dropIncompleteBar(bars);
+}
+
+/* ---------- 미확정(장중) 일봉 제외 ----------
+   미국 장중(뉴욕 시간 16:15 이전)에 Twelve Data 일봉을 요청하면 가장 최근 봉이 "오늘 진행 중인 봉"이고,
+   그 close 값은 확정 종가가 아니라 현재가다. 이 봉을 그대로 쓰면 '최근 종가'가 어제 종가가 아닌 장중 가격이 되므로 제외한다. */
+function nyNowParts() {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", hour12: false
+  }).formatToParts(new Date());
+  const get = t => (parts.find(p => p.type === t) || {}).value;
+  const hour = parseInt(get("hour"), 10) % 24;
+  return { date: `${get("year")}-${get("month")}-${get("day")}`, minutes: hour * 60 + parseInt(get("minute"), 10) };
+}
+function dropIncompleteBar(bars) {
+  if (!bars || bars.length === 0) return bars;
+  const ny = nyNowParts();
+  const last = bars[bars.length - 1];
+  const isToday = last.d === ny.date;
+  const beforeFinalClose = ny.minutes < 16 * 60 + 15; // 16:00 마감 + 15분 확정 여유
+  if (last.d > ny.date || (isToday && beforeFinalClose)) return bars.slice(0, -1);
+  return bars;
+}
+
+/* ---------- CCI(20, 종가 기준) ---------- */
+function computeCciSeries(hist, period) {
+  const out = [];
+  for (let i = period - 1; i < hist.length; i++) {
+    const window = hist.slice(i - period + 1, i + 1).map(d => d.y);
+    const sma = window.reduce((a, b) => a + b, 0) / period;
+    const meanDev = window.reduce((a, b) => a + Math.abs(b - sma), 0) / period;
+    const cci = meanDev === 0 ? 0 : (hist[i].y - sma) / (0.015 * meanDev);
+    out.push({ x: hist[i].x, y: cci });
+  }
+  return out;
+}
+
+async function fetchQqqAthAndTrend() {
+  const fullHist = await tdFetchTimeSeries(BASE_TICKER, BASE_FETCH_CANDLES);
+  if (fullHist.length === 0) throw new Error("QQQ 일별 시세 데이터를 가져오지 못했습니다.");
+  const hist = fullHist.slice(-LOOKBACK_CANDLES);
+  let ath = 0, athIndex = 0;
+  hist.forEach((d, idx) => {
+    if (d.y > ath) { ath = d.y; athIndex = idx; }
+  });
+  const athDate = new Date(hist[athIndex].x).toISOString().split('T')[0];
+  const cciHist = computeCciSeries(fullHist, CCI_PERIOD).slice(-LOOKBACK_CANDLES);
+  return { ath, athDate, hist, cciHist, fullHist };
+}
+
+async function fetchTqqqHistory() {
+  const fullHist = await tdFetchTimeSeries(LEV_TICKER, LEV_FETCH_CANDLES);
+  if (fullHist.length === 0) throw new Error("TQQQ 일별 시세 데이터를 가져오지 못했습니다.");
+  return { fullHist, hist: fullHist.slice(-STREAK_LOOKBACK_CANDLES) };
+}
+
+async function fetchAll() {
+  const btn = document.getElementById("fetchBtn");
+  btn.disabled = true;
+  hideBanner();
+  btn.textContent = "시세 불러오는 중… (Finnhub + Twelve Data)";
+
+  try {
+    const [qqqPrice, qqqData, tqqqData, tqqqPrice] = await Promise.all([
+      fetchQuote(BASE_TICKER),
+      fetchQqqAthAndTrend(),
+      fetchTqqqHistory(),
+      fetchQuote(LEV_TICKER)
+    ]);
+
+    liveAth = qqqData.ath;
+    liveAthDate = qqqData.athDate;
+
+    const tqqqHistFull = tqqqData.hist; // 최근 200봉
+    const qqqCciLast = qqqData.cciHist.length > 0 ? qqqData.cciHist[qqqData.cciHist.length - 1].y : null;
+    const tqqqCciHist = computeCciSeries(tqqqData.fullHist, CCI_PERIOD).slice(-LOOKBACK_CANDLES);
+
+    updateHeader(qqqPrice, qqqData.ath, qqqData.athDate, qqqCciLast);
+    updateTqqqHeader(tqqqPrice, tqqqHistFull, tqqqCciHist.length > 0 ? tqqqCciHist[tqqqCciHist.length - 1].y : null);
+    // 이후 렌더링은 실제 카드 배치 순서와 맞춘다.
+    lastTqqqHist = tqqqHistFull;
+    lastTqqqPrice = tqqqPrice;
+    lastTqqqPriceDate = new Date().toISOString().split("T")[0];
+    setDefaultBuyDate(document.getElementById("buyRecDate").dataset.autoDefault === "1");
+    renderVolEngineCard(tqqqHistFull);   // ① 규칙/② 최적 값을 먼저 계산
+    syncParamsWithMode();                  // 현재 모드 값 자동 적용 (기본 ① 규칙)
+    autoRecordYesterdayBuy();
+    renderLocGuideCard();
+    updateBuyQtyHint();
+    renderBuyRecords();
+    renderSeedSimCards();
+    renderVolProfileCard(tqqqHistFull, qqqData.fullHist.slice(-STREAK_LOOKBACK_CANDLES));
+    renderTqqqStreakStats(tqqqHistFull);
+    renderTqqqUpStreakStats(tqqqHistFull);
+    renderTqqqStreakBanner(tqqqHistFull);
+
+    showBanner("실시간 시세(Finnhub)와 과거 종가 데이터(Twelve Data)를 모두 정상적으로 불러왔습니다.", true);
+  } catch (e) {
+    showBanner("시세 조회 실패: " + e.message, false);
+  }
+
+  btn.disabled = false;
+  btn.textContent = "시세 다시 불러오기";
+}
+
+function updateHeader(price, ath, athDate, qqqCci) {
+  const dd = ((price - ath) / ath) * 100;
+
+  document.getElementById("qqqPriceDisplay").textContent = usd(price);
+  document.getElementById("athDisplay").textContent = usd(ath);
+  document.getElementById("athDateMeta").textContent = athDate ? ("전고점 기준일 " + athDate) : "";
+
+  const ddPill = document.getElementById("ddPill");
+  ddPill.textContent = (dd >= 0 ? "+" : "") + pct(dd);
+  ddPill.classList.toggle("flat", dd > -0.01 && dd < 0.01);
+
+  const cciOk = (qqqCci !== null && qqqCci !== undefined && !isNaN(qqqCci) && qqqCci < 0);
+
+  const cciBigEl = document.getElementById("qqqCciBigDisplay");
+  cciBigEl.textContent = fmtNum(qqqCci, 1);
+  cciBigEl.classList.remove("pos", "neg");
+  cciBigEl.classList.add(cciOk ? "neg" : "pos");
+
+  document.getElementById("lastUpdated").textContent = "마지막 조회 " + new Date().toLocaleTimeString("ko-KR");
+}
+
+function updateTqqqHeader(price, hist, tqqqCci) {
+  const recent = hist.slice(-LOOKBACK_CANDLES);
+  const ath = Math.max(...recent.map(d => d.y));
+  const dd = ((price - ath) / ath) * 100;
+  document.getElementById("tqqqPriceDisplay").textContent = usd(price);
+  document.getElementById("tqqqAthDisplay").textContent = usd(ath);
+  const pill = document.getElementById("tqqqDdPill");
+  pill.textContent = (dd >= 0 ? "+" : "") + pct(dd);
+  pill.classList.toggle("flat", dd > -0.01 && dd < 0.01);
+  const levCciEl = document.getElementById("tqqqCciBigDisplay");
+  levCciEl.textContent = fmtNum(tqqqCci, 1);
+  levCciEl.classList.remove("pos", "neg");
+  levCciEl.classList.add((tqqqCci !== null && !isNaN(tqqqCci) && tqqqCci < 0) ? "neg" : "pos");
+}
+
+function fmtCompactDate(t) {
+  // 모바일용 압축 날짜: 26.03.09
+  const d = new Date(t);
+  const p = n => String(n).padStart(2, "0");
+  return `${String(d.getFullYear()).slice(2)}.${p(d.getMonth() + 1)}.${p(d.getDate())}`;
+}
+function fmtShortDate(t) {
+  return new Date(t).toLocaleDateString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit" });
+}
+
+/* ---------- TQQQ 연속 하락 통계 (최근 200봉) ---------- */
+function findDownStreaks(hist) {
+  const streaks = [];
+  let i = 1;
+  while (i < hist.length) {
+    if (hist[i].y < hist[i - 1].y) {
+      const startIdx = i;
+      let j = i;
+      while (j + 1 < hist.length && hist[j + 1].y < hist[j].y) j++;
+      const endIdx = j;
+      const preIdx = startIdx - 1;
+      streaks.push({ startIdx, endIdx, length: endIdx - startIdx + 1, preIdx });
+      i = j + 1;
+    } else {
+      i++;
+    }
+  }
+  return streaks;
+}
+
+function computeStreakStatsForLength(streaks, totalStreaks, hist, k) {
+  const atLeastCount = streaks.filter(s => s.length >= k).length;
+  const probability = totalStreaks > 0 ? (atLeastCount / totalStreaks) * 100 : 0;
+
+  const exactStreaks = streaks.filter(s => s.length === k);
+  const returns = [];
+  const recoveryDays = [];
+  let unresolved = 0;
+
+  exactStreaks.forEach(s => {
+    const buyPrices = hist.slice(s.startIdx, s.endIdx + 1).map(d => d.y);
+    const totalCost = buyPrices.reduce((a, b) => a + b, 0);
+    const peakPrice = hist[s.preIdx].y;
+    let recoveryIdx = -1;
+    for (let m = s.endIdx + 1; m < hist.length; m++) {
+      if (hist[m].y >= peakPrice) { recoveryIdx = m; break; }
+    }
+    if (recoveryIdx !== -1) {
+      const proceeds = peakPrice * s.length;
+      returns.push((proceeds - totalCost) / totalCost * 100);
+      recoveryDays.push(recoveryIdx - s.endIdx);
+    } else {
+      unresolved++;
+    }
+  });
+
+  const avgReturn = returns.length > 0 ? returns.reduce((a, b) => a + b, 0) / returns.length : null;
+  const minReturn = returns.length > 0 ? Math.min(...returns) : null;
+
+  return { k, probability, sampleCount: exactStreaks.length, resolvedCount: returns.length, unresolved, avgReturn, minReturn };
+}
+
+function computeStreakStats(hist) {
+  const streaks = findDownStreaks(hist);
+  if (streaks.length === 0) return null;
+  const maxLen = Math.max(...streaks.map(s => s.length));
+  const totalStreaks = streaks.length;
+  const rows = [];
+  for (let k = 2; k <= maxLen; k++) {
+    rows.push(computeStreakStatsForLength(streaks, totalStreaks, hist, k));
+  }
+  return { maxLen, totalStreaks, streaks, rows };
+}
+
+function computeDayChangeCounts(hist) {
+  let downDays = 0, upFlatDays = 0;
+  for (let i = 1; i < hist.length; i++) {
+    if (hist[i].y < hist[i - 1].y) downDays++;
+    else upFlatDays++;
+  }
+  return { downDays, upFlatDays };
+}
+
+function renderTqqqStreakStats(hist) {
+  const container = document.getElementById("tqqqStreakContent");
+  const { downDays, upFlatDays } = computeDayChangeCounts(hist);
+  const stats = computeStreakStats(hist);
+  const detail = computeStreakDetailStats(hist);   // 평균 연속일수·평균 하락률·최대 하락률
+
+  const summaryRow = `
+    <div class="fg-meta-row" style="margin-bottom:14px;">
+      <div class="fg-meta-item"><div class="fg-meta-label">전일 대비 하락한 날</div><div class="fg-meta-value" style="color:var(--down);">${downDays}일</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">전일과 같거나 상승한 날</div><div class="fg-meta-value" style="color:var(--up);">${upFlatDays}일</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">최대 연속 하락일수</div><div class="fg-meta-value">${stats ? stats.maxLen : 0}일</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">전체 하락 구간 표본</div><div class="fg-meta-value">${stats ? stats.totalStreaks : 0}회</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">평균 연속일수</div><div class="fg-meta-value">${detail ? detail.avgLength.toFixed(1) + "일" : "--"}</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">평균 하락률</div><div class="fg-meta-value" style="color:var(--down);">${detail ? detail.avgDeclineRate.toFixed(2) + "%" : "--"}</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">최대 하락률</div><div class="fg-meta-value" style="color:var(--down);">${detail ? detail.maxDeclineRate.toFixed(2) + "%" : "--"}</div></div>
+    </div>
+  `;
+
+  if (!stats) {
+    container.innerHTML = summaryRow + '<div class="fg-empty">최근 200봉 내 연속 하락 구간이 없습니다.</div>';
+    return;
+  }
+
+  const rowsHtml = stats.rows.map(r => `
+    <tr>
+      <td>${r.k}일</td>
+      <td class="num">${r.probability.toFixed(1)}%</td>
+      <td class="num" style="${r.avgReturn === null ? '' : (r.avgReturn >= 0 ? 'color:var(--up);' : 'color:var(--down);')}">${r.avgReturn !== null ? (r.avgReturn >= 0 ? "+" : "") + r.avgReturn.toFixed(2) + "%" : "--"}</td>
+      <td class="num">${r.resolvedCount}/${r.sampleCount}${r.unresolved > 0 ? `<span class="unres-note">미회수 ${r.unresolved}</span>` : ""}</td>
+    </tr>
+  `).join("");
+
+  container.innerHTML = `
+    ${summaryRow}
+    <table class="stat-table even-cols">
+      <thead><tr><th>연속일수</th><th class="num">N일 이상 하락 확률</th><th class="num">평균 수익률</th><th class="num">표본<br>(회수/전체)</th></tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+    <p class="desc" style="margin:12px 0 0;">평균 수익률은 연속 하락 구간의 하락일마다(전일 대비 하락한 날) 종가로 1주씩 매수한 뒤, 하락 시작 전 종가(직전 고점)에 도달한 시점에 전량 매도했다고 가정한 값입니다. 조회 기간 내 아직 그 가격을 회복하지 못한 구간(미회수)은 평균 계산에서 제외했습니다.</p>
+  `;
+}
+
+/* ---------- TQQQ 연속 상승 통계 (최근 200봉) ---------- */
+function computeUpStreakStatsForLength(streaks, totalStreaks, hist, k) {
+  const atLeastCount = streaks.filter(s => s.length >= k).length;
+  const probability = totalStreaks > 0 ? (atLeastCount / totalStreaks) * 100 : 0;
+  const exactStreaks = streaks.filter(s => s.length === k);
+  const riseRates = exactStreaks.map(s => (hist[s.endIdx].y - hist[s.preIdx].y) / hist[s.preIdx].y * 100);
+  const avgRiseRate = riseRates.length > 0 ? riseRates.reduce((a, b) => a + b, 0) / riseRates.length : null;
+  return { k, probability, sampleCount: exactStreaks.length, avgRiseRate };
+}
+
+function computeUpStreakStats(hist) {
+  const streaks = findUpStreaks(hist);
+  if (streaks.length === 0) return null;
+  const maxLen = Math.max(...streaks.map(s => s.length));
+  const totalStreaks = streaks.length;
+  const rows = [];
+  for (let k = 2; k <= maxLen; k++) {
+    rows.push(computeUpStreakStatsForLength(streaks, totalStreaks, hist, k));
+  }
+  return { maxLen, totalStreaks, streaks, rows };
+}
+
+function computeUpDayChangeCounts(hist) {
+  let upDays = 0, downFlatDays = 0;
+  for (let i = 1; i < hist.length; i++) {
+    if (hist[i].y > hist[i - 1].y) upDays++;
+    else downFlatDays++;
+  }
+  return { upDays, downFlatDays };
+}
+
+function renderTqqqUpStreakStats(hist) {
+  const container = document.getElementById("tqqqUpStreakStatsContent");
+  if (!container) return;
+  const { upDays, downFlatDays } = computeUpDayChangeCounts(hist);
+  const stats = computeUpStreakStats(hist);
+  const detail = computeUpStreakDetailStats(hist);   // 평균 연속일수·평균 상승률·최대 상승률
+
+  const summaryRow = `
+    <div class="fg-meta-row" style="margin-bottom:14px;">
+      <div class="fg-meta-item"><div class="fg-meta-label">전일 대비 상승한 날</div><div class="fg-meta-value" style="color:var(--up);">${upDays}일</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">전일과 같거나 하락한 날</div><div class="fg-meta-value" style="color:var(--down);">${downFlatDays}일</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">최대 연속 상승일수</div><div class="fg-meta-value">${stats ? stats.maxLen : 0}일</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">전체 상승 구간 표본</div><div class="fg-meta-value">${stats ? stats.totalStreaks : 0}회</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">평균 연속일수</div><div class="fg-meta-value">${detail ? detail.avgLength.toFixed(1) + "일" : "--"}</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">평균 상승률</div><div class="fg-meta-value" style="color:var(--up);">${detail ? "+" + detail.avgRiseRate.toFixed(2) + "%" : "--"}</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">최대 상승률</div><div class="fg-meta-value" style="color:var(--up);">${detail ? "+" + detail.maxRiseRate.toFixed(2) + "%" : "--"}</div></div>
+    </div>
+  `;
+
+  if (!stats) {
+    container.innerHTML = summaryRow + '<div class="fg-empty">최근 200봉 내 연속 상승 구간이 없습니다.</div>';
+    return;
+  }
+
+  const rowsHtml = stats.rows.map(r => `
+    <tr>
+      <td>${r.k}일</td>
+      <td class="num">${r.probability.toFixed(1)}%</td>
+      <td class="num" style="${r.avgRiseRate === null ? '' : 'color:var(--up);'}">${r.avgRiseRate !== null ? "+" + r.avgRiseRate.toFixed(2) + "%" : "--"}</td>
+      <td class="num">${r.sampleCount}회</td>
+    </tr>
+  `).join("");
+
+  container.innerHTML = `
+    ${summaryRow}
+    <table class="stat-table even-cols">
+      <thead><tr><th>연속일수</th><th class="num">N일 이상 상승 확률</th><th class="num">평균 상승률</th><th class="num">표본</th></tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+    <p class="desc" style="margin:12px 0 0;">평균 상승률은 해당 연속일수(N일)로 정확히 끝난 상승 구간들의, 상승 시작 전 종가(직전 저점) 대비 상승 종료일 종가의 평균 변화율입니다.</p>
+  `;
+}
+
+/* ---------- TQQQ 연속 하락 구간 상세 내역 ---------- */
+function fmtDateFull(t) {
+  return new Date(t).toISOString().split("T")[0];
+}
+
+function computeStreakDetailStats(hist) {
+  const streaks = findDownStreaks(hist);
+  if (streaks.length === 0) return null;
+  const rows = streaks.map(s => {
+    const preClose = hist[s.preIdx].y;
+    const endClose = hist[s.endIdx].y;
+    return { preDate: hist[s.preIdx].x, preClose, startDate: hist[s.startIdx].x, endDate: hist[s.endIdx].x, length: s.length, endClose, declineRate: (endClose - preClose) / preClose * 100 };
+  });
+  const totalCount = rows.length;
+  const avgLength = rows.reduce((a, r) => a + r.length, 0) / totalCount;
+  const avgDeclineRate = trimmedMeanExcludingMinMax(rows.map(r => r.declineRate));
+  const maxDeclineRate = Math.min(...rows.map(r => r.declineRate));
+  return { rows, totalCount, avgLength, avgDeclineRate, maxDeclineRate };
+}
+
+
+/* ---------- TQQQ 연속 상승 구간 상세 내역 ---------- */
+function findUpStreaks(hist) {
+  const streaks = [];
+  let i = 1;
+  while (i < hist.length) {
+    if (hist[i].y > hist[i - 1].y) {
+      const startIdx = i;
+      let j = i;
+      while (j + 1 < hist.length && hist[j + 1].y > hist[j].y) j++;
+      const endIdx = j;
+      const preIdx = startIdx - 1;
+      streaks.push({ startIdx, endIdx, length: endIdx - startIdx + 1, preIdx });
+      i = j + 1;
+    } else {
+      i++;
+    }
+  }
+  return streaks;
+}
+
+function computeUpStreakDetailStats(hist) {
+  const streaks = findUpStreaks(hist);
+  if (streaks.length === 0) return null;
+  const rows = streaks.map(s => {
+    const preClose = hist[s.preIdx].y;
+    const endClose = hist[s.endIdx].y;
+    return { preDate: hist[s.preIdx].x, preClose, startDate: hist[s.startIdx].x, endDate: hist[s.endIdx].x, length: s.length, endClose, riseRate: (endClose - preClose) / preClose * 100 };
+  });
+  const totalCount = rows.length;
+  const avgLength = rows.reduce((a, r) => a + r.length, 0) / totalCount;
+  const avgRiseRate = trimmedMeanExcludingMinMax(rows.map(r => r.riseRate));
+  const maxRiseRate = Math.max(...rows.map(r => r.riseRate));
+  return { rows, totalCount, avgLength, avgRiseRate, maxRiseRate };
+}
+
+
+/* ---------- 상단 카드: 오늘 기준 TQQQ 연속 하락/상승 현황 배너 ---------- */
+function computeCurrentTqqqStreakStatus(hist) {
+  if (!hist || hist.length < 2) return null;
+  const last = hist[hist.length - 1];
+  const prev = hist[hist.length - 2];
+  let streak = null, direction = null;
+  if (last.y < prev.y) {
+    direction = "down";
+    streak = findDownStreaks(hist).find(s => s.endIdx === hist.length - 1);
+  } else if (last.y > prev.y) {
+    direction = "up";
+    streak = findUpStreaks(hist).find(s => s.endIdx === hist.length - 1);
+  } else {
+    return { direction: "flat" };
+  }
+  if (!streak) return { direction: "flat" };
+  const preClose = hist[streak.preIdx].y;
+  const endClose = hist[streak.endIdx].y;
+  return {
+    direction, preDate: hist[streak.preIdx].x, preClose,
+    startDate: hist[streak.startIdx].x, endDate: hist[streak.endIdx].x,
+    length: streak.length, endClose, rate: (endClose - preClose) / preClose * 100
+  };
+}
+
+function computeStreakContinuationProb(hist, direction, currentLength) {
+  const streaksArr = direction === "down" ? findDownStreaks(hist) : findUpStreaks(hist);
+  const atLeast = streaksArr.filter(s => s.length >= currentLength);
+  const totalAtLeast = atLeast.length;
+  if (totalAtLeast === 0) return null;
+  const continued = atLeast.filter(s => s.length >= currentLength + 1).length;
+  const continueProb = (continued / totalAtLeast) * 100;
+  return { continueProb, reverseProb: 100 - continueProb, sampleCount: totalAtLeast };
+}
+
+function renderTqqqStreakBanner(hist) {
+  const el = document.getElementById("tqqqStreakBanner");
+  if (!el) return;
+  const status = computeCurrentTqqqStreakStatus(hist);
+  if (!status || status.direction === "flat") {
+    el.classList.add("hidden");
+    el.innerHTML = "";
+    return;
+  }
+  const isDown = status.direction === "down";
+  const label = isDown ? "TQQQ 오늘 연속 하락 중" : "TQQQ 오늘 연속 상승 중";
+  const colorVar = isDown ? "var(--down)" : "var(--up)";
+  const bg = isDown ? "rgba(240,71,90,0.12)" : "rgba(56,217,140,0.12)";
+  const border = isDown ? "rgba(240,71,90,0.35)" : "rgba(56,217,140,0.35)";
+  const sign = status.rate >= 0 ? "+" : "";
+
+  const contStats = computeStreakContinuationProb(hist, status.direction, status.length);
+  let upProb = null, downProb = null;
+  if (contStats) {
+    if (isDown) { downProb = contStats.continueProb; upProb = contStats.reverseProb; }
+    else { upProb = contStats.continueProb; downProb = contStats.reverseProb; }
+  }
+
+  const probBlock = contStats ? `
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-soft);">
+      <div class="ssb-label" style="margin-bottom:6px;">다음 거래일 방향 확률 (연속 ${status.length}일차 이상 과거 표본 ${contStats.sampleCount}건 기준)</div>
+      <div class="ssb-grid">
+        <div class="ssb-item"><div class="ssb-label">상승할 확률</div><div class="ssb-value mono" style="color:var(--up);">${upProb.toFixed(1)}%</div></div>
+        <div class="ssb-item"><div class="ssb-label">하락할 확률</div><div class="ssb-value mono" style="color:var(--down);">${downProb.toFixed(1)}%</div></div>
+      </div>
+    </div>
+  ` : `
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-soft);">
+      <div class="fg-empty" style="padding:6px 0;">과거 표본이 없어 다음 거래일 방향 확률을 계산할 수 없습니다.</div>
+    </div>
+  `;
+
+  el.classList.remove("hidden");
+  el.innerHTML = `
+    <div class="ssb-top">
+      <span class="ssb-badge" style="color:${colorVar};background:${bg};border-color:${border};">${label}</span>
+      <span class="ssb-rate mono" style="color:${colorVar};">${sign}${status.rate.toFixed(2)}%</span>
+    </div>
+    <div class="ssb-grid">
+      <div class="ssb-item"><div class="ssb-label">기준일 (${isDown ? "하락" : "상승"} 전일)</div><div class="ssb-value mono">${fmtDateFull(status.preDate)}</div><div class="ssb-sub mono">${usd(status.preClose)}</div></div>
+      <div class="ssb-item"><div class="ssb-label">${isDown ? "하락" : "상승"} 구간</div><div class="ssb-value mono">${fmtDateFull(status.startDate)} ~ ${fmtDateFull(status.endDate)}</div></div>
+      <div class="ssb-item"><div class="ssb-label">연속일수</div><div class="ssb-value mono">${status.length}일</div></div>
+      <div class="ssb-item"><div class="ssb-label">${isDown ? "하락률" : "상승률"}</div><div class="ssb-value mono" style="color:${colorVar};">${sign}${status.rate.toFixed(2)}%</div></div>
+    </div>
+    ${probBlock}
+  `;
+}
+
+function fmtPctSigned(n, digits = 2) {
+  return (n === null || n === undefined || isNaN(n)) ? "--" : (n >= 0 ? "+" : "") + n.toFixed(digits) + "%";
+}
+function fmtPct1(n) {
+  return (n === null || n === undefined || isNaN(n)) ? "--" : n.toFixed(1) + "%";
+}
+
+function trimmedMeanExcludingMinMax(values) {
+  if (!values || values.length === 0) return null;
+  if (values.length <= 2) return values.reduce((a, b) => a + b, 0) / values.length;
+  const maxV = Math.max(...values);
+  const minV = Math.min(...values);
+  let removedMax = false, removedMin = false;
+  const filtered = [];
+  for (const v of values) {
+    if (!removedMax && v === maxV) { removedMax = true; continue; }
+    if (!removedMin && v === minV) { removedMin = true; continue; }
+    filtered.push(v);
+  }
+  if (filtered.length === 0) return null;
+  return filtered.reduce((a, b) => a + b, 0) / filtered.length;
+}
+
+/* ---------- AI 분할매수·매도 전략 ---------- */
+function calculateStreakDetails(hist) {
+  const streaks = [];
+  let i = 1;
+  while (i < hist.length) {
+    if (hist[i].y < hist[i - 1].y) {
+      const startIdx = i;
+      let j = i;
+      while (j + 1 < hist.length && hist[j + 1].y < hist[j].y) j++;
+      const endIdx = j;
+      const peakIdx = startIdx - 1;
+      const peak = hist[peakIdx].y;
+      const length = endIdx - startIdx + 1;
+      const buyPrices = hist.slice(startIdx, endIdx + 1).map(d => d.y);
+      const totalCost = buyPrices.reduce((a, b) => a + b, 0);
+      const shares = buyPrices.length;
+      const avgBuyPrice = totalCost / shares;
+
+      let recoveryIdx = -1;
+      for (let m = endIdx + 1; m < hist.length; m++) {
+        if (hist[m].y >= peak) { recoveryIdx = m; break; }
+      }
+      let recovered = false, returnPct = null;
+      if (recoveryIdx !== -1) {
+        returnPct = (hist[recoveryIdx].y * shares - totalCost) / totalCost * 100;
+        recovered = true;
+      }
+      streaks.push({ startIdx, endIdx, length, peak, peakIdx, avgBuyPrice, recovered, returnPct });
+      i = j + 1;
+    } else {
+      i++;
+    }
+  }
+  return streaks;
+}
+
+function summarizeByLength(streaks) {
+  const map = new Map();
+  streaks.forEach(s => {
+    if (!map.has(s.length)) map.set(s.length, { count: 0, recovered: 0, unrecovered: 0, returns: [] });
+    const g = map.get(s.length);
+    g.count++;
+    if (s.recovered) { g.recovered++; g.returns.push(s.returnPct); }
+    else g.unrecovered++;
+  });
+  return map;
+}
+
+function probAtLeast(streaks, N) {
+  if (streaks.length === 0) return 0;
+  return (streaks.filter(s => s.length >= N).length / streaks.length) * 100;
+}
+
+function buildAiStrategy(hist) {
+  const streaks = calculateStreakDetails(hist);
+  if (streaks.length === 0) return null;
+  const summary = summarizeByLength(streaks);
+  const maxLen = Math.max(...streaks.map(s => s.length));
+
+  const candidates = [];
+  for (let N = 2; N <= maxLen; N++) {
+    const g = summary.get(N);
+    if (!g) continue;
+    const recoveryProb = g.count > 0 ? g.recovered / g.count : 0;
+    const avgReturn = g.returns.length > 0 ? g.returns.reduce((a, b) => a + b, 0) / g.returns.length : 0;
+    candidates.push({ N, count: g.count, recovered: g.recovered, unrecovered: g.unrecovered, recoveryProb, avgReturn, expectedReturn: recoveryProb * avgReturn });
+  }
+  if (candidates.length === 0) return null;
+
+  const qualified = candidates.filter(c => c.count >= 2);
+  const pool = qualified.length > 0 ? qualified : candidates;
+  const best = pool.reduce((a, b) => (b.expectedReturn > a.expectedReturn ? b : a));
+
+  const length1Count = streaks.filter(s => s.length === 1).length;
+  return {
+    recommendedN: best.N,
+    avgReturn: best.avgReturn,
+    within1DayRatio: (length1Count / streaks.length) * 100,
+    over2DaysRatio: probAtLeast(streaks, 2),
+    recoveryProb: best.recoveryProb * 100,
+    sampleCount: best.count, recovered: best.recovered, unrecovered: best.unrecovered,
+    totalStreaks: streaks.length,
+    usedFallbackPool: qualified.length === 0,
+    candidates
+  };
+}
+
+
+/* ---------- TQQQ 매도가·손절 전략 분석 (평단가 대비 % 매도 목표 전수 시뮬레이션) ---------- */
+function simulateSellTargets(hist, streaks, minPct, maxPct, stepPct) {
+  const targets = [];
+  for (let p = minPct; p <= maxPct + 1e-9; p += stepPct) targets.push(Math.round(p * 100) / 100);
+
+  return targets.map(p => {
+    const returns = [], days = [], unresolvedStreaks = [];
+    streaks.forEach(s => {
+      const targetPrice = s.avgBuyPrice * (1 + p / 100);
+      let hitIdx = -1;
+      for (let m = s.endIdx + 1; m < hist.length; m++) {
+        if (hist[m].y >= targetPrice) { hitIdx = m; break; }
+      }
+      if (hitIdx !== -1) {
+        returns.push((hist[hitIdx].y - s.avgBuyPrice) / s.avgBuyPrice * 100);
+        days.push(hitIdx - s.endIdx);
+      } else {
+        unresolvedStreaks.push(s);
+      }
+    });
+    const total = streaks.length;
+    const successCount = returns.length;
+    const avgReturn = returns.length > 0 ? returns.reduce((a, b) => a + b, 0) / returns.length : 0;
+    return {
+      pct: p, total, successCount, unresolvedCount: unresolvedStreaks.length,
+      successRate: total > 0 ? successCount / total * 100 : 0,
+      avgReturn,
+      avgDays: days.length > 0 ? days.reduce((a, b) => a + b, 0) / days.length : null,
+      maxDays: days.length > 0 ? Math.max(...days) : null,
+      expectedReturn: (successCount / total) * avgReturn,
+      unresolvedStreaks
+    };
+  });
+}
+
+// N회차 매수 완료 기준, 평단가 대비 몇 %까지 떨어지면 손절해야 하는지 분석
+function analyzeStopLossForRound(hist, streaksAll, sellTargetPct, N) {
+  if (!N || N < 1) return null;
+  let candidates = streaksAll.filter(s => s.length === N);
+  let usedFallback = false;
+  if (candidates.length < 2) {
+    candidates = streaksAll.filter(s => s.length >= N);
+    usedFallback = true;
+  }
+  if (candidates.length === 0) return null;
+
+  const drawdowns = candidates.map(s => {
+    const avgBuyPrice = N === s.length ? s.avgBuyPrice : hist.slice(s.startIdx, s.startIdx + N).reduce((a, d) => a + d.y, 0) / N;
+    const targetPrice = avgBuyPrice * (1 + sellTargetPct / 100);
+    let hitIdx = -1;
+    for (let m = s.startIdx + N; m < hist.length; m++) {
+      if (hist[m].y >= targetPrice) { hitIdx = m; break; }
+    }
+    const scanEnd = hitIdx !== -1 ? hitIdx : hist.length - 1;
+    let minPrice = hist[Math.min(s.startIdx + N - 1, hist.length - 1)].y;
+    for (let m = s.startIdx + N; m <= scanEnd; m++) {
+      if (hist[m].y < minPrice) minPrice = hist[m].y;
+    }
+    return (minPrice - avgBuyPrice) / avgBuyPrice * 100;
+  });
+
+  return {
+    N, sampleCount: candidates.length, usedFallback,
+    avgDrawdown: drawdowns.reduce((a, b) => a + b, 0) / drawdowns.length,
+    worstDrawdown: Math.min(...drawdowns)
+  };
+}
+
+function analyzeSellStrategy(hist) {
+  const streaks = calculateStreakDetails(hist);
+  if (streaks.length === 0) return null;
+
+  const sweep = simulateSellTargets(hist, streaks, SELL_SWEEP_MIN, SELL_SWEEP_MAX, SELL_SWEEP_STEP);
+  const best = sweep.reduce((a, b) => {
+    if (b.expectedReturn > a.expectedReturn) return b;
+    if (b.expectedReturn === a.expectedReturn && b.successRate > a.successRate) return b;
+    return a;
+  });
+
+  const aiStrategy = buildAiStrategy(hist);
+  const recommendedN = aiStrategy ? aiStrategy.recommendedN : null;
+  const stopLossByRound = recommendedN ? analyzeStopLossForRound(hist, streaks, best.pct, recommendedN) : null;
+
+  return { streaksTotal: streaks.length, sweep, best, recommendedN, stopLossByRound };
+}
+
+// 같은 200봉 배열에 대해 매도 전략 분석을 한 번만 수행(엔진 그리드 서치 성능 최적화)
+function getSellAnalysis(hist) {
+  if (sellAnalysisCache.hist === hist && sellAnalysisCache.result) return sellAnalysisCache.result;
+  const result = analyzeSellStrategy(hist);
+  sellAnalysisCache = { hist, result };
+  return result;
+}
+
+/* ---------- 시드 분할매수 시뮬레이션 (시드 ÷ 분할수 = 1회 매수금, 종가 기준 정수 주식) ---------- */
+function simulateSeedBacktest(hist, seed, splits, requirePrevDown, cycleDays) {
+  const a = getSellAnalysis(hist);
+  if (!a || !a.recommendedN) return null;
+
+  const perSplit = seed / splits;
+  const maxRounds = splits;
+  const sellPct = a.best.pct;
+  const stopPct = a.stopLossByRound ? a.stopLossByRound.worstDrawdown : null;
+  const recommendedN = a.recommendedN;
+  const cycle = Math.max(1, Math.floor(cycleDays) || 1);
+  const lastIdx = hist.length - 1;
+  const lastClose = hist[lastIdx].y;
+
+  const trades = [];
+  let i = 1;
+  while (i < hist.length) {
+    if (!(hist[i].y < hist[i - 1].y)) { i++; continue; }
+
+    const entryIdx = i;
+    let shares = 0, cost = 0, rounds = 0, lastBuyIdx = i;
+    const buys = [];
+    const buy = (idx) => {
+      const q = Math.floor(perSplit / hist[idx].y);
+      if (q <= 0) return false;
+      shares += q; cost += q * hist[idx].y; rounds++; lastBuyIdx = idx;
+      buys.push({ x: hist[idx].x, price: hist[idx].y, shares: q, round: rounds });
+      return true;
+    };
+    if (!buy(i)) { i++; continue; }
+
+    let outcome = "open", exitIdx = -1;
+    for (let m = i + 1; m < hist.length; m++) {
+      const avgNow = cost / shares;
+      const c = hist[m].y;
+      if (c >= avgNow * (1 + sellPct / 100)) { outcome = "profit"; exitIdx = m; break; }
+      if (rounds >= maxRounds && stopPct !== null && c <= avgNow * (1 + stopPct / 100)) { outcome = "loss"; exitIdx = m; break; }
+      const conditionMet = c < avgNow && (!requirePrevDown || c < hist[m - 1].y);
+      if (rounds < maxRounds && conditionMet) {
+        if (rounds < recommendedN) buy(m);
+        else if ((m - lastBuyIdx) >= cycle) buy(m);
+      }
+    }
+
+    const avg = cost / shares;
+    const exitPrice = exitIdx !== -1 ? hist[exitIdx].y : null;
+    const value = (exitPrice !== null ? exitPrice : lastClose) * shares;
+    trades.push({
+      rounds, shares, cost, avg, outcome, buys,
+      entryX: hist[entryIdx].x, buyEndX: hist[lastBuyIdx].x,
+      exitX: exitIdx !== -1 ? hist[exitIdx].x : null, exitPrice,
+      pnl: value - cost, pnlPct: (value - cost) / cost * 100
+    });
+    i = exitIdx !== -1 ? exitIdx + 1 : hist.length;
+  }
+
+  const profit = trades.filter(t => t.outcome === "profit");
+  const loss = trades.filter(t => t.outcome === "loss");
+  const open = trades.filter(t => t.outcome === "open");
+  const sum = arr => arr.reduce((acc, t) => acc + t.pnl, 0);
+  const realizedProfit = sum(profit), realizedLoss = sum(loss), unrealized = sum(open);
+  const realizedTotal = realizedProfit + realizedLoss;
+  const maxInvested = trades.length > 0 ? Math.max(...trades.map(t => t.cost)) : 0;
+
+  return {
+    seed, splits, perSplit, maxRounds, sellPct, stopPct, recommendedN, cycle, trades,
+    profit, loss, open, realizedProfit, realizedLoss, realizedTotal, unrealized,
+    grandTotal: realizedTotal + unrealized, maxInvested
+  };
+}
+
+function fmtUsd0Signed(n) {
+  if (n === null || n === undefined || isNaN(n)) return "--";
+  return (n >= 0 ? "+" : "-") + "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
+}
+function fmtUsdCompact(n) {
+  // 좁은 표 칸용: $15,240,643 → $15.24M, $152,300 → $152.3K (10만 달러 미만은 그대로)
+  if (n === null || n === undefined || isNaN(n)) return "--";
+  const a = Math.abs(n);
+  if (a >= 1e6) return "$" + (n / 1e6).toFixed(2) + "M";
+  if (a >= 1e5) return "$" + (n / 1e3).toFixed(1) + "K";
+  return fmtUsd0(n);
+}
+function fmtUsd0(n) {
+  if (n === null || n === undefined || isNaN(n)) return "--";
+  return "$" + Number(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
+}
+
+function renderSeedSimCard(n, requirePrevDown) {
+  const el = document.getElementById("seedSimContent" + n);
+  if (!el || !lastTqqqHist) return;
+
+  const seed = parseFloat(document.getElementById("seedSimSeed" + n).value);
+  const splits = parseInt(document.getElementById("seedSimSplits" + n).value, 10);
+  const cycleInput = document.getElementById("seedSimCycle" + n);
+  const cycleDays = cycleInput ? parseInt(cycleInput.value, 10) : 1;
+  if (!(seed > 0) || !(splits >= 1) || !(cycleDays >= 1)) {
+    el.innerHTML = '<div class="fg-empty">시드·분할 수·매수 주기를 올바르게 입력해주세요.</div>';
+    return;
+  }
+
+  const r = simulateSeedBacktest(lastTqqqHist, seed, splits, requirePrevDown, cycleDays);
+  if (!r) {
+    el.innerHTML = '<div class="fg-empty">최근 200봉 내 연속 하락 구간이 없어 시뮬레이션할 수 없습니다.</div>';
+    return;
+  }
+
+  const col = v => v >= 0 ? "color:var(--up);" : "color:var(--down);";
+  const retOnSeed = r.grandTotal / r.seed * 100;
+
+  const rowsHtml = r.trades.map(t => {
+    const label = t.outcome === "profit" ? "익절" : t.outcome === "loss" ? "손절" : "보유중(평가)";
+    const lc = t.outcome === "profit" ? "var(--up)" : t.outcome === "loss" ? "var(--down)" : "var(--text-faint)";
+    const buysHtml = t.buys.map(b => {
+      const phaseTag = b.round <= r.recommendedN ? "" : ` <span style="color:var(--glow);">[2단계]</span>`;
+      return `<div class="buy-event"><b>${b.round}회</b> ${fmtCompactDate(b.x)} ${usd(b.price)}${phaseTag}</div>`;
+    }).join("");
+    return `
+      <tr>
+        <td class="buy-events-cell">${buysHtml}<span class="sub-price">평단 ${usd(t.avg)} · 총 ${t.rounds}회</span></td>
+        <td>${t.exitX ? fmtCompactDate(t.exitX) : "--"}<span class="sub-price" style="color:${lc};">${label}</span>${t.exitPrice !== null ? `<span class="sub-price">${usd(t.exitPrice)}</span>` : ""}</td>
+        <td class="num" style="${col(t.pnl)}">${fmtUsd0Signed(t.pnl)}<span class="sub-price" style="${col(t.pnl)}">${fmtPctSigned(t.pnlPct)}</span></td>
+      </tr>
+    `;
+  }).join("");
+
+  el.innerHTML = `
+    <div class="hl-grid">
+      <div class="hl-item star"><div class="hl-label">총 수익금 (실현+평가)</div><div class="hl-value" style="${col(r.grandTotal)}">${fmtUsd0Signed(r.grandTotal)}</div></div>
+      <div class="hl-item line"><div class="hl-label">시드 대비 수익률</div><div class="hl-value" style="${col(retOnSeed)}">${fmtPctSigned(retOnSeed)}</div></div>
+    </div>
+    <div class="kv-row"><span class="k">시드 / 분할 (1회 매수금)</span><span class="v">${fmtUsd0(r.seed)} / ${r.splits}분할 (${fmtUsd0(r.perSplit)})</span></div>
+    <div class="kv-row"><span class="k">1단계(AI 추천) / 2단계(주기)</span><span class="v">${r.recommendedN}회까지 매일 조건 매수 → 이후 ${r.cycle}일마다 1회</span></div>
+    <div class="kv-row"><span class="k">적용 규칙</span><span class="v">최대 ${r.maxRounds}회 매수 · +${r.sellPct.toFixed(2)}% 익절 · ${r.stopPct !== null ? fmtPctSigned(r.stopPct) + " 손절" : "손절선 없음"}</span></div>
+    <div class="kv-row"><span class="k">매매 결과</span><span class="v">익절 ${r.profit.length} · 손절 ${r.loss.length} · 보유중 ${r.open.length} (총 ${r.trades.length}건)</span></div>
+    <div class="kv-row"><span class="k">총 수익 (익절분)</span><span class="v" style="color:var(--up);">${fmtUsd0Signed(r.realizedProfit)}</span></div>
+    <div class="kv-row"><span class="k">총 손실 (손절분)</span><span class="v" style="color:var(--down);">${fmtUsd0Signed(r.realizedLoss)}</span></div>
+    <div class="kv-row"><span class="k">실현 손익 합계</span><span class="v" style="${col(r.realizedTotal)}">${fmtUsd0Signed(r.realizedTotal)}</span></div>
+    <div class="kv-row"><span class="k">보유중 평가손익</span><span class="v" style="${col(r.unrealized)}">${fmtUsd0Signed(r.unrealized)}</span></div>
+    <div class="kv-row"><span class="k">1건 최대 투입금</span><span class="v">${fmtUsd0(r.maxInvested)} (시드의 ${(r.maxInvested / r.seed * 100).toFixed(1)}%)</span></div>
+    <table class="stat-table trade-table" style="margin-top:12px;">
+      <thead><tr><th>매수 내역 (회차·날짜·종가)</th><th>청산</th><th class="num">손익</th></tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+    <p class="desc" style="margin:12px 0 0;">1분할(시드÷분할수)어치를 종가로 정수 주식만큼 매수하고, 손익은 재투자 없이 고정 분할금액으로 계산했습니다. TQQQ 매도 목표는 ${SELL_SWEEP_MIN}~${SELL_SWEEP_MAX}% 구간(${SELL_SWEEP_STEP}%p 간격)을 전수 탐색해 기대수익률이 가장 높은 값을 사용합니다. AI 추천 분할매수 회차(${r.recommendedN}회)까지는 조건 충족 시마다 매수하고, 이를 초과하면 마지막 매수일로부터 ${r.cycle}일이 지난 뒤 조건이 다시 충족될 때만 1회 매수합니다([2단계] 표시). 수수료·세금·슬리피지는 반영하지 않았고, 종가 기준 체결을 가정한 과거 데이터 시뮬레이션이므로 실제 성과를 보장하지 않습니다.</p>
+  `;
+}
+
+function renderSeedSimCards() {
+  renderSeedSimCard(1, true); // 종가 < 평단 그리고 종가 < 전일 종가
+}
+
+[["seedSimSeed1", 1, true], ["seedSimSplits1", 1, true], ["seedSimCycle1", 1, true]].forEach(([id, n, prevDown]) => {
+  const inp = document.getElementById(id);
+  if (inp) inp.addEventListener("input", () => renderSeedSimCard(n, prevDown));
+});
+
+["seedSimSeed1", "seedSimSplits1", "seedSimCycle1"].forEach(id => {
+  const inp = document.getElementById(id);
+  if (inp) inp.addEventListener("input", renderLocGuideCard);
+});
+
+/* ---------- 나의 매수 기록 (localStorage 저장) ---------- */
+const BUY_RECORDS_KEY = "tqqq_buy_records_v2";
+const LOC_QTY_UNIT = 5;   // LOC 매수 수량 단위(주)
+
+function fmtKrDate(dateStr) {
+  // 모바일에서 한 줄에 들어가도록 압축 표기: 26.09.10
+  return fmtCompactDate(new Date(dateStr + "T00:00:00").getTime());
+}
+
+function loadBuyRecords() {
+  try {
+    const raw = localStorage.getItem(BUY_RECORDS_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) {
+    return [];
+  }
+}
+function saveBuyRecordsToStorage(records) {
+  try { localStorage.setItem(BUY_RECORDS_KEY, JSON.stringify(records)); } catch (e) {}
+}
+function sortedBuyRecords() {
+  return loadBuyRecords().slice().sort((a, b) => {
+    if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+    return a.id - b.id;
+  });
+}
+function findCloseOnDate(dateStr) {
+  if (!lastTqqqHist) return null;
+  for (const d of lastTqqqHist) {
+    if (new Date(d.x).toISOString().split("T")[0] === dateStr) return d.y;
+  }
+  return null;
+}
+function resolveAutoPrice(dateStr) {
+  /* 자동 매수가 결정 규칙 (V0.31)
+     ① 입력한 날짜의 확정 종가가 있으면 그 종가
+     ② 주말·휴장일이면 그 날짜 이전 가장 가까운 거래일 종가
+     ③ 오늘(뉴욕 기준) 장중이라 종가가 아직 없으면 실시간 현재가
+     ④ 데이터 범위(최근 200봉)보다 과거이거나 미래 날짜면 자동 입력 불가 → 직접 입력 요청
+     이전 버전은 날짜가 데이터에 없으면 무조건 현재가를 넣고 "종가 자동"으로 표시해 평단이 틀어질 수 있었다. */
+  if (!lastTqqqHist || lastTqqqHist.length === 0) return null;
+  const exact = findCloseOnDate(dateStr);
+  if (exact !== null) return { price: exact, note: "종가 자동" };
+  const firstDate = fmtDateFull(lastTqqqHist[0].x);
+  const lastBar = lastTqqqHist[lastTqqqHist.length - 1];
+  const lastDate = fmtDateFull(lastBar.x);
+  const nyToday = nyNowParts().date;
+  if (dateStr < firstDate) return { error: `${dateStr}은(는) 불러온 데이터(${firstDate}~) 이전이라 종가를 알 수 없습니다. 매수가를 직접 입력해주세요.` };
+  if (dateStr > nyToday) return { error: `${dateStr}은(는) 미래 날짜입니다. 날짜를 확인해주세요.` };
+  if (dateStr === nyToday && dateStr > lastDate) {
+    if (lastTqqqPrice !== null) return { price: lastTqqqPrice, note: "현재가 자동(장중)" };
+    return { error: "오늘 종가가 아직 확정되지 않았습니다. 매수가를 직접 입력해주세요." };
+  }
+  // 휴장일: 직전 거래일 종가
+  let prev = null;
+  for (const d of lastTqqqHist) { if (fmtDateFull(d.x) <= dateStr) prev = d; else break; }
+  if (prev) return { price: prev.y, note: `직전 거래일(${fmtCompactDate(prev.x)}) 종가` };
+  return null;
+}
+function showBuyRecMsg(msg, ok) {
+  const el = document.getElementById("buyRecMsg");
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.remove("hidden");
+  el.classList.toggle("ok", !!ok);
+}
+function hideBuyRecMsg() {
+  const el = document.getElementById("buyRecMsg");
+  if (el) el.classList.add("hidden");
+}
+
+function addBuyRecord() {
+  const dateEl = document.getElementById("buyRecDate");
+  const qtyEl = document.getElementById("buyRecQty");
+  const priceEl = document.getElementById("buyRecPrice");
+  const dateStr = dateEl.value;
+  const qtyInput = qtyEl.value.trim();
+  const priceInput = priceEl.value.trim();
+
+  if (!dateStr) { showBuyRecMsg("매수 날짜를 입력해주세요.", false); return; }
+  if (qtyInput !== "" && !(parseInt(qtyInput, 10) > 0)) { showBuyRecMsg("매수 수량을 올바르게 입력해주세요.", false); return; }
+
+  let price, autoClose = false, priceNote = "";
+  if (priceInput === "") {
+    const resolved = resolveAutoPrice(dateStr);
+    if (!resolved) { showBuyRecMsg("시세 데이터가 없어 종가를 자동으로 채울 수 없습니다. 먼저 시세를 불러오거나 매수가를 직접 입력해주세요.", false); return; }
+    if (resolved.error) { showBuyRecMsg(resolved.error, false); return; }
+    price = resolved.price; autoClose = true; priceNote = resolved.note;
+  } else {
+    price = parseFloat(priceInput);
+    if (!(price > 0)) { showBuyRecMsg("매수가를 올바르게 입력해주세요.", false); return; }
+  }
+
+  // 매수 수량: 입력값 우선, 비어 있으면 디폴트 = 1분할 금액 ÷ 매수가 → 5주 단위 내림 (LOC 가이드와 동일 공식)
+  let qty, autoQty = false;
+  if (qtyInput === "") {
+    const d = computeDefaultBuyQty(price);
+    if (!d) { showBuyRecMsg("매수 수량을 자동 계산할 수 없습니다. 시드 분할매수 시뮬레이션의 시드·분할 수를 확인하거나 수량을 직접 입력해주세요.", false); return; }
+    if (d.qty <= 0) { showBuyRecMsg(`1분할 금액(${fmtUsd0(d.perSplit)})으로는 ${LOC_QTY_UNIT}주를 살 수 없습니다(매수가 ${usd(price)}). 수량을 직접 입력해주세요.`, false); return; }
+    qty = d.qty; autoQty = true;
+  } else {
+    qty = parseInt(qtyInput, 10);
+  }
+
+  const records = loadBuyRecords();
+  records.push({ id: Date.now() * 1000 + Math.floor(Math.random() * 1000), date: dateStr, qty, price, autoClose, autoQty, priceNote });
+  saveBuyRecordsToStorage(records);
+
+  qtyEl.value = ""; priceEl.value = "";
+  setDefaultBuyDate(true);
+  updateBuyQtyHint();
+  showBuyRecMsg(autoQty ? `매수 기록이 저장되었습니다. 수량 ${qty.toLocaleString("en-US")}주 자동 입력 (1분할 ÷ ${usd(price)}, ${LOC_QTY_UNIT}주 단위 내림)` : "매수 기록이 저장되었습니다.", true);
+  renderBuyRecords();
+  renderLocGuideCard();
+}
+
+/* ---------- 매수 수량 디폴트 ---------- */
+document.getElementById("buyRecDate").addEventListener("input", e => { e.target.dataset.autoDefault = "0"; });
+function computeDefaultBuyQty(price) {
+  const seed = parseFloat((document.getElementById("seedSimSeed1") || {}).value);
+  const splits = parseInt((document.getElementById("seedSimSplits1") || {}).value, 10);
+  if (!(seed > 0) || !(splits >= 1) || !(price > 0)) return null;
+  const perSplit = seed / splits;
+  const qty = Math.floor(Math.floor(perSplit / price) / LOC_QTY_UNIT) * LOC_QTY_UNIT;
+  return { qty, perSplit };
+}
+// 입력칸 안내: 날짜·매수가를 넣으면 비워둘 때 들어갈 수량을 미리 보여준다
+function updateBuyQtyHint() {
+  const qtyEl = document.getElementById("buyRecQty");
+  if (!qtyEl) return;
+  const dateStr = document.getElementById("buyRecDate").value;
+  const priceInput = document.getElementById("buyRecPrice").value.trim();
+  let price = priceInput !== "" ? parseFloat(priceInput) : null;
+  if (price === null && dateStr) { const r = resolveAutoPrice(dateStr); price = r && !r.error ? r.price : null; }
+  if (price === null && lastTqqqHist) price = lastTqqqHist[lastTqqqHist.length - 1].y;
+  const d = price ? computeDefaultBuyQty(price) : null;
+  qtyEl.placeholder = d && d.qty > 0 ? `비우면 ${d.qty.toLocaleString("en-US")}주` : "비우면 자동";
+}
+["buyRecDate", "buyRecPrice", "seedSimSeed1", "seedSimSplits1"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) { el.addEventListener("input", updateBuyQtyHint); el.addEventListener("change", updateBuyQtyHint); }
+});
+
+/* ---------- 매수 날짜 기본값: 어제 ---------- */
+function setDefaultBuyDate(force) {
+  const el = document.getElementById("buyRecDate");
+  if (!el || (el.value && !force)) return;
+  let d;
+  if (lastTqqqHist && lastTqqqHist.length) {
+    d = fmtDateFull(lastTqqqHist[lastTqqqHist.length - 1].x);          // 가장 최근 확정 종가일 (미국장 기준 어제)
+  } else {
+    const y = new Date(Date.now() - 86400000);           // 시세 조회 전: 달력상 어제
+    d = `${y.getFullYear()}-${String(y.getMonth() + 1).padStart(2, "0")}-${String(y.getDate()).padStart(2, "0")}`;
+  }
+  el.value = d;
+  el.dataset.autoDefault = "1";
+}
+
+/* ---------- 어제 LOC 매수 조건 충족 시 자동 저장 ----------
+   어제(가장 최근 확정 종가일 D)에 LOC 가이드가 제시했을 매수 주문을 그대로 다시 계산한다.
+     · 기준가 = min(평단가, D-1 종가) 를 센트 단위 내림  (LOC 가이드와 동일)
+     · 수량   = 1분할 금액 ÷ 기준가 → 5주 단위 내림
+     · 분할 수 소진, 2단계 매수 주기 미도래면 주문이 없었던 것으로 본다
+   D 종가 ≤ 기준가 이면 LOC가 체결된 것이므로 (체결가 = D 종가) 기록을 자동 추가한다.
+   · 이미 D 이후 기록이 있거나, 사용자가 이 자동 기록을 삭제한 적이 있으면 추가하지 않는다
+   · 기록이 하나도 없는 신규 진입 전 상태는 실제 진입 여부를 알 수 없어 자동 저장하지 않는다 */
+const AUTO_SKIP_KEY = BUY_RECORDS_KEY + "_auto_skip";
+function loadAutoSkip() { try { return JSON.parse(localStorage.getItem(AUTO_SKIP_KEY) || "[]"); } catch (e) { return []; } }
+function saveAutoSkip(a) { try { localStorage.setItem(AUTO_SKIP_KEY, JSON.stringify(a.slice(-60))); } catch (e) {} }
+let lastAutoRecordMsg = "", lastAutoRecordInfo = "";
+
+/* ---------- 매도·수익 기록 ---------- */
+const TRADES_KEY = LEV_TICKER.toLowerCase() + "_trades_v1";
+function loadTrades() { try { const a = JSON.parse(localStorage.getItem(TRADES_KEY) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+function saveTrades(a) { try { localStorage.setItem(TRADES_KEY, JSON.stringify(a.slice().sort((x, y) => x.sellDate < y.sellDate ? -1 : x.sellDate > y.sellDate ? 1 : x.id - y.id))); } catch (e) {} }
+const tradeTombOf = t => "T|" + (t && t.auto ? "sell:" + t.sellDate : "t:" + (t && t.id));
+/* 보유 전량 매도 → 거래 1건 생성 (그 사이클의 매수 기록을 안에 보관) + 매수 기록 비우기 */
+function closeCycle(sellDate, sellPrice, o) {
+  o = o || {};
+  const recs = sortedBuyRecords();
+  if (!recs.length || !(sellPrice > 0)) return null;
+  const qty = recs.reduce((x, r) => x + r.qty, 0), cost = recs.reduce((x, r) => x + r.qty * r.price, 0);
+  const avg = cost / qty, proceeds = qty * sellPrice;
+  const t = { id: Date.now() * 1000 + Math.floor(Math.random() * 1000), sellDate, sellPrice, qty, avg, cost, proceeds,
+              profit: proceeds - cost, pct: (sellPrice / avg - 1) * 100, rounds: recs.length, firstBuy: recs[0].date,
+              auto: !!o.auto, limit: o.limit || null, note: o.note || "",
+              buys: recs.map(r => ({ date: r.date, qty: r.qty, price: r.price, auto: !!r.autoRecorded })) };
+  const all = loadTrades(); all.push(t); saveTrades(all);
+  saveBuyRecordsToStorage([]);
+  return t;
+}
+
+function autoRecordYesterdayBuy() {
+  /* 마지막 기록(매수 또는 매도) 다음 거래일부터 어제(D)까지 하루씩 LOC 체결 여부를 재생한다 (최대 15거래일).
+     하루마다 ① 보유 중이면 LOC 매도(익절) 체결 여부 → 체결 시 전량 매도 기록 ② 아니면 LOC 매수 체결 여부.
+     매도 후에는 신규 진입(전일 종가 이하 LOC)부터 다시 이어서 기록한다. */
+  lastAutoRecordMsg = ""; lastAutoRecordInfo = "";
+  const hist = lastTqqqHist;
+  if (!hist || hist.length < 3) return null;
+  let records = sortedBuyRecords();
+  const trades = loadTrades();
+  const lastSell = trades.length ? trades.reduce((x, t) => t.sellDate > x ? t.sellDate : x, "") : "";
+  const anchor = records.length ? records[records.length - 1].date : lastSell;
+  if (!anchor) { lastAutoRecordInfo = "기록이 없는 신규 진입 전이라 자동 저장하지 않습니다 (첫 매수는 직접 저장)"; return null; }
+  const seed = parseFloat(document.getElementById("seedSimSeed1").value);
+  const splits = parseInt(document.getElementById("seedSimSplits1").value, 10);
+  const cycleDays = parseInt(document.getElementById("seedSimCycle1").value, 10) || 1;
+  if (!(seed > 0) || !(splits >= 1)) return null;
+  const strategy = getSellAnalysis(hist);
+  if (!strategy || !strategy.recommendedN) return null;
+  const sellPct = strategy.best.pct;
+  const D = hist.length - 1;
+  const dates = hist.map(d => fmtDateFull(d.x));
+  let start = dates.findIndex(dd => dd > anchor);
+  if (start === -1) { lastAutoRecordInfo = `어제(${fmtCompactDate(hist[D].x)})까지 이미 기록되어 있습니다`; return null; }
+  start = Math.max(start, D - 14, 1);
+  const skip = loadAutoSkip();
+  const added = [];
+  let lastReason = "";
+  for (let i = start; i <= D; i++) {
+    const day = dates[i];
+    const rounds = records.length;
+    // ① 보유 중 → LOC 매도(익절) 체결 확인
+    if (rounds > 0) {
+      const q0 = records.reduce((x, r) => x + r.qty, 0);
+      const avg0 = records.reduce((x, r) => x + r.qty * r.price, 0) / q0;
+      const sellLimit = Math.ceil(avg0 * (1 + sellPct / 100) * 100 - 1e-6) / 100;
+      if (hist[i].y >= sellLimit) {
+        if (skip.includes("sell:" + day)) { lastReason = `${fmtCompactDate(hist[i].x)} 자동 매도 기록은 직접 삭제하셔서 다시 만들지 않습니다`; continue; }
+        const t = closeCycle(day, hist[i].y, { auto: true, limit: sellLimit });
+        records = [];
+        if (t) added.push(`💰 ${fmtCompactDate(hist[i].x)} 전량 ${t.qty}주 매도 @ ${usd(t.sellPrice)} (LOC ${usd(sellLimit)} 이상 체결) → ${fmtUsd0Signed(t.profit)} · ${fmtPctSigned(t.pct)}`);
+        lastReason = "";
+        continue;
+      }
+    }
+    // ② LOC 매수 체결 확인
+    if (skip.includes(day)) { lastReason = `${fmtCompactDate(hist[i].x)} 자동 기록은 직접 삭제하셔서 다시 만들지 않습니다`; continue; }
+    if (rounds >= splits) { lastReason = `분할 수(${splits}회)를 모두 매수해 추가 매수 주문이 없습니다`; continue; }
+    if (rounds > 0 && rounds + 1 > strategy.recommendedN) {
+      const lastIdx = dates.indexOf(records[rounds - 1].date);
+      const gap = lastIdx === -1 ? Infinity : i - lastIdx;
+      if (gap < cycleDays) { lastReason = `2단계 매수 주기 대기 중 (마지막 매수 후 ${gap}거래일 / 주기 ${cycleDays}일)`; continue; }
+    }
+    let basisRaw = hist[i - 1].y;
+    if (rounds > 0) {
+      const qtySum = records.reduce((x, r) => x + r.qty, 0);
+      basisRaw = Math.min(records.reduce((x, r) => x + r.qty * r.price, 0) / qtySum, basisRaw);
+    }
+    const basis = Math.floor(basisRaw * 100 + 1e-6) / 100;
+    const qty = Math.floor(Math.floor((seed / splits) / basis) / LOC_QTY_UNIT) * LOC_QTY_UNIT;
+    if (qty <= 0) { lastReason = `1분할 금액으로 ${LOC_QTY_UNIT}주를 살 수 없습니다`; continue; }
+    if (hist[i].y > basis) { lastReason = `${fmtCompactDate(hist[i].x)} 종가 ${usd(hist[i].y)} > LOC 매수가 ${usd(basis)} → 미체결`; continue; }
+    const rec = { id: Date.now() * 1000 + Math.floor(Math.random() * 1000), date: day, qty, price: hist[i].y, autoRecorded: true };
+    const all = loadBuyRecords(); all.push(rec); saveBuyRecordsToStorage(all);
+    records = sortedBuyRecords();
+    added.push(`${fmtCompactDate(hist[i].x)} ${rounds === 0 ? "신규 진입 " : ""}${qty}주 @ ${usd(hist[i].y)} (LOC ${usd(basis)} 이하 체결)`);
+    lastReason = "";
+  }
+  if (added.length) lastAutoRecordMsg = `LOC 체결 조건 충족 → 자동 저장: ${added.join(", ")}. 실제로 체결되지 않았다면 ✕로 지워주세요.`;
+  if (lastReason) lastAutoRecordInfo = "자동 저장 안 함 — " + lastReason;
+  return added;
+}
+
+/* 수동 매도(손절·직접 매도) */
+function setDefaultSellDate() {
+  const el = document.getElementById("sellRecDate");
+  if (!el || el.value) return;
+  const hist = lastTqqqHist;
+  if (hist && hist.length) el.value = fmtDateFull(hist[hist.length - 1].x);
+  else { const y = new Date(Date.now() - 864e5); el.value = `${y.getFullYear()}-${String(y.getMonth() + 1).padStart(2, "0")}-${String(y.getDate()).padStart(2, "0")}`; }
+}
+function showSellMsg(msg, ok) { const el = document.getElementById("sellRecMsg"); el.textContent = msg; el.classList.remove("hidden"); el.classList.toggle("ok", !!ok); }
+function addSellRecord() {
+  const dateStr = document.getElementById("sellRecDate").value;
+  const pIn = document.getElementById("sellRecPrice").value.trim();
+  const recs = sortedBuyRecords();
+  if (!recs.length) { showSellMsg("보유 중인 매수 기록이 없어 매도할 수량이 없습니다.", false); return; }
+  if (!dateStr) { showSellMsg("매도 날짜를 선택해주세요.", false); return; }
+  if (dateStr < recs[recs.length - 1].date) { showSellMsg(`매도 날짜가 마지막 매수일(${fmtKrDate(recs[recs.length - 1].date)})보다 빠릅니다.`, false); return; }
+  let price = pIn !== "" ? parseFloat(pIn) : null, note = "직접 입력";
+  if (price === null) {
+    const r = resolveAutoPrice(dateStr);
+    if (!r || r.error) { showSellMsg(r && r.error ? r.error.replace("매수가", "매도가") : "시세를 불러온 뒤 다시 시도하거나 매도가를 직접 입력해주세요.", false); return; }
+    price = r.price; note = r.note || "종가 자동";
+  }
+  if (!(price > 0)) { showSellMsg("매도가를 확인해주세요.", false); return; }
+  const t = closeCycle(dateStr, price, { auto: false, note });
+  document.getElementById("sellRecPrice").value = "";
+  showSellMsg(`매도 기록 저장: ${t.qty}주 × ${usd(price)} = ${fmtUsd0(t.proceeds)} · 수익금 ${fmtUsd0Signed(t.profit)} · 수익률 ${fmtPctSigned(t.pct)}`, true);
+  renderBuyRecords(); renderLocGuideCard();
+}
+function deleteTrade(id) {
+  const all = loadTrades(), t = all.find(x => x.id === id);
+  if (!t) return;
+  const latest = all.reduce((x, y) => (y.sellDate > x.sellDate || (y.sellDate === x.sellDate && y.id > x.id)) ? y : x);
+  const cur = loadBuyRecords();
+  const restore = t === latest && cur.every(r => r.date <= t.sellDate) && Array.isArray(t.buys) && t.buys.length;
+  const msg = restore
+    ? `${fmtKrDate(t.sellDate)} 매도 기록을 지우고, 그 사이클의 매수 기록 ${t.buys.length}건을 되살릴까요?`
+    : `${fmtKrDate(t.sellDate)} 매도 기록을 지울까요? (이후 새 사이클이 있어 매수 기록은 되살리지 않습니다)`;
+  if (!confirm(msg)) return;
+  if (t.auto) { const sk = loadAutoSkip(); sk.push("sell:" + t.sellDate); saveAutoSkip(sk); }
+  saveTrades(all.filter(x => x.id !== id));
+  if (restore) {
+    const base = Date.now() * 1000;
+    const back = t.buys.map((b, k) => ({ id: base + k * 7 + Math.floor(Math.random() * 5), date: b.date, qty: b.qty, price: b.price, restored: true }));
+    saveBuyRecordsToStorage([...back, ...cur]);
+  }
+  lastAutoRecordMsg = "";
+  renderBuyRecords(); renderLocGuideCard();
+}
+function tradeStats(trades) {
+  const n = trades.length, cost = trades.reduce((x, t) => x + t.cost, 0), profit = trades.reduce((x, t) => x + t.profit, 0);
+  const wins = trades.filter(t => t.profit > 0).length;
+  return { n, cost, profit, wins, rate: cost > 0 ? profit / cost * 100 : null, avgPct: n ? trades.reduce((x, t) => x + t.pct, 0) / n : null };
+}
+function renderTrades() {
+  const sumEl = document.getElementById("tradeSummary"), el = document.getElementById("tradeContent");
+  if (!sumEl || !el) return;
+  setDefaultSellDate();
+  const trades = loadTrades(), st = tradeStats(trades);
+  const col = v => v === null ? "var(--text-faint)" : v > 0 ? "var(--up)" : v < 0 ? "var(--down)" : "var(--text-dim)";
+  sumEl.innerHTML = `<div class="pl-tiles">
+      <div class="pl-tile"><div class="l">실현 수익금</div><div class="v" style="color:${col(st.n ? st.profit : null)};">${st.n ? fmtUsd0Signed(st.profit) : "--"}</div><div class="s">매수금액 ${st.n ? fmtUsdCompact(st.cost) : "--"}</div></div>
+      <div class="pl-tile"><div class="l">실현 수익률</div><div class="v" style="color:${col(st.rate)};">${st.rate !== null ? fmtPctSigned(st.rate) : "--"}</div><div class="s">거래 평균 ${st.avgPct !== null ? fmtPctSigned(st.avgPct) : "--"}</div></div>
+      <div class="pl-tile"><div class="l">매도 거래</div><div class="v">${st.n}회</div><div class="s">승률 ${st.n ? Math.round(st.wins / st.n * 100) + "%" : "--"}</div></div>
+    </div>`;
+  if (!trades.length) { el.innerHTML = '<div class="fg-empty" style="margin-top:12px;">아직 매도 기록이 없습니다. LOC 매도가 체결되면 자동으로 기록됩니다.</div>'; return; }
+  const rows = trades.slice().reverse().map(t => `
+    <tr>
+      <td>${fmtKrDate(t.sellDate)}<span class="sell-tag">${t.auto ? "자동" : "직접"} · ${t.rounds}회</span></td>
+      <td class="num">${t.qty.toLocaleString("en-US")}주<span class="sub-price">${fmtUsdCompact(t.proceeds)}</span></td>
+      <td class="num">${usd(t.sellPrice)}<span class="sub-price">평단 ${usd(t.avg)}</span></td>
+      <td class="num pl" style="color:${col(t.profit)};">${fmtUsd0Signed(t.profit)}<span class="sub-price" style="color:${col(t.pct)};">${fmtPctSigned(t.pct)}</span></td>
+      <td class="buyrec-del-cell"><button class="buy-del-btn" type="button" onclick="deleteTrade(${t.id})" aria-label="삭제" title="삭제">✕</button></td>
+    </tr>`).join("");
+  el.innerHTML = `<div class="buysim-sub-title">매도 기록 · ${trades.length}건 (최근 순)</div>
+    <table class="stat-table detail-table sim-table trade-table">
+      <colgroup><col style="width:23%"><col style="width:21%"><col style="width:22%"><col style="width:24%"><col style="width:10%"></colgroup>
+      <thead><tr><th>매도일</th><th class="num">수량·금액</th><th class="num">매도가</th><th class="num">수익금·률</th><th></th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <p class="verify-note">검산: 수익금 = 수량 × 매도가 − 매수금액(수량 × 평단). 실현 수익률 = 수익금 합계 ${fmtUsd0Signed(st.profit)} ÷ 매수금액 합계 ${fmtUsd0(st.cost)}. 수수료·세금 미반영.</p>`;
+}
+document.getElementById("sellRecSaveBtn").addEventListener("click", addSellRecord);
+
+function deleteBuyRecord(id) {
+  const target = loadBuyRecords().find(r => r.id === id);
+  if (target && target.autoRecorded) { const sk = loadAutoSkip(); sk.push(target.date); saveAutoSkip(sk); lastAutoRecordMsg = ""; }
+  saveBuyRecordsToStorage(loadBuyRecords().filter(r => r.id !== id));
+  hideBuyRecMsg();
+  renderBuyRecords();
+  renderLocGuideCard();
+}
+
+function resetBuyRecords() {
+  if (!confirm("저장된 매수 기록을 모두 삭제하시겠습니까?")) return;
+  saveBuyRecordsToStorage([]);
+  hideBuyRecMsg();
+  renderBuyRecords();
+  renderLocGuideCard();
+}
+
+function computeBuyRecordsSummary() {
+  const sorted = sortedBuyRecords();
+  let qtyCum = 0, costCum = 0;
+  const rows = sorted.map((r, idx) => {
+    qtyCum += r.qty;
+    costCum += r.qty * r.price;
+    return { id: r.id, date: r.date, qty: r.qty, price: r.price, amount: r.qty * r.price, autoRecorded: r.autoRecorded, round: idx + 1, cumQty: qtyCum, cumAvg: costCum / qtyCum };
+  });
+  return { rows, totalQty: qtyCum, totalCost: costCum, avgPrice: qtyCum > 0 ? costCum / qtyCum : null };
+}
+
+function renderBuyRecords() {
+  try { renderTrades(); } catch (e) {}
+  const el = document.getElementById("buyRecordContent");
+  if (!el) return;
+  const summary = computeBuyRecordsSummary();
+  if (summary.rows.length === 0) {
+    const tr = loadTrades();
+    el.innerHTML = `${lastAutoRecordMsg ? `<div class="banner ok" style="margin:12px 0 0;">🤖 ${lastAutoRecordMsg}</div>` : ""}
+      ${lastAutoRecordInfo ? `<div class="auto-info">ℹ️ ${lastAutoRecordInfo}</div>` : ""}
+      <div class="fg-empty" style="margin-top:14px;">${tr.length ? `💰 직전 사이클을 ${fmtKrDate(tr[tr.length - 1].sellDate)} 매도했습니다.<br>신규 진입(전일 종가 이하 LOC)이 체결되면 자동으로 기록됩니다.` : "📝 아직 저장된 매수 기록이 없습니다.<br>위에 날짜를 입력하고 저장해 보세요."}</div>`;
+    return;
+  }
+  const rowsHtml = summary.rows.map(r => `
+    <tr>
+      <td class="num">${r.round}</td>
+      <td>${fmtKrDate(r.date)}</td>
+      <td class="num">${r.qty.toLocaleString("en-US")}주<span class="sub-price">${fmtUsdCompact(r.amount)}</span></td>
+      <td class="num">${usd(r.price)}${r.autoRecorded ? '<span class="sub-price auto-tag">자동 저장</span>' : ''}</td>
+      <td class="num">${usd(r.cumAvg)}</td>
+      <td class="buyrec-del-cell"><button class="buy-del-btn" type="button" onclick="deleteBuyRecord(${r.id})" aria-label="삭제" title="삭제">✕</button></td>
+    </tr>
+  `).join("");
+
+  // 평가 기준가: 실시간 현재가 → 없으면 최근 확정 종가
+  const refPx = (lastTqqqPrice !== null && !isNaN(lastTqqqPrice)) ? lastTqqqPrice : (lastTqqqHist ? lastTqqqHist[lastTqqqHist.length - 1].y : null);
+  const evalPl = refPx !== null ? refPx * summary.totalQty - summary.totalCost : null;
+  const evalPct = refPx !== null ? (refPx / summary.avgPrice - 1) * 100 : null;
+  const plCol = v => v === null ? "var(--text-faint)" : (v >= 0 ? "var(--up)" : "var(--down)");
+  el.innerHTML = `
+    <div class="hold-hero">
+      <div class="hold-main">
+        <div class="l">내 평단가</div>
+        <div class="v">${usd(summary.avgPrice)}</div>
+        <div class="s">총 ${summary.totalQty.toLocaleString("en-US")}주 · 매수금액 ${fmtUsd0(summary.totalCost)}</div>
+      </div>
+      <div class="hold-side">
+        <div class="hold-mini"><div class="l">평가손익</div><div class="v" style="color:${plCol(evalPl)};">${evalPl !== null ? fmtUsd0Signed(evalPl) : "--"}</div></div>
+        <div class="hold-mini"><div class="l">수익률${refPx !== null ? ` · ${usd(refPx)}` : ""}</div><div class="v" style="color:${plCol(evalPct)};">${evalPct !== null ? fmtPctSigned(evalPct) : "시세 조회 필요"}</div></div>
+      </div>
+    </div>
+    ${lastAutoRecordMsg ? `<div class="banner ok" style="margin:12px 0 0;">🤖 ${lastAutoRecordMsg}</div>` : ""}
+    ${lastAutoRecordInfo ? `<div class="auto-info">ℹ️ ${lastAutoRecordInfo}</div>` : ""}
+    <div class="buysim-sub-title">저장된 매수 기록 · ${summary.rows.length}건</div>
+    <table class="stat-table detail-table sim-table">
+      <thead><tr><th>회</th><th>매수일</th><th class="num">수량</th><th class="num">매수가</th><th class="num">누적 평단</th><th></th></tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+    <p class="verify-note">검산: 누적 매수금액 ${usd(summary.totalCost)} ÷ 누적 수량 ${summary.totalQty.toLocaleString("en-US")}주 = 평단가 <b>${usd(summary.avgPrice)}</b> · 수량 아래 금액은 행별 매수금액(수량×매수가)입니다. 평단이 이상하면 매수가가 튀는 행을 찾아 ✕로 삭제 후 다시 입력하세요.</p>
+  `;
+}
+
+/* ---------- 📌 LOC 매수/매도 예약 가이드 ---------- */
+/* ---------- 2단계 주기: 예상 재개일 ---------- */
+function nextTradingDay(fromTs, n) {
+  const d = new Date(fromTs);
+  let k = 0;
+  while (k < n) { d.setUTCDate(d.getUTCDate() + 1); const w = d.getUTCDay(); if (w !== 0 && w !== 6) k++; }
+  return d;
+}
+function fmtResume(d) {
+  const wk = ["일", "월", "화", "수", "목", "금", "토"][d.getUTCDay()];
+  return `${d.getUTCMonth() + 1}/${d.getUTCDate()}(${wk}) 전후`;
+}
+
+function renderLocGuideCard() {
+  const el = document.getElementById("locGuideContent");
+  if (!el) return;
+  if (!lastTqqqHist) {
+    el.innerHTML = '<div class="fg-empty">데이터를 불러오면 LOC 예약 가이드가 표시됩니다.</div>';
+    return;
+  }
+
+  const seed = parseFloat(document.getElementById("seedSimSeed1").value);
+  const splits = parseInt(document.getElementById("seedSimSplits1").value, 10);
+  const cycleInput = document.getElementById("seedSimCycle1");
+  const cycleDays = cycleInput ? parseInt(cycleInput.value, 10) : 1;
+  if (!(seed > 0) || !(splits >= 1) || !(cycleDays >= 1)) {
+    el.innerHTML = '<div class="fg-empty">시드 분할매수 시뮬레이션의 시드·분할 수·매수 주기를 올바르게 입력해주세요.</div>';
+    return;
+  }
+
+  const strategy = getSellAnalysis(lastTqqqHist);
+  if (!strategy || !strategy.recommendedN) {
+    el.innerHTML = '<div class="fg-empty">최근 200봉 데이터로는 매수/매도 목표를 계산할 수 없습니다.</div>';
+    return;
+  }
+
+  const perSplit = seed / splits;
+  const recommendedN = strategy.recommendedN;
+  const sellPct = strategy.best.pct;
+  const stopPct = strategy.stopLossByRound ? strategy.stopLossByRound.worstDrawdown : null;
+
+  const summary = computeBuyRecordsSummary();
+  const rounds = summary.rows.length;
+  const hasPosition = rounds > 0;
+  const avgPrice = summary.avgPrice;
+  const lastRecord = hasPosition ? summary.rows[summary.rows.length - 1] : null;
+  const lastClose = lastTqqqHist[lastTqqqHist.length - 1].y;   // 확정 종가(장중 봉 제외)
+  const lastCloseDate = fmtDateFull(lastTqqqHist[lastTqqqHist.length - 1].x);
+
+  const nextRound = rounds + 1;
+  const inStage1 = nextRound <= recommendedN;
+  const canBuyMore = rounds < splits;
+
+  /* LOC 매수 기준가 = "평단 & 전일종가 이하" (시드 분할매수 시뮬레이션 매수 조건과 동일)
+     - 보유 중: 평단가와 최근 확정 종가 중 더 낮은 값. 이 가격 이하로 마감해야 두 조건이 동시에 충족된다.
+     - 신규 진입: 보유 수량이 없어 평단가가 없으므로 전일 확정 종가만 적용(종가가 전일보다 낮은 날 1회차 진입). */
+  let buyBasisPrice, buyBasisLabel, bindingLabel;
+  if (hasPosition) {
+    buyBasisPrice = Math.min(avgPrice, lastClose);
+    bindingLabel = avgPrice <= lastClose ? "평단가" : `전일 확정 종가(${lastCloseDate})`;
+    buyBasisLabel = `평단 & 전일종가 이하 · 더 낮은 ${bindingLabel} 적용`;
+  } else {
+    buyBasisPrice = lastClose;
+    bindingLabel = `전일 확정 종가(${lastCloseDate})`;
+    buyBasisLabel = `전일종가 이하 · ${bindingLabel} 적용 (신규 진입, 평단 없음)`;
+  }
+  // 주문 입력용 가격: 매수가는 센트 단위 내림(기준가 이하 보장)
+  buyBasisPrice = Math.floor(buyBasisPrice * 100 + 1e-6) / 100;
+  // 매수 수량은 5주 단위로 내림 (1분할 금액 초과 방지)
+  const rawBuyQty = canBuyMore ? Math.floor(perSplit / buyBasisPrice) : 0;
+  const buyQty = Math.floor(rawBuyQty / LOC_QTY_UNIT) * LOC_QTY_UNIT;
+
+  let cycleStatusText = "";
+  let buyReady = true;
+  let cycleInfo = null;   // 2단계 주기 상태 (오늘의 LOC 카드 강조용)
+  if (hasPosition && !inStage1 && canBuyMore) {
+    const lastBuyDateStr = lastRecord.date;
+    const lastBuyIdx = lastTqqqHist.findIndex(d => new Date(d.x).toISOString().split("T")[0] === lastBuyDateStr);
+    if (lastBuyIdx !== -1) {
+      /* 오늘 거는 LOC는 '다음 거래일' 주문이므로, 그 거래일 기준 경과일로 판정한다
+         (시뮬레이션·자동 저장과 같은 기준: 마지막 매수 후 N번째 거래일이 되면 매수) */
+      const elapsedTradingDays = (lastTqqqHist.length - 1) - lastBuyIdx;   // 어제까지 경과
+      const nextGap = elapsedTradingDays + 1;                         // 다음 거래일 기준
+      buyReady = nextGap >= cycleDays;
+      const remain = Math.max(0, cycleDays - nextGap);
+      cycleInfo = { elapsed: elapsedTradingDays, nextGap, cycle: cycleDays, remain, ready: buyReady,
+                    firstDay: nextGap === cycleDays, resumeDate: nextTradingDay(lastTqqqHist[lastTqqqHist.length - 1].x, remain + 1) };
+      cycleStatusText = `2단계 주기: 마지막 매수(${fmtKrDate(lastBuyDateStr)}) 후 다음 거래일이 ${nextGap}번째 거래일 (주기 ${cycleDays}일) → ${buyReady ? "매수 재개 · 조건 충족 시 체결" : `앞으로 ${remain}거래일 더 대기 (예상 재개 ${fmtResume(cycleInfo.resumeDate)})`}`;
+    } else {
+      cycleStatusText = `2단계 주기: 마지막 매수일(${fmtKrDate(lastBuyDateStr)})을 최근 200봉 데이터에서 찾을 수 없어 정확한 경과일을 계산할 수 없습니다.`;
+    }
+  }
+
+  const canSell = hasPosition;
+  // 주문 입력용 매도가: 센트 단위 올림(목표 수익률 이상 보장)
+  const sellPrice = hasPosition ? Math.ceil(avgPrice * (1 + sellPct / 100) * 100 - 1e-6) / 100 : null;
+  const sellQty = hasPosition ? summary.totalQty : null;
+
+  // TQQQ 손절모드 판정: 평단가 × STRAT2_MODE_RATIO(0.80) 이하이면 손절모드 경고
+  const inStopMode = hasPosition && lastClose <= avgPrice * STRAT2_MODE_RATIO;
+
+  const stageLabel = !canBuyMore ? `분할 수 소진 (${rounds}/${splits}회)`
+    : !hasPosition ? "신규 진입 전"
+    : (inStage1 ? `1단계 (AI 추천 ${recommendedN}회 이내, 현재 ${rounds}회)` : `2단계 (추천 회차 초과, 현재 ${rounds}회 · 주기 ${cycleDays}일)`);
+  const stageColor = !hasPosition ? "var(--text-dim)" : (inStage1 ? "var(--glow)" : "var(--amber)");
+  const stageBg = !hasPosition ? "rgba(75,90,115,0.14)" : (inStage1 ? "rgba(94,234,212,0.12)" : "rgba(245,165,36,0.12)");
+  const stageBorder = !hasPosition ? "var(--border-soft)" : (inStage1 ? "rgba(94,234,212,0.35)" : "rgba(245,165,36,0.4)");
+
+  const buyBoxOff = !canBuyMore || (hasPosition && !inStage1 && !buyReady);
+  const buyBoxClass = buyBoxOff ? "loc-box off" : "loc-box buy";
+  let buyNote;
+  if (!canBuyMore) buyNote = `입력한 분할 수(${splits}회)를 모두 매수했습니다. 매도 후 새 진입을 준비하세요.`;
+  else if (hasPosition && !inStage1) buyNote = cycleStatusText;
+  else buyNote = `${buyBasisLabel} · ${nextRound}회차 매수 트리거 (종가가 이 가격 이하일 때 체결)`;
+
+  /* Termux 자동주문 봇용 주문 데이터 (화면에 보이는 숫자와 동일한 값) */
+  const exportOrders = [];
+  if (!buyBoxOff && buyQty > 0) exportOrders.push({ side: "buy", type: "LOC", price: Number(buyBasisPrice.toFixed(2)), qty: buyQty });
+  if (canSell && sellQty > 0) exportOrders.push({ side: "sell", type: "LOC", price: Number(sellPrice.toFixed(2)), qty: sellQty });
+  lastLocOrder = {
+    schema: "loc-order/1",
+    app: `${LEV_TICKER}무한매수`, version: APP_VERSION, release: RELEASE_DATE,
+    symbol: LEV_TICKER,
+    basis_close_date: lastCloseDate,
+    generated_at: new Date().toISOString(),
+    stage: stageLabel.replace(/<[^>]+>/g, ""),
+    avg_price: hasPosition ? Number(avgPrice.toFixed(4)) : null,
+    holding_qty: hasPosition ? summary.totalQty : 0,
+    orders: exportOrders
+  };
+  const exportBtnHtml = `<button class="buysim-btn save export-loc-btn" type="button" data-export-loc="1" ${exportOrders.length ? "" : "disabled"}>📤 자동주문 파일 저장 (${exportOrders.length ? exportOrders.map(o => (o.side === "buy" ? "매수" : "매도") + " " + o.qty + "주").join(" · ") : "주문 없음"})</button>
+    <p class="copy-hint" style="margin-top:6px;">Termux 자동주문 봇이 다운로드 폴더의 이 파일을 읽어 알림으로 확인을 받은 뒤 MTS에 예약합니다</p>`;
+
+  const heroEl = document.getElementById("locHeroContent");
+  let cycleBanner = "";
+  if (cycleInfo && cycleInfo.ready && buyQty > 0) {
+    cycleBanner = `<div class="cycle-alert ${cycleInfo.firstDay ? "first" : ""}">
+      <div class="ca-title">🔔 ${cycleInfo.firstDay ? "오늘이 2단계 매수 재개일입니다" : "2단계 매수 주기 도래 · 매수 가능"}</div>
+      <div class="ca-body">지금 LOC 매수 예약을 걸어두세요 → <b>${usd(buyBasisPrice)} × ${buyQty}주</b></div>
+      <div class="ca-sub">마지막 매수 후 ${cycleInfo.nextGap}번째 거래일 (주기 ${cycleInfo.cycle}일) · 종가가 예약가 이하일 때만 체결</div>
+    </div>`;
+  } else if (cycleInfo && !cycleInfo.ready) {
+    const pctDone = Math.min(100, cycleInfo.nextGap / cycleInfo.cycle * 100);
+    cycleBanner = `<div class="cycle-wait">
+      <div class="cw-top"><span>⏳ 2단계 매수 대기</span><b>${cycleInfo.remain}거래일 남음</b></div>
+      <div class="cw-bar"><i style="width:${pctDone.toFixed(0)}%"></i></div>
+      <div class="cw-sub">예상 재개 <b>${fmtResume(cycleInfo.resumeDate)}</b> · 그날 이 카드가 🔔 알림으로 바뀝니다 (미국 휴장일은 반영 안 됨)</div>
+    </div>`;
+  }
+  if (cycleInfo && cycleInfo.ready && buyQty > 0) document.title = "🔔 " + document.title.replace(/^🔔 /, "");
+  else document.title = document.title.replace(/^🔔 /, "");
+  if (heroEl) heroEl.innerHTML = `
+    ${cycleBanner}
+    <span class="loc-status-badge" style="color:${stageColor};background:${stageBg};border-color:${stageBorder};">${stageLabel}</span>
+    ${inStopMode ? `<span class="loc-status-badge" style="color:var(--down);background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.4);margin-left:6px;">⚠ 손절모드 (평단 -${((1 - STRAT2_MODE_RATIO) * 100).toFixed(0)}% 이탈)</span>` : ""}
+    <div class="loc-grid">
+      <div class="${buyBoxClass}">
+        <div class="loc-tag">LOC 매수 예약가</div>
+        <div class="loc-price copyable" role="button" tabindex="0" data-copy="${buyBasisPrice.toFixed(2)}" data-label="매수가">${usd(buyBasisPrice)}</div>
+        <div class="loc-qty ${buyQty > 0 ? "copyable" : ""}" ${buyQty > 0 ? `role="button" tabindex="0" data-copy="${buyQty}" data-label="매수수량"` : ""}>${buyQty > 0 ? buyQty.toLocaleString("en-US") + "주" : "매수 불가"}</div>
+        <div class="loc-sub">${LOC_QTY_UNIT}주 단위 내림${canBuyMore ? ` (1분할 기준 ${rawBuyQty.toLocaleString("en-US")}주${buyQty > 0 ? ` → 실투입 ${usd(buyQty * buyBasisPrice)}` : ` → ${LOC_QTY_UNIT}주 미만`})` : ""}</div>
+        <div class="loc-sub">${buyNote}</div>
+      </div>
+      <div class="loc-box ${canSell ? "sell" : "off"}">
+        <div class="loc-tag">LOC 매도 예약가 (익절)</div>
+        <div class="loc-price ${canSell ? "copyable" : ""}" ${canSell ? `role="button" tabindex="0" data-copy="${sellPrice.toFixed(2)}" data-label="매도가"` : ""}>${canSell ? usd(sellPrice) : "--"}</div>
+        <div class="loc-qty">${canSell ? sellQty.toLocaleString("en-US") + "주 (전량)" : "보유 수량 없음"}</div>
+        <div class="loc-sub">${canSell ? `평단가 ${usd(avgPrice)} 대비 +${sellPct.toFixed(2)}%` : "매수 기록을 추가하면 매도 목표가가 계산됩니다."}</div>
+      </div>
+    </div>
+    <p class="copy-hint">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p>
+  `;
+  el.innerHTML = `
+    <div class="loc-moved-note">LOC 매수·매도 예약가와 수량은 <b data-goto="pg-order" style="cursor:pointer;text-decoration:underline;">⚡ 주문 탭 · 오늘의 LOC 주문</b> 카드에 있습니다</div>
+    ${exportBtnHtml}
+    <div class="kv-row"><span class="k">매수 조건 ① 평단가 이하</span><span class="v">${hasPosition ? usd(avgPrice) + (avgPrice <= lastClose ? " ← 적용" : "") : "보유 없음 (해당 없음)"}</span></div>
+    <div class="kv-row"><span class="k">매수 조건 ② 전일 확정 종가 이하 (${lastCloseDate})</span><span class="v">${usd(lastClose)}${!hasPosition || lastClose < avgPrice ? " ← 적용" : ""}</span></div>
+    <div class="kv-row"><span class="k">입력된 시드 / 분할 수</span><span class="v">${fmtUsd0(seed)} / ${splits}분할 (1분할 ${fmtUsd0(perSplit)})</span></div>
+    <div class="kv-row"><span class="k">2단계 매수 주기</span><span class="v">${cycleDays}일</span></div>
+    <div class="kv-row"><span class="k">AI 추천 분할매수 회차</span><span class="v">${recommendedN}회</span></div>
+    <div class="kv-row"><span class="k">현재 매수 회차 (저장된 기록 기준)</span><span class="v">${rounds}회 / ${splits}회</span></div>
+    ${hasPosition ? `<div class="kv-row"><span class="k">현재 평단가 / 보유 수량</span><span class="v">${usd(avgPrice)} · ${summary.totalQty.toLocaleString("en-US")}주</span></div>` : ""}
+    ${hasPosition ? `<div class="kv-row"><span class="k">손절모드 기준가 (평단×${STRAT2_MODE_RATIO.toFixed(2)})</span><span class="v" style="color:var(--down);">${usd(avgPrice * STRAT2_MODE_RATIO)}</span></div>` : ""}
+    ${stopPct !== null && hasPosition && !canBuyMore ? `<div class="kv-row"><span class="k">손절 참고선 (평단가 대비)</span><span class="v" style="color:var(--down);">${fmtPctSigned(stopPct)}</span></div>` : ""}
+    <p class="desc" style="margin:12px 0 0;">LOC(지정가-종가) 주문은 지정한 가격보다 유리하거나 같은 종가가 형성될 때만 체결됩니다. 매수 LOC는 표시된 가격 이하로 종가가 형성될 때, 매도 LOC는 표시된 가격 이상으로 종가가 형성될 때 체결되도록 예약하는 용도입니다. 매수 예약가는 평단가와 전일 확정 종가 중 더 낮은 값이며(평단 &amp; 전일종가 이하 조건), 매수 회차·단계 판정은 "나의 매수 기록" 카드에 저장된 실제 매수 내역을, 시드·분할 수·매수 주기는 시드 분할매수 시뮬레이션의 입력값을 사용합니다.</p>
+  `;
+}
+
+/* ---------- 자동주문 파일 저장 (Termux 봇 연동) ---------- */
+let lastLocOrder = null;
+function exportLocOrder() {
+  if (!lastLocOrder || !lastLocOrder.orders.length) { showCopyToast("내보낼 주문이 없습니다", false); return; }
+  const name = `loc_orders_${lastLocOrder.symbol}_${lastLocOrder.basis_close_date}.json`;
+  try {
+    const blob = new Blob([JSON.stringify(lastLocOrder, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+    showCopyToast(`✓ ${name} 저장됨 (다운로드 폴더)`, true);
+  } catch (e) { showCopyToast("저장 실패: " + e.message, false); }
+}
+document.addEventListener("click", e => { if (e.target.closest("[data-export-loc]")) exportLocOrder(); });
+
+/* ---------- 숫자 탭 복사 (LOC 가이드) ---------- */
+async function copyText(text) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); return true; }
+  } catch (e) {}
+  // 대체: 파일로 연 HTML·일부 모바일 브라우저는 클립보드 API가 막혀 있어 임시 입력칸으로 복사
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", "");
+    ta.style.position = "fixed"; ta.style.top = "-1000px"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    return ok;
+  } catch (e) { return false; }
+}
+function showCopyToast(msg, ok) {
+  let t = document.getElementById("copyToast");
+  if (!t) { t = document.createElement("div"); t.id = "copyToast"; document.body.appendChild(t); }
+  t.textContent = msg; t.className = "copy-toast show" + (ok ? "" : " fail");
+  clearTimeout(showCopyToast._tm);
+  showCopyToast._tm = setTimeout(() => { t.className = "copy-toast"; }, 1600);
+}
+async function handleCopyTap(el) {
+  const text = el.dataset.copy, label = el.dataset.label || "값";
+  const ok = await copyText(text);
+  el.classList.add(ok ? "copied" : "copy-fail");
+  setTimeout(() => el.classList.remove("copied", "copy-fail"), 1200);
+  showCopyToast(ok ? `✓ ${label} ${text} 복사됨` : `복사 실패 — 길게 눌러 직접 복사하세요 (${text})`, ok);
+  if (ok && navigator.vibrate) navigator.vibrate(15);
+}
+document.addEventListener("click", e => {
+  const el = e.target.closest(".copyable[data-copy]");
+  if (el) handleCopyTap(el);
+});
+document.addEventListener("keydown", e => {
+  if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches(".copyable[data-copy]")) { e.preventDefault(); handleCopyTap(e.target); }
+});
+
+["seedSimSplits1", "seedSimCycle1"].forEach(id => document.getElementById(id).addEventListener("input", () => { saveParamMode({ mode: "manual" }); updateRuleChips(); }));
+document.getElementById("seedSimSeed1").addEventListener("input", () => { saveParamMode(); updateRuleChips(); });
+document.getElementById("buyRecSaveBtn").addEventListener("click", addBuyRecord);
+document.getElementById("buyRecResetBtn").addEventListener("click", resetBuyRecords);
+setDefaultBuyDate(false);
+renderBuyRecords();
+renderLocGuideCard();
+
+/* ---------- TQQQ · QQQ 변동성 프로파일 ---------- */
+function calcDailyReturns(hist) {
+  const r = [];
+  for (let i = 1; i < hist.length; i++) r.push((hist[i].y - hist[i - 1].y) / hist[i - 1].y * 100);
+  return r;
+}
+function calcStdev(arr) {
+  if (!arr || arr.length < 2) return null;
+  const m = arr.reduce((a, b) => a + b, 0) / arr.length;
+  return Math.sqrt(arr.reduce((a, b) => a + (b - m) * (b - m), 0) / (arr.length - 1));
+}
+
+function renderVolProfileCard(lvHist, bsHist) {
+  const el = document.getElementById("tqqqVolContent");
+  if (!el) return;
+  const lvRet = calcDailyReturns(lvHist);
+  if (lvRet.length < 30) {
+    el.innerHTML = '<div class="fg-empty">데이터가 부족하여 변동성을 계산할 수 없습니다.</div>';
+    return;
+  }
+
+  const sd200 = calcStdev(lvRet);
+  const sd20 = calcStdev(lvRet.slice(-20));
+  const annual = sd200 * Math.sqrt(252);
+  const avgAbs = lvRet.reduce((a, b) => a + Math.abs(b), 0) / lvRet.length;
+  const maxDrop = Math.min(...lvRet);
+  const maxGain = Math.max(...lvRet);
+
+  const regime = sd200 > 0 ? sd20 / sd200 : 1;
+  let regimeLabel = "보통 변동", regimeColor = "var(--text)";
+  if (regime < 0.8) { regimeLabel = "저변동 국면"; regimeColor = "var(--up)"; }
+  else if (regime > 1.2) { regimeLabel = "고변동 국면"; regimeColor = "var(--down)"; }
+
+  const lastClose = lvHist[lvHist.length - 1].y;
+  const bandLo = lastClose * (1 - sd20 / 100);
+  const bandHi = lastClose * (1 + sd20 / 100);
+  const band2Lo = lastClose * (1 - 2 * sd20 / 100);
+
+  let ratioText = "--", bsSdText = "--", ratioN = 0;
+  if (bsHist && bsHist.length > 21) {
+    const bsRet = calcDailyReturns(bsHist);
+    ratioN = Math.min(bsRet.length, lvRet.length);
+    const bs = calcStdev(bsRet.slice(-ratioN));
+    const ls = calcStdev(lvRet.slice(-ratioN));
+    if (bs > 0 && ls !== null) { ratioText = (ls / bs).toFixed(2) + "배"; bsSdText = bs.toFixed(2) + "%"; }
+  }
+
+  const baseDropPct = (1 - STRAT2_MODE_RATIO) * 100;
+  const factor = clamp(regime, VOL_FACTOR_MIN, VOL_FACTOR_MAX);
+  const adjDropPct = baseDropPct * factor;
+
+  el.innerHTML = `
+    <div class="fg-header-row">
+      <div class="fg-score mono" style="color:${regimeColor};">${regime.toFixed(2)}배</div>
+      <div class="fg-badge" style="color:${regimeColor};border-color:${regimeColor};background:rgba(255,255,255,0.03);">${regimeLabel}</div>
+    </div>
+    <div class="fg-meta-row">
+      <div class="fg-meta-item"><div class="fg-meta-label">TQQQ 일간σ (200봉)</div><div class="fg-meta-value">${sd200.toFixed(2)}%</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">TQQQ 일간σ (20봉)</div><div class="fg-meta-value">${sd20.toFixed(2)}%</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">연환산 변동성</div><div class="fg-meta-value">${annual.toFixed(1)}%</div></div>
+    </div>
+    <div class="kv-row"><span class="k">평균 일간 변동폭(절대값)</span><span class="v">${avgAbs.toFixed(2)}%</span></div>
+    <div class="kv-row"><span class="k">최대 일간 하락 / 상승</span><span class="v"><span style="color:var(--down);">${fmtPctSigned(maxDrop)}</span> / <span style="color:var(--up);">${fmtPctSigned(maxGain)}</span></span></div>
+    <div class="kv-row"><span class="k">QQQ 일간σ (최근 ${ratioN}봉)</span><span class="v">${bsSdText}</span></div>
+    <div class="kv-row"><span class="k">TQQQ ÷ QQQ 변동성 배율</span><span class="v">${ratioText}</span></div>
+    <div class="kv-row"><span class="k">기준σ(${REF_SIGMA}%) 대비 변동성 배율</span><span class="v">${(sd200 / REF_SIGMA).toFixed(2)}배</span></div>
+    <div class="kv-row"><span class="k">최근 확정 종가 ${usd(lastClose)} 기준 1σ 범위</span><span class="v">${usd(bandLo)} ~ ${usd(bandHi)}</span></div>
+    <div class="kv-row"><span class="k">2σ 하단 (급락 대비 참고가)</span><span class="v" style="color:var(--down);">${usd(band2Lo)}</span></div>
+    <div class="kv-row"><span class="k">손절모드 기준선 (고정 / 변동성 보정)</span><span class="v" style="color:var(--down);">-${baseDropPct.toFixed(1)}% / -${adjDropPct.toFixed(1)}%</span></div>
+    <p class="desc" style="margin:10px 0 0;">변동성 국면은 최근 20봉 σ ÷ 200봉 σ로 판정합니다(0.8 미만 저변동, 1.2 초과 고변동). 실제 손절모드 판정은 평단가×${STRAT2_MODE_RATIO.toFixed(2)}(고정, TQQQ 기준 -12%)를 사용하며, 보정선(보정계수 ${VOL_FACTOR_MIN}~${VOL_FACTOR_MAX} 제한)은 고변동 국면에서 손절선을 더 넓게 볼지 판단하기 위한 참고값입니다. TQQQ ÷ QQQ 배율은 이론상 3배에 가까워야 하므로, 크게 벗어나면 데이터 이상 여부를 확인하세요.</p>
+  `;
+}
+
+/* ---------- 🤖 TQQQ 변동성 최적화 AI 엔진 ---------- */
+let engineRecs = null;
+
+function renderVolEngineCard(hist) {
+  const el = document.getElementById("tqqqEngineContent");
+  if (!el) return;
+  const ret = calcDailyReturns(hist);
+  if (ret.length < 30) {
+    el.innerHTML = '<div class="fg-empty">데이터가 부족하여 최적 파라미터를 계산할 수 없습니다.</div>';
+    return;
+  }
+
+  // ① 규칙 기반 환산 (TQQQ V0.19 기준 → TQQQ 실측 σ)
+  const sd200 = calcStdev(ret);
+  const k = sd200 / REF_SIGMA;
+  const ruleSplits = clamp(Math.round(BASE_PARAMS.splits * Math.sqrt(k)), 4, 12);
+  const ruleCycle = clamp(Math.round(BASE_PARAMS.cycle / (k * k)), 3, 14);
+  const ruleStopMode = clamp(BASE_PARAMS.stopModePct * k, 8, 35);
+
+  // ② 백테스트 그리드 서치 (시뮬레이션 규칙: 종가 < 평단 그리고 종가 < 전일 종가)
+  const seedInput = parseFloat(document.getElementById("seedSimSeed1").value);
+  const seed = seedInput > 0 ? seedInput : 36000;
+  const grid = [];
+  ENGINE_SPLITS_GRID.forEach((s, si) => {
+    ENGINE_CYCLE_GRID.forEach((c, ci) => {
+      const r = simulateSeedBacktest(hist, seed, s, true, c);
+      grid.push({ s, c, si, ci, ret: r ? r.grandTotal / seed * 100 : null, losses: r ? r.loss.length : 0, trades: r ? r.trades.length : 0 });
+    });
+  });
+  const valid = grid.filter(g => g.ret !== null);
+  if (valid.length === 0) {
+    el.innerHTML = '<div class="fg-empty">최근 200봉 내 연속 하락 구간이 없어 백테스트를 수행할 수 없습니다.</div>';
+    return;
+  }
+  // 과최적화 완화: 자신 + 상하좌우 인접 조합 수익률의 평균을 "견고성 점수"로 사용
+  valid.forEach(g => {
+    const nb = valid.filter(o => Math.abs(o.si - g.si) + Math.abs(o.ci - g.ci) <= 1);
+    g.robust = nb.reduce((a, o) => a + o.ret, 0) / nb.length;
+  });
+  const bestBt = valid.reduce((a, b) => {
+    if (b.robust > a.robust + 1e-9) return b;
+    if (Math.abs(b.robust - a.robust) <= 1e-9 && b.losses < a.losses) return b;
+    return a;
+  });
+  const ruleRun = simulateSeedBacktest(hist, seed, ruleSplits, true, ruleCycle);
+  const ruleRet = ruleRun ? ruleRun.grandTotal / seed * 100 : null;
+  const tqqqRun = simulateSeedBacktest(hist, seed, BASE_PARAMS.splits, true, BASE_PARAMS.cycle);
+  const tqqqRet = tqqqRun ? tqqqRun.grandTotal / seed * 100 : null;
+
+  engineRecs = { rule: { splits: ruleSplits, cycle: ruleCycle }, bt: { splits: bestBt.s, cycle: bestBt.c } };
+
+  const top = valid.slice().sort((a, b) => b.robust - a.robust).slice(0, 5);
+  const col = v => v === null ? "" : (v >= 0 ? "color:var(--up);" : "color:var(--down);");
+  const topRows = top.map((g, i) => `
+    <tr${i === 0 ? ' style="background:linear-gradient(90deg, rgba(94,234,212,0.14), rgba(94,234,212,0.02));"' : ''}>
+      <td${i === 0 ? ' style="color:var(--glow);font-weight:700;"' : ''}>${i === 0 ? "★ " : ""}${g.s}분할</td>
+      <td class="num">${g.c}일</td>
+      <td class="num" style="${col(g.ret)}">${fmtPctSigned(g.ret)}</td>
+      <td class="num" style="${col(g.robust)}">${fmtPctSigned(g.robust)}</td>
+    </tr>
+  `).join("");
+
+  const a = getSellAnalysis(hist);
+
+  el.innerHTML = `
+    <div class="fg-header-row">
+      <div class="fg-score mono" style="color:var(--amber);">k = ${k.toFixed(2)}</div>
+      <div class="fg-badge" style="color:var(--amber);border-color:rgba(245,165,36,0.5);background:rgba(245,165,36,0.08);">TQQQ σ ${sd200.toFixed(2)}% ÷ 기준σ ${REF_SIGMA}%</div>
+    </div>
+    <div class="engine-grid">
+      <div class="engine-box rule">
+        <div class="eb-tag">① 규칙 기반 환산</div>
+        <div class="eb-line"><span>분할 수 (6×√k)</span><span>${ruleSplits}분할</span></div>
+        <div class="eb-line"><span>2단계 주기 (14÷k²)</span><span>${ruleCycle}일</span></div>
+        <div class="eb-line"><span>손절모드 (12%×k)</span><span>-${ruleStopMode.toFixed(1)}%</span></div>
+        <div class="eb-ret" style="${col(ruleRet)}">${fmtPctSigned(ruleRet)}</div>
+      </div>
+      <div class="engine-box bt">
+        <div class="eb-tag">② 백테스트 최적 (견고성)</div>
+        <div class="eb-line"><span>분할 수</span><span>${bestBt.s}분할</span></div>
+        <div class="eb-line"><span>2단계 주기</span><span>${bestBt.c}일</span></div>
+        <div class="eb-line"><span>견고성 점수</span><span>${fmtPctSigned(bestBt.robust)}</span></div>
+        <div class="eb-ret" style="${col(bestBt.ret)}">${fmtPctSigned(bestBt.ret)}</div>
+      </div>
+    </div>
+    <div class="buysim-actions">
+      <button class="buysim-btn amber" type="button" data-engine-apply="rule" onclick="applyEngineRec('rule')">① 규칙 적용</button>
+      <button class="buysim-btn save" type="button" data-engine-apply="bt" onclick="applyEngineRec('bt')">② 최적 적용</button>
+    </div>
+    <div class="kv-row" style="margin-top:8px;"><span class="k">참고: 기본 파라미터(6분할·14일) 적용 시</span><span class="v" style="${col(tqqqRet)}">${fmtPctSigned(tqqqRet)}</span></div>
+    <div class="kv-row"><span class="k">TQQQ 매도 목표 탐색 구간</span><span class="v">${SELL_SWEEP_MIN}~${SELL_SWEEP_MAX}% (${SELL_SWEEP_STEP}%p)</span></div>
+    <div class="kv-row"><span class="k">AI 최적 매도 목표 / 추천 분할매수 회차</span><span class="v">${a ? "+" + a.best.pct.toFixed(2) + "%" : "--"} / ${a && a.recommendedN ? a.recommendedN + "회" : "--"}</span></div>
+    <div class="buysim-sub-title">견고성 상위 5개 조합 (시드 ${fmtUsd0(seed)}, 평단&전일종가 이하 규칙)</div>
+    <table class="stat-table even-cols">
+      <thead><tr><th>분할 수</th><th class="num">2단계 주기</th><th class="num">시드 대비 수익률</th><th class="num">견고성(인접 평균)</th></tr></thead>
+      <tbody>${topRows}</tbody>
+    </table>
+    <p class="desc" style="margin:12px 0 0;">예시: TQQQ σ가 4.3%라면 k = 4.3 ÷ 3.6 ≈ 1.19 → 분할 수 6×√1.19 ≈ 6.5 → 7분할, 2단계 주기 14 ÷ 1.19² ≈ 9.9 → 10일, 손절모드 12%×1.19 ≈ -14.3%. σ가 평상시(3.6%)면 k ≈ 1.00이라 기본값 6분할·14일이 그대로 나옵니다. 분할 수는 낙폭 깊이(σ에 비례)를 버틸 자금 여유를, 주기는 같은 % 가격 이동에 걸리는 시간(1/σ²에 비례)을 반영합니다. 백테스트 최적은 분할 수 ${ENGINE_SPLITS_GRID.join("·")} × 주기 ${ENGINE_CYCLE_GRID.join("·")}일 = ${valid.length}개 조합을 최근 200봉에 돌린 뒤, 한 조합만 튀는 과최적화를 피하려고 상하좌우 인접 조합 수익률 평균이 가장 높은 조합을 고릅니다. 과거 200봉 기준 결과이므로 미래 성과를 보장하지 않습니다.</p>
+  `;
+}
+
+/* ---------- 파라미터 적용 모드 (① 규칙 기본값 · 브라우저에 저장) ----------
+   mode: "rule" = ① 규칙 기반(기본) · "bt" = ② 백테스트 최적 · "manual" = 분할 수·주기를 직접 입력
+   rule/bt 모드는 시세를 불러올 때마다 그날 변동성으로 다시 계산된 값을 자동 적용한다. */
+const PARAM_MODE_KEY = "tqqq_param_mode_v1";
+function loadParamMode() {
+  try { const v = JSON.parse(localStorage.getItem(PARAM_MODE_KEY) || "null"); if (v && v.mode) return v; } catch (e) {}
+  return { mode: "rule" };
+}
+function saveParamMode(extra) {
+  const cur = Object.assign(loadParamMode(), extra || {}, {
+    seed: document.getElementById("seedSimSeed1").value,
+    splits: document.getElementById("seedSimSplits1").value,
+    cycle: document.getElementById("seedSimCycle1").value
+  });
+  try { localStorage.setItem(PARAM_MODE_KEY, JSON.stringify(cur)); } catch (e) {}
+  return cur;
+}
+function restoreParamInputs() {
+  const pm = loadParamMode();
+  if (pm.seed) document.getElementById("seedSimSeed1").value = pm.seed;
+  if (pm.splits) document.getElementById("seedSimSplits1").value = pm.splits;
+  if (pm.cycle) document.getElementById("seedSimCycle1").value = pm.cycle;
+}
+const MODE_LABEL = { rule: "① 규칙 기반", bt: "② 백테스트 최적", manual: "✎ 직접 입력" };
+function updateRuleChips() {
+  const pm = loadParamMode();
+  const sp = document.getElementById("seedSimSplits1").value, cy = document.getElementById("seedSimCycle1").value;
+  const pending = pm.mode !== "manual" && !engineRecs;
+  const html = `<span class="rc-mode rc-${pm.mode}">${MODE_LABEL[pm.mode]} 적용 중</span>` +
+    `<span class="rc-val">${sp}분할 · 2단계 ${cy}일</span>` +
+    (pending ? `<span class="rc-note">시세를 불러오면 오늘 변동성으로 재계산</span>` : "");
+  document.querySelectorAll("[data-rule-chip]").forEach(el => { el.innerHTML = html; el.className = "rule-chip rc-wrap-" + pm.mode; });
+  document.querySelectorAll("[data-engine-apply]").forEach(b => {
+    const on = b.dataset.engineApply === pm.mode;
+    b.classList.toggle("is-active", on);
+    b.textContent = (b.dataset.engineApply === "rule" ? "① 규칙" : "② 최적") + (on ? " ✓ 적용 중" : " 적용");
+  });
+}
+// 엔진 계산 직후 호출: rule/bt 모드면 새로 계산된 값을 자동 적용
+function syncParamsWithMode() {
+  const pm = loadParamMode();
+  if ((pm.mode === "rule" || pm.mode === "bt") && engineRecs && engineRecs[pm.mode]) {
+    document.getElementById("seedSimSplits1").value = engineRecs[pm.mode].splits;
+    document.getElementById("seedSimCycle1").value = engineRecs[pm.mode].cycle;
+  }
+  saveParamMode();
+  updateRuleChips();
+}
+
+function applyEngineRec(kind) {
+  if (!engineRecs || !engineRecs[kind]) return;
+  const r = engineRecs[kind];
+  document.getElementById("seedSimSplits1").value = r.splits;
+  document.getElementById("seedSimCycle1").value = r.cycle;
+  saveParamMode({ mode: kind });
+  updateRuleChips();
+  updateBuyQtyHint();
+  renderSeedSimCards();
+  renderLocGuideCard();
+  showBanner(`${kind === "rule" ? "규칙 기반" : "백테스트 최적"} 파라미터(${r.splits}분할 · 2단계 주기 ${r.cycle}일)를 시뮬레이션과 LOC 가이드에 적용했습니다.`, true);
+}
+
+/* ------------------------ 상단 이동 탭 (QLD V0.12 구조) ------------------------ */
+function initQuickNav() {
+  const nav = document.getElementById("quicknav");
+  const inner = document.getElementById("quicknavInner");
+  const bar = document.getElementById("qnProgress");
+  if (!nav || !inner) return;
+  const btns = Array.from(inner.querySelectorAll(".qn"));
+  const cards = btns.map(b => b.dataset.target === "__top" ? null : document.getElementById(b.dataset.target));
+  const navH = () => nav.getBoundingClientRect().height;
+  btns.forEach((b, i) => b.addEventListener("click", () => {
+    const card = cards[i];
+    if (!card) { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+    const y = card.getBoundingClientRect().top + window.scrollY - navH() - 10;
+    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+  }));
+  let activeIdx = -1, ticking = false;
+  const setActive = (i) => { if (i === activeIdx) return; activeIdx = i; btns.forEach((b, k) => b.classList.toggle("active", k === i)); };
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      if (bar) bar.style.width = Math.min(100, (window.scrollY / max) * 100).toFixed(1) + "%";
+      const line = navH() + 24;
+      let idx = -1;
+      cards.forEach((c, i) => { if (c && c.getBoundingClientRect().top <= line) idx = i; });
+      if (window.scrollY < 10) idx = -1;
+      if (max - window.scrollY < 4) idx = cards.length - 1;
+      setActive(idx);
+    });
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  onScroll();
+}
+
+/* ------------------------ 파일 자체 저장(다운로드) ------------------------ */
+const FILE_NAME = `TQQQ무한매수_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
+function downloadSelf() {
+  try {
+    const blob = new Blob([__PRISTINE_HTML], { type: "text/html;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = FILE_NAME;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+  } catch (e) { alert("저장에 실패했습니다: " + e.message); }
+}
+document.getElementById("dlName").textContent = FILE_NAME;
+document.getElementById("downloadSelfBtn").addEventListener("click", downloadSelf);
+/* ------------------------ 기록 백업 · 복원 (온라인 이전용) ------------------------ */
+const BACKUP_PREFIXES = ["tqqq_"];
+const BACKUP_APP = "TQQQ";
+function collectBackup() {
+  const data = {};
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (BACKUP_PREFIXES.some(p => k.startsWith(p))) data[k] = localStorage.getItem(k);
+    }
+  } catch (e) {}
+  return { schema: "dash-backup/1", app: BACKUP_APP, version: APP_VERSION, saved: new Date().toISOString(), data };
+}
+function setBkMsg(t, ok) { const m = document.getElementById("bkMsg"); m.textContent = t; m.className = "bk-msg " + (ok ? "ok" : "err"); }
+document.getElementById("bkCopyBtn").addEventListener("click", async () => {
+  const b = collectBackup();
+  const n = Object.keys(b.data).length;
+  const txt = JSON.stringify(b);
+  document.getElementById("bkText").value = txt;
+  if (!n) { setBkMsg("저장된 기록이 없습니다 (백업할 항목 0개).", false); return; }
+  const ok = await copyText(txt);
+  setBkMsg(ok ? `복사 완료 · ${n}개 항목. 새 곳에서 붙여넣고 [복원]을 누르세요.` : "자동 복사가 막혔습니다. 아래 텍스트를 길게 눌러 전체 선택 후 복사하세요.", ok);
+  showCopyToast(ok ? "백업 복사됨" : "직접 복사해 주세요", ok);
+});
+let __bkArmed = 0;
+document.getElementById("bkRestoreBtn").addEventListener("click", () => {
+  const btn = document.getElementById("bkRestoreBtn");
+  let b;
+  try { b = JSON.parse(document.getElementById("bkText").value.trim()); } catch (e) { setBkMsg("백업 텍스트 형식이 올바르지 않습니다. [백업 복사]로 만든 텍스트 전체를 붙여넣으세요.", false); return; }
+  if (!b || b.schema !== "dash-backup/1" || !b.data) { setBkMsg("백업 텍스트가 아닙니다.", false); return; }
+  if (b.app !== BACKUP_APP) { setBkMsg(`${b.app} 백업입니다. ${b.app} 화면에서 복원하세요.`, false); return; }
+  const keys = Object.keys(b.data).filter(k => BACKUP_PREFIXES.some(p => k.startsWith(p)));
+  if (!keys.length) { setBkMsg("복원할 항목이 없습니다.", false); return; }
+  if (Date.now() - __bkArmed > 5000) {
+    __bkArmed = Date.now();
+    btn.textContent = "⚠ 한 번 더 누르면 덮어쓰기"; btn.classList.add("warn");
+    setBkMsg(`현재 기록을 백업(${keys.length}개 항목, ${String(b.saved || "").slice(0, 10)})으로 덮어씁니다. 5초 안에 한 번 더 누르세요.`, false);
+    setTimeout(() => { btn.textContent = "📥 복원"; btn.classList.remove("warn"); }, 5000);
+    return;
+  }
+  try {
+    keys.forEach(k => localStorage.setItem(k, b.data[k]));
+    setBkMsg("복원 완료. 새로고침합니다…", true);
+    setTimeout(() => location.reload(), 700);
+  } catch (e) { setBkMsg("저장 실패: " + e.message, false); }
+});
+/* ------------------------ 하단 탭바: 화면 전환 ------------------------ */
+const TAB_SS_KEY = "tqqq_tab_v1";
+const __tabScroll = {};
+function goTab(id, opts) {
+  const pg = document.getElementById(id);
+  if (!pg) return;
+  const cur = document.querySelector(".page.on");
+  if (cur && cur !== pg) __tabScroll[cur.id] = window.scrollY;
+  document.querySelectorAll(".page").forEach(p => p.classList.toggle("on", p === pg));
+  document.querySelectorAll("#tabbar .tb").forEach(b => { const on = b.dataset.p === id; b.classList.toggle("on", on); b.setAttribute("aria-selected", on ? "true" : "false"); });
+  try { sessionStorage.setItem(TAB_SS_KEY, id); } catch (e) {}
+  const y = (opts && opts.top) ? 0 : (__tabScroll[id] || 0);
+  window.scrollTo({ top: y, behavior: "instant" });
+}
+function initTabs() {
+  document.querySelectorAll("#tabbar .tb").forEach(b => b.addEventListener("click", () => {
+    const already = b.classList.contains("on");
+    goTab(b.dataset.p, { top: already });   // 같은 탭을 다시 누르면 맨 위로
+  }));
+  document.addEventListener("click", e => { const g = e.target.closest("[data-goto]"); if (g) goTab(g.dataset.goto, { top: true }); });
+  let saved = null;
+  try { saved = sessionStorage.getItem(TAB_SS_KEY); } catch (e) {}
+  if (saved && document.getElementById(saved)) goTab(saved);
+  /* 카드가 다시 그려질 때 생기는 설명 문구(각주)를 📖설명 탭으로 옮김 + 주문 탭 알림 점 */
+  const dynBox = {};
+  document.querySelectorAll(".help-dyn").forEach(d => dynBox[d.dataset.for] = d);
+  let pend = false;
+  const sync = () => {
+    pend = false;
+    Object.keys(dynBox).forEach(cid => {
+      const card = document.getElementById(cid);
+      if (!card) return;
+      const notes = card.querySelectorAll("p.desc");
+      if (!notes.length) return;
+      dynBox[cid].innerHTML = "";
+      notes.forEach(n => { n.removeAttribute("style"); dynBox[cid].appendChild(n); });
+    });
+    const t0 = document.querySelector('#tabbar .tb[data-p="pg-order"]');
+    if (t0) t0.classList.toggle("alert", !!document.querySelector(".cycle-alert"));
+  };
+  new MutationObserver(() => { if (!pend) { pend = true; requestAnimationFrame(sync); } })
+    .observe(document.body, { childList: true, subtree: true });
+  sync();
+}
+/* 상단 시세 영역 접기/펼치기 (기기별 기억) */
+(function initHeaderToggle() {
+  const KEY = "tqqq_hdr_open_v1";
+  const hdr = document.getElementById("topbar"), btn = document.getElementById("hdrToggle");
+  if (!hdr || !btn) return;
+  const apply = (open) => { hdr.classList.toggle("compact", !open); btn.textContent = open ? "접기 ▴" : "상세 ▾"; btn.setAttribute("aria-expanded", open ? "true" : "false"); };
+  let open = false;
+  try { open = localStorage.getItem(KEY) === "1"; } catch (e) {}
+  apply(open);
+  btn.addEventListener("click", () => { open = !open; apply(open); try { localStorage.setItem(KEY, open ? "1" : "0"); } catch (e) {} });
+})();
+/* 오프라인 대비 (온라인 주소에서만) */
+if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+/* ======================== ☁️ PC · 모바일 기록 동기화 (GitHub 비공개 Gist) ========================
+   저장소: 내 GitHub 계정의 secret gist "muhan-sync" 안의 tqqq.json
+   동기화 대상: 매수 기록 + 매도·수익 기록 + 자동 저장 건너뛰기 목록 (토큰·화면 설정은 기기별)
+   합치기: 기록 키(수동=id, 자동저장=날짜) 기준 합집합 − 삭제 표시(tombstone) 합집합 */
+const SYNC = {
+  app: "tqqq", file: "tqqq.json", desc: "muhan-sync (무한매수 기록 동기화 · 지우지 마세요)",
+  tokKey: "muhansync_token", gistKey: "muhansync_gist", metaKey: "muhansync_tqqq_meta",
+};
+const __lsSet = Storage.prototype.setItem;
+const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { __lsSet.call(localStorage, k, v); } catch (e) {} };
+const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
+const parseArr = v => { try { const a = JSON.parse(v || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } };
+const recKeyOf = r => r && r.autoRecorded ? "auto:" + r.date : "id:" + (r && r.id);
+function syncMeta() { try { return Object.assign({ tombs: [], last: 0, dirty: false }, JSON.parse(lsGet(SYNC.metaKey) || "{}")); } catch (e) { return { tombs: [], last: 0, dirty: false }; } }
+function saveSyncMeta(m) { lsSet(SYNC.metaKey, JSON.stringify(m)); }
+const syncTok = () => lsGet(SYNC.tokKey) || "";
+const syncGist = () => lsGet(SYNC.gistKey) || "";
+const syncDevice = () => /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent) ? "모바일" : "PC";
+
+/* 기록이 바뀌는 모든 저장을 감지 → 삭제분은 tombstone으로 남기고, 잠시 뒤 자동 동기화 */
+let __syncMute = false, __syncTimer = null;
+Storage.prototype.setItem = function (k, v) {
+  if (this === window.localStorage && !__syncMute && (k === BUY_RECORDS_KEY || k === AUTO_SKIP_KEY || k === TRADES_KEY)) {
+    if (k === BUY_RECORDS_KEY || k === TRADES_KEY) {
+      const kf = k === TRADES_KEY ? tradeTombOf : recKeyOf;
+      const after = new Set(parseArr(v).map(kf));
+      const removed = parseArr(this.getItem(k)).map(kf).filter(x => !after.has(x));
+      const m = syncMeta();
+      if (removed.length) m.tombs = [...new Set([...m.tombs, ...removed])].slice(-500);
+      m.dirty = true; saveSyncMeta(m);
+    }
+    __lsSet.call(this, k, v);
+    syncSchedule(1500);
+    return;
+  }
+  return __lsSet.call(this, k, v);
+};
+function syncSchedule(ms) { if (!syncTok() || !syncGist()) return; clearTimeout(__syncTimer); __syncTimer = setTimeout(() => syncNow("auto"), ms); }
+
+async function gh(path, opt) {
+  opt = opt || {};
+  const headers = { Authorization: "Bearer " + syncTok(), Accept: "application/vnd.github+json" };
+  if (opt.body) headers["Content-Type"] = "application/json";
+  let r;
+  try { r = await fetch("https://api.github.com" + path, { method: opt.method || "GET", headers, body: opt.body, cache: "no-store" }); }
+  catch (e) { throw new Error("인터넷 연결 없음 · 연결되면 자동으로 다시 맞춥니다"); }
+  if (r.status === 401) throw new Error("토큰이 틀렸거나 만료됐습니다. 새 토큰으로 다시 연결하세요");
+  if (r.status === 403 || r.status === 404) throw new Error("토큰에 gist 권한이 없거나 동기화 Gist를 찾을 수 없습니다 (" + r.status + ")");
+  if (!r.ok) throw new Error("GitHub 응답 오류 " + r.status);
+  return r.json();
+}
+const sortRecs = a => a.slice().sort((x, y) => x.date !== y.date ? (x.date < y.date ? -1 : 1) : (x.id || 0) - (y.id || 0));
+const canonTrades = a => JSON.stringify((a || []).map(t => [tradeTombOf(t), t.qty, t.sellPrice]).sort());
+const canonRecs = a => JSON.stringify(sortRecs(a || []).map(r => [recKeyOf(r), r.date, r.qty, r.price]));
+function mergeDocs(local, remote) {
+  const tombs = [...new Set([...(local.tombs || []), ...(remote.tombs || [])])].slice(-500);
+  const dead = new Set(tombs), map = new Map();
+  for (const r of [...(local.records || []), ...(remote.records || [])]) {
+    const k = recKeyOf(r);
+    if (!dead.has(k) && !map.has(k)) map.set(k, r);
+  }
+  const skip = [...new Set([...(local.skip || []), ...(remote.skip || [])])].sort().slice(-60);
+  const tmap = new Map();
+  for (const t of [...(local.trades || []), ...(remote.trades || [])]) { const k = tradeTombOf(t); if (!dead.has(k) && !tmap.has(k)) tmap.set(k, t); }
+  const trades = [...tmap.values()].sort((x, y) => x.sellDate < y.sellDate ? -1 : x.sellDate > y.sellDate ? 1 : x.id - y.id);
+  return { records: sortRecs([...map.values()]), skip, tombs, trades };
+}
+
+let __syncBusy = false, __syncAgain = false, __syncErr = "";
+async function syncNow(why) {
+  if (!syncTok() || !syncGist()) { syncRender(); return; }
+  if (__syncBusy) { __syncAgain = true; return; }
+  __syncBusy = true; syncRender("busy");
+  let note = "";
+  try {
+    const g = await gh("/gists/" + syncGist());
+    const f = g.files && g.files[SYNC.file];
+    let remote = {};
+    try { remote = f && f.content ? JSON.parse(f.content) : {}; } catch (e) { remote = {}; }
+    const meta = syncMeta();
+    const local = { records: loadBuyRecords(), skip: loadAutoSkip(), tombs: meta.tombs, trades: loadTrades() };
+    const m = mergeDocs(local, remote);
+    const recLocalChanged = canonTrades(m.trades) !== canonTrades(local.trades) || canonRecs(m.records) !== canonRecs(local.records) || JSON.stringify(m.skip) !== JSON.stringify([...(local.skip || [])].sort().slice(-60));
+    const remoteChanged = canonTrades(m.trades) !== canonTrades(remote.trades) || canonRecs(m.records) !== canonRecs(remote.records) || JSON.stringify(m.skip) !== JSON.stringify(remote.skip || []) || JSON.stringify(m.tombs) !== JSON.stringify(remote.tombs || []);
+    if (recLocalChanged) {
+      const before = local.records.length;
+      __syncMute = true;
+      try { localStorage.setItem(BUY_RECORDS_KEY, JSON.stringify(m.records)); localStorage.setItem(AUTO_SKIP_KEY, JSON.stringify(m.skip)); localStorage.setItem(TRADES_KEY, JSON.stringify(m.trades)); }
+      finally { __syncMute = false; }
+      const d = m.records.length - before;
+      const dT = m.trades.length - local.trades.length;
+      note = dT > 0 ? `다른 기기 매도 기록 ${dT}건 반영` : d > 0 ? `다른 기기 기록 ${d}건 추가됨` : d < 0 ? `다른 기기에서 지운 ${-d}건 반영` : "다른 기기 변경 반영";
+      try { renderBuyRecords(); renderLocGuideCard(); if (typeof updateBuyQtyHint === "function") updateBuyQtyHint(); } catch (e) {}
+    }
+    if (remoteChanged) {
+      const doc = { schema: "muhan-sync/1", app: SYNC.app, version: APP_VERSION, updated: new Date().toISOString(), device: syncDevice(), records: m.records, skip: m.skip, tombs: m.tombs, trades: m.trades };
+      await gh("/gists/" + syncGist(), { method: "PATCH", body: JSON.stringify({ files: { [SYNC.file]: { content: JSON.stringify(doc) } } }) });
+      if (!note) note = "이 기기 변경을 올렸습니다";
+    }
+    meta.tombs = m.tombs; meta.last = Date.now(); meta.dirty = false; meta.remoteDevice = remote.device || ""; meta.note = note || meta.note || "";
+    saveSyncMeta(meta);
+    __syncErr = "";
+    if (note && why !== "load") showCopyToast("☁ " + note, true);
+  } catch (e) {
+    __syncErr = e.message;
+  } finally {
+    __syncBusy = false; syncRender();
+    if (__syncAgain) { __syncAgain = false; syncSchedule(300); }
+  }
+}
+
+function syncRender(state) {
+  const st = document.getElementById("syncState"), chip = document.getElementById("syncChip");
+  const setup = document.getElementById("syncSetup"), on = document.getElementById("syncOn");
+  if (!st) return;
+  const connected = !!(syncTok() && syncGist()), meta = syncMeta();
+  setup.hidden = connected; on.hidden = !connected; chip.hidden = !connected;
+  st.className = "sync-state"; chip.className = "sync-chip";
+  if (!connected) { st.textContent = "동기화 꺼짐 · 이 기기에만 저장 중. 토큰을 붙여넣고 연결하면 PC와 폰이 같은 기록을 씁니다."; return; }
+  const t = meta.last ? new Date(meta.last).toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "-";
+  const n = loadBuyRecords().length;
+  if (state === "busy") { st.textContent = "☁ 동기화 중…"; chip.classList.add("busy"); chip.textContent = "☁ 동기화 중"; return; }
+  if (__syncErr) {
+    st.classList.add("err"); chip.classList.add("err"); chip.textContent = "☁ 확인 필요";
+    st.textContent = `⚠ ${__syncErr}` + (meta.dirty ? " · 이 기기 변경은 저장돼 있고 연결되면 올라갑니다." : "");
+    return;
+  }
+  st.classList.add("ok"); chip.classList.add("ok"); chip.textContent = "☁ 동기화됨";
+  st.textContent = `✅ 동기화 켜짐 (${syncDevice()}) · 기록 ${n}건 · 마지막 ${t}` + (meta.note ? ` · ${meta.note}` : "");
+}
+
+document.getElementById("syncConnectBtn").addEventListener("click", async () => {
+  const btn = document.getElementById("syncConnectBtn"), inp = document.getElementById("syncToken");
+  const tok = inp.value.trim();
+  if (!/^(ghp_|github_pat_)[A-Za-z0-9_]{20,}$/.test(tok)) { __syncErr = "토큰 형식이 아닙니다. ghp_로 시작하는 토큰 전체를 붙여넣으세요"; syncRenderSetupErr(); return; }
+  btn.disabled = true; btn.textContent = "연결 중…";
+  lsSet(SYNC.tokKey, tok);
+  try {
+    let id = "";
+    for (let page = 1; page <= 3 && !id; page++) {
+      const list = await gh(`/gists?per_page=100&page=${page}`);
+      const hit = list.find(x => x.description === SYNC.desc);
+      if (hit) id = hit.id;
+      if (list.length < 100) break;
+    }
+    if (!id) {
+      const init = JSON.stringify({ schema: "muhan-sync/1", records: [], skip: [], tombs: [] });
+      const g = await gh("/gists", { method: "POST", body: JSON.stringify({ description: SYNC.desc, public: false, files: { "soxl.json": { content: init }, "tqqq.json": { content: init } } }) });
+      id = g.id;
+    }
+    lsSet(SYNC.gistKey, id); inp.value = ""; __syncErr = "";
+    await syncNow("connect");
+  } catch (e) {
+    lsDel(SYNC.tokKey); lsDel(SYNC.gistKey); __syncErr = e.message; syncRenderSetupErr();
+  } finally { btn.disabled = false; btn.textContent = "☁️ 연결하고 동기화 시작"; }
+});
+function syncRenderSetupErr() { syncRender(); const st = document.getElementById("syncState"); st.className = "sync-state err"; st.textContent = "⚠ " + __syncErr; __syncErr = ""; }
+document.getElementById("syncNowBtn").addEventListener("click", () => syncNow("manual"));
+let __syncOffArm = 0;
+document.getElementById("syncOffBtn").addEventListener("click", () => {
+  const b = document.getElementById("syncOffBtn");
+  if (Date.now() - __syncOffArm > 4000) { __syncOffArm = Date.now(); b.textContent = "한 번 더 = 해제"; setTimeout(() => b.textContent = "연결 해제", 4000); return; }
+  lsDel(SYNC.tokKey); lsDel(SYNC.gistKey); __syncErr = ""; b.textContent = "연결 해제";
+  syncRender(); showCopyToast("이 기기의 동기화를 껐습니다 (기록은 그대로)", true);
+});
+document.addEventListener("visibilitychange", () => { if (!document.hidden && Date.now() - syncMeta().last > 15000) syncSchedule(200); });
+window.addEventListener("online", () => syncSchedule(500));
+setInterval(() => { if (!document.hidden) syncSchedule(100); }, 90000);
+syncRender();
+syncSchedule(400);
+/* ======================== 📊 엑셀(.xlsx) 내보내기 ======================== */
+const XL = (() => {
+  const esc = v => String(v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const col = n => { let c = ""; n++; while (n) { const m = (n - 1) % 26; c = String.fromCharCode(65 + m) + c; n = Math.floor((n - 1) / 26); } return c; };
+  const serial = ds => { const [y, m, d] = ds.split("-").map(Number); return (Date.UTC(y, m - 1, d) - Date.UTC(1899, 11, 30)) / 864e5; };
+  const crcT = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+  const crc32 = u => { let c = 0xFFFFFFFF; for (let i = 0; i < u.length; i++) c = crcT[(c ^ u[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+  function zip(files) {               // 무압축(store) ZIP
+    const enc = new TextEncoder(), parts = [], cen = []; let off = 0;
+    for (const f of files) {
+      const name = enc.encode(f.name), data = typeof f.data === "string" ? enc.encode(f.data) : f.data, crc = crc32(data);
+      const h = new DataView(new ArrayBuffer(30));
+      h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(8, 0, true);
+      h.setUint16(10, 0, true); h.setUint16(12, 0x21, true); h.setUint32(14, crc, true); h.setUint32(18, data.length, true);
+      h.setUint32(22, data.length, true); h.setUint16(26, name.length, true); h.setUint16(28, 0, true);
+      parts.push(new Uint8Array(h.buffer), name, data);
+      const c = new DataView(new ArrayBuffer(46));
+      c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x0800, true); c.setUint16(10, 0, true);
+      c.setUint16(12, 0, true); c.setUint16(14, 0x21, true); c.setUint32(16, crc, true); c.setUint32(20, data.length, true); c.setUint32(24, data.length, true);
+      c.setUint16(28, name.length, true); c.setUint32(42, off, true);
+      cen.push(new Uint8Array(c.buffer), name);
+      off += 30 + name.length + data.length;
+    }
+    const cenSize = cen.reduce((x, p) => x + p.length, 0);
+    const e = new DataView(new ArrayBuffer(22));
+    e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true);
+    e.setUint32(12, cenSize, true); e.setUint32(16, off, true);
+    return new Blob([...parts, ...cen, new Uint8Array(e.buffer)], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+  }
+  // 셀 스타일: 0 기본 1 헤더 2 $ 3 % 4 정수 5 ±$ 6 합계±$ 7 굵게 8 합계% 9 날짜 10 합계$
+  const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<numFmts count="3"><numFmt numFmtId="164" formatCode="&quot;$&quot;#,##0.00"/><numFmt numFmtId="166" formatCode="&quot;+$&quot;#,##0.00;&quot;-$&quot;#,##0.00;&quot;$&quot;0.00"/><numFmt numFmtId="167" formatCode="yyyy-mm-dd"/></numFmts>
+<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts>
+<fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFDDEBF7"/><bgColor indexed="64"/></patternFill></fill></fills>
+<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>
+<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
+<cellXfs count="11">
+<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
+<xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/>
+<xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>
+<xf numFmtId="10" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>
+<xf numFmtId="3" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>
+<xf numFmtId="166" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>
+<xf numFmtId="166" fontId="1" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/>
+<xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/>
+<xf numFmtId="10" fontId="1" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/>
+<xf numFmtId="167" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/>
+<xf numFmtId="164" fontId="1" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/>
+</cellXfs>
+<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
+</styleSheet>`;
+  function sheetXml(sh) {
+    const rows = sh.rows.map((r, ri) => `<row r="${ri + 1}">` + r.map((c, ci) => {
+      if (c === null || c === undefined || c === "") return "";
+      const o = typeof c === "object" ? c : { v: c };
+      if (o.v === "" && !o.f && !o.d) return "";
+      const ref = col(ci) + (ri + 1), st = o.s ? ` s="${o.s}"` : "";
+      if (o.f) return `<c r="${ref}"${st}><f>${esc(o.f)}</f>${typeof o.v === "number" && isFinite(o.v) ? `<v>${o.v}</v>` : ""}</c>`;
+      if (o.d) return `<c r="${ref}" s="${o.s || 9}"><v>${serial(o.d)}</v></c>`;
+      if (typeof o.v === "number") return isFinite(o.v) ? `<c r="${ref}"${st}><v>${o.v}</v></c>` : "";
+      return `<c r="${ref}"${st} t="inlineStr"><is><t xml:space="preserve">${esc(o.v)}</t></is></c>`;
+    }).join("") + `</row>`).join("");
+    const cols = sh.cols ? `<cols>${sh.cols.map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join("")}</cols>` : "";
+    const pane = sh.freeze ? `<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>` : `<sheetViews><sheetView workbookViewId="0"/></sheetViews>`;
+    return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">${pane}${cols}<sheetData>${rows}</sheetData></worksheet>`;
+  }
+  function build(sheets) {
+    const files = [
+      { name: "[Content_Types].xml", data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${sheets.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("")}</Types>` },
+      { name: "_rels/.rels", data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>` },
+      { name: "xl/workbook.xml", data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheets.map((sh, i) => `<sheet name="${esc(sh.name)}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`).join("")}</sheets><calcPr calcId="191029" fullCalcOnLoad="1"/></workbook>` },
+      { name: "xl/_rels/workbook.xml.rels", data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${sheets.map((_, i) => `<Relationship Id="rId${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join("")}<Relationship Id="rId${sheets.length + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>` },
+      { name: "xl/styles.xml", data: styles },
+      ...sheets.map((sh, i) => ({ name: `xl/worksheets/sheet${i + 1}.xml`, data: sheetXml(sh) })),
+    ];
+    return zip(files);
+  }
+  return { build };
+})();
+
+function buildTradeWorkbook() {
+  const trades = loadTrades(), st = tradeStats(trades), cur = sortedBuyRecords();
+  const H = s => ({ v: s, s: 1 });
+  const hist = lastTqqqHist;
+  const refPx = (lastTqqqPrice !== null && !isNaN(lastTqqqPrice)) ? lastTqqqPrice : (hist && hist.length ? hist[hist.length - 1].y : null);
+  const hq = cur.reduce((x, r) => x + r.qty, 0), hc = cur.reduce((x, r) => x + r.qty * r.price, 0), havg = hq ? hc / hq : null;
+  const now = new Date();
+  const summary = { name: "요약", cols: [24, 22, 40], rows: [
+    [H("항목"), H("값"), H("설명")],
+    ["종목", LEV_TICKER, `${LEV_TICKER}무한매수 ${APP_VERSION}`],
+    ["내보낸 시각", now.toLocaleString("ko-KR"), ""],
+    ["매도 거래 수", { v: st.n, s: 4 }, "완료된 사이클(전량 매도) 수"],
+    ["누적 매수금액(매도 완료분)", { v: st.cost, s: 2 }, "매도한 사이클들의 매수금액 합"],
+    ["실현 수익금", { v: st.profit, s: 6 }, "Σ(수량 × 매도가 − 매수금액)"],
+    ["실현 수익률", { v: st.rate !== null ? st.rate / 100 : "", s: 8 }, "실현 수익금 ÷ 누적 매수금액"],
+    ["거래 평균 수익률", { v: st.avgPct !== null ? st.avgPct / 100 : "", s: 3 }, "거래별 수익률의 단순 평균"],
+    ["승률", { v: st.n ? st.wins / st.n : "", s: 3 }, `수익 거래 ${st.wins}회 / ${st.n}회`],
+    ["현재 보유 수량", { v: hq, s: 4 }, cur.length ? `${cur.length}회 매수 · 첫 매수 ${cur[0].date}` : "보유 없음"],
+    ["현재 평단가", { v: havg !== null ? havg : "", s: 2 }, ""],
+    ["현재 매수금액", { v: hc, s: 2 }, ""],
+    ["평가 기준가", { v: refPx !== null ? refPx : "", s: 2 }, "실시간 현재가(없으면 최근 확정 종가)"],
+    ["평가손익", { v: hq && refPx !== null ? refPx * hq - hc : "", s: 5 }, ""],
+    ["평가 수익률", { v: hq && refPx !== null ? refPx / havg - 1 : "", s: 3 }, ""],
+    ["비고", "수수료·세금·환율 미반영", "자동 기록은 종가 기준 LOC 체결 가정"],
+  ] };
+  const tRows = [[H("번호"), H("첫 매수일"), H("매도일"), H("매수 횟수"), H("수량"), H("평단가"), H("매수금액"), H("매도가"), H("매도금액"), H("수익금"), H("수익률"), H("구분")]];
+  trades.forEach((t, i) => tRows.push([{ v: i + 1, s: 4 }, { d: t.firstBuy }, { d: t.sellDate }, { v: t.rounds, s: 4 }, { v: t.qty, s: 4 }, { v: t.avg, s: 2 }, { v: t.cost, s: 2 }, { v: t.sellPrice, s: 2 }, { v: t.proceeds, s: 2 }, { v: t.profit, s: 5 }, { v: t.pct / 100, s: 3 }, t.auto ? "자동(LOC)" : "직접"]));
+  if (trades.length) {
+    const n = trades.length + 1;
+    tRows.push([{ v: "합계", s: 7 }, "", "", "", { f: `SUM(E2:E${n})`, v: trades.reduce((x, t) => x + t.qty, 0), s: 4 }, "", { f: `SUM(G2:G${n})`, v: st.cost, s: 10 }, "", { f: `SUM(I2:I${n})`, v: trades.reduce((x, t) => x + t.proceeds, 0), s: 10 }, { f: `SUM(J2:J${n})`, v: st.profit, s: 6 }, { f: `IF(G${n + 1}=0,"",J${n + 1}/G${n + 1})`, v: st.rate !== null ? st.rate / 100 : 0, s: 8 }, ""]);
+  }
+  const bRows = [[H("사이클"), H("상태"), H("회차"), H("매수일"), H("수량"), H("매수가"), H("매수금액"), H("누적 평단"), H("구분")]];
+  const addCycle = (label, state, buys) => { let q = 0, c = 0; buys.forEach((b, k) => { q += b.qty; c += b.qty * b.price; bRows.push([label, state, { v: k + 1, s: 4 }, { d: b.date }, { v: b.qty, s: 4 }, { v: b.price, s: 2 }, { v: b.qty * b.price, s: 2 }, { v: c / q, s: 2 }, (b.auto || b.autoRecorded) ? "자동(LOC)" : "직접"]); }); };
+  trades.forEach((t, i) => addCycle(`${i + 1}`, `매도 완료 ${t.sellDate}`, t.buys || []));
+  if (cur.length) addCycle(`${trades.length + 1}`, "보유 중", cur);
+  return XL.build([summary, { name: "매도·수익", cols: [6, 12, 12, 9, 9, 11, 13, 11, 13, 13, 10, 11], freeze: true, rows: tRows }, { name: "매수기록", cols: [7, 20, 6, 12, 9, 11, 13, 11, 11], freeze: true, rows: bRows }]);
+}
+document.getElementById("xlsxBtn").addEventListener("click", () => {
+  const msg = document.getElementById("xlsxMsg");
+  try {
+    const blob = buildTradeWorkbook();
+    const d = new Date(), ymd = `${String(d.getFullYear()).slice(2)}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+    const name = `${LEV_TICKER}_매매기록_${ymd}.xlsx`;
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    const t = loadTrades();
+    msg.className = "bk-msg ok"; msg.textContent = `다운로드: ${name} · 매도 ${t.length}건 · 보유 매수 ${loadBuyRecords().length}건`;
+  } catch (e) { msg.className = "bk-msg err"; msg.textContent = "엑셀 생성 실패: " + e.message; }
+});
+initTabs();
+initQuickNav();
+restoreParamInputs();   // 저장된 규칙 모드·시드·분할 수·주기 복원 (상수 선언 이후에 호출)
+updateBuyQtyHint();
+updateRuleChips();   // 적용 규칙 칩 (엔진 변수 선언 이후)
+
+document.getElementById("appVersionBadge").textContent = APP_VERSION;
+document.getElementById("footerVersion").textContent = `${APP_VERSION} (${RELEASE_DATE})`;
+document.title = `TQQQ 무한매수 AI (${APP_VERSION} - ${RELEASE_DATE})`;
+
+document.getElementById("fetchBtn").addEventListener("click", fetchAll);
+</script>
+</body>
+</html>
