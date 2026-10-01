@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="version" content="V0.58-TwelveData-SOXL-VolOpt">
 <meta name="release-date" content="261001">
-<title>SOXL 무한매수 AI (V0.64 - 261001)</title>
+<title>SOXL 무한매수 AI (V0.65 - 261001)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -529,6 +529,7 @@
   #syncSetup[hidden],#syncOn[hidden]{display:none;}
 
   /* ===== 매도 · 수익 ===== */
+  .field input[type="date"]{min-width:0;font-size:clamp(14px,4.4vw,17px);}
   .pl-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
   .pl-tile{background:var(--panel-2);border:1px solid var(--border-soft);border-radius:12px;padding:10px 8px;text-align:center;min-width:0;}
   .pl-tile .l{font-size:11.5px;color:var(--text-faint);font-weight:700;}
@@ -618,8 +619,8 @@
     </div>
     <div id="tradeSummary"></div>
     <div class="form-grid" style="margin-top:12px;">
-      <div class="field"><label for="sellRecDate">매도 날짜</label><input type="date" id="sellRecDate"></div>
-      <div class="field"><label for="sellRecPrice">매도가 ($, 선택)</label><input type="number" id="sellRecPrice" min="0" step="any" inputmode="decimal" placeholder="비우면 종가"></div>
+      <div class="field full"><label for="sellRecDate">매도 날짜</label><input type="date" id="sellRecDate"></div>
+      <div class="field full"><label for="sellRecPrice">매도가 ($, 선택)</label><input type="number" id="sellRecPrice" min="0" step="any" inputmode="decimal" placeholder="비우면 종가"></div>
     </div>
     <div class="buysim-actions">
       <button class="buysim-btn save" id="sellRecSaveBtn" type="button">＋ 보유 전량 매도 기록</button>
@@ -672,8 +673,8 @@
   </section>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">SOXL무한매수_V0_64_261001.HTML</span>)</button>
-  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V0.64 (261001)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">SOXL무한매수_V0_65_261001.HTML</span>)</button>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V0.65 (261001)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>
   </footer>
 
   </div>
@@ -861,7 +862,7 @@
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V0.64";
+const APP_VERSION = "V0.65";
 const RELEASE_DATE = "261001";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
