@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V0.31-TwelveData-TQQQ-VolOpt">
-<meta name="release-date" content="261003">
-<title>TQQQ 무한매수 AI (V0.39 - 261003)</title>
+<meta name="version" content="V0.1-KRX-494310-2x">
+<meta name="release-date" content="261008">
+<title>KODEX 반도체레버리지 무한매수 AI (V0.1 - 261008)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -320,7 +320,7 @@
   .loc-qty{font-size:15.5px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text);margin-top:6px;}
   .loc-sub{font-size:10.5px;color:var(--text-dim);margin-top:6px;line-height:1.5;}
 
-  /* ---------- 🤖 TQQQ 변동성 최적화 AI 엔진 ---------- */
+  /* ---------- 🤖 반도체2X 변동성 최적화 AI 엔진 ---------- */
   .engine-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 12px;}
   .engine-box{border-radius:14px;padding:12px;border:1px solid;}
   .engine-box.rule{background:rgba(245,165,36,0.08);border-color:rgba(245,165,36,0.35);}
@@ -573,6 +573,8 @@
   .cy-del{margin-top:10px;min-height:36px;padding:0 12px;border-radius:10px;border:1px solid rgba(240,71,90,0.35);background:transparent;color:var(--down);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;}
   .cy-link{display:flex;align-items:center;justify-content:center;min-height:42px;margin-top:12px;border-radius:12px;border:1px solid var(--border);background:var(--panel-2);color:var(--text-dim);font-weight:700;font-size:13px;text-decoration:none;}
   .cy-link[hidden]{display:none;}
+  .krx-note{margin:0 0 12px;padding:10px 12px;border-radius:12px;background:rgba(94,234,212,0.07);border:1px solid rgba(94,234,212,0.3);font-size:12.5px;line-height:1.65;color:var(--text-dim);}
+  .krx-note b{color:var(--glow);}
 </style>
 </head>
 <body>
@@ -580,36 +582,36 @@
 
   <header class="topbar compact" id="topbar">
     <div class="topbar-header">
-      <p class="topbar-eyebrow"><span class="live-dot"></span>Finnhub 실시간 · Twelve Data 확정 종가</p>
+      <p class="topbar-eyebrow"><span class="live-dot"></span>494310 · 네이버 금융 · GitHub 자동 수집</p>
       <button class="sync-chip" id="syncChip" type="button" data-goto="pg-backup" hidden>☁ 동기화</button>
       <button class="hdr-toggle" id="hdrToggle" type="button" aria-expanded="false">상세 ▾</button>
-      <span class="version-badge" id="appVersionBadge">V0.31</span>
+      <span class="version-badge" id="appVersionBadge">V0.58</span>
     </div>
-    <h1 class="topbar-title">TQQQ 무한매수 <span class="accent">AI</span></h1>
+    <h1 class="topbar-title">KODEX 반도체레버리지 <span class="accent">AI</span></h1>
 
     <div class="quote-grid">
       <div class="quote">
-        <div class="quote-tk"><span class="tk base">QQQ</span><span class="dd-pill flat" id="ddPill">-- %</span></div>
-        <div class="price-main mono" id="qqqPriceDisplay">--</div>
+        <div class="quote-tk"><span class="tk base">반도체1X</span><span class="dd-pill flat" id="ddPill">-- %</span></div>
+        <div class="price-main mono" id="soxxPriceDisplay">--</div>
         <div class="price-sub">전고점(200봉 종가) <span id="athDisplay" class="mono">--</span></div>
-        <div class="cci-line"><span class="cci-label">CCI(20)</span><span class="cci-main mono" id="qqqCciBigDisplay">--</span></div>
+        <div class="cci-line"><span class="cci-label">CCI(20)</span><span class="cci-main mono" id="soxxCciBigDisplay">--</span></div>
       </div>
       <div class="quote lev">
-        <div class="quote-tk"><span class="tk lev">TQQQ</span><span class="dd-pill flat" id="tqqqDdPill">-- %</span></div>
-        <div class="price-main mono" id="tqqqPriceDisplay">--</div>
-        <div class="price-sub">전고점(200봉 종가) <span id="tqqqAthDisplay" class="mono">--</span></div>
-        <div class="cci-line"><span class="cci-label">CCI(20)</span><span class="cci-main mono" id="tqqqCciBigDisplay">--</span></div>
+        <div class="quote-tk"><span class="tk lev">반도체2X</span><span class="dd-pill flat" id="soxlDdPill">-- %</span></div>
+        <div class="price-main mono" id="soxlPriceDisplay">--</div>
+        <div class="price-sub">전고점(200봉 종가) <span id="soxlAthDisplay" class="mono">--</span></div>
+        <div class="cci-line"><span class="cci-label">CCI(20)</span><span class="cci-main mono" id="soxlCciBigDisplay">--</span></div>
       </div>
     </div>
 
-    <div class="soxl-streak-banner hidden" id="tqqqStreakBanner"></div>
+    <div class="soxl-streak-banner hidden" id="soxlStreakBanner"></div>
 
     <div class="topbar-meta">
       <span id="lastUpdated">아직 조회 전</span>
       <span id="athDateMeta" style="text-align:right;"></span>
     </div>
 
-    <button class="refresh-btn" id="fetchBtn">QQQ · TQQQ 시세 불러오기</button>
+    <button class="refresh-btn" id="fetchBtn">KODEX 반도체 · 레버리지 시세 불러오기</button>
   </header>
 
   <div id="errorBanner" class="banner hidden"></div>
@@ -623,6 +625,7 @@
       <div><div class="card-kicker">00 · TODAY'S LOC</div><h2>오늘의 LOC 주문</h2></div>
     </div>
     <div class="rule-chip" data-rule-chip></div>
+    <div class="krx-note">🇰🇷 국내 ETF에는 LOC 주문이 없습니다 → 장 마감 <b>15:20~15:30 종가 단일가</b> 시간에 아래 가격으로 <b>지정가</b> 주문하면 종가로 체결됩니다 (매수: 종가 ≤ 지정가 · 매도: 종가 ≥ 지정가). 15:20 전에 넣으면 장중 가격에 바로 체결될 수 있습니다.</div>
     <div id="locHeroContent">
       <div class="fg-empty">상단 '시세 불러오기'를 누르면 오늘 걸어 둘 LOC 매수·매도 가격과 수량이 표시됩니다.</div>
     </div>
@@ -636,7 +639,7 @@
     <div class="form-grid">
       <div class="field full"><label for="buyRecDate">최근 매수 날짜</label><input type="date" id="buyRecDate"></div>
       <div class="field"><label for="buyRecQty">매수 수량 (주)</label><input type="number" id="buyRecQty" min="1" step="1" inputmode="numeric" placeholder="비우면 자동"></div>
-      <div class="field"><label for="buyRecPrice">매수가 ($, 선택)</label><input type="number" id="buyRecPrice" min="0" step="any" inputmode="decimal" placeholder="비우면 종가"></div>
+      <div class="field"><label for="buyRecPrice">매수가 (원, 선택)</label><input type="number" id="buyRecPrice" min="0" step="1" inputmode="numeric" placeholder="비우면 종가"></div>
     </div>
     <div class="buysim-actions">
       <button class="buysim-btn save" id="buyRecSaveBtn" type="button">＋ 매수 기록 저장</button>
@@ -663,7 +666,7 @@
     </div>
     <div class="form-grid">
       <div class="field full"><label for="sellRecDate">매도 날짜</label><input type="date" id="sellRecDate"></div>
-      <div class="field full"><label for="sellRecPrice">매도가 ($, 선택)</label><input type="number" id="sellRecPrice" min="0" step="any" inputmode="decimal" placeholder="비우면 종가"></div>
+      <div class="field full"><label for="sellRecPrice">매도가 (원, 선택)</label><input type="number" id="sellRecPrice" min="0" step="1" inputmode="numeric" placeholder="비우면 종가"></div>
     </div>
     <div class="buysim-actions">
       <button class="buysim-btn save" id="sellRecSaveBtn" type="button">🏁 보유 전량 매도 · 사이클 종료</button>
@@ -715,8 +718,8 @@
   </section>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">TQQQ무한매수_V0_39_261003.HTML</span>)</button>
-  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V0.39 (261003)</code> · SOXL판(V0.48)과 동일 기능 · TQQQ 변동성 최적화판</div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">KODEX반도체레버리지_V0_1_261008.HTML</span>)</button>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V0.1 (261008)</code> · 반도체2X 무한매수 V0.66 구조 · KODEX 반도체레버리지(494310) 2배 최적화판</div>
   </footer>
 
   </div>
@@ -725,18 +728,18 @@
   <section class="card" id="card-engine" style="--c:var(--violet);">
     <div class="card-head">
       <div class="card-icon">🤖</div>
-      <div><div class="card-kicker">02 · AI ENGINE</div><h2>TQQQ 변동성 최적화 AI 엔진</h2></div>
+      <div><div class="card-kicker">02 · AI ENGINE</div><h2>반도체2X 변동성 최적화 AI 엔진</h2></div>
     </div>
-    <div id="tqqqEngineContent">
-      <div class="fg-empty">데이터를 불러오면 TQQQ 최적 파라미터가 계산됩니다.</div>
+    <div id="soxlEngineContent">
+      <div class="fg-empty">데이터를 불러오면 반도체2X 최적 파라미터가 계산됩니다.</div>
     </div>
   </section>
   <section class="card" id="card-vol" style="--c:var(--teal);">
     <div class="card-head">
       <div class="card-icon">🌊</div>
-      <div><div class="card-kicker">05 · VOLATILITY</div><h2>TQQQ·QQQ 변동성 프로파일</h2></div>
+      <div><div class="card-kicker">05 · VOLATILITY</div><h2>레버리지·1배 변동성 프로파일</h2></div>
     </div>
-    <div id="tqqqVolContent">
+    <div id="soxlVolContent">
       <div class="fg-empty">데이터를 불러오면 변동성 프로파일이 표시됩니다.</div>
     </div>
   </section>
@@ -760,9 +763,9 @@
     </div>
     <div class="rule-chip" data-rule-chip></div>
     <div class="form-grid three">
-      <div class="field"><label for="seedSimSeed1">시드 ($)</label><input type="number" id="seedSimSeed1" min="1" step="any" inputmode="decimal" value="36000"></div>
-      <div class="field"><label for="seedSimSplits1">분할 수</label><input type="number" id="seedSimSplits1" min="1" step="1" inputmode="numeric" value="6"></div>
-      <div class="field"><label for="seedSimCycle1">2단계 주기(일)</label><input type="number" id="seedSimCycle1" min="1" step="1" inputmode="numeric" value="14"></div>
+      <div class="field"><label for="seedSimSeed1">시드 (원)</label><input type="number" id="seedSimSeed1" min="1" step="10000" inputmode="numeric" value="30000000"></div>
+      <div class="field"><label for="seedSimSplits1">분할 수</label><input type="number" id="seedSimSplits1" min="1" step="1" inputmode="numeric" value="8"></div>
+      <div class="field"><label for="seedSimCycle1">2단계 주기(일)</label><input type="number" id="seedSimCycle1" min="1" step="1" inputmode="numeric" value="5"></div>
     </div>
     <div id="seedSimContent1">
       <div class="fg-empty">데이터를 불러오면 시드 시뮬레이션 결과가 표시됩니다.</div>
@@ -774,18 +777,18 @@
   <section class="card" id="card-down" style="--c:var(--down);">
     <div class="card-head">
       <div class="card-icon">📉</div>
-      <div><div class="card-kicker">06 · DOWN STREAK</div><h2>TQQQ 연속 하락 통계 (최근 200봉)</h2></div>
+      <div><div class="card-kicker">06 · DOWN STREAK</div><h2>반도체2X 연속 하락 통계 (최근 200봉)</h2></div>
     </div>
-    <div id="tqqqStreakContent">
+    <div id="soxlStreakContent">
       <div class="fg-empty">데이터를 불러오면 연속 하락 확률과 평균 수익률이 표시됩니다.</div>
     </div>
   </section>
   <section class="card" id="card-up" style="--c:var(--up);">
     <div class="card-head">
       <div class="card-icon">📈</div>
-      <div><div class="card-kicker">07 · UP STREAK</div><h2>TQQQ 연속 상승 통계 (최근 200봉)</h2></div>
+      <div><div class="card-kicker">07 · UP STREAK</div><h2>반도체2X 연속 상승 통계 (최근 200봉)</h2></div>
     </div>
-    <div id="tqqqUpStreakStatsContent">
+    <div id="soxlUpStreakStatsContent">
       <div class="fg-empty">데이터를 불러오면 연속 상승 확률과 평균 상승률이 표시됩니다.</div>
     </div>
   </section>
@@ -805,7 +808,7 @@
       </details>
       <details class="help-item" open>
         <summary><span class="hi-ic">📒</span>나의 매수 기록</summary>
-        <p>실제 매수 내역을 입력해 누적 평단가를 계산합니다. 매수 수량을 비워두면 1분할 금액(시드 ÷ 분할 수) ÷ 매수가를 5주 단위로 내림한 수량(LOC 가이드와 같은 공식)이 자동으로 들어갑니다. 매수 날짜는 어제(가장 최근 확정 종가일)가 기본으로 들어갑니다. 시세를 불러왔을 때 어제 종가가 LOC 매수가 이하였으면(체결 조건 충족) 저장 버튼을 누르지 않아도 그 매수가 자동으로 기록됩니다. 매수가를 비워두면 입력한 매수일의 TQQQ 종가를 자동으로 채웁니다(주말·휴장일은 직전 거래일 종가, 오늘 장중이면 실시간 현재가). 이 기록은 이 브라우저(로컬 저장소)에만 저장되며 서버로 전송되지 않으므로, 다른 기기·브라우저에서는 보이지 않습니다.</p>
+        <p>실제 매수 내역을 입력해 누적 평단가를 계산합니다. 매수 수량을 비워두면 1분할 금액(시드 ÷ 분할 수) ÷ 매수가를 1주 단위로 내림한 수량(LOC 가이드와 같은 공식)이 자동으로 들어갑니다. 매수 날짜는 어제(가장 최근 확정 종가일)가 기본으로 들어갑니다. 시세를 불러왔을 때 어제 종가가 LOC 매수가 이하였으면(체결 조건 충족) 저장 버튼을 누르지 않아도 그 매수가 자동으로 기록됩니다. 매수가를 비워두면 입력한 매수일의 반도체2X 종가를 자동으로 채웁니다(주말·휴장일은 직전 거래일 종가, 오늘 장중이면 실시간 현재가). 이 기록은 이 브라우저(로컬 저장소)에만 저장되며 서버로 전송되지 않으므로, 다른 기기·브라우저에서는 보이지 않습니다.</p>
         <div class="help-dyn" data-for="card-records"></div>
       </details>
     <div class="help-group">🏁 사이클 탭</div>
@@ -813,9 +816,9 @@
         <summary><span class="hi-ic">🏁</span>사이클 기록</summary>
         <p><b>사이클 = 첫 매수부터 전량 매도까지.</b> 익절이든 손절이든 보유 전량을 매도하면 그 사이클이 끝나고, 매도일 기준으로 <b>연도.순번차</b> 이름이 자동으로 붙습니다. 예: 2026년에 세 번째로 끝난 사이클 = <b>2026.3차</b>. 해가 바뀌면 2027.1차부터 다시 셉니다.</p>
         <p><b>자동 종료(익절):</b> 시세를 불러올 때 마지막 기록 다음 거래일부터 어제까지 하루씩 다시 계산해, 그날 종가가 LOC 매도 예약가(평단 × (1 + AI 익절%), 센트 올림) 이상이면 보유 전량을 그날 종가로 매도한 것으로 보고 사이클을 닫습니다. 그다음 거래일부터는 신규 진입(전일 종가 이하 LOC)을 다시 자동 기록합니다. <b>손절·직접 매도</b>는 LOC 주문이 없으므로 [사이클 종료 직접 기록]에 날짜와 매도가를 넣으면 같은 방식으로 닫힙니다(매도가를 비우면 그날 종가).</p>
-        <p><b>사이클마다 남는 기록:</b> 기간(첫 매수 → 매도, 달력 일수·거래일 수), 매수 횟수와 분할 사용(예: 4/8), 수량·평단·투입금, 매도가, 손익 금액, 수익률, 보유 중 최대 낙폭(그 사이 최저 종가 ÷ 평단 − 1), 자동·직접 구분, 그 사이클의 매수 내역. 예: 9/24 → 9/30 · 6일 · 매수 2회 · 평단 $49.50 → $70.00 · +$2,050 · +41.41%.</p>
+        <p><b>사이클마다 남는 기록:</b> 기간(첫 매수 → 매도, 달력 일수·거래일 수), 매수 횟수와 분할 사용(예: 4/8), 수량·평단·투입금, 매도가, 손익 금액, 수익률, 보유 중 최대 낙폭(그 사이 최저 종가 ÷ 평단 − 1), 자동·직접 구분, 그 사이클의 매수 내역. 예: 9/24 → 9/30 · 6일 · 매수 2회 · 평단 24,000원 → 26,400원 · +240,000원 · +10.00%.</p>
         <p><b>평생 요약:</b> 누적 손익과 실현 수익률(손익 합계 ÷ 투입금 합계), 승률(익절 ÷ 전체), 평균 기간, 평균 매수 횟수, 최고·최저 사이클, 연도별 소계. 수수료·세금·환율은 반영하지 않습니다.</p>
-        <p><b>평생 보관:</b> 기록은 이 기기에 저장되고, ☁️ 동기화를 켜면 사이클이 끝날 때마다 GitHub 비공개 Gist에 자동으로 올라갑니다. 앱 데이터와 함께 <b>TQQQ-cycles.md</b> 라는 읽기 좋은 표 문서도 매번 다시 써지므로, 앱이 없어도 GitHub에서 기록을 볼 수 있습니다. 📊 엑셀 내보내기에도 사이클 시트가 들어갑니다. 잘못 닫힌 사이클은 줄을 펼쳐 [이 사이클 삭제]를 누르세요(가장 최근 것이면 매수 기록이 되살아납니다).</p>
+        <p><b>평생 보관:</b> 기록은 이 기기에 저장되고, ☁️ 동기화를 켜면 사이클이 끝날 때마다 GitHub 비공개 Gist에 자동으로 올라갑니다. 앱 데이터와 함께 <b>반도체2X-cycles.md</b> 라는 읽기 좋은 표 문서도 매번 다시 써지므로, 앱이 없어도 GitHub에서 기록을 볼 수 있습니다. 📊 엑셀 내보내기에도 사이클 시트가 들어갑니다. 잘못 닫힌 사이클은 줄을 펼쳐 [이 사이클 삭제]를 누르세요(가장 최근 것이면 매수 기록이 되살아납니다).</p>
         <div class="help-dyn" data-for="card-cycle"></div>
         <div class="help-dyn" data-for="card-trades"></div>
       </details>
@@ -823,7 +826,7 @@
       <details class="help-item" open>
         <summary><span class="hi-ic">☁️</span>PC · 모바일 기록 동기화</summary>
         <p>매수·매도·수익 기록을 내 GitHub 계정의 <b>비공개(secret) Gist</b> 한 곳에 저장해 PC와 폰이 같은 기록을 씁니다. 화면을 열 때, 기록을 저장·삭제할 때(1.5초 뒤), 다른 앱에서 돌아올 때, 열어둔 동안 90초마다 자동으로 맞춥니다.</p>
-        <p><b>토큰 만들기 (한 번만):</b> github.com → 오른쪽 위 프로필 → Settings → 맨 아래 Developer settings → Personal access tokens → <b>Tokens (classic)</b> → Generate new token (classic) → Note: 무한매수 동기화, Expiration: No expiration(또는 1년), 권한은 <b>gist 하나만</b> 체크 → Generate → <b>ghp_…</b> 복사. 같은 토큰을 PC와 폰의 이 카드에 각각 한 번씩 붙여넣고 [연결]을 누르면 끝입니다. SOXL에서 연결하면 같은 기기의 TQQQ도 자동으로 연결됩니다.</p>
+        <p><b>토큰 만들기 (한 번만):</b> github.com → 오른쪽 위 프로필 → Settings → 맨 아래 Developer settings → Personal access tokens → <b>Tokens (classic)</b> → Generate new token (classic) → Note: 무한매수 동기화, Expiration: No expiration(또는 1년), 권한은 <b>gist 하나만</b> 체크 → Generate → <b>ghp_…</b> 복사. 같은 토큰을 PC와 폰의 이 카드에 각각 한 번씩 붙여넣고 [연결]을 누르면 끝입니다. 반도체2X에서 연결하면 같은 기기의 TQQQ도 자동으로 연결됩니다.</p>
         <p><b>합치는 규칙:</b> 처음 연결하면 PC 기록과 폰 기록을 합칩니다(백업 복원으로 옮긴 같은 기록은 1건으로 인식). 한쪽에서 지운 기록은 다른 쪽에서도 지워지고, 두 기기가 같은 날 자동 저장한 체결은 1건으로 합칩니다. 양쪽에 같은 매수를 손으로 따로 입력했다면 2건이 되니 하나를 지우세요. 인터넷이 끊겨도 이 기기에 먼저 저장되고, 연결되면 자동으로 올라갑니다.</p>
         <p><b>보안:</b> 토큰은 이 기기 브라우저에만 저장되며 백업 텍스트에도 포함되지 않습니다. gist 권한만 있어 저장소·계정은 건드릴 수 없습니다. 비공개 Gist는 검색되지 않지만 주소를 아는 사람은 볼 수 있으니 Gist 주소는 공유하지 마세요. 폰을 잃어버리면 GitHub에서 토큰을 삭제(Revoke)하면 됩니다.</p>
         <div class="help-dyn" data-for="card-sync"></div>
@@ -835,18 +838,18 @@
       </details>
       <details class="help-item" open>
         <summary><span class="hi-ic">📊</span>엑셀로 내보내기</summary>
-        <p>버튼을 누르면 <b>TQQQ_매매기록_날짜.xlsx</b> 파일이 다운로드됩니다. 시트 3개: ① 요약(종료 사이클 수·승률·평균 기간·실현 손익·현재 보유·평가손익), ② 사이클(2026.1차 같은 이름·결과·기간·매수 횟수·평단·매도가·손익·수익률·최대 낙폭, 맨 아래 합계는 엑셀 수식), ③ 매수기록(사이클별 모든 매수, 진행 중인 사이클 포함). 날짜는 엑셀 날짜, 금액은 $ 서식, 수익률은 % 서식이라 바로 정렬·필터·차트에 쓸 수 있습니다. 인터넷 없이도 이 기기에서 만들어집니다.</p>
+        <p>버튼을 누르면 <b>반도체2X_매매기록_날짜.xlsx</b> 파일이 다운로드됩니다. 시트 3개: ① 요약(종료 사이클 수·승률·평균 기간·실현 손익·현재 보유·평가손익), ② 사이클(2026.1차 같은 이름·결과·기간·매수 횟수·평단·매도가·손익·수익률·최대 낙폭, 맨 아래 합계는 엑셀 수식), ③ 매수기록(사이클별 모든 매수, 진행 중인 사이클 포함). 날짜는 엑셀 날짜, 금액은 $ 서식, 수익률은 % 서식이라 바로 정렬·필터·차트에 쓸 수 있습니다. 인터넷 없이도 이 기기에서 만들어집니다.</p>
         <div class="help-dyn" data-for="card-excel"></div>
       </details>
     <div class="help-group">🤖 AI엔진 탭</div>
       <details class="help-item" open>
-        <summary><span class="hi-ic">🤖</span>TQQQ 변동성 최적화 AI 엔진</summary>
-        <p>기본 파라미터(6분할 · 2단계 주기 14일 · 손절모드 -12%)는 TQQQ 평상시 일간σ 약 3.6%에 맞춰져 있습니다. 이 엔진은 조회 시점 TQQQ의 실제 일간σ를 측정해 ① 변동성 배율로 파라미터를 환산한 "규칙 기반 추천"과 ② 분할 수 × 매수 주기 조합을 최근 200봉에 전수 백테스트해 인접 조합 평균(과최적화 완화)이 가장 높은 "백테스트 최적"을 함께 제시합니다. 백테스트는 아래 시뮬레이션과 같은 "평단&amp;전일종가 이하" 매수 규칙을 사용하며, 버튼을 누르면 시뮬레이션과 LOC 가이드에 바로 적용됩니다.</p>
+        <summary><span class="hi-ic">🤖</span>반도체2X 변동성 최적화 AI 엔진</summary>
+        <p>TQQQ 버전(V0.19)의 파라미터(6분할 · 2단계 주기 14일 · 손절모드 -12%)는 TQQQ 일간σ 약 3.6%에 맞춰져 있습니다. 이 엔진은 반도체2X의 실제 일간σ를 측정해 ① 변동성 배율로 파라미터를 환산한 "규칙 기반 추천"과 ② 분할 수 × 매수 주기 조합을 최근 200봉에 전수 백테스트해 인접 조합 평균(과최적화 완화)이 가장 높은 "백테스트 최적"을 함께 제시합니다. 백테스트는 아래 시뮬레이션과 같은 "평단&amp;전일종가 이하" 매수 규칙을 사용하며, 버튼을 누르면 시뮬레이션과 LOC 가이드에 바로 적용됩니다.</p>
         <div class="help-dyn" data-for="card-engine"></div>
       </details>
       <details class="help-item" open>
-        <summary><span class="hi-ic">🌊</span>TQQQ·QQQ 변동성 프로파일</summary>
-        <p>최근 200봉 TQQQ 일간 수익률의 변동성(표준편차)과 최근 20봉 변동성을 비교해 현재 변동성 국면을 진단합니다. 손절모드 기준선을 변동성 국면에 맞게 보정한 참고선과, 오늘 종가 기준 1σ 예상 등락 범위도 함께 제시합니다.</p>
+        <summary><span class="hi-ic">🌊</span>레버리지·1배 변동성 프로파일</summary>
+        <p>최근 200봉 반도체2X 일간 수익률의 변동성(표준편차)과 최근 20봉 변동성을 비교해 현재 변동성 국면을 진단합니다. 손절모드 기준선을 변동성 국면에 맞게 보정한 참고선과, 오늘 종가 기준 1σ 예상 등락 범위도 함께 제시합니다.</p>
         <div class="help-dyn" data-for="card-vol"></div>
       </details>
     <div class="help-group">🎯 가이드 탭</div>
@@ -862,19 +865,26 @@
       </details>
     <div class="help-group">📊 통계 탭</div>
       <details class="help-item" open>
-        <summary><span class="hi-ic">📉</span>TQQQ 연속 하락 통계 (최근 200봉)</summary>
+        <summary><span class="hi-ic">📉</span>반도체2X 연속 하락 통계 (최근 200봉)</summary>
         <p>최근 200봉 종가 기준 연속 하락 일수별 발생 확률과, 연속 하락 시마다 종가로 1주씩 매수하여 하락 전 고점 가격에 도달했을 때 전량 매도했다고 가정한 구간별 평균 수익률입니다. 상단 요약의 평균 연속일수·평균 하락률·최대 하락률은 실제 발생한 모든 연속 하락 구간을 집계한 값이며, 평균 하락률은 최대·최소 각 1건을 제외하고 계산합니다.</p>
         <div class="help-dyn" data-for="card-down"></div>
       </details>
       <details class="help-item" open>
-        <summary><span class="hi-ic">📈</span>TQQQ 연속 상승 통계 (최근 200봉)</summary>
+        <summary><span class="hi-ic">📈</span>반도체2X 연속 상승 통계 (최근 200봉)</summary>
         <p>최근 200봉 종가 기준 연속 상승 일수별 발생 확률과, 연속 상승 구간별 평균 상승률입니다. 상승률은 상승 시작 전 종가(직전 저점) 대비 상승 종료일 종가의 변화율입니다. 상단 요약의 평균 연속일수·평균 상승률·최대 상승률은 실제 발생한 모든 연속 상승 구간을 집계한 값이며, 평균 상승률은 최대·최소 각 1건을 제외하고 계산합니다.</p>
         <div class="help-dyn" data-for="card-up"></div>
       </details>
     <div class="help-group">📡 데이터</div>
       <details class="help-item" open>
+        <summary><span class="hi-ic">🇰🇷</span>국내 주문 방법 · 호가 · 세금</summary>
+        <p><b>LOC 대신 종가 단일가 지정가:</b> 국내 증권사에는 LOC(지정가-종가) 주문이 없습니다. 한국거래소는 15:20~15:30에 주문을 모아 종가 하나로 체결(종가 단일가)하므로, 이 10분 동안 표시된 가격으로 <b>지정가</b> 주문을 내면 LOC와 같은 효과가 납니다. 매수는 종가가 지정가 이하일 때, 매도는 종가가 지정가 이상일 때 종가로 체결됩니다. 15:20 전에 내면 장중 가격에 바로 체결될 수 있으니 주의하세요. 예: 매수 지정가 24,150원, 종가 24,100원 → 24,100원에 체결 / 종가 24,200원 → 미체결.</p>
+        <p><b>호가 단위·수량:</b> ETF는 2,000원 미만 1원, 2,000원 이상 5원 단위라 매수가는 5원 단위로 내림, 매도가는 5원 단위로 올림합니다(예: 평단 24,033원 × 1.075 = 25,835.5원 → 25,840원). 수량은 1주 단위입니다.</p>
+        <p><b>세금:</b> 국내 상장 레버리지 ETF의 매매차익은 배당소득세(15.4%, 보유기간 과세 · 과세표준 기준가 증가분과 실제 차익 중 작은 금액) 대상입니다. 이 화면의 손익·수익률은 세금·수수료 전 금액입니다.</p>
+        <div class="help-dyn" data-for="card-krx"></div>
+      </details>
+      <details class="help-item" open>
         <summary><span class="hi-ic">📡</span>데이터 출처</summary>
-        <p>데이터 출처: 실시간 시세 = Finnhub API (무료), 과거 일별 종가(전고점·추이) = Twelve Data API (무료, Finnhub 무료 티어는 캔들 엔드포인트를 지원하지 않음).</p>
+        <p>KODEX 반도체레버리지(494310, KRX 반도체 지수 일간 2배)와 비교용 KODEX 반도체(091160, 1배)의 일봉·현재가를 <b>네이버 금융</b>에서 받습니다(실패하면 Yahoo Finance). 국내 ETF는 브라우저에서 무료로 부를 수 있는 시세 API가 없어, 이 저장소의 <b>GitHub Actions 자동 수집기</b>가 평일 15:07 · 15:47 · 18:17(KST)에 data/kodex.json을 갱신하고 이 화면은 그 파일을 읽습니다. 15:07 수집분의 현재가는 장중 가격이고, 전략 계산은 15:40 이후 확정된 종가만 씁니다. 수집 시각은 시세를 불러온 뒤 상단 알림에 표시됩니다. 실제 주문 전에는 증권사 앱의 시세를 함께 확인하세요.</p>
       </details>
   </section>
   </div>
@@ -909,8 +919,8 @@
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V0.39";
-const RELEASE_DATE = "261003";
+const APP_VERSION = "V0.1";
+const RELEASE_DATE = "261008";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
 const FINNHUB_API_KEY = "daik4m9r01qr9o8hnfj0daik4m9r01qr9o8hnfjg";
@@ -920,43 +930,47 @@ const FINNHUB_BASE_URL = "https://finnhub.io/api/v1";
 const TWELVE_DATA_API_KEY = "7382ca9c267944f49ae850dbbdb7545f";
 const TWELVE_DATA_BASE_URL = "https://api.twelvedata.com";
 
-const BASE_TICKER = "QQQ";   // 기초지수 ETF
-const LEV_TICKER = "TQQQ";    // 3배 레버리지 ETF
+const BASE_TICKER = "091160";   // KODEX 반도체 (1배, KRX 반도체 지수)
+const LEV_TICKER = "KODEX";    // KODEX 반도체레버리지 494310 (2배) — 저장 키·파일 이름용
+const LEV_CODE = "494310";
 
 const LOOKBACK_CANDLES = 200;          // 전고점·추이·CCI 등 모든 분석 기준 봉 수
 const STREAK_LOOKBACK_CANDLES = 200;   // 연속 하락/상승 통계 기준 봉 수 (동일 200봉)
 const CCI_PERIOD = 20;
 
-/* ===================== TQQQ 변동성 최적화 파라미터 =====================
-   TQQQ 일간σ는 통상 3.5~4.0%로, 이 파일의 기준값(REF_SIGMA 3.6%)이 곧 TQQQ 자신의 평상시 변동성이다.
-   따라서 기본 파라미터(6분할 · 2단계 주기 14일 · 손절모드 -12%)를 그대로 쓰고,
-   AI 엔진이 조회 시점의 실제 σ를 재서 k = σ ÷ 3.6 만큼 다시 환산한다.
-   SOXL판(일간σ 약 5.8%, k≈1.6)과 비교하면 TQQQ는 같은 %를 움직이는 데 시간이 더 걸리므로
-   ① 매도 목표를 낮고 촘촘하게, ② 손절선을 얕게, ③ 매수 주기를 길게 잡는다.
-   ① 매도 목표 스윕: 0.5~10%, 0.25%p 간격 (SOXL판 1~15% / 0.5%p)
-   ② 손절모드 기준선: 평단 -12% (평단×0.88) (SOXL판 -20%)
-   ③ 분할 수 기본값: 6분할 (SOXL판 8분할)
-   ④ 2단계 매수 주기: 14일 — 같은 % 이동에 걸리는 시간 ∝ 1/σ² (SOXL판 5일)
-   ⑤ 변동성 보정계수 범위: 0.8~1.3 — TQQQ는 국면 전환 폭이 SOXL보다 작다 (SOXL판 0.8~1.5) */
-const SELL_SWEEP_MIN = 0.5, SELL_SWEEP_MAX = 10, SELL_SWEEP_STEP = 0.25;
-const STRAT2_MODE_RATIO = 0.88;           // 손절모드/일반모드 전환 기준(평단가 대비 -12%)
-const VOL_FACTOR_MIN = 0.8, VOL_FACTOR_MAX = 1.3;
-const REF_SIGMA = 3.6;                    // 기본 파라미터가 맞춰진 기준 일간σ(%) = TQQQ 평상시 변동성
-const BASE_PARAMS = { splits: 6, cycle: 14, stopModePct: 12 };
-const ENGINE_SPLITS_GRID = [4, 5, 6, 7, 8, 10, 12];
-const ENGINE_CYCLE_GRID = [5, 8, 10, 14, 20, 28];
+/* ===================== KODEX 반도체레버리지(2배) 변동성 최적화 파라미터 =====================
+   기준: TQQQ V0.19 파라미터는 TQQQ 일간σ ≈ 3.6%에 맞춰 튜닝됨.
+   KODEX 반도체레버리지는 KRX 반도체 지수(삼성전자·SK하이닉스 비중이 큼)의 일간 2배.
+   일간σ는 국면에 따라 대략 3~5% → TQQQ와 비슷하거나 조금 큼(k ≈ 0.9~1.4).
+   ① 매도 목표 스윕: 1~15% (0.5%p 간격) — 고변동 국면까지 덮도록 반도체2X과 같은 넓은 범위
+   ② 손절모드 기준선: 2배라 3배(SOXL -20%)보다 좁게 → -15% (평단×0.85)
+   ③ 분할 수·2단계 주기는 AI 엔진이 조회 때마다 실측 σ로 6√k · 14/k² 환산 + 200봉 백테스트로 다시 정한다.
+   ⑤ 변동성 보정계수 범위: 0.8~1.5 */
+const SELL_SWEEP_MIN = 1, SELL_SWEEP_MAX = 15, SELL_SWEEP_STEP = 0.5;
+const STRAT2_MODE_RATIO = 0.85;           // 손절모드/일반모드 전환 기준(평단가 대비 -15%)
+const VOL_FACTOR_MIN = 0.8, VOL_FACTOR_MAX = 1.5;
+const TQQQ_REF_SIGMA = 3.6;               // TQQQ V0.19 튜닝 기준 일간σ(%)
+const TQQQ_BASE = { splits: 6, cycle: 14, stopModePct: 12 };
+const ENGINE_SPLITS_GRID = [5, 6, 7, 8, 9, 10, 12];
+const ENGINE_CYCLE_GRID = [3, 4, 6, 8, 10, 14, 20];
 
+/* CCI(20)를 200봉 전체 구간에서 계산하려면 앞쪽에 19봉 여유분이 더 필요하다(200 + 19 = 219봉). */
+/* +1봉: 장중에는 Twelve Data가 "오늘 진행 중인 봉"을 최신 봉으로 주므로, 이를 제외해도 확정 종가 200봉(+CCI 여유 19봉)이 남도록 한다. */
 const BASE_FETCH_CANDLES = LOOKBACK_CANDLES + CCI_PERIOD;
 const LEV_FETCH_CANDLES = STREAK_LOOKBACK_CANDLES + CCI_PERIOD;
 
 let liveAth = null;
 let liveAthDate = "";
-let lastTqqqHist = null;
-let lastTqqqPrice = null;
-let lastTqqqPriceDate = "";
+let lastSoxlHist = null;
+let lastSoxlPrice = null;
+let lastSoxlPriceDate = "";
 let sellAnalysisCache = { hist: null, result: null };
 
-const usd = (n) => (n === null || n === undefined || isNaN(n)) ? "--" : "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const usd = (n) => (n === null || n === undefined || isNaN(n)) ? "--" : Math.round(n).toLocaleString("ko-KR") + "원";
+/* ETF 호가가격단위(한국거래소): 2,000원 미만 1원 · 2,000원 이상 5원 */
+const tickOf = p => p < 2000 ? 1 : 5;
+const floorTick = p => { const t = tickOf(p); return Math.floor(p / t + 1e-9) * t; };
+const ceilTick = p => { const t = tickOf(p); return Math.ceil(p / t - 1e-9) * t; };
 const pct = (n) => (n === null || n === undefined || isNaN(n)) ? "--" : n.toFixed(2) + "%";
 const fmtNum = (n, digits = 2) => (n === null || n === undefined || isNaN(n)) ? "--" : n.toFixed(digits);
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -971,59 +985,55 @@ function hideBanner() {
   document.getElementById("errorBanner").classList.add("hidden");
 }
 
-/* ---------- Finnhub: 실시간 시세(quote) 전용 ---------- */
-async function fhFetch(endpoint, params = {}) {
-  const url = new URL(`${FINNHUB_BASE_URL}${endpoint}`);
-  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
-  url.searchParams.set("token", FINNHUB_API_KEY);
-  const res = await fetch(url.toString());
-  if (!res.ok) throw new Error(`HTTP 오류 (${res.status})`);
-  const data = await res.json();
-  if (data.error) throw new Error(data.error);
-  return data;
+/* ---------- 시세 데이터: GitHub Actions가 장 마감 전후 네이버 금융에서 받아 저장한 data/kodex.json ----------
+   국내 ETF는 무료 브라우저용 시세 API가 없어(Twelve Data 한국거래소 = 유료, Finnhub 무료 = 미국만),
+   저장소의 자동 수집기(.github/workflows/kodex-data.yml)가 평일 15:07 · 15:47 · 18:17(KST)에 갱신한다.
+   같은 주소(Pages)와 raw.githubusercontent.com 두 곳을 동시에 읽어 더 최근 것을 쓴다. */
+function kodexDataUrls() {
+  const urls = ["data/kodex.json"];
+  const m = location.hostname.match(/^([^.]+)\.github\.io$/i), repo = location.pathname.split("/").filter(Boolean)[0];
+  if (m && repo) urls.push(`https://raw.githubusercontent.com/${m[1]}/${repo}/main/data/kodex.json`);
+  else urls.push("https://mins0x001.github.io/TQQQ/data/kodex.json", "https://raw.githubusercontent.com/mins0x001/TQQQ/main/data/kodex.json");
+  return urls;
 }
-
+let __kodexData = null, __kodexP = null;
+async function __loadKodex() {
+  const got = await Promise.all(kodexDataUrls().map(async u => {
+    try {
+      const r = await fetch(u + (u.includes("?") ? "&" : "?") + "t=" + Date.now(), { cache: "no-store" });
+      if (!r.ok) return null;
+      const j = await r.json();
+      return (j && j.lev && Array.isArray(j.lev.bars) && j.lev.bars.length > 30) ? j : null;
+    } catch (e) { return null; }
+  }));
+  const ok = got.filter(Boolean).sort((a, b) => String(b.updated).localeCompare(String(a.updated)));
+  if (!ok.length) throw new Error("시세 파일(data/kodex.json)이 아직 없습니다. GitHub 저장소 → Actions → 'KODEX 시세 수집' → Run workflow를 한 번 실행하세요.");
+  __kodexData = ok[0];
+  return __kodexData;
+}
+function loadKodexData() {
+  if (!__kodexP) __kodexP = __loadKodex().finally(() => setTimeout(() => { __kodexP = null; }, 3000));
+  return __kodexP;
+}
+const kodexSeries = (j, symbol) => symbol === BASE_TICKER ? j.base : j.lev;
 async function fetchQuote(symbol) {
-  const data = await fhFetch("/quote", { symbol });
-  if (!data || data.c === undefined || data.c === 0) {
-    throw new Error(`${symbol} 시세를 가져오지 못했습니다.`);
-  }
-  return data.c;
+  const j = await loadKodexData(), sr = kodexSeries(j, symbol);
+  const q = sr.quote && sr.quote.price > 0 ? sr.quote.price : (sr.bars.length ? sr.bars[sr.bars.length - 1][4] : 0);
+  if (!(q > 0)) throw new Error(`${sr.name || symbol} 시세가 비어 있습니다.`);
+  return q;
 }
-
-/* ---------- Twelve Data: 일별 과거 시세(캔들) 전용 ---------- */
 async function tdFetchTimeSeries(symbol, outputsize) {
-  const url = new URL(`${TWELVE_DATA_BASE_URL}/time_series`);
-  url.searchParams.set("symbol", symbol);
-  url.searchParams.set("interval", "1day");
-  url.searchParams.set("outputsize", outputsize);
-  url.searchParams.set("apikey", TWELVE_DATA_API_KEY);
-  const res = await fetch(url.toString());
-  if (!res.ok) throw new Error(`HTTP 오류 (${res.status})`);
-  const data = await res.json();
-  if (data.status === "error" || !data.values) {
-    throw new Error(`${symbol} 과거 시세를 가져오지 못했습니다: ${data.message || "알 수 없는 오류"}`);
-  }
-  // Twelve Data는 최신순(내림차순)으로 반환하므로 오래된순으로 뒤집는다.
-  const bars = data.values
-    .map(v => ({
-      d: String(v.datetime).slice(0, 10),
-      x: new Date(v.datetime).getTime(),
-      o: parseFloat(v.open),
-      h: parseFloat(v.high),
-      l: parseFloat(v.low),
-      y: parseFloat(v.close)
-    }))
-    .reverse();
-  return dropIncompleteBar(bars);
+  const j = await loadKodexData(), sr = kodexSeries(j, symbol);
+  const bars = sr.bars.map(([d, o, h, l, c]) => ({ d, x: new Date(d + "T00:00:00Z").getTime(), o: +o, h: +h, l: +l, y: +c }));
+  return dropIncompleteBar(bars).slice(-outputsize);
 }
 
 /* ---------- 미확정(장중) 일봉 제외 ----------
-   미국 장중(뉴욕 시간 16:15 이전)에 Twelve Data 일봉을 요청하면 가장 최근 봉이 "오늘 진행 중인 봉"이고,
+   한국 장중(15:40 이전)에 수집된 일봉은 가장 최근 봉이 "오늘 진행 중인 봉"이고,
    그 close 값은 확정 종가가 아니라 현재가다. 이 봉을 그대로 쓰면 '최근 종가'가 어제 종가가 아닌 장중 가격이 되므로 제외한다. */
 function nyNowParts() {
   const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit",
+    timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit",
     hour: "2-digit", minute: "2-digit", hour12: false
   }).formatToParts(new Date());
   const get = t => (parts.find(p => p.type === t) || {}).value;
@@ -1035,7 +1045,7 @@ function dropIncompleteBar(bars) {
   const ny = nyNowParts();
   const last = bars[bars.length - 1];
   const isToday = last.d === ny.date;
-  const beforeFinalClose = ny.minutes < 16 * 60 + 15; // 16:00 마감 + 15분 확정 여유
+  const beforeFinalClose = ny.minutes < 15 * 60 + 40; // KRX 15:30 마감 + 10분 확정 여유
   if (last.d > ny.date || (isToday && beforeFinalClose)) return bars.slice(0, -1);
   return bars;
 }
@@ -1053,9 +1063,9 @@ function computeCciSeries(hist, period) {
   return out;
 }
 
-async function fetchQqqAthAndTrend() {
+async function fetchSoxxAthAndTrend() {
   const fullHist = await tdFetchTimeSeries(BASE_TICKER, BASE_FETCH_CANDLES);
-  if (fullHist.length === 0) throw new Error("QQQ 일별 시세 데이터를 가져오지 못했습니다.");
+  if (fullHist.length === 0) throw new Error("반도체1X 일별 시세 데이터를 가져오지 못했습니다.");
   const hist = fullHist.slice(-LOOKBACK_CANDLES);
   let ath = 0, athIndex = 0;
   hist.forEach((d, idx) => {
@@ -1066,9 +1076,9 @@ async function fetchQqqAthAndTrend() {
   return { ath, athDate, hist, cciHist, fullHist };
 }
 
-async function fetchTqqqHistory() {
+async function fetchSoxlHistory() {
   const fullHist = await tdFetchTimeSeries(LEV_TICKER, LEV_FETCH_CANDLES);
-  if (fullHist.length === 0) throw new Error("TQQQ 일별 시세 데이터를 가져오지 못했습니다.");
+  if (fullHist.length === 0) throw new Error("반도체2X 일별 시세 데이터를 가져오지 못했습니다.");
   return { fullHist, hist: fullHist.slice(-STREAK_LOOKBACK_CANDLES) };
 }
 
@@ -1076,43 +1086,43 @@ async function fetchAll() {
   const btn = document.getElementById("fetchBtn");
   btn.disabled = true;
   hideBanner();
-  btn.textContent = "시세 불러오는 중… (Finnhub + Twelve Data)";
+  btn.textContent = "시세 불러오는 중… (GitHub 자동 수집 데이터)";
 
   try {
-    const [qqqPrice, qqqData, tqqqData, tqqqPrice] = await Promise.all([
+    const [soxxPrice, soxxData, soxlData, soxlPrice] = await Promise.all([
       fetchQuote(BASE_TICKER),
-      fetchQqqAthAndTrend(),
-      fetchTqqqHistory(),
+      fetchSoxxAthAndTrend(),
+      fetchSoxlHistory(),
       fetchQuote(LEV_TICKER)
     ]);
 
-    liveAth = qqqData.ath;
-    liveAthDate = qqqData.athDate;
+    liveAth = soxxData.ath;
+    liveAthDate = soxxData.athDate;
 
-    const tqqqHistFull = tqqqData.hist; // 최근 200봉
-    const qqqCciLast = qqqData.cciHist.length > 0 ? qqqData.cciHist[qqqData.cciHist.length - 1].y : null;
-    const tqqqCciHist = computeCciSeries(tqqqData.fullHist, CCI_PERIOD).slice(-LOOKBACK_CANDLES);
+    const soxlHistFull = soxlData.hist; // 최근 200봉
+    const soxxCciLast = soxxData.cciHist.length > 0 ? soxxData.cciHist[soxxData.cciHist.length - 1].y : null;
+    const soxlCciHist = computeCciSeries(soxlData.fullHist, CCI_PERIOD).slice(-LOOKBACK_CANDLES);
 
-    updateHeader(qqqPrice, qqqData.ath, qqqData.athDate, qqqCciLast);
-    updateTqqqHeader(tqqqPrice, tqqqHistFull, tqqqCciHist.length > 0 ? tqqqCciHist[tqqqCciHist.length - 1].y : null);
+    updateHeader(soxxPrice, soxxData.ath, soxxData.athDate, soxxCciLast);
+    updateSoxlHeader(soxlPrice, soxlHistFull, soxlCciHist.length > 0 ? soxlCciHist[soxlCciHist.length - 1].y : null);
     // 이후 렌더링은 실제 카드 배치 순서와 맞춘다.
-    lastTqqqHist = tqqqHistFull;
-    lastTqqqPrice = tqqqPrice;
-    lastTqqqPriceDate = new Date().toISOString().split("T")[0];
+    lastSoxlHist = soxlHistFull;
+    lastSoxlPrice = soxlPrice;
+    lastSoxlPriceDate = new Date().toISOString().split("T")[0];
     setDefaultBuyDate(document.getElementById("buyRecDate").dataset.autoDefault === "1");
-    renderVolEngineCard(tqqqHistFull);   // ① 규칙/② 최적 값을 먼저 계산
+    renderVolEngineCard(soxlHistFull);   // ① 규칙/② 최적 값을 먼저 계산
     syncParamsWithMode();                  // 현재 모드 값 자동 적용 (기본 ① 규칙)
     autoRecordYesterdayBuy();
     renderLocGuideCard();
     updateBuyQtyHint();
     renderBuyRecords();
     renderSeedSimCards();
-    renderVolProfileCard(tqqqHistFull, qqqData.fullHist.slice(-STREAK_LOOKBACK_CANDLES));
-    renderTqqqStreakStats(tqqqHistFull);
-    renderTqqqUpStreakStats(tqqqHistFull);
-    renderTqqqStreakBanner(tqqqHistFull);
+    renderVolProfileCard(soxlHistFull, soxxData.fullHist.slice(-STREAK_LOOKBACK_CANDLES));
+    renderSoxlStreakStats(soxlHistFull);
+    renderSoxlUpStreakStats(soxlHistFull);
+    renderSoxlStreakBanner(soxlHistFull);
 
-    showBanner("실시간 시세(Finnhub)와 과거 종가 데이터(Twelve Data)를 모두 정상적으로 불러왔습니다.", true);
+    showBanner(`시세 데이터를 불러왔습니다 · 수집 ${(__kodexData && __kodexData.updated_kst) || "-"} (KST) · 최근 확정 종가 ${lastSoxlHist && lastSoxlHist.length ? lastSoxlHist[lastSoxlHist.length - 1].d : "-"}`, true);
   } catch (e) {
     showBanner("시세 조회 실패: " + e.message, false);
   }
@@ -1121,10 +1131,10 @@ async function fetchAll() {
   btn.textContent = "시세 다시 불러오기";
 }
 
-function updateHeader(price, ath, athDate, qqqCci) {
+function updateHeader(price, ath, athDate, soxxCci) {
   const dd = ((price - ath) / ath) * 100;
 
-  document.getElementById("qqqPriceDisplay").textContent = usd(price);
+  document.getElementById("soxxPriceDisplay").textContent = usd(price);
   document.getElementById("athDisplay").textContent = usd(ath);
   document.getElementById("athDateMeta").textContent = athDate ? ("전고점 기준일 " + athDate) : "";
 
@@ -1132,29 +1142,29 @@ function updateHeader(price, ath, athDate, qqqCci) {
   ddPill.textContent = (dd >= 0 ? "+" : "") + pct(dd);
   ddPill.classList.toggle("flat", dd > -0.01 && dd < 0.01);
 
-  const cciOk = (qqqCci !== null && qqqCci !== undefined && !isNaN(qqqCci) && qqqCci < 0);
+  const cciOk = (soxxCci !== null && soxxCci !== undefined && !isNaN(soxxCci) && soxxCci < 0);
 
-  const cciBigEl = document.getElementById("qqqCciBigDisplay");
-  cciBigEl.textContent = fmtNum(qqqCci, 1);
+  const cciBigEl = document.getElementById("soxxCciBigDisplay");
+  cciBigEl.textContent = fmtNum(soxxCci, 1);
   cciBigEl.classList.remove("pos", "neg");
   cciBigEl.classList.add(cciOk ? "neg" : "pos");
 
   document.getElementById("lastUpdated").textContent = "마지막 조회 " + new Date().toLocaleTimeString("ko-KR");
 }
 
-function updateTqqqHeader(price, hist, tqqqCci) {
+function updateSoxlHeader(price, hist, soxlCci) {
   const recent = hist.slice(-LOOKBACK_CANDLES);
   const ath = Math.max(...recent.map(d => d.y));
   const dd = ((price - ath) / ath) * 100;
-  document.getElementById("tqqqPriceDisplay").textContent = usd(price);
-  document.getElementById("tqqqAthDisplay").textContent = usd(ath);
-  const pill = document.getElementById("tqqqDdPill");
+  document.getElementById("soxlPriceDisplay").textContent = usd(price);
+  document.getElementById("soxlAthDisplay").textContent = usd(ath);
+  const pill = document.getElementById("soxlDdPill");
   pill.textContent = (dd >= 0 ? "+" : "") + pct(dd);
   pill.classList.toggle("flat", dd > -0.01 && dd < 0.01);
-  const levCciEl = document.getElementById("tqqqCciBigDisplay");
-  levCciEl.textContent = fmtNum(tqqqCci, 1);
+  const levCciEl = document.getElementById("soxlCciBigDisplay");
+  levCciEl.textContent = fmtNum(soxlCci, 1);
   levCciEl.classList.remove("pos", "neg");
-  levCciEl.classList.add((tqqqCci !== null && !isNaN(tqqqCci) && tqqqCci < 0) ? "neg" : "pos");
+  levCciEl.classList.add((soxlCci !== null && !isNaN(soxlCci) && soxlCci < 0) ? "neg" : "pos");
 }
 
 function fmtCompactDate(t) {
@@ -1167,7 +1177,7 @@ function fmtShortDate(t) {
   return new Date(t).toLocaleDateString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit" });
 }
 
-/* ---------- TQQQ 연속 하락 통계 (최근 200봉) ---------- */
+/* ---------- 반도체2X 연속 하락 통계 (최근 200봉) ---------- */
 function findDownStreaks(hist) {
   const streaks = [];
   let i = 1;
@@ -1240,8 +1250,8 @@ function computeDayChangeCounts(hist) {
   return { downDays, upFlatDays };
 }
 
-function renderTqqqStreakStats(hist) {
-  const container = document.getElementById("tqqqStreakContent");
+function renderSoxlStreakStats(hist) {
+  const container = document.getElementById("soxlStreakContent");
   const { downDays, upFlatDays } = computeDayChangeCounts(hist);
   const stats = computeStreakStats(hist);
   const detail = computeStreakDetailStats(hist);   // 평균 연속일수·평균 하락률·최대 하락률
@@ -1282,7 +1292,7 @@ function renderTqqqStreakStats(hist) {
   `;
 }
 
-/* ---------- TQQQ 연속 상승 통계 (최근 200봉) ---------- */
+/* ---------- 반도체2X 연속 상승 통계 (최근 200봉) ---------- */
 function computeUpStreakStatsForLength(streaks, totalStreaks, hist, k) {
   const atLeastCount = streaks.filter(s => s.length >= k).length;
   const probability = totalStreaks > 0 ? (atLeastCount / totalStreaks) * 100 : 0;
@@ -1313,8 +1323,8 @@ function computeUpDayChangeCounts(hist) {
   return { upDays, downFlatDays };
 }
 
-function renderTqqqUpStreakStats(hist) {
-  const container = document.getElementById("tqqqUpStreakStatsContent");
+function renderSoxlUpStreakStats(hist) {
+  const container = document.getElementById("soxlUpStreakStatsContent");
   if (!container) return;
   const { upDays, downFlatDays } = computeUpDayChangeCounts(hist);
   const stats = computeUpStreakStats(hist);
@@ -1356,7 +1366,7 @@ function renderTqqqUpStreakStats(hist) {
   `;
 }
 
-/* ---------- TQQQ 연속 하락 구간 상세 내역 ---------- */
+/* ---------- 반도체2X 연속 하락 구간 상세 내역 ---------- */
 function fmtDateFull(t) {
   return new Date(t).toISOString().split("T")[0];
 }
@@ -1377,7 +1387,7 @@ function computeStreakDetailStats(hist) {
 }
 
 
-/* ---------- TQQQ 연속 상승 구간 상세 내역 ---------- */
+/* ---------- 반도체2X 연속 상승 구간 상세 내역 ---------- */
 function findUpStreaks(hist) {
   const streaks = [];
   let i = 1;
@@ -1413,8 +1423,8 @@ function computeUpStreakDetailStats(hist) {
 }
 
 
-/* ---------- 상단 카드: 오늘 기준 TQQQ 연속 하락/상승 현황 배너 ---------- */
-function computeCurrentTqqqStreakStatus(hist) {
+/* ---------- 상단 카드: 오늘 기준 반도체2X 연속 하락/상승 현황 배너 ---------- */
+function computeCurrentSoxlStreakStatus(hist) {
   if (!hist || hist.length < 2) return null;
   const last = hist[hist.length - 1];
   const prev = hist[hist.length - 2];
@@ -1448,17 +1458,17 @@ function computeStreakContinuationProb(hist, direction, currentLength) {
   return { continueProb, reverseProb: 100 - continueProb, sampleCount: totalAtLeast };
 }
 
-function renderTqqqStreakBanner(hist) {
-  const el = document.getElementById("tqqqStreakBanner");
+function renderSoxlStreakBanner(hist) {
+  const el = document.getElementById("soxlStreakBanner");
   if (!el) return;
-  const status = computeCurrentTqqqStreakStatus(hist);
+  const status = computeCurrentSoxlStreakStatus(hist);
   if (!status || status.direction === "flat") {
     el.classList.add("hidden");
     el.innerHTML = "";
     return;
   }
   const isDown = status.direction === "down";
-  const label = isDown ? "TQQQ 오늘 연속 하락 중" : "TQQQ 오늘 연속 상승 중";
+  const label = isDown ? "반도체2X 오늘 연속 하락 중" : "반도체2X 오늘 연속 상승 중";
   const colorVar = isDown ? "var(--down)" : "var(--up)";
   const bg = isDown ? "rgba(240,71,90,0.12)" : "rgba(56,217,140,0.12)";
   const border = isDown ? "rgba(240,71,90,0.35)" : "rgba(56,217,140,0.35)";
@@ -1612,7 +1622,7 @@ function buildAiStrategy(hist) {
 }
 
 
-/* ---------- TQQQ 매도가·손절 전략 분석 (평단가 대비 % 매도 목표 전수 시뮬레이션) ---------- */
+/* ---------- 반도체2X 매도가·손절 전략 분석 (평단가 대비 % 매도 목표 전수 시뮬레이션) ---------- */
 function simulateSellTargets(hist, streaks, minPct, maxPct, stepPct) {
   const targets = [];
   for (let p = minPct; p <= maxPct + 1e-9; p += stepPct) targets.push(Math.round(p * 100) / 100);
@@ -1779,24 +1789,24 @@ function simulateSeedBacktest(hist, seed, splits, requirePrevDown, cycleDays) {
 
 function fmtUsd0Signed(n) {
   if (n === null || n === undefined || isNaN(n)) return "--";
-  return (n >= 0 ? "+" : "-") + "$" + Math.abs(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
+  return (n >= 0 ? "+" : "-") + Math.abs(Math.round(n)).toLocaleString("ko-KR") + "원";
 }
 function fmtUsdCompact(n) {
-  // 좁은 표 칸용: $15,240,643 → $15.24M, $152,300 → $152.3K (10만 달러 미만은 그대로)
+  // 좁은 표 칸용: 152,345,000원 → 1.52억, 12,340,000원 → 1,234만 (100만원 미만은 그대로)
   if (n === null || n === undefined || isNaN(n)) return "--";
   const a = Math.abs(n);
-  if (a >= 1e6) return "$" + (n / 1e6).toFixed(2) + "M";
-  if (a >= 1e5) return "$" + (n / 1e3).toFixed(1) + "K";
+  if (a >= 1e8) return (n / 1e8).toFixed(2) + "억";
+  if (a >= 1e6) return Math.round(n / 1e4).toLocaleString("ko-KR") + "만";
   return fmtUsd0(n);
 }
 function fmtUsd0(n) {
   if (n === null || n === undefined || isNaN(n)) return "--";
-  return "$" + Number(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
+  return Math.round(n).toLocaleString("ko-KR") + "원";
 }
 
 function renderSeedSimCard(n, requirePrevDown) {
   const el = document.getElementById("seedSimContent" + n);
-  if (!el || !lastTqqqHist) return;
+  if (!el || !lastSoxlHist) return;
 
   const seed = parseFloat(document.getElementById("seedSimSeed" + n).value);
   const splits = parseInt(document.getElementById("seedSimSplits" + n).value, 10);
@@ -1807,7 +1817,7 @@ function renderSeedSimCard(n, requirePrevDown) {
     return;
   }
 
-  const r = simulateSeedBacktest(lastTqqqHist, seed, splits, requirePrevDown, cycleDays);
+  const r = simulateSeedBacktest(lastSoxlHist, seed, splits, requirePrevDown, cycleDays);
   if (!r) {
     el.innerHTML = '<div class="fg-empty">최근 200봉 내 연속 하락 구간이 없어 시뮬레이션할 수 없습니다.</div>';
     return;
@@ -1850,7 +1860,7 @@ function renderSeedSimCard(n, requirePrevDown) {
       <thead><tr><th>매수 내역 (회차·날짜·종가)</th><th>청산</th><th class="num">손익</th></tr></thead>
       <tbody>${rowsHtml}</tbody>
     </table>
-    <p class="desc" style="margin:12px 0 0;">1분할(시드÷분할수)어치를 종가로 정수 주식만큼 매수하고, 손익은 재투자 없이 고정 분할금액으로 계산했습니다. TQQQ 매도 목표는 ${SELL_SWEEP_MIN}~${SELL_SWEEP_MAX}% 구간(${SELL_SWEEP_STEP}%p 간격)을 전수 탐색해 기대수익률이 가장 높은 값을 사용합니다. AI 추천 분할매수 회차(${r.recommendedN}회)까지는 조건 충족 시마다 매수하고, 이를 초과하면 마지막 매수일로부터 ${r.cycle}일이 지난 뒤 조건이 다시 충족될 때만 1회 매수합니다([2단계] 표시). 수수료·세금·슬리피지는 반영하지 않았고, 종가 기준 체결을 가정한 과거 데이터 시뮬레이션이므로 실제 성과를 보장하지 않습니다.</p>
+    <p class="desc" style="margin:12px 0 0;">1분할(시드÷분할수)어치를 종가로 정수 주식만큼 매수하고, 손익은 재투자 없이 고정 분할금액으로 계산했습니다. 반도체2X 매도 목표는 ${SELL_SWEEP_MIN}~${SELL_SWEEP_MAX}% 구간(${SELL_SWEEP_STEP}%p 간격)을 전수 탐색해 기대수익률이 가장 높은 값을 사용합니다. AI 추천 분할매수 회차(${r.recommendedN}회)까지는 조건 충족 시마다 매수하고, 이를 초과하면 마지막 매수일로부터 ${r.cycle}일이 지난 뒤 조건이 다시 충족될 때만 1회 매수합니다([2단계] 표시). 수수료·세금·슬리피지는 반영하지 않았고, 종가 기준 체결을 가정한 과거 데이터 시뮬레이션이므로 실제 성과를 보장하지 않습니다.</p>
   `;
 }
 
@@ -1869,8 +1879,8 @@ function renderSeedSimCards() {
 });
 
 /* ---------- 나의 매수 기록 (localStorage 저장) ---------- */
-const BUY_RECORDS_KEY = "tqqq_buy_records_v2";
-const LOC_QTY_UNIT = 5;   // LOC 매수 수량 단위(주)
+const BUY_RECORDS_KEY = "kodex_buy_records_v1";
+const LOC_QTY_UNIT = 1;   // 국내 ETF 주문 수량 단위(주)
 
 function fmtKrDate(dateStr) {
   // 모바일에서 한 줄에 들어가도록 압축 표기: 26.09.10
@@ -1897,35 +1907,35 @@ function sortedBuyRecords() {
   });
 }
 function findCloseOnDate(dateStr) {
-  if (!lastTqqqHist) return null;
-  for (const d of lastTqqqHist) {
+  if (!lastSoxlHist) return null;
+  for (const d of lastSoxlHist) {
     if (new Date(d.x).toISOString().split("T")[0] === dateStr) return d.y;
   }
   return null;
 }
 function resolveAutoPrice(dateStr) {
-  /* 자동 매수가 결정 규칙 (V0.31)
+  /* 자동 매수가 결정 규칙 (V0.58)
      ① 입력한 날짜의 확정 종가가 있으면 그 종가
      ② 주말·휴장일이면 그 날짜 이전 가장 가까운 거래일 종가
-     ③ 오늘(뉴욕 기준) 장중이라 종가가 아직 없으면 실시간 현재가
+     ③ 오늘(한국 기준) 장중이라 종가가 아직 없으면 실시간 현재가
      ④ 데이터 범위(최근 200봉)보다 과거이거나 미래 날짜면 자동 입력 불가 → 직접 입력 요청
      이전 버전은 날짜가 데이터에 없으면 무조건 현재가를 넣고 "종가 자동"으로 표시해 평단이 틀어질 수 있었다. */
-  if (!lastTqqqHist || lastTqqqHist.length === 0) return null;
+  if (!lastSoxlHist || lastSoxlHist.length === 0) return null;
   const exact = findCloseOnDate(dateStr);
   if (exact !== null) return { price: exact, note: "종가 자동" };
-  const firstDate = fmtDateFull(lastTqqqHist[0].x);
-  const lastBar = lastTqqqHist[lastTqqqHist.length - 1];
+  const firstDate = fmtDateFull(lastSoxlHist[0].x);
+  const lastBar = lastSoxlHist[lastSoxlHist.length - 1];
   const lastDate = fmtDateFull(lastBar.x);
   const nyToday = nyNowParts().date;
   if (dateStr < firstDate) return { error: `${dateStr}은(는) 불러온 데이터(${firstDate}~) 이전이라 종가를 알 수 없습니다. 매수가를 직접 입력해주세요.` };
   if (dateStr > nyToday) return { error: `${dateStr}은(는) 미래 날짜입니다. 날짜를 확인해주세요.` };
   if (dateStr === nyToday && dateStr > lastDate) {
-    if (lastTqqqPrice !== null) return { price: lastTqqqPrice, note: "현재가 자동(장중)" };
+    if (lastSoxlPrice !== null) return { price: lastSoxlPrice, note: "현재가 자동(장중)" };
     return { error: "오늘 종가가 아직 확정되지 않았습니다. 매수가를 직접 입력해주세요." };
   }
   // 휴장일: 직전 거래일 종가
   let prev = null;
-  for (const d of lastTqqqHist) { if (fmtDateFull(d.x) <= dateStr) prev = d; else break; }
+  for (const d of lastSoxlHist) { if (fmtDateFull(d.x) <= dateStr) prev = d; else break; }
   if (prev) return { price: prev.y, note: `직전 거래일(${fmtCompactDate(prev.x)}) 종가` };
   return null;
 }
@@ -1963,7 +1973,7 @@ function addBuyRecord() {
     if (!(price > 0)) { showBuyRecMsg("매수가를 올바르게 입력해주세요.", false); return; }
   }
 
-  // 매수 수량: 입력값 우선, 비어 있으면 디폴트 = 1분할 금액 ÷ 매수가 → 5주 단위 내림 (LOC 가이드와 동일 공식)
+  // 매수 수량: 입력값 우선, 비어 있으면 디폴트 = 1분할 금액 ÷ 매수가 → 1주 단위 내림 (LOC 가이드와 동일 공식)
   let qty, autoQty = false;
   if (qtyInput === "") {
     const d = computeDefaultBuyQty(price);
@@ -2004,7 +2014,7 @@ function updateBuyQtyHint() {
   const priceInput = document.getElementById("buyRecPrice").value.trim();
   let price = priceInput !== "" ? parseFloat(priceInput) : null;
   if (price === null && dateStr) { const r = resolveAutoPrice(dateStr); price = r && !r.error ? r.price : null; }
-  if (price === null && lastTqqqHist) price = lastTqqqHist[lastTqqqHist.length - 1].y;
+  if (price === null && lastSoxlHist) price = lastSoxlHist[lastSoxlHist.length - 1].y;
   const d = price ? computeDefaultBuyQty(price) : null;
   qtyEl.placeholder = d && d.qty > 0 ? `비우면 ${d.qty.toLocaleString("en-US")}주` : "비우면 자동";
 }
@@ -2018,8 +2028,8 @@ function setDefaultBuyDate(force) {
   const el = document.getElementById("buyRecDate");
   if (!el || (el.value && !force)) return;
   let d;
-  if (lastTqqqHist && lastTqqqHist.length) {
-    d = fmtDateFull(lastTqqqHist[lastTqqqHist.length - 1].x);          // 가장 최근 확정 종가일 (미국장 기준 어제)
+  if (lastSoxlHist && lastSoxlHist.length) {
+    d = fmtDateFull(lastSoxlHist[lastSoxlHist.length - 1].x);          // 가장 최근 확정 종가일 (미국장 기준 어제)
   } else {
     const y = new Date(Date.now() - 86400000);           // 시세 조회 전: 달력상 어제
     d = `${y.getFullYear()}-${String(y.getMonth() + 1).padStart(2, "0")}-${String(y.getDate()).padStart(2, "0")}`;
@@ -2031,7 +2041,7 @@ function setDefaultBuyDate(force) {
 /* ---------- 어제 LOC 매수 조건 충족 시 자동 저장 ----------
    어제(가장 최근 확정 종가일 D)에 LOC 가이드가 제시했을 매수 주문을 그대로 다시 계산한다.
      · 기준가 = min(평단가, D-1 종가) 를 센트 단위 내림  (LOC 가이드와 동일)
-     · 수량   = 1분할 금액 ÷ 기준가 → 5주 단위 내림
+     · 수량   = 1분할 금액 ÷ 기준가 → 1주 단위 내림
      · 분할 수 소진, 2단계 매수 주기 미도래면 주문이 없었던 것으로 본다
    D 종가 ≤ 기준가 이면 LOC가 체결된 것이므로 (체결가 = D 종가) 기록을 자동 추가한다.
    · 이미 D 이후 기록이 있거나, 사용자가 이 자동 기록을 삭제한 적이 있으면 추가하지 않는다
@@ -2049,7 +2059,7 @@ const tradeTombOf = t => "T|" + (t && t.auto ? "sell:" + t.sellDate : "t:" + (t 
 /* 보유 전량 매도 → 거래 1건 생성 (그 사이클의 매수 기록을 안에 보관) + 매수 기록 비우기 */
 /* 보유 구간(첫 매수일~매도일)의 거래일 수 · 최대 낙폭(최저 종가 ÷ 평단 − 1). 시세 범위 밖이면 null */
 function cycleMarketStats(t) {
-  const hist = lastTqqqHist;
+  const hist = lastSoxlHist;
   if (!hist || !hist.length) return { tdays: null, mdd: null };
   const bars = hist.filter(d => { const ds = fmtDateFull(d.x); return ds >= t.firstBuy && ds <= t.sellDate; });
   if (!bars.length || fmtDateFull(hist[0].x) > t.firstBuy) return { tdays: null, mdd: null };
@@ -2094,7 +2104,7 @@ function autoRecordYesterdayBuy() {
      하루마다 ① 보유 중이면 LOC 매도(익절) 체결 여부 → 체결 시 전량 매도 기록 ② 아니면 LOC 매수 체결 여부.
      매도 후에는 신규 진입(전일 종가 이하 LOC)부터 다시 이어서 기록한다. */
   lastAutoRecordMsg = ""; lastAutoRecordInfo = "";
-  const hist = lastTqqqHist;
+  const hist = lastSoxlHist;
   if (!hist || hist.length < 3) return null;
   let records = sortedBuyRecords();
   const trades = loadTrades();
@@ -2123,7 +2133,7 @@ function autoRecordYesterdayBuy() {
     if (rounds > 0) {
       const q0 = records.reduce((x, r) => x + r.qty, 0);
       const avg0 = records.reduce((x, r) => x + r.qty * r.price, 0) / q0;
-      const sellLimit = Math.ceil(avg0 * (1 + sellPct / 100) * 100 - 1e-6) / 100;
+      const sellLimit = ceilTick(avg0 * (1 + sellPct / 100));
       if (hist[i].y >= sellLimit) {
         if (skip.includes("sell:" + day)) { lastReason = `${fmtCompactDate(hist[i].x)} 자동 매도 기록은 직접 삭제하셔서 다시 만들지 않습니다`; continue; }
         const t = closeCycle(day, hist[i].y, { auto: true, limit: sellLimit });
@@ -2146,7 +2156,7 @@ function autoRecordYesterdayBuy() {
       const qtySum = records.reduce((x, r) => x + r.qty, 0);
       basisRaw = Math.min(records.reduce((x, r) => x + r.qty * r.price, 0) / qtySum, basisRaw);
     }
-    const basis = Math.floor(basisRaw * 100 + 1e-6) / 100;
+    const basis = floorTick(basisRaw);
     const qty = Math.floor(Math.floor((seed / splits) / basis) / LOC_QTY_UNIT) * LOC_QTY_UNIT;
     if (qty <= 0) { lastReason = `1분할 금액으로 ${LOC_QTY_UNIT}주를 살 수 없습니다`; continue; }
     if (hist[i].y > basis) { lastReason = `${fmtCompactDate(hist[i].x)} 종가 ${usd(hist[i].y)} > LOC 매수가 ${usd(basis)} → 미체결`; continue; }
@@ -2165,7 +2175,7 @@ function autoRecordYesterdayBuy() {
 function setDefaultSellDate() {
   const el = document.getElementById("sellRecDate");
   if (!el || el.value) return;
-  const hist = lastTqqqHist;
+  const hist = lastSoxlHist;
   if (hist && hist.length) el.value = fmtDateFull(hist[hist.length - 1].x);
   else { const y = new Date(Date.now() - 864e5); el.value = `${y.getFullYear()}-${String(y.getMonth() + 1).padStart(2, "0")}-${String(y.getDate()).padStart(2, "0")}`; }
 }
@@ -2242,8 +2252,8 @@ function renderTrades() {
   if (cur.length) {
     const y = String(new Date().getFullYear()), seq = cs.filter(c => c.year === y).length + 1;
     const q = cur.reduce((x, r) => x + r.qty, 0), cost = cur.reduce((x, r) => x + r.qty * r.price, 0), avg = cost / q;
-    const hist = lastTqqqHist;
-    const px = (lastTqqqPrice !== null && !isNaN(lastTqqqPrice)) ? lastTqqqPrice : (hist && hist.length ? hist[hist.length - 1].y : null);
+    const hist = lastSoxlHist;
+    const px = (lastSoxlPrice !== null && !isNaN(lastSoxlPrice)) ? lastSoxlPrice : (hist && hist.length ? hist[hist.length - 1].y : null);
     const today = new Date(); const tds = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
     const ev = px !== null ? (px / avg - 1) * 100 : null;
     html += `<div class="cy-year"><b>진행 중</b></div>
@@ -2358,7 +2368,7 @@ function renderBuyRecords() {
   `).join("");
 
   // 평가 기준가: 실시간 현재가 → 없으면 최근 확정 종가
-  const refPx = (lastTqqqPrice !== null && !isNaN(lastTqqqPrice)) ? lastTqqqPrice : (lastTqqqHist ? lastTqqqHist[lastTqqqHist.length - 1].y : null);
+  const refPx = (lastSoxlPrice !== null && !isNaN(lastSoxlPrice)) ? lastSoxlPrice : (lastSoxlHist ? lastSoxlHist[lastSoxlHist.length - 1].y : null);
   const evalPl = refPx !== null ? refPx * summary.totalQty - summary.totalCost : null;
   const evalPct = refPx !== null ? (refPx / summary.avgPrice - 1) * 100 : null;
   const plCol = v => v === null ? "var(--text-faint)" : (v >= 0 ? "var(--up)" : "var(--down)");
@@ -2401,7 +2411,7 @@ function fmtResume(d) {
 function renderLocGuideCard() {
   const el = document.getElementById("locGuideContent");
   if (!el) return;
-  if (!lastTqqqHist) {
+  if (!lastSoxlHist) {
     el.innerHTML = '<div class="fg-empty">데이터를 불러오면 LOC 예약 가이드가 표시됩니다.</div>';
     return;
   }
@@ -2415,7 +2425,7 @@ function renderLocGuideCard() {
     return;
   }
 
-  const strategy = getSellAnalysis(lastTqqqHist);
+  const strategy = getSellAnalysis(lastSoxlHist);
   if (!strategy || !strategy.recommendedN) {
     el.innerHTML = '<div class="fg-empty">최근 200봉 데이터로는 매수/매도 목표를 계산할 수 없습니다.</div>';
     return;
@@ -2431,8 +2441,8 @@ function renderLocGuideCard() {
   const hasPosition = rounds > 0;
   const avgPrice = summary.avgPrice;
   const lastRecord = hasPosition ? summary.rows[summary.rows.length - 1] : null;
-  const lastClose = lastTqqqHist[lastTqqqHist.length - 1].y;   // 확정 종가(장중 봉 제외)
-  const lastCloseDate = fmtDateFull(lastTqqqHist[lastTqqqHist.length - 1].x);
+  const lastClose = lastSoxlHist[lastSoxlHist.length - 1].y;   // 확정 종가(장중 봉 제외)
+  const lastCloseDate = fmtDateFull(lastSoxlHist[lastSoxlHist.length - 1].x);
 
   const nextRound = rounds + 1;
   const inStage1 = nextRound <= recommendedN;
@@ -2452,8 +2462,8 @@ function renderLocGuideCard() {
     buyBasisLabel = `전일종가 이하 · ${bindingLabel} 적용 (신규 진입, 평단 없음)`;
   }
   // 주문 입력용 가격: 매수가는 센트 단위 내림(기준가 이하 보장)
-  buyBasisPrice = Math.floor(buyBasisPrice * 100 + 1e-6) / 100;
-  // 매수 수량은 5주 단위로 내림 (1분할 금액 초과 방지)
+  buyBasisPrice = floorTick(buyBasisPrice);
+  // 매수 수량은 1주 단위로 내림 (1분할 금액 초과 방지)
   const rawBuyQty = canBuyMore ? Math.floor(perSplit / buyBasisPrice) : 0;
   const buyQty = Math.floor(rawBuyQty / LOC_QTY_UNIT) * LOC_QTY_UNIT;
 
@@ -2462,16 +2472,16 @@ function renderLocGuideCard() {
   let cycleInfo = null;   // 2단계 주기 상태 (오늘의 LOC 카드 강조용)
   if (hasPosition && !inStage1 && canBuyMore) {
     const lastBuyDateStr = lastRecord.date;
-    const lastBuyIdx = lastTqqqHist.findIndex(d => new Date(d.x).toISOString().split("T")[0] === lastBuyDateStr);
+    const lastBuyIdx = lastSoxlHist.findIndex(d => new Date(d.x).toISOString().split("T")[0] === lastBuyDateStr);
     if (lastBuyIdx !== -1) {
       /* 오늘 거는 LOC는 '다음 거래일' 주문이므로, 그 거래일 기준 경과일로 판정한다
          (시뮬레이션·자동 저장과 같은 기준: 마지막 매수 후 N번째 거래일이 되면 매수) */
-      const elapsedTradingDays = (lastTqqqHist.length - 1) - lastBuyIdx;   // 어제까지 경과
+      const elapsedTradingDays = (lastSoxlHist.length - 1) - lastBuyIdx;   // 어제까지 경과
       const nextGap = elapsedTradingDays + 1;                         // 다음 거래일 기준
       buyReady = nextGap >= cycleDays;
       const remain = Math.max(0, cycleDays - nextGap);
       cycleInfo = { elapsed: elapsedTradingDays, nextGap, cycle: cycleDays, remain, ready: buyReady,
-                    firstDay: nextGap === cycleDays, resumeDate: nextTradingDay(lastTqqqHist[lastTqqqHist.length - 1].x, remain + 1) };
+                    firstDay: nextGap === cycleDays, resumeDate: nextTradingDay(lastSoxlHist[lastSoxlHist.length - 1].x, remain + 1) };
       cycleStatusText = `2단계 주기: 마지막 매수(${fmtKrDate(lastBuyDateStr)}) 후 다음 거래일이 ${nextGap}번째 거래일 (주기 ${cycleDays}일) → ${buyReady ? "매수 재개 · 조건 충족 시 체결" : `앞으로 ${remain}거래일 더 대기 (예상 재개 ${fmtResume(cycleInfo.resumeDate)})`}`;
     } else {
       cycleStatusText = `2단계 주기: 마지막 매수일(${fmtKrDate(lastBuyDateStr)})을 최근 200봉 데이터에서 찾을 수 없어 정확한 경과일을 계산할 수 없습니다.`;
@@ -2480,10 +2490,10 @@ function renderLocGuideCard() {
 
   const canSell = hasPosition;
   // 주문 입력용 매도가: 센트 단위 올림(목표 수익률 이상 보장)
-  const sellPrice = hasPosition ? Math.ceil(avgPrice * (1 + sellPct / 100) * 100 - 1e-6) / 100 : null;
+  const sellPrice = hasPosition ? ceilTick(avgPrice * (1 + sellPct / 100)) : null;
   const sellQty = hasPosition ? summary.totalQty : null;
 
-  // TQQQ 손절모드 판정: 평단가 × STRAT2_MODE_RATIO(0.80) 이하이면 손절모드 경고
+  // 손절모드 판정: 평단가 × STRAT2_MODE_RATIO(0.85) 이하이면 손절모드 경고
   const inStopMode = hasPosition && lastClose <= avgPrice * STRAT2_MODE_RATIO;
 
   const stageLabel = !canBuyMore ? `분할 수 소진 (${rounds}/${splits}회)`
@@ -2502,8 +2512,8 @@ function renderLocGuideCard() {
 
   /* Termux 자동주문 봇용 주문 데이터 (화면에 보이는 숫자와 동일한 값) */
   const exportOrders = [];
-  if (!buyBoxOff && buyQty > 0) exportOrders.push({ side: "buy", type: "LOC", price: Number(buyBasisPrice.toFixed(2)), qty: buyQty });
-  if (canSell && sellQty > 0) exportOrders.push({ side: "sell", type: "LOC", price: Number(sellPrice.toFixed(2)), qty: sellQty });
+  if (!buyBoxOff && buyQty > 0) exportOrders.push({ side: "buy", type: "LOC", price: Math.round(buyBasisPrice), qty: buyQty });
+  if (canSell && sellQty > 0) exportOrders.push({ side: "sell", type: "LOC", price: Math.round(sellPrice), qty: sellQty });
   lastLocOrder = {
     schema: "loc-order/1",
     app: `${LEV_TICKER}무한매수`, version: APP_VERSION, release: RELEASE_DATE,
@@ -2543,19 +2553,19 @@ function renderLocGuideCard() {
     <div class="loc-grid">
       <div class="${buyBoxClass}">
         <div class="loc-tag">LOC 매수 예약가</div>
-        <div class="loc-price copyable" role="button" tabindex="0" data-copy="${buyBasisPrice.toFixed(2)}" data-label="매수가">${usd(buyBasisPrice)}</div>
+        <div class="loc-price copyable" role="button" tabindex="0" data-copy="${Math.round(buyBasisPrice)}" data-label="매수가">${usd(buyBasisPrice)}</div>
         <div class="loc-qty ${buyQty > 0 ? "copyable" : ""}" ${buyQty > 0 ? `role="button" tabindex="0" data-copy="${buyQty}" data-label="매수수량"` : ""}>${buyQty > 0 ? buyQty.toLocaleString("en-US") + "주" : "매수 불가"}</div>
         <div class="loc-sub">${LOC_QTY_UNIT}주 단위 내림${canBuyMore ? ` (1분할 기준 ${rawBuyQty.toLocaleString("en-US")}주${buyQty > 0 ? ` → 실투입 ${usd(buyQty * buyBasisPrice)}` : ` → ${LOC_QTY_UNIT}주 미만`})` : ""}</div>
         <div class="loc-sub">${buyNote}</div>
       </div>
       <div class="loc-box ${canSell ? "sell" : "off"}">
         <div class="loc-tag">LOC 매도 예약가 (익절)</div>
-        <div class="loc-price ${canSell ? "copyable" : ""}" ${canSell ? `role="button" tabindex="0" data-copy="${sellPrice.toFixed(2)}" data-label="매도가"` : ""}>${canSell ? usd(sellPrice) : "--"}</div>
+        <div class="loc-price ${canSell ? "copyable" : ""}" ${canSell ? `role="button" tabindex="0" data-copy="${Math.round(sellPrice)}" data-label="매도가"` : ""}>${canSell ? usd(sellPrice) : "--"}</div>
         <div class="loc-qty">${canSell ? sellQty.toLocaleString("en-US") + "주 (전량)" : "보유 수량 없음"}</div>
         <div class="loc-sub">${canSell ? `평단가 ${usd(avgPrice)} 대비 +${sellPct.toFixed(2)}%` : "매수 기록을 추가하면 매도 목표가가 계산됩니다."}</div>
       </div>
     </div>
-    <p class="copy-hint">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p>
+    <p class="copy-hint">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 (원·쉼표 없이 숫자만)</p>
   `;
   el.innerHTML = `
     <div class="loc-moved-note">LOC 매수·매도 예약가와 수량은 <b data-goto="pg-order" style="cursor:pointer;text-decoration:underline;">⚡ 주문 탭 · 오늘의 LOC 주문</b> 카드에 있습니다</div>
@@ -2636,7 +2646,7 @@ setDefaultBuyDate(false);
 renderBuyRecords();
 renderLocGuideCard();
 
-/* ---------- TQQQ · QQQ 변동성 프로파일 ---------- */
+/* ---------- 레버리지 · 1배 변동성 프로파일 ---------- */
 function calcDailyReturns(hist) {
   const r = [];
   for (let i = 1; i < hist.length; i++) r.push((hist[i].y - hist[i - 1].y) / hist[i - 1].y * 100);
@@ -2649,7 +2659,7 @@ function calcStdev(arr) {
 }
 
 function renderVolProfileCard(lvHist, bsHist) {
-  const el = document.getElementById("tqqqVolContent");
+  const el = document.getElementById("soxlVolContent");
   if (!el) return;
   const lvRet = calcDailyReturns(lvHist);
   if (lvRet.length < 30) {
@@ -2693,27 +2703,27 @@ function renderVolProfileCard(lvHist, bsHist) {
       <div class="fg-badge" style="color:${regimeColor};border-color:${regimeColor};background:rgba(255,255,255,0.03);">${regimeLabel}</div>
     </div>
     <div class="fg-meta-row">
-      <div class="fg-meta-item"><div class="fg-meta-label">TQQQ 일간σ (200봉)</div><div class="fg-meta-value">${sd200.toFixed(2)}%</div></div>
-      <div class="fg-meta-item"><div class="fg-meta-label">TQQQ 일간σ (20봉)</div><div class="fg-meta-value">${sd20.toFixed(2)}%</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">반도체2X 일간σ (200봉)</div><div class="fg-meta-value">${sd200.toFixed(2)}%</div></div>
+      <div class="fg-meta-item"><div class="fg-meta-label">반도체2X 일간σ (20봉)</div><div class="fg-meta-value">${sd20.toFixed(2)}%</div></div>
       <div class="fg-meta-item"><div class="fg-meta-label">연환산 변동성</div><div class="fg-meta-value">${annual.toFixed(1)}%</div></div>
     </div>
     <div class="kv-row"><span class="k">평균 일간 변동폭(절대값)</span><span class="v">${avgAbs.toFixed(2)}%</span></div>
     <div class="kv-row"><span class="k">최대 일간 하락 / 상승</span><span class="v"><span style="color:var(--down);">${fmtPctSigned(maxDrop)}</span> / <span style="color:var(--up);">${fmtPctSigned(maxGain)}</span></span></div>
-    <div class="kv-row"><span class="k">QQQ 일간σ (최근 ${ratioN}봉)</span><span class="v">${bsSdText}</span></div>
-    <div class="kv-row"><span class="k">TQQQ ÷ QQQ 변동성 배율</span><span class="v">${ratioText}</span></div>
-    <div class="kv-row"><span class="k">기준σ(${REF_SIGMA}%) 대비 변동성 배율</span><span class="v">${(sd200 / REF_SIGMA).toFixed(2)}배</span></div>
+    <div class="kv-row"><span class="k">반도체1X 일간σ (최근 ${ratioN}봉)</span><span class="v">${bsSdText}</span></div>
+    <div class="kv-row"><span class="k">반도체2X ÷ 반도체1X 변동성 배율</span><span class="v">${ratioText}</span></div>
+    <div class="kv-row"><span class="k">TQQQ 대비 변동성 배율 (기준σ ${TQQQ_REF_SIGMA}%)</span><span class="v">${(sd200 / TQQQ_REF_SIGMA).toFixed(2)}배</span></div>
     <div class="kv-row"><span class="k">최근 확정 종가 ${usd(lastClose)} 기준 1σ 범위</span><span class="v">${usd(bandLo)} ~ ${usd(bandHi)}</span></div>
     <div class="kv-row"><span class="k">2σ 하단 (급락 대비 참고가)</span><span class="v" style="color:var(--down);">${usd(band2Lo)}</span></div>
     <div class="kv-row"><span class="k">손절모드 기준선 (고정 / 변동성 보정)</span><span class="v" style="color:var(--down);">-${baseDropPct.toFixed(1)}% / -${adjDropPct.toFixed(1)}%</span></div>
-    <p class="desc" style="margin:10px 0 0;">변동성 국면은 최근 20봉 σ ÷ 200봉 σ로 판정합니다(0.8 미만 저변동, 1.2 초과 고변동). 실제 손절모드 판정은 평단가×${STRAT2_MODE_RATIO.toFixed(2)}(고정, TQQQ 기준 -12%)를 사용하며, 보정선(보정계수 ${VOL_FACTOR_MIN}~${VOL_FACTOR_MAX} 제한)은 고변동 국면에서 손절선을 더 넓게 볼지 판단하기 위한 참고값입니다. TQQQ ÷ QQQ 배율은 이론상 3배에 가까워야 하므로, 크게 벗어나면 데이터 이상 여부를 확인하세요.</p>
+    <p class="desc" style="margin:10px 0 0;">변동성 국면은 최근 20봉 σ ÷ 200봉 σ로 판정합니다(0.8 미만 저변동, 1.2 초과 고변동). 실제 손절모드 판정은 평단가×${STRAT2_MODE_RATIO.toFixed(2)}(고정, 2배 기준 -15%)를 사용하며, 보정선(보정계수 ${VOL_FACTOR_MIN}~${VOL_FACTOR_MAX} 제한)은 고변동 국면에서 손절선을 더 넓게 볼지 판단하기 위한 참고값입니다. 레버리지 ÷ 1배 배율은 이론상 2배에 가까워야 하므로, 크게 벗어나면 데이터 이상 여부를 확인하세요.</p>
   `;
 }
 
-/* ---------- 🤖 TQQQ 변동성 최적화 AI 엔진 ---------- */
+/* ---------- 🤖 반도체2X 변동성 최적화 AI 엔진 ---------- */
 let engineRecs = null;
 
 function renderVolEngineCard(hist) {
-  const el = document.getElementById("tqqqEngineContent");
+  const el = document.getElementById("soxlEngineContent");
   if (!el) return;
   const ret = calcDailyReturns(hist);
   if (ret.length < 30) {
@@ -2721,12 +2731,12 @@ function renderVolEngineCard(hist) {
     return;
   }
 
-  // ① 규칙 기반 환산 (TQQQ V0.19 기준 → TQQQ 실측 σ)
+  // ① 규칙 기반 환산 (TQQQ V0.19 기준 → 반도체2X 실측 σ)
   const sd200 = calcStdev(ret);
-  const k = sd200 / REF_SIGMA;
-  const ruleSplits = clamp(Math.round(BASE_PARAMS.splits * Math.sqrt(k)), 4, 12);
-  const ruleCycle = clamp(Math.round(BASE_PARAMS.cycle / (k * k)), 3, 14);
-  const ruleStopMode = clamp(BASE_PARAMS.stopModePct * k, 8, 35);
+  const k = sd200 / TQQQ_REF_SIGMA;
+  const ruleSplits = clamp(Math.round(TQQQ_BASE.splits * Math.sqrt(k)), 4, 12);
+  const ruleCycle = clamp(Math.round(TQQQ_BASE.cycle / (k * k)), 3, 14);
+  const ruleStopMode = clamp(TQQQ_BASE.stopModePct * k, 8, 35);
 
   // ② 백테스트 그리드 서치 (시뮬레이션 규칙: 종가 < 평단 그리고 종가 < 전일 종가)
   const seedInput = parseFloat(document.getElementById("seedSimSeed1").value);
@@ -2755,7 +2765,7 @@ function renderVolEngineCard(hist) {
   });
   const ruleRun = simulateSeedBacktest(hist, seed, ruleSplits, true, ruleCycle);
   const ruleRet = ruleRun ? ruleRun.grandTotal / seed * 100 : null;
-  const tqqqRun = simulateSeedBacktest(hist, seed, BASE_PARAMS.splits, true, BASE_PARAMS.cycle);
+  const tqqqRun = simulateSeedBacktest(hist, seed, TQQQ_BASE.splits, true, TQQQ_BASE.cycle);
   const tqqqRet = tqqqRun ? tqqqRun.grandTotal / seed * 100 : null;
 
   engineRecs = { rule: { splits: ruleSplits, cycle: ruleCycle }, bt: { splits: bestBt.s, cycle: bestBt.c } };
@@ -2776,7 +2786,7 @@ function renderVolEngineCard(hist) {
   el.innerHTML = `
     <div class="fg-header-row">
       <div class="fg-score mono" style="color:var(--amber);">k = ${k.toFixed(2)}</div>
-      <div class="fg-badge" style="color:var(--amber);border-color:rgba(245,165,36,0.5);background:rgba(245,165,36,0.08);">TQQQ σ ${sd200.toFixed(2)}% ÷ 기준σ ${REF_SIGMA}%</div>
+      <div class="fg-badge" style="color:var(--amber);border-color:rgba(245,165,36,0.5);background:rgba(245,165,36,0.08);">반도체2X σ ${sd200.toFixed(2)}% ÷ TQQQ 기준σ ${TQQQ_REF_SIGMA}%</div>
     </div>
     <div class="engine-grid">
       <div class="engine-box rule">
@@ -2798,22 +2808,22 @@ function renderVolEngineCard(hist) {
       <button class="buysim-btn amber" type="button" data-engine-apply="rule" onclick="applyEngineRec('rule')">① 규칙 적용</button>
       <button class="buysim-btn save" type="button" data-engine-apply="bt" onclick="applyEngineRec('bt')">② 최적 적용</button>
     </div>
-    <div class="kv-row" style="margin-top:8px;"><span class="k">참고: 기본 파라미터(6분할·14일) 적용 시</span><span class="v" style="${col(tqqqRet)}">${fmtPctSigned(tqqqRet)}</span></div>
-    <div class="kv-row"><span class="k">TQQQ 매도 목표 탐색 구간</span><span class="v">${SELL_SWEEP_MIN}~${SELL_SWEEP_MAX}% (${SELL_SWEEP_STEP}%p)</span></div>
+    <div class="kv-row" style="margin-top:8px;"><span class="k">참고: TQQQ 원본 파라미터(6분할·14일) 그대로 적용 시</span><span class="v" style="${col(tqqqRet)}">${fmtPctSigned(tqqqRet)}</span></div>
+    <div class="kv-row"><span class="k">반도체2X 매도 목표 탐색 구간</span><span class="v">${SELL_SWEEP_MIN}~${SELL_SWEEP_MAX}% (${SELL_SWEEP_STEP}%p)</span></div>
     <div class="kv-row"><span class="k">AI 최적 매도 목표 / 추천 분할매수 회차</span><span class="v">${a ? "+" + a.best.pct.toFixed(2) + "%" : "--"} / ${a && a.recommendedN ? a.recommendedN + "회" : "--"}</span></div>
     <div class="buysim-sub-title">견고성 상위 5개 조합 (시드 ${fmtUsd0(seed)}, 평단&전일종가 이하 규칙)</div>
     <table class="stat-table even-cols">
       <thead><tr><th>분할 수</th><th class="num">2단계 주기</th><th class="num">시드 대비 수익률</th><th class="num">견고성(인접 평균)</th></tr></thead>
       <tbody>${topRows}</tbody>
     </table>
-    <p class="desc" style="margin:12px 0 0;">예시: TQQQ σ가 4.3%라면 k = 4.3 ÷ 3.6 ≈ 1.19 → 분할 수 6×√1.19 ≈ 6.5 → 7분할, 2단계 주기 14 ÷ 1.19² ≈ 9.9 → 10일, 손절모드 12%×1.19 ≈ -14.3%. σ가 평상시(3.6%)면 k ≈ 1.00이라 기본값 6분할·14일이 그대로 나옵니다. 분할 수는 낙폭 깊이(σ에 비례)를 버틸 자금 여유를, 주기는 같은 % 가격 이동에 걸리는 시간(1/σ²에 비례)을 반영합니다. 백테스트 최적은 분할 수 ${ENGINE_SPLITS_GRID.join("·")} × 주기 ${ENGINE_CYCLE_GRID.join("·")}일 = ${valid.length}개 조합을 최근 200봉에 돌린 뒤, 한 조합만 튀는 과최적화를 피하려고 상하좌우 인접 조합 수익률 평균이 가장 높은 조합을 고릅니다. 과거 200봉 기준 결과이므로 미래 성과를 보장하지 않습니다.</p>
+    <p class="desc" style="margin:12px 0 0;">예시: 반도체2X σ가 5.8%라면 k = 5.8 ÷ 3.6 ≈ 1.61 → 분할 수 6×√1.61 ≈ 7.6 → 8분할, 2단계 주기 14 ÷ 1.61² ≈ 5.4 → 5일, 손절모드 12%×1.61 ≈ -19.3%. 분할 수는 낙폭 깊이(σ에 비례)를 버틸 자금 여유를, 주기는 같은 % 가격 이동에 걸리는 시간(1/σ²에 비례)을 반영합니다. 백테스트 최적은 분할 수 ${ENGINE_SPLITS_GRID.join("·")} × 주기 ${ENGINE_CYCLE_GRID.join("·")}일 = ${valid.length}개 조합을 최근 200봉에 돌린 뒤, 한 조합만 튀는 과최적화를 피하려고 상하좌우 인접 조합 수익률 평균이 가장 높은 조합을 고릅니다. 과거 200봉 기준 결과이므로 미래 성과를 보장하지 않습니다.</p>
   `;
 }
 
 /* ---------- 파라미터 적용 모드 (① 규칙 기본값 · 브라우저에 저장) ----------
    mode: "rule" = ① 규칙 기반(기본) · "bt" = ② 백테스트 최적 · "manual" = 분할 수·주기를 직접 입력
    rule/bt 모드는 시세를 불러올 때마다 그날 변동성으로 다시 계산된 값을 자동 적용한다. */
-const PARAM_MODE_KEY = "tqqq_param_mode_v1";
+const PARAM_MODE_KEY = "kodex_param_mode_v1";
 function loadParamMode() {
   try { const v = JSON.parse(localStorage.getItem(PARAM_MODE_KEY) || "null"); if (v && v.mode) return v; } catch (e) {}
   return { mode: "rule" };
@@ -2910,7 +2920,7 @@ function initQuickNav() {
 }
 
 /* ------------------------ 파일 자체 저장(다운로드) ------------------------ */
-const FILE_NAME = `TQQQ무한매수_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
+const FILE_NAME = `KODEX반도체레버리지_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 function downloadSelf() {
   try {
     const blob = new Blob([__PRISTINE_HTML], { type: "text/html;charset=utf-8" });
@@ -2924,8 +2934,8 @@ function downloadSelf() {
 document.getElementById("dlName").textContent = FILE_NAME;
 document.getElementById("downloadSelfBtn").addEventListener("click", downloadSelf);
 /* ------------------------ 기록 백업 · 복원 (온라인 이전용) ------------------------ */
-const BACKUP_PREFIXES = ["tqqq_"];
-const BACKUP_APP = "TQQQ";
+const BACKUP_PREFIXES = ["kodex_"];
+const BACKUP_APP = "KODEX";
 function collectBackup() {
   const data = {};
   try {
@@ -2970,7 +2980,7 @@ document.getElementById("bkRestoreBtn").addEventListener("click", () => {
   } catch (e) { setBkMsg("저장 실패: " + e.message, false); }
 });
 /* ------------------------ 하단 탭바: 화면 전환 ------------------------ */
-const TAB_SS_KEY = "tqqq_tab_v1";
+const TAB_SS_KEY = "kodex_tab_v1";
 const __tabScroll = {};
 function goTab(id, opts) {
   const pg = document.getElementById(id);
@@ -3015,7 +3025,7 @@ function initTabs() {
 }
 /* 상단 시세 영역 접기/펼치기 (기기별 기억) */
 (function initHeaderToggle() {
-  const KEY = "tqqq_hdr_open_v1";
+  const KEY = "kodex_hdr_open_v1";
   const hdr = document.getElementById("topbar"), btn = document.getElementById("hdrToggle");
   if (!hdr || !btn) return;
   const apply = (open) => { hdr.classList.toggle("compact", !open); btn.textContent = open ? "접기 ▴" : "상세 ▾"; btn.setAttribute("aria-expanded", open ? "true" : "false"); };
@@ -3029,12 +3039,12 @@ if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
 /* ======================== ☁️ PC · 모바일 기록 동기화 (GitHub 비공개 Gist) ========================
-   저장소: 내 GitHub 계정의 secret gist "muhan-sync" 안의 tqqq.json
+   저장소: 내 GitHub 계정의 secret gist "muhan-sync" 안의 kodex.json
    동기화 대상: 매수 기록 + 매도·수익 기록 + 자동 저장 건너뛰기 목록 (토큰·화면 설정은 기기별)
    합치기: 기록 키(수동=id, 자동저장=날짜) 기준 합집합 − 삭제 표시(tombstone) 합집합 */
 const SYNC = {
-  app: "tqqq", file: "tqqq.json", desc: "muhan-sync (무한매수 기록 동기화 · 지우지 마세요)",
-  tokKey: "muhansync_token", gistKey: "muhansync_gist", metaKey: "muhansync_tqqq_meta",
+  app: "kodex", file: "kodex.json", desc: "muhan-sync (무한매수 기록 동기화 · 지우지 마세요)",
+  tokKey: "muhansync_token", gistKey: "muhansync_gist", metaKey: "muhansync_kodex_meta",
 };
 const __lsSet = Storage.prototype.setItem;
 const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
@@ -3182,7 +3192,7 @@ document.getElementById("syncConnectBtn").addEventListener("click", async () => 
     }
     if (!id) {
       const init = JSON.stringify({ schema: "muhan-sync/1", records: [], skip: [], tombs: [] });
-      const g = await gh("/gists", { method: "POST", body: JSON.stringify({ description: SYNC.desc, public: false, files: { "soxl.json": { content: init }, "tqqq.json": { content: init } } }) });
+      const g = await gh("/gists", { method: "POST", body: JSON.stringify({ description: SYNC.desc, public: false, files: { "kodex.json": { content: init }, "tqqq.json": { content: init } } }) });
       id = g.id;
     }
     lsSet(SYNC.gistKey, id); inp.value = ""; __syncErr = "";
@@ -3237,7 +3247,7 @@ const XL = (() => {
   // 셀 스타일: 0 기본 1 헤더 2 $ 3 % 4 정수 5 ±$ 6 합계±$ 7 굵게 8 합계% 9 날짜 10 합계$
   const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-<numFmts count="3"><numFmt numFmtId="164" formatCode="&quot;$&quot;#,##0.00"/><numFmt numFmtId="166" formatCode="&quot;+$&quot;#,##0.00;&quot;-$&quot;#,##0.00;&quot;$&quot;0.00"/><numFmt numFmtId="167" formatCode="yyyy-mm-dd"/></numFmts>
+<numFmts count="3"><numFmt numFmtId="164" formatCode="#,##0&quot;원&quot;"/><numFmt numFmtId="166" formatCode="&quot;+&quot;#,##0&quot;원&quot;;&quot;-&quot;#,##0&quot;원&quot;;0&quot;원&quot;"/><numFmt numFmtId="167" formatCode="yyyy-mm-dd"/></numFmts>
 <fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts>
 <fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFDDEBF7"/><bgColor indexed="64"/></patternFill></fill></fills>
 <borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>
@@ -3289,8 +3299,8 @@ const XL = (() => {
 function buildTradeWorkbook() {
   const trades = loadTrades(), st = tradeStats(trades), cur = sortedBuyRecords();
   const H = s => ({ v: s, s: 1 });
-  const hist = lastTqqqHist;
-  const refPx = (lastTqqqPrice !== null && !isNaN(lastTqqqPrice)) ? lastTqqqPrice : (hist && hist.length ? hist[hist.length - 1].y : null);
+  const hist = lastSoxlHist;
+  const refPx = (lastSoxlPrice !== null && !isNaN(lastSoxlPrice)) ? lastSoxlPrice : (hist && hist.length ? hist[hist.length - 1].y : null);
   const hq = cur.reduce((x, r) => x + r.qty, 0), hc = cur.reduce((x, r) => x + r.qty * r.price, 0), havg = hq ? hc / hq : null;
   const now = new Date();
   const summary = { name: "요약", cols: [24, 22, 40], rows: [
@@ -3346,7 +3356,7 @@ updateRuleChips();   // 적용 규칙 칩 (엔진 변수 선언 이후)
 
 document.getElementById("appVersionBadge").textContent = APP_VERSION;
 document.getElementById("footerVersion").textContent = `${APP_VERSION} (${RELEASE_DATE})`;
-document.title = `TQQQ 무한매수 AI (${APP_VERSION} - ${RELEASE_DATE})`;
+document.title = `KODEX 반도체레버리지 무한매수 AI (${APP_VERSION} - ${RELEASE_DATE})`;
 
 document.getElementById("fetchBtn").addEventListener("click", fetchAll);
 </script>

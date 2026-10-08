@@ -9,8 +9,8 @@
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="version" content="V0.58-TwelveData-SOXL-VolOpt">
-<meta name="release-date" content="261001">
-<title>SOXL 무한매수 AI (V0.65 - 261001)</title>
+<meta name="release-date" content="261003">
+<title>SOXL 무한매수 AI (V0.66 - 261003)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -449,7 +449,7 @@
   @media (prefers-reduced-motion: reduce){.page.on{animation:none;}}
   .page > .card:first-child{margin-top:14px;}
   body{padding-bottom:calc(84px + env(safe-area-inset-bottom)) !important;}
-  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:grid;grid-template-columns:repeat(6,1fr);
+  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:grid;grid-template-columns:repeat(7,1fr);
     padding:6px 6px calc(6px + env(safe-area-inset-bottom));background:rgba(10,17,32,0.94);
     -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-top:1px solid var(--border);}
   .tb{min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
@@ -540,6 +540,39 @@
   .trade-table .sub-price,.trade-table .sell-tag{display:block;white-space:nowrap;}
   .trade-table .pl{font-weight:800;}
   .sell-tag{display:block;font-size:11.5px;color:var(--text-faint);font-weight:600;}
+
+  /* ===== 🏁 사이클 기록 ===== */
+  .tabbar{padding-left:3px !important;padding-right:3px !important;}
+  .tb .tx{letter-spacing:-0.4px;}
+  .pl-tiles.four{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .cy-best{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;font-size:12px;color:var(--text-dim);}
+  .cy-best div{padding:8px 10px;border-radius:10px;background:var(--panel-2);border:1px solid var(--border-soft);min-width:0;}
+  .cy-best b{font-family:'JetBrains Mono',monospace;color:var(--text);}
+  .cy-year{display:flex;align-items:baseline;gap:8px;margin:18px 2px 8px;font-size:12.5px;font-weight:700;color:var(--text-dim);}
+  .cy-year b{font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--text);}
+  .cy-year span{margin-left:auto;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .cy{--k:var(--up);border:1px solid var(--border);border-left:3px solid var(--k);border-radius:14px;background:var(--panel-2);margin-bottom:8px;overflow:hidden;}
+  .cy.loss{--k:var(--down);}
+  .cy.live{--k:var(--amber);border-style:dashed;border-left-style:solid;}
+  .cy summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 10px;padding:11px 12px;align-items:baseline;}
+  .cy summary::-webkit-details-marker{display:none;}
+  .cy summary:focus-visible{outline:2px solid var(--glow);outline-offset:-2px;}
+  .cy-name{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:15.5px;color:var(--text);white-space:nowrap;}
+  .cy-pill{display:inline-block;margin-left:7px;padding:1px 8px;border-radius:99px;font-family:'Pretendard',sans-serif;font-size:11.5px;font-weight:800;color:var(--k);
+    border:1px solid color-mix(in srgb,var(--k) 45%,transparent);background:color-mix(in srgb,var(--k) 12%,transparent);vertical-align:1px;}
+  .cy-pl{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:16px;color:var(--k);text-align:right;white-space:nowrap;}
+  .cy-meta{font-size:12.5px;color:var(--text-dim);font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .cy-pct{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--k);text-align:right;white-space:nowrap;}
+  .cy-body{padding:2px 12px 12px;border-top:1px dashed var(--border);}
+  .cy-kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px;}
+  .cy-kv div{padding:7px 4px;border-radius:10px;background:var(--panel);border:1px solid var(--border-soft);text-align:center;min-width:0;}
+  .cy-kv span{display:block;font-size:11.5px;color:var(--text-faint);font-weight:700;}
+  .cy-kv b{display:block;font-family:'JetBrains Mono',monospace;font-size:13px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .cy-buys{margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);line-height:1.8;}
+  .cy-buys i{font-style:normal;color:var(--text-faint);}
+  .cy-del{margin-top:10px;min-height:36px;padding:0 12px;border-radius:10px;border:1px solid rgba(240,71,90,0.35);background:transparent;color:var(--down);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;}
+  .cy-link{display:flex;align-items:center;justify-content:center;min-height:42px;margin-top:12px;border-radius:12px;border:1px solid var(--border);background:var(--panel-2);color:var(--text-dim);font-weight:700;font-size:13px;text-decoration:none;}
+  .cy-link[hidden]{display:none;}
 </style>
 </head>
 <body>
@@ -612,21 +645,30 @@
     <div id="buyRecMsg" class="banner hidden" style="margin-top:10px;"></div>
     <div id="buyRecordContent"></div>
   </section>
-  <section class="card" id="card-trades" style="--c:var(--up);">
+  </div>
+
+  <div class="page" id="pg-cycle" role="tabpanel" aria-label="사이클">
+  <section class="card" id="card-cycle" style="--c:var(--up);">
     <div class="card-head">
-      <div class="card-icon">💰</div>
-      <div><div class="card-kicker">02 · SELL &amp; P/L</div><h2>나의 매도 · 수익 기록</h2></div>
+      <div class="card-icon">🏁</div>
+      <div><div class="card-kicker">CYCLE LOG · LIFETIME</div><h2>사이클 기록</h2></div>
     </div>
     <div id="tradeSummary"></div>
-    <div class="form-grid" style="margin-top:12px;">
+    <div id="tradeContent"></div>
+  </section>
+  <section class="card" id="card-trades" style="--c:var(--amber);">
+    <div class="card-head">
+      <div class="card-icon">✍️</div>
+      <div><div class="card-kicker">CLOSE CYCLE · MANUAL</div><h2>사이클 종료 직접 기록</h2></div>
+    </div>
+    <div class="form-grid">
       <div class="field full"><label for="sellRecDate">매도 날짜</label><input type="date" id="sellRecDate"></div>
       <div class="field full"><label for="sellRecPrice">매도가 ($, 선택)</label><input type="number" id="sellRecPrice" min="0" step="any" inputmode="decimal" placeholder="비우면 종가"></div>
     </div>
     <div class="buysim-actions">
-      <button class="buysim-btn save" id="sellRecSaveBtn" type="button">＋ 보유 전량 매도 기록</button>
+      <button class="buysim-btn save" id="sellRecSaveBtn" type="button">🏁 보유 전량 매도 · 사이클 종료</button>
     </div>
     <div id="sellRecMsg" class="banner hidden" style="margin-top:10px;"></div>
-    <div id="tradeContent"></div>
   </section>
   </div>
 
@@ -673,8 +715,8 @@
   </section>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">SOXL무한매수_V0_65_261001.HTML</span>)</button>
-  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V0.65 (261001)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">SOXL무한매수_V0_66_261003.HTML</span>)</button>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V0.66 (261003)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>
   </footer>
 
   </div>
@@ -766,11 +808,15 @@
         <p>실제 매수 내역을 입력해 누적 평단가를 계산합니다. 매수 수량을 비워두면 1분할 금액(시드 ÷ 분할 수) ÷ 매수가를 5주 단위로 내림한 수량(LOC 가이드와 같은 공식)이 자동으로 들어갑니다. 매수 날짜는 어제(가장 최근 확정 종가일)가 기본으로 들어갑니다. 시세를 불러왔을 때 어제 종가가 LOC 매수가 이하였으면(체결 조건 충족) 저장 버튼을 누르지 않아도 그 매수가 자동으로 기록됩니다. 매수가를 비워두면 입력한 매수일의 SOXL 종가를 자동으로 채웁니다(주말·휴장일은 직전 거래일 종가, 오늘 장중이면 실시간 현재가). 이 기록은 이 브라우저(로컬 저장소)에만 저장되며 서버로 전송되지 않으므로, 다른 기기·브라우저에서는 보이지 않습니다.</p>
         <div class="help-dyn" data-for="card-records"></div>
       </details>
+    <div class="help-group">🏁 사이클 탭</div>
       <details class="help-item" open>
-        <summary><span class="hi-ic">💰</span>나의 매도 · 수익 기록</summary>
-        <p><b>자동 매도 기록:</b> 시세를 불러올 때 마지막 매수 다음 거래일부터 어제까지 하루씩 다시 계산해, 그날 종가가 LOC 매도 예약가(평단 × (1 + AI 익절%) 센트 올림) 이상이면 LOC 매도가 체결된 것으로 보고 <b>보유 전량을 그날 종가로 매도 기록</b>합니다. 예: 평단 $78.62, 익절 +9.5% → 매도 예약가 $86.09, 종가 $87.10 → 170주 × $87.10 = $14,807 매도, 수익금 +$441.6, 수익률 +10.79%.</p>
-        <p>매도되면 그 사이클의 매수 기록은 매도 기록 안으로 옮겨지고(엑셀에 사이클별로 남음), 매수 기록은 비워져 다음 거래일부터 신규 진입(전일 종가 이하 LOC)을 다시 자동 기록합니다. 손절·수동 매도는 매도 날짜와 매도가를 넣고 [보유 전량 매도 기록]을 누르세요(매도가를 비우면 그날 종가).</p>
-        <p><b>계산:</b> 수익금 = 수량 × 매도가 − 매수금액, 수익률 = 매도가 ÷ 평단 − 1, 실현 수익률 = 수익금 합계 ÷ 매수금액 합계. 수수료·세금·환율은 반영하지 않습니다. 자동 판정은 현재 AI 익절%를 쓰므로 실제 체결과 다르면 ✕로 지우세요. 가장 최근 매도를 지우면 그 사이클의 매수 기록이 되살아납니다.</p>
+        <summary><span class="hi-ic">🏁</span>사이클 기록</summary>
+        <p><b>사이클 = 첫 매수부터 전량 매도까지.</b> 익절이든 손절이든 보유 전량을 매도하면 그 사이클이 끝나고, 매도일 기준으로 <b>연도.순번차</b> 이름이 자동으로 붙습니다. 예: 2026년에 세 번째로 끝난 사이클 = <b>2026.3차</b>. 해가 바뀌면 2027.1차부터 다시 셉니다.</p>
+        <p><b>자동 종료(익절):</b> 시세를 불러올 때 마지막 기록 다음 거래일부터 어제까지 하루씩 다시 계산해, 그날 종가가 LOC 매도 예약가(평단 × (1 + AI 익절%), 센트 올림) 이상이면 보유 전량을 그날 종가로 매도한 것으로 보고 사이클을 닫습니다. 그다음 거래일부터는 신규 진입(전일 종가 이하 LOC)을 다시 자동 기록합니다. <b>손절·직접 매도</b>는 LOC 주문이 없으므로 [사이클 종료 직접 기록]에 날짜와 매도가를 넣으면 같은 방식으로 닫힙니다(매도가를 비우면 그날 종가).</p>
+        <p><b>사이클마다 남는 기록:</b> 기간(첫 매수 → 매도, 달력 일수·거래일 수), 매수 횟수와 분할 사용(예: 4/8), 수량·평단·투입금, 매도가, 손익 금액, 수익률, 보유 중 최대 낙폭(그 사이 최저 종가 ÷ 평단 − 1), 자동·직접 구분, 그 사이클의 매수 내역. 예: 9/24 → 9/30 · 6일 · 매수 2회 · 평단 $49.50 → $70.00 · +$2,050 · +41.41%.</p>
+        <p><b>평생 요약:</b> 누적 손익과 실현 수익률(손익 합계 ÷ 투입금 합계), 승률(익절 ÷ 전체), 평균 기간, 평균 매수 횟수, 최고·최저 사이클, 연도별 소계. 수수료·세금·환율은 반영하지 않습니다.</p>
+        <p><b>평생 보관:</b> 기록은 이 기기에 저장되고, ☁️ 동기화를 켜면 사이클이 끝날 때마다 GitHub 비공개 Gist에 자동으로 올라갑니다. 앱 데이터와 함께 <b>SOXL-cycles.md</b> 라는 읽기 좋은 표 문서도 매번 다시 써지므로, 앱이 없어도 GitHub에서 기록을 볼 수 있습니다. 📊 엑셀 내보내기에도 사이클 시트가 들어갑니다. 잘못 닫힌 사이클은 줄을 펼쳐 [이 사이클 삭제]를 누르세요(가장 최근 것이면 매수 기록이 되살아납니다).</p>
+        <div class="help-dyn" data-for="card-cycle"></div>
         <div class="help-dyn" data-for="card-trades"></div>
       </details>
     <div class="help-group">💾 백업 탭</div>
@@ -789,7 +835,7 @@
       </details>
       <details class="help-item" open>
         <summary><span class="hi-ic">📊</span>엑셀로 내보내기</summary>
-        <p>버튼을 누르면 <b>SOXL_매매기록_날짜.xlsx</b> 파일이 다운로드됩니다. 시트 3개: ① 요약(실현 수익금·실현 수익률·승률·현재 보유·평가손익), ② 매도·수익(거래별 첫 매수일·매도일·수량·평단·매도가·수익금·수익률, 맨 아래 합계는 엑셀 수식), ③ 매수기록(사이클별 모든 매수, 보유 중인 현재 사이클 포함). 날짜는 엑셀 날짜, 금액은 $ 서식, 수익률은 % 서식이라 바로 정렬·필터·차트에 쓸 수 있습니다. 인터넷 없이도 이 기기에서 만들어집니다.</p>
+        <p>버튼을 누르면 <b>SOXL_매매기록_날짜.xlsx</b> 파일이 다운로드됩니다. 시트 3개: ① 요약(종료 사이클 수·승률·평균 기간·실현 손익·현재 보유·평가손익), ② 사이클(2026.1차 같은 이름·결과·기간·매수 횟수·평단·매도가·손익·수익률·최대 낙폭, 맨 아래 합계는 엑셀 수식), ③ 매수기록(사이클별 모든 매수, 진행 중인 사이클 포함). 날짜는 엑셀 날짜, 금액은 $ 서식, 수익률은 % 서식이라 바로 정렬·필터·차트에 쓸 수 있습니다. 인터넷 없이도 이 기기에서 만들어집니다.</p>
         <div class="help-dyn" data-for="card-excel"></div>
       </details>
     <div class="help-group">🤖 AI엔진 탭</div>
@@ -852,6 +898,7 @@
 
 <nav class="tabbar" id="tabbar" role="tablist" aria-label="화면 전환">
   <button class="tb on" type="button" role="tab" data-p="pg-order" aria-selected="true"><span class="ic">⚡</span><span class="tx">주문</span></button>
+  <button class="tb" type="button" role="tab" data-p="pg-cycle" aria-selected="false"><span class="ic">🏁</span><span class="tx">사이클</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-backup" aria-selected="false"><span class="ic">💾</span><span class="tx">백업</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-engine" aria-selected="false"><span class="ic">🤖</span><span class="tx">AI엔진</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-guide" aria-selected="false"><span class="ic">🎯</span><span class="tx">가이드</span></button>
@@ -862,8 +909,8 @@
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V0.65";
-const RELEASE_DATE = "261001";
+const APP_VERSION = "V0.66";
+const RELEASE_DATE = "261003";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
 const FINNHUB_API_KEY = "daik4m9r01qr9o8hnfj0daik4m9r01qr9o8hnfjg";
@@ -2000,6 +2047,27 @@ function loadTrades() { try { const a = JSON.parse(localStorage.getItem(TRADES_K
 function saveTrades(a) { try { localStorage.setItem(TRADES_KEY, JSON.stringify(a.slice().sort((x, y) => x.sellDate < y.sellDate ? -1 : x.sellDate > y.sellDate ? 1 : x.id - y.id))); } catch (e) {} }
 const tradeTombOf = t => "T|" + (t && t.auto ? "sell:" + t.sellDate : "t:" + (t && t.id));
 /* 보유 전량 매도 → 거래 1건 생성 (그 사이클의 매수 기록을 안에 보관) + 매수 기록 비우기 */
+/* 보유 구간(첫 매수일~매도일)의 거래일 수 · 최대 낙폭(최저 종가 ÷ 평단 − 1). 시세 범위 밖이면 null */
+function cycleMarketStats(t) {
+  const hist = lastSoxlHist;
+  if (!hist || !hist.length) return { tdays: null, mdd: null };
+  const bars = hist.filter(d => { const ds = fmtDateFull(d.x); return ds >= t.firstBuy && ds <= t.sellDate; });
+  if (!bars.length || fmtDateFull(hist[0].x) > t.firstBuy) return { tdays: null, mdd: null };
+  const minClose = Math.min(...bars.map(d => d.y));
+  return { tdays: bars.length, mdd: Math.min(0, (minClose / t.avg - 1) * 100) };
+}
+const cycleDays = (a, b) => Math.max(0, Math.round((new Date(b + "T00:00:00Z") - new Date(a + "T00:00:00Z")) / 864e5));
+/* 매도일 순으로 '연도.순번차' 이름 부여 (저장하지 않고 매번 계산 → 삭제·동기화 후에도 번호가 항상 맞음) */
+function cyclesNamed() {
+  const cnt = {};
+  return loadTrades().slice().sort((x, y) => x.sellDate < y.sellDate ? -1 : x.sellDate > y.sellDate ? 1 : x.id - y.id).map(t => {
+    const year = t.sellDate.slice(0, 4); cnt[year] = (cnt[year] || 0) + 1;
+    const ms = (t.tdays === undefined || t.mdd === undefined) ? cycleMarketStats(t) : { tdays: t.tdays, mdd: t.mdd };
+    return Object.assign({}, t, { year, seq: cnt[year], name: `${year}.${cnt[year]}차`, days: cycleDays(t.firstBuy, t.sellDate), tdays: ms.tdays, mdd: ms.mdd, win: t.profit >= 0 });
+  });
+}
+const cycleNameOf = id => { const c = cyclesNamed().find(x => x.id === id); return c ? c.name : ""; };
+
 function closeCycle(sellDate, sellPrice, o) {
   o = o || {};
   const recs = sortedBuyRecords();
@@ -2010,6 +2078,12 @@ function closeCycle(sellDate, sellPrice, o) {
               profit: proceeds - cost, pct: (sellPrice / avg - 1) * 100, rounds: recs.length, firstBuy: recs[0].date,
               auto: !!o.auto, limit: o.limit || null, note: o.note || "",
               buys: recs.map(r => ({ date: r.date, qty: r.qty, price: r.price, auto: !!r.autoRecorded })) };
+  /* 사이클 분석 지표 (종료 시점에 한 번 계산해 영구 보관) */
+  const mt = cycleMarketStats(t);
+  if (mt.tdays !== null) t.tdays = mt.tdays;
+  if (mt.mdd !== null) t.mdd = mt.mdd;
+  const sp = parseInt((document.getElementById("seedSimSplits1") || {}).value, 10);
+  if (sp >= 1) t.splits = sp;
   const all = loadTrades(); all.push(t); saveTrades(all);
   saveBuyRecordsToStorage([]);
   return t;
@@ -2054,7 +2128,7 @@ function autoRecordYesterdayBuy() {
         if (skip.includes("sell:" + day)) { lastReason = `${fmtCompactDate(hist[i].x)} 자동 매도 기록은 직접 삭제하셔서 다시 만들지 않습니다`; continue; }
         const t = closeCycle(day, hist[i].y, { auto: true, limit: sellLimit });
         records = [];
-        if (t) added.push(`💰 ${fmtCompactDate(hist[i].x)} 전량 ${t.qty}주 매도 @ ${usd(t.sellPrice)} (LOC ${usd(sellLimit)} 이상 체결) → ${fmtUsd0Signed(t.profit)} · ${fmtPctSigned(t.pct)}`);
+        if (t) added.push(`🏁 ${cycleNameOf(t.id)} 사이클 종료 — ${fmtCompactDate(hist[i].x)} 전량 ${t.qty}주 매도 @ ${usd(t.sellPrice)} (LOC ${usd(sellLimit)} 이상 체결) → ${fmtUsd0Signed(t.profit)} · ${fmtPctSigned(t.pct)}`);
         lastReason = "";
         continue;
       }
@@ -2112,7 +2186,7 @@ function addSellRecord() {
   if (!(price > 0)) { showSellMsg("매도가를 확인해주세요.", false); return; }
   const t = closeCycle(dateStr, price, { auto: false, note });
   document.getElementById("sellRecPrice").value = "";
-  showSellMsg(`매도 기록 저장: ${t.qty}주 × ${usd(price)} = ${fmtUsd0(t.proceeds)} · 수익금 ${fmtUsd0Signed(t.profit)} · 수익률 ${fmtPctSigned(t.pct)}`, true);
+  showSellMsg(`🏁 ${cycleNameOf(t.id)} 사이클 종료: ${t.qty}주 × ${usd(price)} = ${fmtUsd0(t.proceeds)} · 수익금 ${fmtUsd0Signed(t.profit)} · 수익률 ${fmtPctSigned(t.pct)}`, true);
   renderBuyRecords(); renderLocGuideCard();
 }
 function deleteTrade(id) {
@@ -2137,36 +2211,98 @@ function deleteTrade(id) {
 }
 function tradeStats(trades) {
   const n = trades.length, cost = trades.reduce((x, t) => x + t.cost, 0), profit = trades.reduce((x, t) => x + t.profit, 0);
-  const wins = trades.filter(t => t.profit > 0).length;
-  return { n, cost, profit, wins, rate: cost > 0 ? profit / cost * 100 : null, avgPct: n ? trades.reduce((x, t) => x + t.pct, 0) / n : null };
+  const wins = trades.filter(t => t.profit >= 0).length;
+  const avg = f => n ? trades.reduce((x, t) => x + f(t), 0) / n : null;
+  const by = (f) => n ? trades.reduce((x, t) => f(t, x) ? t : x) : null;
+  return { n, cost, profit, wins, losses: n - wins, rate: cost > 0 ? profit / cost * 100 : null, avgPct: avg(t => t.pct),
+           avgDays: avg(t => cycleDays(t.firstBuy, t.sellDate)), avgRounds: avg(t => t.rounds),
+           best: by((t, x) => t.pct > x.pct), worst: by((t, x) => t.pct < x.pct) };
 }
+const mdShort = ds => `${+ds.slice(5, 7)}/${+ds.slice(8, 10)}`;
 function renderTrades() {
   const sumEl = document.getElementById("tradeSummary"), el = document.getElementById("tradeContent");
   if (!sumEl || !el) return;
   setDefaultSellDate();
-  const trades = loadTrades(), st = tradeStats(trades);
-  const col = v => v === null ? "var(--text-faint)" : v > 0 ? "var(--up)" : v < 0 ? "var(--down)" : "var(--text-dim)";
-  sumEl.innerHTML = `<div class="pl-tiles">
-      <div class="pl-tile"><div class="l">실현 수익금</div><div class="v" style="color:${col(st.n ? st.profit : null)};">${st.n ? fmtUsd0Signed(st.profit) : "--"}</div><div class="s">매수금액 ${st.n ? fmtUsdCompact(st.cost) : "--"}</div></div>
-      <div class="pl-tile"><div class="l">실현 수익률</div><div class="v" style="color:${col(st.rate)};">${st.rate !== null ? fmtPctSigned(st.rate) : "--"}</div><div class="s">거래 평균 ${st.avgPct !== null ? fmtPctSigned(st.avgPct) : "--"}</div></div>
-      <div class="pl-tile"><div class="l">매도 거래</div><div class="v">${st.n}회</div><div class="s">승률 ${st.n ? Math.round(st.wins / st.n * 100) + "%" : "--"}</div></div>
-    </div>`;
-  if (!trades.length) { el.innerHTML = '<div class="fg-empty" style="margin-top:12px;">아직 매도 기록이 없습니다. LOC 매도가 체결되면 자동으로 기록됩니다.</div>'; return; }
-  const rows = trades.slice().reverse().map(t => `
-    <tr>
-      <td>${fmtKrDate(t.sellDate)}<span class="sell-tag">${t.auto ? "자동" : "직접"} · ${t.rounds}회</span></td>
-      <td class="num">${t.qty.toLocaleString("en-US")}주<span class="sub-price">${fmtUsdCompact(t.proceeds)}</span></td>
-      <td class="num">${usd(t.sellPrice)}<span class="sub-price">평단 ${usd(t.avg)}</span></td>
-      <td class="num pl" style="color:${col(t.profit)};">${fmtUsd0Signed(t.profit)}<span class="sub-price" style="color:${col(t.pct)};">${fmtPctSigned(t.pct)}</span></td>
-      <td class="buyrec-del-cell"><button class="buy-del-btn" type="button" onclick="deleteTrade(${t.id})" aria-label="삭제" title="삭제">✕</button></td>
-    </tr>`).join("");
-  el.innerHTML = `<div class="buysim-sub-title">매도 기록 · ${trades.length}건 (최근 순)</div>
-    <table class="stat-table detail-table sim-table trade-table">
-      <colgroup><col style="width:23%"><col style="width:21%"><col style="width:22%"><col style="width:24%"><col style="width:10%"></colgroup>
-      <thead><tr><th>매도일</th><th class="num">수량·금액</th><th class="num">매도가</th><th class="num">수익금·률</th><th></th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <p class="verify-note">검산: 수익금 = 수량 × 매도가 − 매수금액(수량 × 평단). 실현 수익률 = 수익금 합계 ${fmtUsd0Signed(st.profit)} ÷ 매수금액 합계 ${fmtUsd0(st.cost)}. 수수료·세금 미반영.</p>`;
+  (() => { const all = loadTrades(); let ch = false;
+    all.forEach(t => { if (t.mdd === undefined || t.tdays === undefined) { const ms = cycleMarketStats(t); if (ms.mdd !== null) { t.mdd = ms.mdd; t.tdays = ms.tdays; ch = true; } } });
+    if (ch) saveTrades(all); })();
+  const cs = cyclesNamed(), st = tradeStats(cs);
+  const col = v => v === null || v === undefined ? "var(--text-faint)" : v > 0 ? "var(--up)" : v < 0 ? "var(--down)" : "var(--text-dim)";
+  sumEl.innerHTML = `<div class="pl-tiles four">
+      <div class="pl-tile"><div class="l">누적 손익</div><div class="v" style="color:${col(st.n ? st.profit : null)};">${st.n ? fmtUsd0Signed(st.profit) : "--"}</div><div class="s">실현 수익률 ${st.rate !== null ? fmtPctSigned(st.rate) : "--"}</div></div>
+      <div class="pl-tile"><div class="l">종료 사이클 · 승률</div><div class="v">${st.n}회 · ${st.n ? Math.round(st.wins / st.n * 100) + "%" : "--"}</div><div class="s">익절 ${st.wins} · 손절 ${st.losses}</div></div>
+      <div class="pl-tile"><div class="l">평균 기간</div><div class="v">${st.avgDays !== null ? st.avgDays.toFixed(st.avgDays < 10 ? 1 : 0) + "일" : "--"}</div><div class="s">첫 매수 → 매도</div></div>
+      <div class="pl-tile"><div class="l">평균 매수 횟수</div><div class="v">${st.avgRounds !== null ? st.avgRounds.toFixed(1) + "회" : "--"}</div><div class="s">사이클당 평균 ${st.avgPct !== null ? fmtPctSigned(st.avgPct) : "--"}</div></div>
+    </div>
+    ${st.n >= 2 ? `<div class="cy-best"><div>최고 <b>${st.best.name}</b> <span style="color:${col(st.best.pct)}">${fmtPctSigned(st.best.pct)}</span></div><div>최저 <b>${st.worst.name}</b> <span style="color:${col(st.worst.pct)}">${fmtPctSigned(st.worst.pct)}</span></div></div>` : ""}`;
+
+  let html = "";
+  /* 진행 중인 사이클 */
+  const cur = sortedBuyRecords();
+  if (cur.length) {
+    const y = String(new Date().getFullYear()), seq = cs.filter(c => c.year === y).length + 1;
+    const q = cur.reduce((x, r) => x + r.qty, 0), cost = cur.reduce((x, r) => x + r.qty * r.price, 0), avg = cost / q;
+    const hist = lastSoxlHist;
+    const px = (lastSoxlPrice !== null && !isNaN(lastSoxlPrice)) ? lastSoxlPrice : (hist && hist.length ? hist[hist.length - 1].y : null);
+    const today = new Date(); const tds = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    const ev = px !== null ? (px / avg - 1) * 100 : null;
+    html += `<div class="cy-year"><b>진행 중</b></div>
+      <details class="cy live"><summary>
+        <span class="cy-name">${y}.${seq}차<span class="cy-pill">진행 중</span></span><span class="cy-pl" style="color:${col(ev)}">${ev !== null ? fmtUsd0Signed(px * q - cost) : "--"}</span>
+        <span class="cy-meta">${mdShort(cur[0].date)} → · ${cycleDays(cur[0].date, tds)}일째 · 매수 ${cur.length}회</span><span class="cy-pct" style="color:${col(ev)}">${ev !== null ? fmtPctSigned(ev) : "시세 필요"}</span>
+      </summary><div class="cy-body">
+        <div class="cy-kv"><div><span>평단</span><b>${usd(avg)}</b></div><div><span>수량</span><b>${q.toLocaleString("en-US")}주</b></div><div><span>투입</span><b>${fmtUsd0(cost)}</b></div></div>
+        <div class="cy-buys">${cur.map((r, k) => `<i>${k + 1}회</i> ${mdShort(r.date)} · ${r.qty}주 @ ${usd(r.price)}`).join("<br>")}</div>
+      </div></details>`;
+  }
+  if (!cs.length) {
+    html += `<div class="fg-empty" style="margin-top:12px;">아직 종료된 사이클이 없습니다.<br>전량 매도되면 <b>${new Date().getFullYear()}.1차</b>부터 자동으로 기록됩니다.</div>`;
+  } else {
+    const years = [...new Set(cs.map(c => c.year))].sort().reverse();
+    years.forEach(yr => {
+      const list = cs.filter(c => c.year === yr), ys = tradeStats(list);
+      html += `<div class="cy-year"><b>${yr}년</b>${ys.n}사이클 · 승률 ${Math.round(ys.wins / ys.n * 100)}%<span style="color:${col(ys.profit)}">${fmtUsd0Signed(ys.profit)} · ${fmtPctSigned(ys.rate)}</span></div>`;
+      list.slice().reverse().forEach(c => {
+        html += `<details class="cy${c.win ? "" : " loss"}"><summary>
+          <span class="cy-name">${c.name}<span class="cy-pill">${c.win ? "익절" : "손절"}</span></span><span class="cy-pl">${fmtUsd0Signed(c.profit)}</span>
+          <span class="cy-meta">${mdShort(c.firstBuy)} → ${mdShort(c.sellDate)} · ${c.days}일 · 매수 ${c.rounds}회</span><span class="cy-pct">${fmtPctSigned(c.pct)}</span>
+        </summary><div class="cy-body">
+          <div class="cy-kv">
+            <div><span>평단 → 매도</span><b>${usd(c.avg)} → ${usd(c.sellPrice)}</b></div>
+            <div><span>수량 · 투입</span><b>${c.qty.toLocaleString("en-US")}주 · ${fmtUsdCompact(c.cost)}</b></div>
+            <div><span>최대 낙폭</span><b style="color:${c.mdd !== null && c.mdd < 0 ? "var(--down)" : "var(--text)"}">${c.mdd !== null ? (c.mdd < 0 ? fmtPctSigned(c.mdd, 1) : "0.0%") : "—"}</b></div>
+            <div><span>거래일</span><b>${c.tdays !== null ? c.tdays + "일" : "—"}</b></div>
+            <div><span>분할 사용</span><b>${c.rounds}${c.splits ? "/" + c.splits : "회"}</b></div>
+            <div><span>종료 방식</span><b>${c.auto ? "LOC 자동" : "직접 기록"}</b></div>
+          </div>
+          <div class="cy-buys">${(c.buys || []).map((r, k) => `<i>${k + 1}회</i> ${mdShort(r.date)} · ${r.qty}주 @ ${usd(r.price)}`).join("<br>")}<br><i>매도</i> ${mdShort(c.sellDate)} · ${c.qty}주 @ ${usd(c.sellPrice)}</div>
+          <button class="cy-del" type="button" onclick="deleteTrade(${c.id})">이 사이클 삭제</button>
+        </div></details>`;
+      });
+    });
+  }
+  const gid = (typeof syncGist === "function") ? syncGist() : "";
+  html += `<a class="cy-link" id="cyLink" href="https://gist.github.com/${gid}" target="_blank" rel="noopener"${gid ? "" : " hidden"}>📄 GitHub에 보관된 사이클 기록 보기 ↗</a>`;
+  el.innerHTML = html;
+}
+
+/* 사이클 기록을 읽기 좋은 Markdown 문서로 (동기화 때 Gist에 함께 저장 → 앱 없이도 평생 열람) */
+const CYCLE_MD_FILE = LEV_TICKER + "-cycles.md";
+function buildCycleMarkdown() {
+  const cs = cyclesNamed(), st = tradeStats(cs);
+  const L = [`# ${LEV_TICKER} 무한매수 사이클 기록`, "", "> 앱이 사이클 종료 때마다 자동으로 다시 쓰는 문서입니다. 직접 고치면 다음 동기화 때 덮어써집니다.", ""];
+  if (!cs.length) { L.push("아직 종료된 사이클이 없습니다."); return L.join("\n") + "\n"; }
+  L.push(`**누적** ${st.n}사이클 · 익절 ${st.wins} · 손절 ${st.losses} · 승률 ${Math.round(st.wins / st.n * 100)}% · 손익 **${fmtUsd0Signed(st.profit)}** (${fmtPctSigned(st.rate)}) · 평균 ${st.avgDays.toFixed(1)}일 · 평균 매수 ${st.avgRounds.toFixed(1)}회`, "");
+  L.push(`최근 종료: ${cs[cs.length - 1].name} (${cs[cs.length - 1].sellDate})`, "");
+  [...new Set(cs.map(c => c.year))].sort().reverse().forEach(yr => {
+    const list = cs.filter(c => c.year === yr), ys = tradeStats(list);
+    L.push(`## ${yr}년 · ${ys.n}사이클 · ${fmtUsd0Signed(ys.profit)} (${fmtPctSigned(ys.rate)}) · 승률 ${Math.round(ys.wins / ys.n * 100)}%`, "");
+    L.push("| 사이클 | 결과 | 기간 | 일수 | 매수 | 투입 | 평단 → 매도 | 손익 | 수익률 | 최대 낙폭 |", "|:--|:--:|:--|--:|--:|--:|:--|--:|--:|--:|");
+    list.slice().reverse().forEach(c => L.push(`| **${c.name}** | ${c.win ? "🟢 익절" : "🔴 손절"} | ${c.firstBuy.slice(5)} → ${c.sellDate.slice(5)} | ${c.days}일 | ${c.rounds}회 | ${fmtUsd0(c.cost)} | ${usd(c.avg)} → ${usd(c.sellPrice)} | ${fmtUsd0Signed(c.profit)} | ${fmtPctSigned(c.pct)} | ${c.mdd !== null ? (c.mdd < 0 ? fmtPctSigned(c.mdd, 1) : "0.0%") : "—"} |`));
+    L.push("");
+  });
+  L.push("_수수료·세금·환율 미반영. 최대 낙폭 = 보유 중 최저 종가 ÷ 평단 − 1._");
+  return L.join("\n") + "\n";
 }
 document.getElementById("sellRecSaveBtn").addEventListener("click", addSellRecord);
 
@@ -2207,7 +2343,7 @@ function renderBuyRecords() {
     const tr = loadTrades();
     el.innerHTML = `${lastAutoRecordMsg ? `<div class="banner ok" style="margin:12px 0 0;">🤖 ${lastAutoRecordMsg}</div>` : ""}
       ${lastAutoRecordInfo ? `<div class="auto-info">ℹ️ ${lastAutoRecordInfo}</div>` : ""}
-      <div class="fg-empty" style="margin-top:14px;">${tr.length ? `💰 직전 사이클을 ${fmtKrDate(tr[tr.length - 1].sellDate)} 매도했습니다.<br>신규 진입(전일 종가 이하 LOC)이 체결되면 자동으로 기록됩니다.` : "📝 아직 저장된 매수 기록이 없습니다.<br>위에 날짜를 입력하고 저장해 보세요."}</div>`;
+      <div class="fg-empty" style="margin-top:14px;">${tr.length ? (() => { const c = cyclesNamed().pop(); return `🏁 <b data-goto="pg-cycle" style="cursor:pointer;text-decoration:underline;">${c.name}</b> 사이클 종료 (${fmtKrDate(c.sellDate)} · ${fmtUsd0Signed(c.profit)} · ${fmtPctSigned(c.pct)})<br>신규 진입(전일 종가 이하 LOC)이 체결되면 다음 사이클이 자동으로 시작됩니다.`; })() : "📝 아직 저장된 매수 기록이 없습니다.<br>위에 날짜를 입력하고 저장해 보세요."}</div>`;
     return;
   }
   const rowsHtml = summary.rows.map(r => `
@@ -2984,13 +3120,18 @@ async function syncNow(why) {
       finally { __syncMute = false; }
       const d = m.records.length - before;
       const dT = m.trades.length - local.trades.length;
-      note = dT > 0 ? `다른 기기 매도 기록 ${dT}건 반영` : d > 0 ? `다른 기기 기록 ${d}건 추가됨` : d < 0 ? `다른 기기에서 지운 ${-d}건 반영` : "다른 기기 변경 반영";
+      note = dT > 0 ? `다른 기기에서 끝난 사이클 ${dT}건 반영` : d > 0 ? `다른 기기 기록 ${d}건 추가됨` : d < 0 ? `다른 기기에서 지운 ${-d}건 반영` : "다른 기기 변경 반영";
       try { renderBuyRecords(); renderLocGuideCard(); if (typeof updateBuyQtyHint === "function") updateBuyQtyHint(); } catch (e) {}
     }
-    if (remoteChanged) {
-      const doc = { schema: "muhan-sync/1", app: SYNC.app, version: APP_VERSION, updated: new Date().toISOString(), device: syncDevice(), records: m.records, skip: m.skip, tombs: m.tombs, trades: m.trades };
-      await gh("/gists/" + syncGist(), { method: "PATCH", body: JSON.stringify({ files: { [SYNC.file]: { content: JSON.stringify(doc) } } }) });
-      if (!note) note = "이 기기 변경을 올렸습니다";
+    /* 사이클 Markdown 일지: 내용이 달라졌을 때만 다시 씀 */
+    const md = buildCycleMarkdown(), remoteMd = (g.files && g.files[CYCLE_MD_FILE] && g.files[CYCLE_MD_FILE].content) || "";
+    const mdChanged = (m.trades.length > 0 || remoteMd !== "") && md !== remoteMd;
+    if (remoteChanged || mdChanged) {
+      const files = {};
+      if (remoteChanged) files[SYNC.file] = { content: JSON.stringify({ schema: "muhan-sync/1", app: SYNC.app, version: APP_VERSION, updated: new Date().toISOString(), device: syncDevice(), records: m.records, skip: m.skip, tombs: m.tombs, trades: m.trades }) };
+      if (mdChanged) files[CYCLE_MD_FILE] = { content: md };
+      await gh("/gists/" + syncGist(), { method: "PATCH", body: JSON.stringify({ files }) });
+      if (!note) note = mdChanged && !remoteChanged ? "사이클 기록 문서를 갱신했습니다" : "이 기기 변경을 올렸습니다";
     }
     meta.tombs = m.tombs; meta.last = Date.now(); meta.dirty = false; meta.remoteDevice = remote.device || ""; meta.note = note || meta.note || "";
     saveSyncMeta(meta);
@@ -3005,6 +3146,7 @@ async function syncNow(why) {
 }
 
 function syncRender(state) {
+  try { const lk = document.getElementById("cyLink"); if (lk) { const g = syncGist(); lk.hidden = !(syncTok() && g); lk.href = "https://gist.github.com/" + g; } } catch (e) {}
   const st = document.getElementById("syncState"), chip = document.getElementById("syncChip");
   const setup = document.getElementById("syncSetup"), on = document.getElementById("syncOn");
   if (!st) return;
@@ -3155,7 +3297,9 @@ function buildTradeWorkbook() {
     [H("항목"), H("값"), H("설명")],
     ["종목", LEV_TICKER, `${LEV_TICKER}무한매수 ${APP_VERSION}`],
     ["내보낸 시각", now.toLocaleString("ko-KR"), ""],
-    ["매도 거래 수", { v: st.n, s: 4 }, "완료된 사이클(전량 매도) 수"],
+    ["종료 사이클 수", { v: st.n, s: 4 }, `익절 ${st.wins} · 손절 ${st.losses}`],
+    ["평균 기간(일)", { v: st.avgDays !== null ? Math.round(st.avgDays * 10) / 10 : "" }, "첫 매수 → 매도 달력 일수 평균"],
+    ["평균 매수 횟수", { v: st.avgRounds !== null ? Math.round(st.avgRounds * 10) / 10 : "" }, "사이클당"],
     ["누적 매수금액(매도 완료분)", { v: st.cost, s: 2 }, "매도한 사이클들의 매수금액 합"],
     ["실현 수익금", { v: st.profit, s: 6 }, "Σ(수량 × 매도가 − 매수금액)"],
     ["실현 수익률", { v: st.rate !== null ? st.rate / 100 : "", s: 8 }, "실현 수익금 ÷ 누적 매수금액"],
@@ -3169,17 +3313,18 @@ function buildTradeWorkbook() {
     ["평가 수익률", { v: hq && refPx !== null ? refPx / havg - 1 : "", s: 3 }, ""],
     ["비고", "수수료·세금·환율 미반영", "자동 기록은 종가 기준 LOC 체결 가정"],
   ] };
-  const tRows = [[H("번호"), H("첫 매수일"), H("매도일"), H("매수 횟수"), H("수량"), H("평단가"), H("매수금액"), H("매도가"), H("매도금액"), H("수익금"), H("수익률"), H("구분")]];
-  trades.forEach((t, i) => tRows.push([{ v: i + 1, s: 4 }, { d: t.firstBuy }, { d: t.sellDate }, { v: t.rounds, s: 4 }, { v: t.qty, s: 4 }, { v: t.avg, s: 2 }, { v: t.cost, s: 2 }, { v: t.sellPrice, s: 2 }, { v: t.proceeds, s: 2 }, { v: t.profit, s: 5 }, { v: t.pct / 100, s: 3 }, t.auto ? "자동(LOC)" : "직접"]));
-  if (trades.length) {
-    const n = trades.length + 1;
-    tRows.push([{ v: "합계", s: 7 }, "", "", "", { f: `SUM(E2:E${n})`, v: trades.reduce((x, t) => x + t.qty, 0), s: 4 }, "", { f: `SUM(G2:G${n})`, v: st.cost, s: 10 }, "", { f: `SUM(I2:I${n})`, v: trades.reduce((x, t) => x + t.proceeds, 0), s: 10 }, { f: `SUM(J2:J${n})`, v: st.profit, s: 6 }, { f: `IF(G${n + 1}=0,"",J${n + 1}/G${n + 1})`, v: st.rate !== null ? st.rate / 100 : 0, s: 8 }, ""]);
+  const cs = cyclesNamed();
+  const tRows = [[H("사이클"), H("결과"), H("첫 매수일"), H("매도일"), H("일수"), H("거래일"), H("매수 횟수"), H("수량"), H("평단가"), H("투입금"), H("매도가"), H("매도금액"), H("손익"), H("수익률"), H("최대 낙폭"), H("종료 방식")]];
+  cs.forEach(c => tRows.push([c.name, c.win ? "익절" : "손절", { d: c.firstBuy }, { d: c.sellDate }, { v: c.days, s: 4 }, c.tdays !== null ? { v: c.tdays, s: 4 } : "", { v: c.rounds, s: 4 }, { v: c.qty, s: 4 }, { v: c.avg, s: 2 }, { v: c.cost, s: 2 }, { v: c.sellPrice, s: 2 }, { v: c.proceeds, s: 2 }, { v: c.profit, s: 5 }, { v: c.pct / 100, s: 3 }, c.mdd !== null ? { v: c.mdd / 100, s: 3 } : "", c.auto ? "LOC 자동" : "직접 기록"]));
+  if (cs.length) {
+    const n = cs.length + 1;
+    tRows.push([{ v: "합계", s: 7 }, "", "", "", "", "", { f: `SUM(G2:G${n})`, v: cs.reduce((x, t) => x + t.rounds, 0), s: 4 }, { f: `SUM(H2:H${n})`, v: cs.reduce((x, t) => x + t.qty, 0), s: 4 }, "", { f: `SUM(J2:J${n})`, v: st.cost, s: 10 }, "", { f: `SUM(L2:L${n})`, v: cs.reduce((x, t) => x + t.proceeds, 0), s: 10 }, { f: `SUM(M2:M${n})`, v: st.profit, s: 6 }, { f: `IF(J${n + 1}=0,"",M${n + 1}/J${n + 1})`, v: st.rate !== null ? st.rate / 100 : 0, s: 8 }, "", ""]);
   }
   const bRows = [[H("사이클"), H("상태"), H("회차"), H("매수일"), H("수량"), H("매수가"), H("매수금액"), H("누적 평단"), H("구분")]];
   const addCycle = (label, state, buys) => { let q = 0, c = 0; buys.forEach((b, k) => { q += b.qty; c += b.qty * b.price; bRows.push([label, state, { v: k + 1, s: 4 }, { d: b.date }, { v: b.qty, s: 4 }, { v: b.price, s: 2 }, { v: b.qty * b.price, s: 2 }, { v: c / q, s: 2 }, (b.auto || b.autoRecorded) ? "자동(LOC)" : "직접"]); }); };
-  trades.forEach((t, i) => addCycle(`${i + 1}`, `매도 완료 ${t.sellDate}`, t.buys || []));
-  if (cur.length) addCycle(`${trades.length + 1}`, "보유 중", cur);
-  return XL.build([summary, { name: "매도·수익", cols: [6, 12, 12, 9, 9, 11, 13, 11, 13, 13, 10, 11], freeze: true, rows: tRows }, { name: "매수기록", cols: [7, 20, 6, 12, 9, 11, 13, 11, 11], freeze: true, rows: bRows }]);
+  cs.forEach(c => addCycle(c.name, `${c.win ? "익절" : "손절"} ${c.sellDate}`, c.buys || []));
+  if (cur.length) addCycle(`${new Date().getFullYear()}.${cs.filter(c => c.year === String(new Date().getFullYear())).length + 1}차`, "진행 중", cur);
+  return XL.build([summary, { name: "사이클", cols: [10, 7, 12, 12, 6, 7, 9, 9, 11, 13, 11, 13, 13, 10, 10, 11], freeze: true, rows: tRows }, { name: "매수기록", cols: [10, 18, 6, 12, 9, 11, 13, 11, 11], freeze: true, rows: bRows }]);
 }
 document.getElementById("xlsxBtn").addEventListener("click", () => {
   const msg = document.getElementById("xlsxMsg");
@@ -3190,7 +3335,7 @@ document.getElementById("xlsxBtn").addEventListener("click", () => {
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
     const t = loadTrades();
-    msg.className = "bk-msg ok"; msg.textContent = `다운로드: ${name} · 매도 ${t.length}건 · 보유 매수 ${loadBuyRecords().length}건`;
+    msg.className = "bk-msg ok"; msg.textContent = `다운로드: ${name} · 사이클 ${t.length}건 · 보유 매수 ${loadBuyRecords().length}건`;
   } catch (e) { msg.className = "bk-msg err"; msg.textContent = "엑셀 생성 실패: " + e.message; }
 });
 initTabs();

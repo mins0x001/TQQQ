@@ -2,7 +2,7 @@
   "id": "./",
   "name": "무한매수 허브",
   "short_name": "무한매수",
-  "description": "SOXL · TQQQ 무한매수 대시보드",
+  "description": "SOXL · TQQQ · KODEX 반도체레버리지 무한매수 대시보드",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

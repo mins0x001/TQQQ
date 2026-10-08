@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="release-date" content="261001">
+<meta name="release-date" content="261008">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="무한매수">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -71,17 +71,22 @@
 <div class="wrap">
   <header>
     <h1>무한매수 허브<span class="app-pill" id="appPill" hidden>앱</span></h1>
-    <p>SOXL · TQQQ 무한매수 <span class="ver">· 허브 V1.5 (261001)</span></p>
+    <p>SOXL · TQQQ · KODEX 반도체레버리지 <span class="ver">· 허브 V1.7 (261008)</span></p>
   </header>
 
   <a class="dash" href="soxl.html" style="--c:var(--amber);">
     <span class="tk">SOXL</span>
-    <span class="info"><span class="nm">SOXL 무한매수 <small>V0.65</small></span><span class="st" id="st-soxl">기록 확인 중…</span></span>
+    <span class="info"><span class="nm">SOXL 무한매수 <small>V0.66</small></span><span class="st" id="st-soxl">기록 확인 중…</span></span>
     <span class="go">›</span>
   </a>
   <a class="dash" href="tqqq.html" style="--c:var(--glow);">
     <span class="tk">TQQQ</span>
-    <span class="info"><span class="nm">TQQQ 무한매수 <small>V0.38</small></span><span class="st" id="st-tqqq">기록 확인 중…</span></span>
+    <span class="info"><span class="nm">TQQQ 무한매수 <small>V0.39</small></span><span class="st" id="st-tqqq">기록 확인 중…</span></span>
+    <span class="go">›</span>
+  </a>
+  <a class="dash" href="kodex.html" style="--c:var(--violet);">
+    <span class="tk" style="font-size:11.5px;line-height:1.15;text-align:center;">KODEX<br>2X</span>
+    <span class="info"><span class="nm">KODEX 반도체레버리지 <small>V0.1</small></span><span class="st" id="st-kodex">기록 확인 중…</span></span>
     <span class="go">›</span>
   </a>
 
@@ -104,25 +109,27 @@
   <p class="note">매수 기록은 각 화면 💾 백업 탭의 <b>☁️ PC·모바일 동기화</b>를 켜면 PC와 폰이 같은 기록을 씁니다. 이 목록은 이 기기에 마지막으로 맞춰진 기록입니다.</p>
 </div>
 <script>
-const HUB_VERSION = "V1.5", HUB_RELEASE = "261001";
+const HUB_VERSION = "V1.7", HUB_RELEASE = "261008";
 function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
-function realized(tk){
+function realized(tk, won){
   const t = readJSON(tk + "_trades_v1");
   if (!Array.isArray(t) || !t.length) return "";
   const p = t.reduce((x, r) => x + (+r.profit || 0), 0);
-  return `<br>실현 <b style="color:${p >= 0 ? "#38D98C" : "#F0475A"}">${p >= 0 ? "+" : "-"}$${Math.abs(p).toLocaleString("en-US", { maximumFractionDigits: 0 })}</b> · 매도 <b>${t.length}회</b>`;
+  const amt = won ? Math.abs(Math.round(p)).toLocaleString("ko-KR") + "원" : "$" + Math.abs(p).toLocaleString("en-US", { maximumFractionDigits: 0 });
+  return `<br>실현 <b style="color:${p >= 0 ? "#38D98C" : "#F0475A"}">${p >= 0 ? "+" : "-"}${amt}</b> · 사이클 <b>${t.length}회</b> 종료`;
 }
-function summary(records){
+function summary(records, won){
   if (!Array.isArray(records) || !records.length) return "보유 중인 매수 기록 없음";
   let q = 0, cost = 0, last = "";
   records.forEach(r => { const n = +r.qty || 0, p = +r.price || 0; q += n; cost += n * p; if ((r.date || "") > last) last = r.date; });
   const avg = q ? cost / q : 0;
   const d = last ? last.slice(2).replace(/-/g, ".") : "-";
-  return `기록 <b>${records.length}회</b> · <b>${q}주</b> · 평단 <b>$${avg.toFixed(2)}</b> · 최근 <b>${d}</b>`;
+  return `기록 <b>${records.length}회</b> · <b>${q}주</b> · 평단 <b>${won ? Math.round(avg).toLocaleString("ko-KR") + "원" : "$" + avg.toFixed(2)}</b> · 최근 <b>${d}</b>`;
 }
 function renderSummary(){
   document.getElementById("st-soxl").innerHTML = summary(readJSON("soxl_buy_records_v1")) + realized("soxl");
   document.getElementById("st-tqqq").innerHTML = summary(readJSON("tqqq_buy_records_v2")) + realized("tqqq");
+  document.getElementById("st-kodex").innerHTML = summary(readJSON("kodex_buy_records_v1"), true) + realized("kodex", true);
   }
 renderSummary();
 
