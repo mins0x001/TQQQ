@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V0.1-KRX-494310-2x">
+<meta name="version" content="V0.2-KRX-494310-2x">
 <meta name="release-date" content="261008">
-<title>KODEX 반도체레버리지 무한매수 AI (V0.1 - 261008)</title>
+<title>KODEX 반도체레버리지 무한매수 AI (V0.2 - 261008)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -719,7 +719,7 @@
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
   <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">KODEX반도체레버리지_V0_1_261008.HTML</span>)</button>
-  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V0.1 (261008)</code> · 반도체2X 무한매수 V0.66 구조 · KODEX 반도체레버리지(494310) 2배 최적화판</div>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V0.2 (261008)</code> · 반도체2X 무한매수 V0.66 구조 · KODEX 반도체레버리지(494310) 2배 최적화판</div>
   </footer>
 
   </div>
@@ -884,7 +884,7 @@
       </details>
       <details class="help-item" open>
         <summary><span class="hi-ic">📡</span>데이터 출처</summary>
-        <p>KODEX 반도체레버리지(494310, KRX 반도체 지수 일간 2배)와 비교용 KODEX 반도체(091160, 1배)의 일봉·현재가를 <b>네이버 금융</b>에서 받습니다(실패하면 Yahoo Finance). 국내 ETF는 브라우저에서 무료로 부를 수 있는 시세 API가 없어, 이 저장소의 <b>GitHub Actions 자동 수집기</b>가 평일 15:07 · 15:47 · 18:17(KST)에 data/kodex.json을 갱신하고 이 화면은 그 파일을 읽습니다. 15:07 수집분의 현재가는 장중 가격이고, 전략 계산은 15:40 이후 확정된 종가만 씁니다. 수집 시각은 시세를 불러온 뒤 상단 알림에 표시됩니다. 실제 주문 전에는 증권사 앱의 시세를 함께 확인하세요.</p>
+        <p>KODEX 반도체레버리지(494310, KRX 반도체 지수 일간 2배)와 비교용 KODEX 반도체(091160, 1배)의 확정 일봉은 <b>공공데이터포털 · 금융위원회 시세정보</b>(한국거래소 원천, 공식)를 뼈대로 쓰고, 공공데이터에 아직 올라오지 않은 최신 거래일(공공데이터는 전 영업일 기준으로 다음 영업일 오후에 갱신)만 <b>네이버 금융</b>으로 채웁니다. 두 출처가 겹치는 날짜는 종가를 서로 대조해, 불일치가 있으면 상단 알림에 ⚠로 표시합니다. 현재가는 네이버 실시간 시세이며, 둘 다 실패하면 Yahoo Finance를 씁니다. 공공데이터 인증키는 GitHub 저장소 Secret(DATA_GO_KR_KEY)에만 저장되고 이 화면에는 들어 있지 않습니다. 국내 ETF는 브라우저에서 무료로 부를 수 있는 시세 API가 없어, 이 저장소의 <b>GitHub Actions 자동 수집기</b>가 평일 15:07 · 15:47 · 18:17(KST)에 data/kodex.json을 갱신하고 이 화면은 그 파일을 읽습니다. 15:07 수집분의 현재가는 장중 가격이고, 전략 계산은 15:40 이후 확정된 종가만 씁니다. 수집 시각은 시세를 불러온 뒤 상단 알림에 표시됩니다. 실제 주문 전에는 증권사 앱의 시세를 함께 확인하세요.</p>
       </details>
   </section>
   </div>
@@ -919,7 +919,7 @@
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V0.1";
+const APP_VERSION = "V0.2";
 const RELEASE_DATE = "261008";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
@@ -997,6 +997,20 @@ function kodexDataUrls() {
   return urls;
 }
 let __kodexData = null, __kodexP = null;
+/* V0.2: 출처·검증 요약 — 공공데이터포털(금융위원회, 한국거래소 원천) 공식 일봉 + 네이버 최신일 보충 */
+function kodexSourceNote() {
+  const L = __kodexData && __kodexData.lev;
+  if (!L) return "";
+  const v = L.verify || {};
+  const src = String(L.source || "-").replace("naver", "네이버").replace("yahoo", "Yahoo");
+  let t = ` · 출처 ${src}`;
+  if (v.official_last) {
+    t += ` · 공식 확정 ~${v.official_last}`;
+    if (v.naver_added && v.naver_added.length) t += ` (+네이버 ${v.naver_added.length}일)`;
+    if (typeof v.overlap === "number" && v.overlap > 0) t += v.mismatch ? ` · ⚠ 종가 불일치 ${v.mismatch}일` : ` · 종가 대조 ${v.overlap}일 일치 ✓`;
+  }
+  return t;
+}
 async function __loadKodex() {
   const got = await Promise.all(kodexDataUrls().map(async u => {
     try {
@@ -1122,7 +1136,7 @@ async function fetchAll() {
     renderSoxlUpStreakStats(soxlHistFull);
     renderSoxlStreakBanner(soxlHistFull);
 
-    showBanner(`시세 데이터를 불러왔습니다 · 수집 ${(__kodexData && __kodexData.updated_kst) || "-"} (KST) · 최근 확정 종가 ${lastSoxlHist && lastSoxlHist.length ? lastSoxlHist[lastSoxlHist.length - 1].d : "-"}`, true);
+    showBanner(`시세 데이터를 불러왔습니다 · 수집 ${(__kodexData && __kodexData.updated_kst) || "-"} (KST) · 최근 확정 종가 ${lastSoxlHist && lastSoxlHist.length ? lastSoxlHist[lastSoxlHist.length - 1].d : "-"}${kodexSourceNote()}`, true);
   } catch (e) {
     showBanner("시세 조회 실패: " + e.message, false);
   }

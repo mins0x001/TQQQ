@@ -1,9 +1,18 @@
-"""KODEX 반도체레버리지(494310) · KODEX 반도체(091160) 시세 수집기 V1.0 (2026-10-08)
+"""KODEX 반도체레버리지(494310) · KODEX 반도체(091160) 시세 수집기 V1.2 (2026-10-08)
 GitHub Actions에서 실행 → data/kodex.json 저장. 표준 라이브러리만 사용.
-1순위 네이버 금융 일봉(fchart) + 현재가(polling), 실패하면 Yahoo Finance(.KS)."""
-import json, os, re, sys, urllib.request
+
+데이터 구성 (V1.1)
+  ① 공공데이터포털 · 금융위원회 증권상품시세정보 V2 getETFPriceInfo (한국거래소 원천, 공식) — 확정 일봉의 뼈대
+     · 기준일자 = 전 영업일. 매 영업일 오후(13시 전후)에 전일 시세가 올라온다.
+     · 인증키는 저장소 Secret DATA_GO_KR_KEY 에서만 읽는다 (HTML·저장소에 절대 넣지 않음).
+  ② 네이버 금융 일봉 — 공공데이터에 아직 없는 최신 거래일(오늘 15:40 확정 종가 등)만 덧붙이고,
+     겹치는 날짜는 종가를 서로 대조(검증)한다.
+  ③ Yahoo Finance(.KS) — ①② 모두 실패할 때만.
+현재가는 네이버 실시간 시세(polling)."""
+import json, os, re, sys, urllib.parse, urllib.request
 from datetime import datetime, timedelta, timezone
 
+VERSION = "V1.2"
 KST = timezone(timedelta(hours=9))
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36",
       "Referer": "https://finance.naver.com/"}
@@ -11,13 +20,94 @@ SERIES = {"lev": ("494310", "KODEX 반도체레버리지"), "base": ("091160", "
 COUNT = 520            # 약 2년치 일봉
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "kodex.json")
 
+# 금융위원회 시세 API 후보 — ETF는 '증권상품시세정보'(getETFPriceInfo)에 있다.
+# 주식시세정보(getStockPriceInfo)는 보통 주식 위주라 ETF가 없을 수 있어 뒤 순서로 시도한다.
+GOV_ENDPOINTS = [
+    ("ETF시세V2", "https://apis.data.go.kr/1160100/GetSecuritiesProductInfoService_V2/getETFPriceInfo"),   # 활용신청 완료(2026-10-08)
+    ("ETF시세", "https://apis.data.go.kr/1160100/service/GetSecuritiesProductInfoService/getETFPriceInfo"),
+    ("주식시세V2", "https://apis.data.go.kr/1160100/GetStockSecuritiesInfoService_V2/getStockPriceInfo"),
+    ("주식시세", "https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo"),
+]
 
-def get(url, timeout=20):
-    req = urllib.request.Request(url, headers=UA)
+
+def get(url, timeout=25, headers=UA):
+    req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read()
 
 
+def num(v):
+    try:
+        return float(str(v).replace(",", "").strip() or 0)
+    except ValueError:
+        return 0.0
+
+
+# ───────── ① 공공데이터포털 (금융위원회) ─────────
+def gov_key():
+    """Secret에 '인코딩 키'(%2F 포함)를 넣든 '디코딩 키'(/,+,= 포함)를 넣든 둘 다 동작하게 만든다."""
+    k = (os.environ.get("DATA_GO_KR_KEY") or "").strip()
+    if not k:
+        return ""
+    return k if "%" in k else urllib.parse.quote(k, safe="")
+
+
+def parse_gov(payload, code):
+    """응답(JSON) → [[YYYY-MM-DD, o, h, l, c], ...], totalCount.
+    인증 오류 등은 게이트웨이가 JSON 대신 XML(OpenAPI_ServiceResponse)을 주므로 그 메시지를 꺼내 예외로 올린다."""
+    text = payload.decode("utf-8", "ignore").strip()
+    if text.startswith("<"):
+        msg = re.search(r"<returnAuthMsg>(.*?)</returnAuthMsg>", text) or re.search(r"<resultMsg>(.*?)</resultMsg>", text)
+        raise RuntimeError("API 오류: " + (msg.group(1) if msg else text[:120]))
+    j = json.loads(text)
+    resp = j.get("response", {})
+    head = resp.get("header", {})
+    if str(head.get("resultCode", "00")) not in ("00", "0"):
+        raise RuntimeError(f"API 오류 {head.get('resultCode')}: {head.get('resultMsg')}")
+    body = resp.get("body", {}) or {}
+    items = (body.get("items") or {}) if isinstance(body.get("items"), dict) else {}
+    rows = items.get("item") or []
+    if isinstance(rows, dict):        # 1건이면 리스트가 아니라 객체로 온다
+        rows = [rows]
+    out = []
+    for it in rows:
+        if str(it.get("srtnCd", "")).lstrip("A") != code:   # likeSrtnCd는 '포함' 검색 → 정확히 일치만
+            continue
+        d, c = str(it.get("basDt", "")), num(it.get("clpr"))
+        if len(d) != 8 or c <= 0:
+            continue
+        o, h, l = num(it.get("mkp")) or c, num(it.get("hipr")) or c, num(it.get("lopr")) or c   # 거래 없던 날은 0 → 종가로
+        out.append([f"{d[:4]}-{d[4:6]}-{d[6:]}", o, h, l, c])
+    return out, int(num(body.get("totalCount")))
+
+
+def gov_daily(code):
+    key = gov_key()
+    if not key:
+        raise RuntimeError("Secret DATA_GO_KR_KEY 없음")
+    begin = (datetime.now(KST) - timedelta(days=int(COUNT * 1.5))).strftime("%Y%m%d")
+    errors = []
+    for label, base in GOV_ENDPOINTS:
+        try:
+            bars, page, total = [], 1, None
+            while page <= 5:
+                q = urllib.parse.urlencode({"resultType": "json", "numOfRows": 1000, "pageNo": page,
+                                            "likeSrtnCd": code, "beginBasDt": begin})
+                chunk, total = parse_gov(get(f"{base}?serviceKey={key}&{q}", headers={"User-Agent": UA["User-Agent"]}), code)
+                bars += chunk
+                if page * 1000 >= (total or 0):
+                    break
+                page += 1
+            if bars:
+                uniq = {b[0]: b for b in bars}
+                return label, [uniq[k] for k in sorted(uniq)]
+            errors.append(f"{label}: 0건(이 API에 종목 없음 또는 활용신청 필요)")
+        except Exception as e:  # noqa: BLE001
+            errors.append(f"{label}: {e}")
+    raise RuntimeError(" / ".join(errors))
+
+
+# ───────── ② 네이버 금융 ─────────
 def parse_naver_fchart(text):
     """<item data="20261008|24000|24500|23800|24300|1234567" /> → [[YYYY-MM-DD, o, h, l, c], ...]"""
     rows = re.findall(r'data="(\d{8})\|([\d.]+)\|([\d.]+)\|([\d.]+)\|([\d.]+)\|(\d*)"', text)
@@ -38,10 +128,11 @@ def naver_daily(code):
 def naver_quote(code):
     j = json.loads(get(f"https://polling.finance.naver.com/api/realtime/domestic/stock/{code}").decode("utf-8", "ignore"))
     d = (j.get("datas") or [{}])[0]
-    price = float(str(d.get("closePrice", "0")).replace(",", "") or 0)
+    price = num(d.get("closePrice", "0"))
     return {"price": price, "at": d.get("localTradedAt", ""), "status": d.get("marketStatus", "")} if price > 0 else None
 
 
+# ───────── ③ Yahoo ─────────
 def yahoo_daily(code):
     j = json.loads(get(f"https://query1.finance.yahoo.com/v8/finance/chart/{code}.KS?range=3y&interval=1d").decode("utf-8"))
     res = j["chart"]["result"][0]
@@ -57,34 +148,71 @@ def yahoo_daily(code):
     return out[-COUNT:]
 
 
+def dedupe(bars):
+    uniq = {b[0]: b for b in bars}
+    return [uniq[k] for k in sorted(uniq)]
+
+
+def merge(gov, naver):
+    """공식(공공데이터) 일봉을 그대로 쓰고, 그 이후 날짜만 네이버로 채운다. 겹치는 날짜는 종가 대조."""
+    gmap = {b[0]: b for b in gov}
+    overlap = [b for b in naver if b[0] in gmap]
+    bad = [{"d": b[0], "gov": gmap[b[0]][4], "naver": b[4]} for b in overlap if abs(gmap[b[0]][4] - b[4]) >= 0.5]
+    last = gov[-1][0]
+    tail = [b for b in naver if b[0] > last]
+    verify = {"official_last": last, "naver_added": [b[0] for b in tail], "overlap": len(overlap),
+              "mismatch": len(bad), "mismatch_rows": bad[-5:]}
+    return dedupe(gov + tail)[-COUNT:], verify
+
+
 def fetch_series(code):
-    errors = []
-    for name, fn in (("naver", naver_daily), ("yahoo", yahoo_daily)):
-        try:
-            bars = fn(code)
-            if len(bars) >= 60:
-                # 날짜 중복 제거 · 오름차순
-                uniq = {b[0]: b for b in bars}
-                return name, [uniq[k] for k in sorted(uniq)]
-            errors.append(f"{name}: {len(bars)}봉")
-        except Exception as e:  # noqa: BLE001
-            errors.append(f"{name}: {e}")
+    errors, gov, nav = [], None, None
+    try:
+        label, gov = gov_daily(code)
+    except Exception as e:  # noqa: BLE001
+        errors.append(f"공공데이터: {e}")
+    try:
+        nav = dedupe(naver_daily(code))
+        if len(nav) < 5:
+            errors.append(f"naver: {len(nav)}봉")
+            nav = None
+    except Exception as e:  # noqa: BLE001
+        errors.append(f"naver: {e}")
+
+    if gov and len(gov) >= 60:
+        if nav:
+            bars, verify = merge(gov, nav)
+            return f"공공데이터({label})+naver", bars, verify, errors
+        return f"공공데이터({label})", gov[-COUNT:], {"official_last": gov[-1][0], "naver_added": [], "note": "네이버 실패 → 오늘 종가는 다음 영업일 오후 반영"}, errors
+    if nav and len(nav) >= 60:
+        return "naver", nav[-COUNT:], {"official_last": None, "note": "공공데이터 미사용"}, errors
+    try:
+        y = dedupe(yahoo_daily(code))
+        if len(y) >= 60:
+            return "yahoo", y, {"official_last": None, "note": "공공데이터·네이버 실패"}, errors
+        errors.append(f"yahoo: {len(y)}봉")
+    except Exception as e:  # noqa: BLE001
+        errors.append(f"yahoo: {e}")
     raise RuntimeError(f"{code} 일봉 수집 실패 — " + " / ".join(errors))
 
 
 def main():
     now = datetime.now(KST)
-    out = {"schema": "kodex-data/1", "updated": now.isoformat(timespec="seconds"),
+    out = {"schema": "kodex-data/1", "collector": VERSION, "updated": now.isoformat(timespec="seconds"),
            "updated_kst": now.strftime("%Y-%m-%d %H:%M"), "tick_rule": "ETF: <2000원 1원, >=2000원 5원"}
     for key, (code, name) in SERIES.items():
-        src, bars = fetch_series(code)
+        src, bars, verify, warns = fetch_series(code)
         quote = None
         try:
             quote = naver_quote(code)
         except Exception as e:  # noqa: BLE001
             print(f"현재가 실패({code}): {e}")
-        out[key] = {"code": code, "name": name, "source": src, "bars": bars, "quote": quote}
-        print(f"{name}({code}) {src} {len(bars)}봉 · 마지막 {bars[-1][0]} 종가 {bars[-1][4]:,.0f}원 · 현재가 {quote['price'] if quote else '-'}")
+        out[key] = {"code": code, "name": name, "source": src, "bars": bars, "quote": quote, "verify": verify}
+        for w in warns:
+            print("  참고:", w)
+        print(f"{name}({code}) {src} {len(bars)}봉 · 마지막 {bars[-1][0]} 종가 {bars[-1][4]:,.0f}원 · "
+              f"공식 마지막 {verify.get('official_last')} · 대조 {verify.get('overlap', 0)}일 중 불일치 {verify.get('mismatch', 0)} · "
+              f"현재가 {quote['price'] if quote else '-'}")
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, separators=(",", ":"))
