@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V0.71-261013-SOXL-MeritzAutoOrder">
+<meta name="version" content="V0.72-261013-SOXL-Stage2x3-MeritzFills">
 <meta name="release-date" content="261003">
-<title>SOXL 무한매수 AI (V0.71 - 261013)</title>
+<title>SOXL 무한매수 AI (V0.72 - 261013)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -631,6 +631,16 @@
   .bot-run.run{border-color:rgba(245,165,36,0.45);} .bot-run.ok{border-color:rgba(46,204,113,0.45);} .bot-run.bad{border-color:rgba(240,71,90,0.5);}
   .bot-step .bk-row .bk-btn{flex:1;}
   .bot-sym summary{cursor:pointer;font-size:12px;color:var(--text-dim);}
+  /* V0.72 💼 메리츠 체결 자동 등록 */
+  .api-strip{margin:0 0 12px;padding:10px 12px;border-radius:12px;border:1px solid rgba(94,234,212,0.35);background:rgba(94,234,212,0.06);font-size:12.5px;line-height:1.6;color:var(--text-dim);overflow-wrap:anywhere;}
+  .api-strip b{color:var(--text);} .api-strip.off{border-color:var(--border);background:var(--panel-2);} .api-strip.warn{border-color:rgba(245,165,36,0.5);background:rgba(245,165,36,0.07);}
+  .api-strip .as-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;}
+  .api-strip .as-h b{color:var(--glow);} .api-strip.off .as-h b{color:var(--text-dim);} .api-strip.warn .as-h b{color:var(--amber);}
+  .api-strip .as-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+  .api-strip button,.api-strip a.as-a{min-height:34px;padding:0 12px;border-radius:10px;border:1px solid var(--border);background:var(--panel-3);color:var(--text);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;text-decoration:none;}
+  .api-strip .ok{color:var(--up);font-weight:800;} .api-strip .bad{color:var(--amber);font-weight:800;}
+  .auto-tag.api{color:var(--glow);}
+  .rule-cmp .tp-cmp-title{color:var(--glow);}
 </style>
 </head>
 <body>
@@ -692,6 +702,7 @@
       <div><div class="card-kicker">01 · MY RECORDS</div><h2>나의 매수 기록</h2></div>
     </div>
     <div class="rule-chip" data-rule-chip></div>
+    <div id="apiRecStrip"></div>
     <div class="form-grid">
       <div class="field full"><label for="buyRecDate">최근 매수 날짜</label><input type="date" id="buyRecDate"></div>
       <div class="field"><label for="buyRecQty">매수 수량 (주)</label><input type="number" id="buyRecQty" min="1" step="1" inputmode="numeric" placeholder="비우면 자동"></div>
@@ -712,6 +723,7 @@
       <div class="card-icon">🏁</div>
       <div><div class="card-kicker">CYCLE LOG · LIFETIME</div><h2>사이클 기록</h2></div>
     </div>
+    <div id="apiCyStrip"></div>
     <div id="tradeSummary"></div>
     <div id="tradeContent"></div>
   </section>
@@ -774,8 +786,8 @@
   </section>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">SOXL무한매수_V0_71_261013.HTML</span>)</button>
-  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V0.71 (261013)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">SOXL무한매수_V0_72_261013.HTML</span>)</button>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V0.72 (261013)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>
   </footer>
 
   </div>
@@ -821,7 +833,7 @@
     <div class="form-grid three">
       <div class="field"><label for="seedSimSeed1">시드 ($)</label><input type="number" id="seedSimSeed1" min="1" step="any" inputmode="decimal" value="36000"></div>
       <div class="field"><label for="seedSimSplits1">분할 수</label><input type="number" id="seedSimSplits1" min="1" step="1" inputmode="numeric" value="8"></div>
-      <div class="field"><label for="seedSimCycle1">2단계 주기(일)</label><input type="number" id="seedSimCycle1" min="1" step="1" inputmode="numeric" value="5"></div>
+      <div class="field"><label for="seedSimCycle1">2단계 분할 배수 (×)</label><input type="number" id="seedSimCycle1" min="1" max="10" step="1" inputmode="numeric" value="3"></div>
     </div>
     <div class="tp-cmp-bar">
       <div class="field"><label for="seedSimTp1">비교 익절 (%)</label><input type="number" id="seedSimTp1" min="0.5" max="100" step="0.5" inputmode="decimal" value="13"></div>
@@ -917,7 +929,7 @@
     <div class="help-group">🤖 AI엔진 탭</div>
       <details class="help-item" open>
         <summary><span class="hi-ic">🤖</span>SOXL 변동성 최적화 AI 엔진</summary>
-        <p>TQQQ 버전(V0.19)의 파라미터(6분할 · 2단계 주기 14일 · 손절모드 -12%)는 TQQQ 일간σ 약 3.6%에 맞춰져 있습니다. 이 엔진은 SOXL의 실제 일간σ를 측정해 ① 변동성 배율로 파라미터를 환산한 "규칙 기반 추천"과 ② 분할 수 × 매수 주기 조합을 최근 200봉에 전수 백테스트해 인접 조합 평균(과최적화 완화)이 가장 높은 "백테스트 최적"을 함께 제시합니다. 백테스트는 아래 시뮬레이션과 같은 "평단&amp;전일종가 이하" 매수 규칙을 사용하며, 버튼을 누르면 시뮬레이션과 LOC 가이드에 바로 적용됩니다.</p>
+        <p>TQQQ 버전(V0.19)의 파라미터(6분할 · 2단계 주기 14일 · 손절모드 -12% — V0.72부터 2단계는 주기 대신 ×3 분할 연속 매수)는 TQQQ 일간σ 약 3.6%에 맞춰져 있습니다. 이 엔진은 SOXL의 실제 일간σ를 측정해 ① 변동성 배율로 파라미터를 환산한 "규칙 기반 추천"과 ② 분할 수(2단계는 대기 없이 ×3 고정) 조합을 최근 200봉에 전수 백테스트해 인접 조합 평균(과최적화 완화)이 가장 높은 "백테스트 최적"을 함께 제시합니다. 백테스트는 아래 시뮬레이션과 같은 "평단&amp;전일종가 이하" 매수 규칙을 사용하며, 버튼을 누르면 시뮬레이션과 LOC 가이드에 바로 적용됩니다.</p>
         <div class="help-dyn" data-for="card-engine"></div>
       </details>
       <details class="help-item" open>
@@ -928,12 +940,12 @@
     <div class="help-group">🎯 가이드 탭</div>
       <details class="help-item" open>
         <summary><span class="hi-ic">🎯</span>LOC 매수/매도 예약 가이드</summary>
-        <p>다음 LOC(지정가-종가) 매수/매도 예약 가격과 수량을 계산합니다. 매수 예약가는 <b>"평단 &amp; 전일종가 이하"</b> 기준(시드 분할매수 시뮬레이션의 매수 조건)으로, 평단가와 전일 확정 종가 중 더 낮은 값을 사용합니다. 두 가격 이하로 마감해야만 체결되므로 평단 위에서 물타기가 되는 일을 막아줍니다. 보유 수량이 없는 신규 진입 시에는 평단가가 없어 전일 확정 종가만 적용합니다. 시드·분할 수·2단계 매수 주기는 시뮬레이션의 입력값을, 매수 회차·단계 판정은 "나의 매수 기록"의 실제 내역을 사용합니다.</p>
+        <p>다음 LOC(지정가-종가) 매수/매도 예약 가격과 수량을 계산합니다. 매수 예약가는 <b>"평단 &amp; 전일종가 이하"</b> 기준(시드 분할매수 시뮬레이션의 매수 조건)으로, 평단가와 전일 확정 종가 중 더 낮은 값을 사용합니다. 두 가격 이하로 마감해야만 체결되므로 평단 위에서 물타기가 되는 일을 막아줍니다. 보유 수량이 없는 신규 진입 시에는 평단가가 없어 전일 확정 종가만 적용합니다. 시드·분할 수·2단계 분할 배수는 시뮬레이션의 입력값을, 매수 회차·단계 판정은 "나의 매수 기록"의 실제 내역을 사용합니다.</p>
         <div class="help-dyn" data-for="card-loc"></div>
       </details>
       <details class="help-item" open>
         <summary><span class="hi-ic">🧪</span>시드 분할매수 시뮬레이션 [평단&amp;전일종가 이하] (최근 200봉)</summary>
-        <p>시드를 N분할해 최근 200봉에 적용한 시뮬레이션입니다. 매수 규칙: ① 종가가 전일 종가보다 낮은 날 1분할 최초 매수, ② AI 추천 분할매수 회차까지는 이후 종가가 현재 평단보다 낮으면서 전일 종가보다도 낮은 날마다 1분할씩 추가 매수, ③ AI 추천 회차를 초과하면 그 이후부터는 입력한 매수 주기(N일)마다 한 번만, 종가가 현재 평단보다 낮으면서 전일 종가보다도 낮은 날에 1분할씩 추가 매수(입력한 분할 수까지). 매도 규칙: 평단가 대비 목표% 도달 시 익절(아래 <b>비교 익절(%)</b>에 원하는 값을 넣으면 같은 규칙으로 익절%만 바꾼 결과를 나란히 보여주고, 주변 익절% 몇 개의 시드 대비 수익률도 함께 표시합니다), 입력한 분할 수만큼 모두 매수한 뒤 손절선에 닿으면 손절합니다. 포지션은 한 번에 하나만 운용하며 청산 다음 거래일부터 새 진입을 탐색합니다.</p>
+        <p>시드를 N분할해 최근 200봉에 적용한 시뮬레이션입니다. 매수 규칙: ① 종가가 전일 종가보다 낮은 날 1분할 최초 매수, ② AI 추천 분할매수 회차까지는 이후 종가가 현재 평단보다 낮으면서 전일 종가보다도 낮은 날마다 1분할씩 추가 매수, ③ AI 추천 회차를 초과하면(2단계) 기다리지 않고 같은 조건이 맞는 날마다 <b>시드÷(분할×배수, 기본 ×3)</b>씩 추가 매수 — 예) 9분할·추천 5회면 1단계 5회 × 시드/9 + 2단계 최대 12회 × 시드/27 = 시드 전액(총 17회). 매도 규칙: 평단가 대비 목표% 도달 시 익절(아래 <b>비교 익절(%)</b>에 원하는 값을 넣으면 같은 규칙으로 익절%만 바꾼 결과를 나란히 보여주고, 주변 익절% 몇 개의 시드 대비 수익률도 함께 표시합니다), 시드를 모두 쓴 뒤(최대 회차) 손절선에 닿으면 손절합니다. 포지션은 한 번에 하나만 운용하며 청산 다음 거래일부터 새 진입을 탐색합니다.</p>
         <div class="help-dyn" data-for="card-sim"></div>
       </details>
     <div class="help-group">📊 통계 탭</div>
@@ -985,7 +997,7 @@
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V0.71";
+const APP_VERSION = "V0.72";
 const RELEASE_DATE = "261013";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
@@ -1018,7 +1030,16 @@ const VOL_FACTOR_MIN = 0.8, VOL_FACTOR_MAX = 1.5;
 const TQQQ_REF_SIGMA = 3.6;               // TQQQ V0.19 튜닝 기준 일간σ(%)
 const TQQQ_BASE = { splits: 6, cycle: 14, stopModePct: 12 };
 const ENGINE_SPLITS_GRID = [5, 6, 7, 8, 9, 10, 12];
-const ENGINE_CYCLE_GRID = [3, 4, 6, 8, 10, 14];
+const ENGINE_CYCLE_GRID = [3, 4, 6, 8, 10, 14];   // V0.71 이전 규칙(2단계 주기 대기) — 이제 비교용
+/* V0.72 2단계 규칙: 대기 없이 매수 조건이 맞을 때마다, 1회 매수금을 시드÷(분할×3)으로 줄여 계속 산다.
+   예) 시드 $36,000 · 9분할 · AI 추천 5회 → 1단계 5회 × $4,000 + 2단계 최대 12회 × $1,333 = 시드 전액 (총 17회) */
+const STAGE2_MULT = 3;
+function stagePlan(seed, splits, recommendedN, mult) {
+  const s = Math.max(1, Math.floor(splits) || 1), m = Math.max(1, Math.floor(mult) || 1);
+  const n1 = Math.max(0, Math.min(Math.floor(recommendedN) || 0, s));
+  return { splits: s, mult: m, n1, per1: seed / s, per2: seed / (s * m), maxRounds: n1 + (s - n1) * m };
+}
+const perOfRound = (sp, round) => round <= sp.n1 ? sp.per1 : sp.per2;
 
 /* CCI(20)를 200봉 전체 구간에서 계산하려면 앞쪽에 19봉 여유분이 더 필요하다(200 + 19 = 219봉). */
 /* +1봉: 장중에는 Twelve Data가 "오늘 진행 중인 봉"을 최신 봉으로 주므로, 이를 제외해도 확정 종가 200봉(+CCI 여유 19봉)이 남도록 한다. */
@@ -1783,16 +1804,18 @@ function getSellAnalysis(hist) {
 }
 
 /* ---------- 시드 분할매수 시뮬레이션 (시드 ÷ 분할수 = 1회 매수금, 종가 기준 정수 주식) ---------- */
-function simulateSeedBacktest(hist, seed, splits, requirePrevDown, cycleDays, sellPctOverride) {
+function simulateSeedBacktest(hist, seed, splits, requirePrevDown, mult, sellPctOverride, legacyCycle) {
   const a = getSellAnalysis(hist);
   if (!a || !a.recommendedN) return null;
 
-  const perSplit = seed / splits;
-  const maxRounds = splits;
+  const legacy = typeof legacyCycle === "number" && legacyCycle >= 1;   // 비교용: V0.71 이전 규칙(2단계 = 주기 대기 · 같은 1분할)
   const sellPct = (typeof sellPctOverride === "number" && sellPctOverride > 0) ? sellPctOverride : a.best.pct;   // VV0.67: 비교용 고정 익절%
   const stopPct = a.stopLossByRound ? a.stopLossByRound.worstDrawdown : null;
   const recommendedN = a.recommendedN;
-  const cycle = Math.max(1, Math.floor(cycleDays) || 1);
+  const sp = legacy ? { splits, mult: 1, n1: Math.min(recommendedN, splits), per1: seed / splits, per2: seed / splits, maxRounds: splits }
+                    : stagePlan(seed, splits, recommendedN, mult);
+  const perSplit = sp.per1, maxRounds = sp.maxRounds;
+  const cycle = legacy ? Math.max(1, Math.floor(legacyCycle)) : 0;
   const lastIdx = hist.length - 1;
   const lastClose = hist[lastIdx].y;
 
@@ -1805,7 +1828,7 @@ function simulateSeedBacktest(hist, seed, splits, requirePrevDown, cycleDays, se
     let shares = 0, cost = 0, rounds = 0, lastBuyIdx = i;
     const buys = [];
     const buy = (idx) => {
-      const q = Math.floor(perSplit / hist[idx].y);
+      const q = Math.floor(perOfRound(sp, rounds + 1) / hist[idx].y);
       if (q <= 0) return false;
       shares += q; cost += q * hist[idx].y; rounds++; lastBuyIdx = idx;
       buys.push({ x: hist[idx].x, price: hist[idx].y, shares: q, round: rounds });
@@ -1821,8 +1844,8 @@ function simulateSeedBacktest(hist, seed, splits, requirePrevDown, cycleDays, se
       if (rounds >= maxRounds && stopPct !== null && c <= avgNow * (1 + stopPct / 100)) { outcome = "loss"; exitIdx = m; break; }
       const conditionMet = c < avgNow && (!requirePrevDown || c < hist[m - 1].y);
       if (rounds < maxRounds && conditionMet) {
-        if (rounds < recommendedN) buy(m);
-        else if ((m - lastBuyIdx) >= cycle) buy(m);
+        if (!legacy || rounds < sp.n1) buy(m);                 // V0.72: 2단계도 대기 없이 (금액만 시드÷(분할×배수))
+        else if ((m - lastBuyIdx) >= cycle) buy(m);           // 비교용 옛 규칙: 마지막 매수 후 주기 대기
       }
     }
 
@@ -1847,7 +1870,8 @@ function simulateSeedBacktest(hist, seed, splits, requirePrevDown, cycleDays, se
   const maxInvested = trades.length > 0 ? Math.max(...trades.map(t => t.cost)) : 0;
 
   return {
-    seed, splits, perSplit, maxRounds, sellPct, stopPct, recommendedN, cycle, trades,
+    seed, splits, perSplit, maxRounds, sellPct, stopPct, recommendedN, cycle, trades, legacy,
+    mult: sp.mult, n1: sp.n1, per2: sp.per2,
     profit, loss, open, realizedProfit, realizedLoss, realizedTotal, unrealized,
     grandTotal: realizedTotal + unrealized, maxInvested
   };
@@ -1879,7 +1903,7 @@ function renderSeedSimCard(n, requirePrevDown) {
   const cycleInput = document.getElementById("seedSimCycle" + n);
   const cycleDays = cycleInput ? parseInt(cycleInput.value, 10) : 1;
   if (!(seed > 0) || !(splits >= 1) || !(cycleDays >= 1)) {
-    el.innerHTML = '<div class="fg-empty">시드·분할 수·매수 주기를 올바르게 입력해주세요.</div>';
+    el.innerHTML = '<div class="fg-empty">시드·분할 수·2단계 배수를 올바르게 입력해주세요.</div>';
     return;
   }
 
@@ -1896,7 +1920,7 @@ function renderSeedSimCard(n, requirePrevDown) {
     const label = t.outcome === "profit" ? "익절" : t.outcome === "loss" ? "손절" : "보유중(평가)";
     const lc = t.outcome === "profit" ? "var(--up)" : t.outcome === "loss" ? "var(--down)" : "var(--text-faint)";
     const buysHtml = t.buys.map(b => {
-      const phaseTag = b.round <= r.recommendedN ? "" : ` <span style="color:var(--glow);">[2단계]</span>`;
+      const phaseTag = b.round <= r.n1 ? "" : ` <span style="color:var(--glow);">[2단계]</span>`;
       return `<div class="buy-event"><b>${b.round}회</b> ${fmtCompactDate(b.x)} ${usd(b.price)}${phaseTag}</div>`;
     }).join("");
     return `
@@ -1914,8 +1938,10 @@ function renderSeedSimCard(n, requirePrevDown) {
       <div class="hl-item line"><div class="hl-label">시드 대비 수익률</div><div class="hl-value" style="${col(retOnSeed)}">${fmtPctSigned(retOnSeed)}</div></div>
     </div>
     ${renderTpCompare(r, seed, splits, requirePrevDown, cycleDays)}
+    ${renderRuleCompare(r, seed, splits, requirePrevDown)}
     <div class="kv-row"><span class="k">시드 / 분할 (1회 매수금)</span><span class="v">${fmtUsd0(r.seed)} / ${r.splits}분할 (${fmtUsd0(r.perSplit)})</span></div>
-    <div class="kv-row"><span class="k">1단계(AI 추천) / 2단계(주기)</span><span class="v">${r.recommendedN}회까지 매일 조건 매수 → 이후 ${r.cycle}일마다 1회</span></div>
+    <div class="kv-row"><span class="k">1단계 (AI 추천)</span><span class="v">${r.n1}회 × ${fmtUsd0(r.perSplit)} (시드÷${r.splits})</span></div>
+    <div class="kv-row"><span class="k">2단계 (대기 없음 · ×${r.mult})</span><span class="v">최대 ${r.maxRounds - r.n1}회 × ${fmtUsd0(r.per2)} (시드÷${r.splits * r.mult})</span></div>
     <div class="kv-row"><span class="k">적용 규칙</span><span class="v">최대 ${r.maxRounds}회 매수 · +${r.sellPct.toFixed(2)}% 익절 · ${r.stopPct !== null ? fmtPctSigned(r.stopPct) + " 손절" : "손절선 없음"}</span></div>
     <div class="kv-row"><span class="k">매매 결과</span><span class="v">익절 ${r.profit.length} · 손절 ${r.loss.length} · 보유중 ${r.open.length} (총 ${r.trades.length}건)</span></div>
     <div class="kv-row"><span class="k">총 수익 (익절분)</span><span class="v" style="color:var(--up);">${fmtUsd0Signed(r.realizedProfit)}</span></div>
@@ -1927,7 +1953,7 @@ function renderSeedSimCard(n, requirePrevDown) {
       <thead><tr><th>매수 내역 (회차·날짜·종가)</th><th>청산</th><th class="num">손익</th></tr></thead>
       <tbody>${rowsHtml}</tbody>
     </table>
-    <p class="desc" style="margin:12px 0 0;">1분할(시드÷분할수)어치를 종가로 정수 주식만큼 매수하고, 손익은 재투자 없이 고정 분할금액으로 계산했습니다. SOXL 매도 목표는 ${SELL_SWEEP_MIN}~${SELL_SWEEP_MAX}% 구간(${SELL_SWEEP_STEP}%p 간격)을 전수 탐색해 기대수익률이 가장 높은 값을 사용합니다. AI 추천 분할매수 회차(${r.recommendedN}회)까지는 조건 충족 시마다 매수하고, 이를 초과하면 마지막 매수일로부터 ${r.cycle}일이 지난 뒤 조건이 다시 충족될 때만 1회 매수합니다([2단계] 표시). 수수료·세금·슬리피지는 반영하지 않았고, 종가 기준 체결을 가정한 과거 데이터 시뮬레이션이므로 실제 성과를 보장하지 않습니다.</p>
+    <p class="desc" style="margin:12px 0 0;">1분할(시드÷분할수)어치를 종가로 정수 주식만큼 매수하고, 손익은 재투자 없이 고정 분할금액으로 계산했습니다. SOXL 매도 목표는 ${SELL_SWEEP_MIN}~${SELL_SWEEP_MAX}% 구간(${SELL_SWEEP_STEP}%p 간격)을 전수 탐색해 기대수익률이 가장 높은 값을 사용합니다. AI 추천 분할매수 회차(${r.n1}회)까지는 1분할(시드÷${r.splits})씩, 그 뒤 2단계는 기다리지 않고 조건이 충족될 때마다 시드÷${r.splits * r.mult}(${r.splits}분할×${r.mult})씩 매수합니다([2단계] 표시 · 최대 ${r.maxRounds}회 = 시드 전액). 수수료·세금·슬리피지는 반영하지 않았고, 종가 기준 체결을 가정한 과거 데이터 시뮬레이션이므로 실제 성과를 보장하지 않습니다.</p>
   `;
 }
 
@@ -1949,6 +1975,39 @@ function simTrades(hist, seed, splits, prevDown, cycleDays, tp) {
   r.avgDays = days.length ? days.reduce((a, b) => a + b, 0) / days.length : null;
   r.winRate = (r.profit.length + r.loss.length) ? r.profit.length / (r.profit.length + r.loss.length) * 100 : null;
   return r;
+}
+/* V0.72 근거: 같은 200봉 · 같은 시드·분할 · 같은 익절·손절에서 '2단계 규칙'만 바꿔 비교 */
+function renderRuleCompare(rNew, seed, splits, prevDown) {
+  const oldCycle = (engineRecs && engineRecs.oldCycle) || 5;
+  const rOld = simulateSeedBacktest(lastSoxlHist, seed, splits, prevDown, 1, undefined, oldCycle);
+  if (!rOld || !rNew) return "";
+  const st = r => {
+    const closed = r.trades.filter(t => t.exitX), days = closed.map(t => (t.exitX - t.entryX) / 864e5), n = r.trades.length;
+    return { ret: r.grandTotal / r.seed * 100, days: days.length ? days.reduce((x, y) => x + y, 0) / days.length : null,
+             rounds: n ? r.trades.reduce((x, t) => x + t.rounds, 0) / n : null, inv: n ? r.trades.reduce((x, t) => x + t.cost, 0) / n : 0 };
+  };
+  const a = st(rNew), b = st(rOld);
+  const col = v => v >= 0 ? "color:var(--up);" : "color:var(--down);";
+  const row = (k, x, y) => `<tr><td>${k}</td><td>${x}</td><td>${y}</td></tr>`;
+  const win = rNew.grandTotal >= rOld.grandTotal, diff = rNew.grandTotal - rOld.grandTotal;
+  const dd = v => v === null ? "--" : v.toFixed(1) + "일";
+  return `
+    <div class="tp-cmp rule-cmp">
+      <div class="tp-cmp-title">🧭 2단계 규칙 비교 — 신규(대기 없음 · ×${rNew.mult}) vs 기존(${oldCycle}일 주기 대기)</div>
+      <table>
+        <thead><tr><th>항목</th><th class="${win ? "win" : ""}">신규 ${rNew.splits}분할 → ${rNew.splits * rNew.mult}분할${win ? " ★" : ""}</th><th class="${!win ? "win" : ""}">기존 ${oldCycle}일 대기${!win ? " ★" : ""}</th></tr></thead>
+        <tbody>
+          ${row("총 수익금", `<b style="${col(rNew.grandTotal)}">${fmtUsd0Signed(rNew.grandTotal)}</b>`, `<b style="${col(rOld.grandTotal)}">${fmtUsd0Signed(rOld.grandTotal)}</b>`)}
+          ${row("시드 대비", `<b style="${col(a.ret)}">${fmtPctSigned(a.ret)}</b>`, `<b style="${col(b.ret)}">${fmtPctSigned(b.ret)}</b>`)}
+          ${row("익절·손절·보유", `${rNew.profit.length}·${rNew.loss.length}·${rNew.open.length}`, `${rOld.profit.length}·${rOld.loss.length}·${rOld.open.length}`)}
+          ${row("사이클당 매수", a.rounds !== null ? a.rounds.toFixed(1) + "회" : "--", b.rounds !== null ? b.rounds.toFixed(1) + "회" : "--")}
+          ${row("사이클당 투입", fmtUsd0(a.inv), fmtUsd0(b.inv))}
+          ${row("1건 최대 투입", fmtUsd0(rNew.maxInvested), fmtUsd0(rOld.maxInvested))}
+          ${row("평균 보유", dd(a.days), dd(b.days))}
+        </tbody>
+      </table>
+      <div class="tp-cmp-verdict">신규 규칙은 기존 대비 총 수익 <b style="${col(diff)}">${fmtUsd0Signed(diff)}</b>(시드 대비 <b style="${col(a.ret - b.ret)}">${(a.ret - b.ret) >= 0 ? "+" : ""}${(a.ret - b.ret).toFixed(2)}%p</b>). 2단계에서 기다리지 않는 대신 1회 금액을 1/${rNew.mult}로 줄여, 하락이 길어질수록 평단을 더 촘촘히 낮추고 반등 초입에 바로 익절선에 닿게 합니다. 하락이 짧고 급반등하면 기존(큰 금액 몇 번)이 유리할 수 있습니다 — 아래 표의 실제 체결 흐름으로 확인하세요.</div>
+    </div>`;
 }
 function renderTpCompare(rAi, seed, splits, prevDown, cycleDays) {
   const inp = document.getElementById("seedSimTp1");
@@ -2206,7 +2265,8 @@ function setDefaultBuyDate(force) {
    어제(가장 최근 확정 종가일 D)에 LOC 가이드가 제시했을 매수 주문을 그대로 다시 계산한다.
      · 기준가 = min(평단가, D-1 종가) 를 센트 단위 내림  (LOC 가이드와 동일)
      · 수량   = 1분할 금액 ÷ 기준가 → 5주 단위 내림
-     · 분할 수 소진, 2단계 매수 주기 미도래면 주문이 없었던 것으로 본다
+     · 최대 회차(1단계 N + 2단계 (분할−N)×3)를 다 샀으면 주문이 없었던 것으로 본다 (V0.72: 2단계는 대기 없음 · 시드÷(분할×3))
+     · 💼 메리츠 체결 자동 등록이 켜져 있으면 이 추정은 쓰지 않는다 (실제 체결이 우선)
    D 종가 ≤ 기준가 이면 LOC가 체결된 것이므로 (체결가 = D 종가) 기록을 자동 추가한다.
    · 이미 D 이후 기록이 있거나, 사용자가 이 자동 기록을 삭제한 적이 있으면 추가하지 않는다
    · 기록이 하나도 없는 신규 진입 전 상태는 실제 진입 여부를 알 수 없어 자동 저장하지 않는다 */
@@ -2258,6 +2318,8 @@ function closeCycle(sellDate, sellPrice, o) {
   if (mt.mdd !== null) t.mdd = mt.mdd;
   const sp = parseInt((document.getElementById("seedSimSplits1") || {}).value, 10);
   if (sp >= 1) t.splits = sp;
+  const ml = parseInt((document.getElementById("seedSimCycle1") || {}).value, 10);
+  if (ml >= 1) t.mult = ml;
   const all = loadTrades(); all.push(t); saveTrades(all);
   saveBuyRecordsToStorage([]);
   return t;
@@ -2270,6 +2332,7 @@ function autoRecordYesterdayBuy() {
   lastAutoRecordMsg = ""; lastAutoRecordInfo = "";
   const hist = lastSoxlHist;
   if (!hist || hist.length < 3) return null;
+  if (typeof apiActive === "function" && apiActive()) { lastAutoRecordInfo = apiInfoLine(); return null; }
   let records = sortedBuyRecords();
   const trades = loadTrades();
   const lastSell = trades.length ? trades.reduce((x, t) => t.sellDate > x ? t.sellDate : x, "") : "";
@@ -2277,11 +2340,12 @@ function autoRecordYesterdayBuy() {
   if (!anchor) { lastAutoRecordInfo = "기록이 없는 신규 진입 전이라 자동 저장하지 않습니다 (첫 매수는 직접 저장)"; return null; }
   const seed = parseFloat(document.getElementById("seedSimSeed1").value);
   const splits = parseInt(document.getElementById("seedSimSplits1").value, 10);
-  const cycleDays = parseInt(document.getElementById("seedSimCycle1").value, 10) || 1;
+  const mult = parseInt(document.getElementById("seedSimCycle1").value, 10) || STAGE2_MULT;
   if (!(seed > 0) || !(splits >= 1)) return null;
   const strategy = getSellAnalysis(hist);
   if (!strategy || !strategy.recommendedN) return null;
   const sellPct = strategy.best.pct;
+  const sp = stagePlan(seed, splits, strategy.recommendedN, mult);
   const D = hist.length - 1;
   const dates = hist.map(d => fmtDateFull(d.x));
   let start = dates.findIndex(dd => dd > anchor);
@@ -2309,19 +2373,14 @@ function autoRecordYesterdayBuy() {
     }
     // ② LOC 매수 체결 확인
     if (skip.includes(day)) { lastReason = `${fmtCompactDate(hist[i].x)} 자동 기록은 직접 삭제하셔서 다시 만들지 않습니다`; continue; }
-    if (rounds >= splits) { lastReason = `분할 수(${splits}회)를 모두 매수해 추가 매수 주문이 없습니다`; continue; }
-    if (rounds > 0 && rounds + 1 > strategy.recommendedN) {
-      const lastIdx = dates.indexOf(records[rounds - 1].date);
-      const gap = lastIdx === -1 ? Infinity : i - lastIdx;
-      if (gap < cycleDays) { lastReason = `2단계 매수 주기 대기 중 (마지막 매수 후 ${gap}거래일 / 주기 ${cycleDays}일)`; continue; }
-    }
+    if (rounds >= sp.maxRounds) { lastReason = `최대 ${sp.maxRounds}회(1단계 ${sp.n1} + 2단계 ${sp.maxRounds - sp.n1})를 모두 매수해 추가 매수 주문이 없습니다`; continue; }
     let basisRaw = hist[i - 1].y;
     if (rounds > 0) {
       const qtySum = records.reduce((x, r) => x + r.qty, 0);
       basisRaw = Math.min(records.reduce((x, r) => x + r.qty * r.price, 0) / qtySum, basisRaw);
     }
     const basis = Math.floor(basisRaw * 100 + 1e-6) / 100;
-    const qty = Math.floor(Math.floor((seed / splits) / basis) / LOC_QTY_UNIT) * LOC_QTY_UNIT;
+    const qty = Math.floor(Math.floor(perOfRound(sp, rounds + 1) / basis) / LOC_QTY_UNIT) * LOC_QTY_UNIT;
     if (qty <= 0) { lastReason = `1분할 금액으로 ${LOC_QTY_UNIT}주를 살 수 없습니다`; continue; }
     if (hist[i].y > basis) { lastReason = `${fmtCompactDate(hist[i].x)} 종가 ${usd(hist[i].y)} > LOC 매수가 ${usd(basis)} → 미체결`; continue; }
     const rec = { id: Date.now() * 1000 + Math.floor(Math.random() * 1000), date: day, qty, price: hist[i].y, autoRecorded: true };
@@ -2366,6 +2425,7 @@ function addSellRecord() {
 function deleteTrade(id) {
   const all = loadTrades(), t = all.find(x => x.id === id);
   if (!t) return;
+  if (t.api && apiActive()) { showCopyToast("💼 메리츠 체결로 만든 사이클은 자동으로 다시 생깁니다 — 지우려면 [자동 등록 끄기] 후 삭제", false); return; }
   const latest = all.reduce((x, y) => (y.sellDate > x.sellDate || (y.sellDate === x.sellDate && y.id > x.id)) ? y : x);
   const cur = loadBuyRecords();
   const restore = t === latest && cur.every(r => r.date <= t.sellDate) && Array.isArray(t.buys) && t.buys.length;
@@ -2446,8 +2506,8 @@ function renderTrades() {
             <div><span>수량 · 투입</span><b>${c.qty.toLocaleString("en-US")}주 · ${fmtUsdCompact(c.cost)}</b></div>
             <div><span>최대 낙폭</span><b style="color:${c.mdd !== null && c.mdd < 0 ? "var(--down)" : "var(--text)"}">${c.mdd !== null ? (c.mdd < 0 ? fmtPctSigned(c.mdd, 1) : "0.0%") : "—"}</b></div>
             <div><span>거래일</span><b>${c.tdays !== null ? c.tdays + "일" : "—"}</b></div>
-            <div><span>분할 사용</span><b>${c.rounds}${c.splits ? "/" + c.splits : "회"}</b></div>
-            <div><span>종료 방식</span><b>${c.auto ? "LOC 자동" : "직접 기록"}</b></div>
+            <div><span>분할 사용</span><b>${c.rounds}회${c.splits ? " · " + c.splits + "분할" + (c.mult > 1 ? "×" + c.mult : "") : ""}</b></div>
+            <div><span>종료 방식</span><b>${c.api ? "💼 메리츠 체결" : c.auto ? "LOC 자동" : "직접 기록"}</b></div>
           </div>
           <div class="cy-buys">${(c.buys || []).map((r, k) => `<i>${k + 1}회</i> ${mdShort(r.date)} · ${r.qty}주 @ ${usd(r.price)}`).join("<br>")}<br><i>매도</i> ${mdShort(c.sellDate)} · ${c.qty}주 @ ${usd(c.sellPrice)}</div>
           <button class="cy-del" type="button" onclick="deleteTrade(${c.id})">이 사이클 삭제</button>
@@ -2482,6 +2542,7 @@ document.getElementById("sellRecSaveBtn").addEventListener("click", addSellRecor
 
 function deleteBuyRecord(id) {
   const target = loadBuyRecords().find(r => r.id === id);
+  if (target && target.api && apiActive()) { showCopyToast("💼 메리츠 체결 기록은 자동으로 맞춰집니다 — 지우려면 위 [자동 등록 끄기] 후 삭제", false); return; }
   if (target && target.autoRecorded) { const sk = loadAutoSkip(); sk.push(target.date); saveAutoSkip(sk); lastAutoRecordMsg = ""; }
   saveBuyRecordsToStorage(loadBuyRecords().filter(r => r.id !== id));
   hideBuyRecMsg();
@@ -2503,13 +2564,14 @@ function computeBuyRecordsSummary() {
   const rows = sorted.map((r, idx) => {
     qtyCum += r.qty;
     costCum += r.qty * r.price;
-    return { id: r.id, date: r.date, qty: r.qty, price: r.price, amount: r.qty * r.price, autoRecorded: r.autoRecorded, round: idx + 1, cumQty: qtyCum, cumAvg: costCum / qtyCum };
+    return { id: r.id, date: r.date, qty: r.qty, price: r.price, amount: r.qty * r.price, autoRecorded: r.autoRecorded, api: !!r.api, synthetic: !!r.synthetic, round: idx + 1, cumQty: qtyCum, cumAvg: costCum / qtyCum };
   });
   return { rows, totalQty: qtyCum, totalCost: costCum, avgPrice: qtyCum > 0 ? costCum / qtyCum : null };
 }
 
 function renderBuyRecords() {
   try { renderTrades(); } catch (e) {}
+  try { renderApiStrips(); } catch (e) {}
   const el = document.getElementById("buyRecordContent");
   if (!el) return;
   const summary = computeBuyRecordsSummary();
@@ -2525,7 +2587,7 @@ function renderBuyRecords() {
       <td class="num">${r.round}</td>
       <td>${fmtKrDate(r.date)}</td>
       <td class="num">${r.qty.toLocaleString("en-US")}주<span class="sub-price">${fmtUsdCompact(r.amount)}</span></td>
-      <td class="num">${usd(r.price)}${r.autoRecorded ? '<span class="sub-price auto-tag">자동 저장</span>' : ''}</td>
+      <td class="num">${usd(r.price)}${r.api ? `<span class="sub-price auto-tag api">${r.synthetic ? "부분매도 후 잔여" : "💼 메리츠 체결"}</span>` : r.autoRecorded ? '<span class="sub-price auto-tag">자동 저장</span>' : ''}</td>
       <td class="num">${usd(r.cumAvg)}</td>
       <td class="buyrec-del-cell"><button class="buy-del-btn" type="button" onclick="deleteBuyRecord(${r.id})" aria-label="삭제" title="삭제">✕</button></td>
     </tr>
@@ -2582,10 +2644,10 @@ function renderLocGuideCard() {
 
   const seed = parseFloat(document.getElementById("seedSimSeed1").value);
   const splits = parseInt(document.getElementById("seedSimSplits1").value, 10);
-  const cycleInput = document.getElementById("seedSimCycle1");
-  const cycleDays = cycleInput ? parseInt(cycleInput.value, 10) : 1;
-  if (!(seed > 0) || !(splits >= 1) || !(cycleDays >= 1)) {
-    el.innerHTML = '<div class="fg-empty">시드 분할매수 시뮬레이션의 시드·분할 수·매수 주기를 올바르게 입력해주세요.</div>';
+  const multInput = document.getElementById("seedSimCycle1");
+  const mult = multInput ? parseInt(multInput.value, 10) : STAGE2_MULT;
+  if (!(seed > 0) || !(splits >= 1) || !(mult >= 1)) {
+    el.innerHTML = '<div class="fg-empty">시드 분할매수 시뮬레이션의 시드·분할 수·2단계 배수를 올바르게 입력해주세요.</div>';
     return;
   }
 
@@ -2595,8 +2657,8 @@ function renderLocGuideCard() {
     return;
   }
 
-  const perSplit = seed / splits;
   const recommendedN = strategy.recommendedN;
+  const sp = stagePlan(seed, splits, recommendedN, mult);
   const sellPct = strategy.best.pct;
   const stopPct = strategy.stopLossByRound ? strategy.stopLossByRound.worstDrawdown : null;
 
@@ -2609,8 +2671,9 @@ function renderLocGuideCard() {
   const lastCloseDate = fmtDateFull(lastSoxlHist[lastSoxlHist.length - 1].x);
 
   const nextRound = rounds + 1;
-  const inStage1 = nextRound <= recommendedN;
-  const canBuyMore = rounds < splits;
+  const inStage1 = nextRound <= sp.n1;
+  const canBuyMore = rounds < sp.maxRounds;
+  const perSplit = perOfRound(sp, nextRound);   // 이번 회차 1회 매수금: 1단계 시드÷분할 · 2단계 시드÷(분할×배수)
 
   /* LOC 매수 기준가 = "평단 & 전일종가 이하" (시드 분할매수 시뮬레이션 매수 조건과 동일)
      - 보유 중: 평단가와 최근 확정 종가 중 더 낮은 값. 이 가격 이하로 마감해야 두 조건이 동시에 충족된다.
@@ -2632,25 +2695,10 @@ function renderLocGuideCard() {
   const buyQty = Math.floor(rawBuyQty / LOC_QTY_UNIT) * LOC_QTY_UNIT;
 
   let cycleStatusText = "";
-  let buyReady = true;
-  let cycleInfo = null;   // 2단계 주기 상태 (오늘의 LOC 카드 강조용)
-  if (hasPosition && !inStage1 && canBuyMore) {
-    const lastBuyDateStr = lastRecord.date;
-    const lastBuyIdx = lastSoxlHist.findIndex(d => new Date(d.x).toISOString().split("T")[0] === lastBuyDateStr);
-    if (lastBuyIdx !== -1) {
-      /* 오늘 거는 LOC는 '다음 거래일' 주문이므로, 그 거래일 기준 경과일로 판정한다
-         (시뮬레이션·자동 저장과 같은 기준: 마지막 매수 후 N번째 거래일이 되면 매수) */
-      const elapsedTradingDays = (lastSoxlHist.length - 1) - lastBuyIdx;   // 어제까지 경과
-      const nextGap = elapsedTradingDays + 1;                         // 다음 거래일 기준
-      buyReady = nextGap >= cycleDays;
-      const remain = Math.max(0, cycleDays - nextGap);
-      cycleInfo = { elapsed: elapsedTradingDays, nextGap, cycle: cycleDays, remain, ready: buyReady,
-                    firstDay: nextGap === cycleDays, resumeDate: nextTradingDay(lastSoxlHist[lastSoxlHist.length - 1].x, remain + 1) };
-      cycleStatusText = `2단계 주기: 마지막 매수(${fmtKrDate(lastBuyDateStr)}) 후 다음 거래일이 ${nextGap}번째 거래일 (주기 ${cycleDays}일) → ${buyReady ? "매수 재개 · 조건 충족 시 체결" : `앞으로 ${remain}거래일 더 대기 (예상 재개 ${fmtResume(cycleInfo.resumeDate)})`}`;
-    } else {
-      cycleStatusText = `2단계 주기: 마지막 매수일(${fmtKrDate(lastBuyDateStr)})을 최근 200봉 데이터에서 찾을 수 없어 정확한 경과일을 계산할 수 없습니다.`;
-    }
-  }
+  const buyReady = true;      // V0.72: 2단계 주기 대기 없음
+  const cycleInfo = null;
+  if (hasPosition && !inStage1 && canBuyMore)
+    cycleStatusText = `2단계 ${nextRound - sp.n1}/${sp.maxRounds - sp.n1}회차 · 대기 없이 조건 충족 시 매수 · 1회 ${fmtUsd0(sp.per2)} (시드÷${sp.splits * sp.mult} = ${sp.splits}분할×${sp.mult})`;
 
   const canSell = hasPosition;
   // 주문 입력용 매도가: 센트 단위 올림(목표 수익률 이상 보장)
@@ -2660,9 +2708,9 @@ function renderLocGuideCard() {
   // SOXL 손절모드 판정: 평단가 × STRAT2_MODE_RATIO(0.80) 이하이면 손절모드 경고
   const inStopMode = hasPosition && lastClose <= avgPrice * STRAT2_MODE_RATIO;
 
-  const stageLabel = !canBuyMore ? `분할 수 소진 (${rounds}/${splits}회)`
+  const stageLabel = !canBuyMore ? `분할 소진 (${rounds}/${sp.maxRounds}회 · 시드 전액)`
     : !hasPosition ? "신규 진입 전"
-    : (inStage1 ? `1단계 (AI 추천 ${recommendedN}회 이내, 현재 ${rounds}회)` : `2단계 (추천 회차 초과, 현재 ${rounds}회 · 주기 ${cycleDays}일)`);
+    : (inStage1 ? `1단계 (AI 추천 ${sp.n1}회 이내, 현재 ${rounds}회)` : `2단계 ×${sp.mult} (현재 ${rounds}회 · ${nextRound - sp.n1}/${sp.maxRounds - sp.n1}회차 · 대기 없음)`);
   const stageColor = !hasPosition ? "var(--text-dim)" : (inStage1 ? "var(--glow)" : "var(--amber)");
   const stageBg = !hasPosition ? "rgba(75,90,115,0.14)" : (inStage1 ? "rgba(94,234,212,0.12)" : "rgba(245,165,36,0.12)");
   const stageBorder = !hasPosition ? "var(--border-soft)" : (inStage1 ? "rgba(94,234,212,0.35)" : "rgba(245,165,36,0.4)");
@@ -2670,8 +2718,8 @@ function renderLocGuideCard() {
   const buyBoxOff = !canBuyMore || (hasPosition && !inStage1 && !buyReady);
   const buyBoxClass = buyBoxOff ? "loc-box off" : "loc-box buy";
   let buyNote;
-  if (!canBuyMore) buyNote = `입력한 분할 수(${splits}회)를 모두 매수했습니다. 매도 후 새 진입을 준비하세요.`;
-  else if (hasPosition && !inStage1) buyNote = cycleStatusText;
+  if (!canBuyMore) buyNote = `최대 ${sp.maxRounds}회(1단계 ${sp.n1} + 2단계 ${sp.maxRounds - sp.n1})를 모두 매수해 시드를 다 썼습니다. 매도 후 새 진입을 준비하세요.`;
+  else if (hasPosition && !inStage1) buyNote = `${buyBasisLabel} · ${cycleStatusText}`;
   else buyNote = `${buyBasisLabel} · ${nextRound}회차 매수 트리거 (종가가 이 가격 이하일 때 체결)`;
 
   /* Termux 자동주문 봇용 주문 데이터 (화면에 보이는 숫자와 동일한 값) */
@@ -2689,8 +2737,10 @@ function renderLocGuideCard() {
     holding_qty: hasPosition ? summary.totalQty : 0,
     orders: exportOrders,
     /* 자동주문 봇이 같은 공식으로 다시 계산해 대조(검수 V2)하는 원자료 */
-    bot: { last_close: lastClose, sell_pct: sellPct, per_split: perSplit, qty_unit: LOC_QTY_UNIT, avg_exact: hasPosition ? avgPrice : null,
-           seed, splits, cycle: cycleDays, rounds, recommended_n: recommendedN, in_stop_mode: !!inStopMode, buy_off: !!buyBoxOff }
+    bot: { last_close: lastClose, sell_pct: sellPct, per_split: canBuyMore ? perSplit : sp.per2, qty_unit: LOC_QTY_UNIT, avg_exact: hasPosition ? avgPrice : null,
+           seed, splits, mult: sp.mult, stage1_n: sp.n1, max_rounds: sp.maxRounds, per_split_1: sp.per1, per_split_2: sp.per2,
+           rounds, recommended_n: recommendedN, in_stop_mode: !!inStopMode, buy_off: !!buyBoxOff,
+           records_src: (typeof apiActive === "function" && apiActive()) ? "meritz" : "app" }
   };
   const exportBtnHtml = `<button class="buysim-btn save export-loc-btn" type="button" data-export-loc="1" ${exportOrders.length ? "" : "disabled"}>📤 자동주문 파일 저장 (${exportOrders.length ? exportOrders.map(o => (o.side === "buy" ? "매수" : "매도") + " " + o.qty + "주").join(" · ") : "주문 없음"})</button>
     <p class="copy-hint" style="margin-top:6px;">Termux 자동주문 봇이 다운로드 폴더의 이 파일을 읽어 알림으로 확인을 받은 뒤 MTS에 예약합니다</p>`;
@@ -2722,7 +2772,7 @@ function renderLocGuideCard() {
         <div class="loc-tag">LOC 매수 예약가</div>
         <div class="loc-price copyable" role="button" tabindex="0" data-copy="${buyBasisPrice.toFixed(2)}" data-label="매수가">${usd(buyBasisPrice)}</div>
         <div class="loc-qty ${buyQty > 0 ? "copyable" : ""}" ${buyQty > 0 ? `role="button" tabindex="0" data-copy="${buyQty}" data-label="매수수량"` : ""}>${buyQty > 0 ? buyQty.toLocaleString("en-US") + "주" : "매수 불가"}</div>
-        <div class="loc-sub">${LOC_QTY_UNIT}주 단위 내림${canBuyMore ? ` (1분할 기준 ${rawBuyQty.toLocaleString("en-US")}주${buyQty > 0 ? ` → 실투입 ${usd(buyQty * buyBasisPrice)}` : ` → ${LOC_QTY_UNIT}주 미만`})` : ""}</div>
+        <div class="loc-sub">${LOC_QTY_UNIT}주 단위 내림${canBuyMore ? ` (${inStage1 ? "1분할" : "2단계 1회 " + fmtUsd0(perSplit)} 기준 ${rawBuyQty.toLocaleString("en-US")}주${buyQty > 0 ? ` → 실투입 ${usd(buyQty * buyBasisPrice)}` : ` → ${LOC_QTY_UNIT}주 미만`})` : ""}</div>
         <div class="loc-sub">${buyNote}</div>
       </div>
       <div class="loc-box ${canSell ? "sell" : "off"}">
@@ -2739,14 +2789,15 @@ function renderLocGuideCard() {
     ${exportBtnHtml}
     <div class="kv-row"><span class="k">매수 조건 ① 평단가 이하</span><span class="v">${hasPosition ? usd(avgPrice) + (avgPrice <= lastClose ? " ← 적용" : "") : "보유 없음 (해당 없음)"}</span></div>
     <div class="kv-row"><span class="k">매수 조건 ② 전일 확정 종가 이하 (${lastCloseDate})</span><span class="v">${usd(lastClose)}${!hasPosition || lastClose < avgPrice ? " ← 적용" : ""}</span></div>
-    <div class="kv-row"><span class="k">입력된 시드 / 분할 수</span><span class="v">${fmtUsd0(seed)} / ${splits}분할 (1분할 ${fmtUsd0(perSplit)})</span></div>
-    <div class="kv-row"><span class="k">2단계 매수 주기</span><span class="v">${cycleDays}일</span></div>
-    <div class="kv-row"><span class="k">AI 추천 분할매수 회차</span><span class="v">${recommendedN}회</span></div>
-    <div class="kv-row"><span class="k">현재 매수 회차 (저장된 기록 기준)</span><span class="v">${rounds}회 / ${splits}회</span></div>
+    <div class="kv-row"><span class="k">입력된 시드 / 분할 수</span><span class="v">${fmtUsd0(seed)} / ${splits}분할 (1분할 ${fmtUsd0(sp.per1)})</span></div>
+    <div class="kv-row"><span class="k">2단계 분할 배수 (대기 없음)</span><span class="v">×${sp.mult} → ${sp.splits * sp.mult}분할 · 1회 ${fmtUsd0(sp.per2)}</span></div>
+    <div class="kv-row"><span class="k">AI 추천 분할매수 회차 (1단계)</span><span class="v">${recommendedN}회${recommendedN > sp.n1 ? ` → 분할 수로 제한 ${sp.n1}회` : ""}</span></div>
+    <div class="kv-row"><span class="k">현재 매수 회차 (저장된 기록 기준)</span><span class="v">${rounds}회 / 최대 ${sp.maxRounds}회 (${sp.n1} + ${sp.maxRounds - sp.n1})</span></div>
+    <div class="kv-row"><span class="k">이번 회차 1회 매수금</span><span class="v">${canBuyMore ? fmtUsd0(perSplit) + (inStage1 ? " (1단계)" : " (2단계)") : "시드 소진"}</span></div>
     ${hasPosition ? `<div class="kv-row"><span class="k">현재 평단가 / 보유 수량</span><span class="v">${usd(avgPrice)} · ${summary.totalQty.toLocaleString("en-US")}주</span></div>` : ""}
     ${hasPosition ? `<div class="kv-row"><span class="k">손절모드 기준가 (평단×${STRAT2_MODE_RATIO.toFixed(2)})</span><span class="v" style="color:var(--down);">${usd(avgPrice * STRAT2_MODE_RATIO)}</span></div>` : ""}
     ${stopPct !== null && hasPosition && !canBuyMore ? `<div class="kv-row"><span class="k">손절 참고선 (평단가 대비)</span><span class="v" style="color:var(--down);">${fmtPctSigned(stopPct)}</span></div>` : ""}
-    <p class="desc" style="margin:12px 0 0;">LOC(지정가-종가) 주문은 지정한 가격보다 유리하거나 같은 종가가 형성될 때만 체결됩니다. 매수 LOC는 표시된 가격 이하로 종가가 형성될 때, 매도 LOC는 표시된 가격 이상으로 종가가 형성될 때 체결되도록 예약하는 용도입니다. 매수 예약가는 평단가와 전일 확정 종가 중 더 낮은 값이며(평단 &amp; 전일종가 이하 조건), 매수 회차·단계 판정은 "나의 매수 기록" 카드에 저장된 실제 매수 내역을, 시드·분할 수·매수 주기는 시드 분할매수 시뮬레이션의 입력값을 사용합니다.</p>
+    <p class="desc" style="margin:12px 0 0;">LOC(지정가-종가) 주문은 지정한 가격보다 유리하거나 같은 종가가 형성될 때만 체결됩니다. 매수 LOC는 표시된 가격 이하로 종가가 형성될 때, 매도 LOC는 표시된 가격 이상으로 종가가 형성될 때 체결되도록 예약하는 용도입니다. 매수 예약가는 평단가와 전일 확정 종가 중 더 낮은 값이며(평단 &amp; 전일종가 이하 조건), 매수 회차·단계 판정은 "나의 매수 기록" 카드에 저장된 실제 매수 내역을, 시드·분할 수·2단계 배수(대기 없이 조건 충족 시마다 시드÷(분할×배수)씩)는 시드 분할매수 시뮬레이션의 입력값을 사용합니다.</p>
   `;
 }
 
@@ -2910,7 +2961,7 @@ function renderVolEngineCard(hist) {
   const seed = seedInput > 0 ? seedInput : 36000;
   const grid = [];
   ENGINE_SPLITS_GRID.forEach((s, si) => {
-    ENGINE_CYCLE_GRID.forEach((c, ci) => {
+    [STAGE2_MULT].forEach((c, ci) => {           // V0.72: 2단계 배수 ×3 고정 → 분할 수만 탐색
       const r = simulateSeedBacktest(hist, seed, s, true, c);
       grid.push({ s, c, si, ci, ret: r ? r.grandTotal / seed * 100 : null, losses: r ? r.loss.length : 0, trades: r ? r.trades.length : 0 });
     });
@@ -2930,19 +2981,21 @@ function renderVolEngineCard(hist) {
     if (Math.abs(b.robust - a.robust) <= 1e-9 && b.losses < a.losses) return b;
     return a;
   });
-  const ruleRun = simulateSeedBacktest(hist, seed, ruleSplits, true, ruleCycle);
+  const ruleRun = simulateSeedBacktest(hist, seed, ruleSplits, true, STAGE2_MULT);
   const ruleRet = ruleRun ? ruleRun.grandTotal / seed * 100 : null;
-  const tqqqRun = simulateSeedBacktest(hist, seed, TQQQ_BASE.splits, true, TQQQ_BASE.cycle);
+  const ruleOld = simulateSeedBacktest(hist, seed, ruleSplits, true, 1, undefined, ruleCycle);   // 비교: 옛 규칙(주기 대기)
+  const ruleOldRet = ruleOld ? ruleOld.grandTotal / seed * 100 : null;
+  const tqqqRun = simulateSeedBacktest(hist, seed, TQQQ_BASE.splits, true, 1, undefined, TQQQ_BASE.cycle);
   const tqqqRet = tqqqRun ? tqqqRun.grandTotal / seed * 100 : null;
 
-  engineRecs = { rule: { splits: ruleSplits, cycle: ruleCycle }, bt: { splits: bestBt.s, cycle: bestBt.c } };
+  engineRecs = { rule: { splits: ruleSplits, cycle: STAGE2_MULT }, bt: { splits: bestBt.s, cycle: bestBt.c }, oldCycle: ruleCycle };   // cycle = 2단계 배수
 
   const top = valid.slice().sort((a, b) => b.robust - a.robust).slice(0, 5);
   const col = v => v === null ? "" : (v >= 0 ? "color:var(--up);" : "color:var(--down);");
   const topRows = top.map((g, i) => `
     <tr${i === 0 ? ' style="background:linear-gradient(90deg, rgba(94,234,212,0.14), rgba(94,234,212,0.02));"' : ''}>
       <td${i === 0 ? ' style="color:var(--glow);font-weight:700;"' : ''}>${i === 0 ? "★ " : ""}${g.s}분할</td>
-      <td class="num">${g.c}일</td>
+      <td class="num">×${g.c} 연속</td>
       <td class="num" style="${col(g.ret)}">${fmtPctSigned(g.ret)}</td>
       <td class="num" style="${col(g.robust)}">${fmtPctSigned(g.robust)}</td>
     </tr>
@@ -2959,14 +3012,14 @@ function renderVolEngineCard(hist) {
       <div class="engine-box rule">
         <div class="eb-tag">① 규칙 기반 환산</div>
         <div class="eb-line"><span>분할 수 (6×√k)</span><span>${ruleSplits}분할</span></div>
-        <div class="eb-line"><span>2단계 주기 (14÷k²)</span><span>${ruleCycle}일</span></div>
+        <div class="eb-line"><span>2단계 (대기 없음)</span><span>×${STAGE2_MULT} → ${ruleSplits * STAGE2_MULT}분할</span></div>
         <div class="eb-line"><span>손절모드 (12%×k)</span><span>-${ruleStopMode.toFixed(1)}%</span></div>
         <div class="eb-ret" style="${col(ruleRet)}">${fmtPctSigned(ruleRet)}</div>
       </div>
       <div class="engine-box bt">
         <div class="eb-tag">② 백테스트 최적 (견고성)</div>
         <div class="eb-line"><span>분할 수</span><span>${bestBt.s}분할</span></div>
-        <div class="eb-line"><span>2단계 주기</span><span>${bestBt.c}일</span></div>
+        <div class="eb-line"><span>2단계 (대기 없음)</span><span>×${bestBt.c} → ${bestBt.s * bestBt.c}분할</span></div>
         <div class="eb-line"><span>견고성 점수</span><span>${fmtPctSigned(bestBt.robust)}</span></div>
         <div class="eb-ret" style="${col(bestBt.ret)}">${fmtPctSigned(bestBt.ret)}</div>
       </div>
@@ -2975,15 +3028,16 @@ function renderVolEngineCard(hist) {
       <button class="buysim-btn amber" type="button" data-engine-apply="rule" onclick="applyEngineRec('rule')">① 규칙 적용</button>
       <button class="buysim-btn save" type="button" data-engine-apply="bt" onclick="applyEngineRec('bt')">② 최적 적용</button>
     </div>
-    <div class="kv-row" style="margin-top:8px;"><span class="k">참고: TQQQ 원본 파라미터(6분할·14일) 그대로 적용 시</span><span class="v" style="${col(tqqqRet)}">${fmtPctSigned(tqqqRet)}</span></div>
+    <div class="kv-row" style="margin-top:8px;"><span class="k">규칙 비교 · ${ruleSplits}분할: 신규 ×${STAGE2_MULT} 연속 / 기존 ${ruleCycle}일 대기</span><span class="v"><b style="${col(ruleRet)}">${fmtPctSigned(ruleRet)}</b> / <span style="${col(ruleOldRet)}">${fmtPctSigned(ruleOldRet)}</span></span></div>
+    <div class="kv-row"><span class="k">참고: TQQQ 원본 파라미터(6분할·14일) 그대로 적용 시</span><span class="v" style="${col(tqqqRet)}">${fmtPctSigned(tqqqRet)}</span></div>
     <div class="kv-row"><span class="k">SOXL 매도 목표 탐색 구간</span><span class="v">${SELL_SWEEP_MIN}~${SELL_SWEEP_MAX}% (${SELL_SWEEP_STEP}%p)</span></div>
     <div class="kv-row"><span class="k">AI 최적 매도 목표 / 추천 분할매수 회차</span><span class="v">${a ? "+" + a.best.pct.toFixed(2) + "%" : "--"} / ${a && a.recommendedN ? a.recommendedN + "회" : "--"}</span></div>
     <div class="buysim-sub-title">견고성 상위 5개 조합 (시드 ${fmtUsd0(seed)}, 평단&전일종가 이하 규칙)</div>
     <table class="stat-table even-cols">
-      <thead><tr><th>분할 수</th><th class="num">2단계 주기</th><th class="num">시드 대비 수익률</th><th class="num">견고성(인접 평균)</th></tr></thead>
+      <thead><tr><th>분할 수</th><th class="num">2단계</th><th class="num">시드 대비 수익률</th><th class="num">견고성(인접 평균)</th></tr></thead>
       <tbody>${topRows}</tbody>
     </table>
-    <p class="desc" style="margin:12px 0 0;">예시: SOXL σ가 5.8%라면 k = 5.8 ÷ 3.6 ≈ 1.61 → 분할 수 6×√1.61 ≈ 7.6 → 8분할, 2단계 주기 14 ÷ 1.61² ≈ 5.4 → 5일, 손절모드 12%×1.61 ≈ -19.3%. 분할 수는 낙폭 깊이(σ에 비례)를 버틸 자금 여유를, 주기는 같은 % 가격 이동에 걸리는 시간(1/σ²에 비례)을 반영합니다. 백테스트 최적은 분할 수 ${ENGINE_SPLITS_GRID.join("·")} × 주기 ${ENGINE_CYCLE_GRID.join("·")}일 = ${valid.length}개 조합을 최근 200봉에 돌린 뒤, 한 조합만 튀는 과최적화를 피하려고 상하좌우 인접 조합 수익률 평균이 가장 높은 조합을 고릅니다. 과거 200봉 기준 결과이므로 미래 성과를 보장하지 않습니다.</p>
+    <p class="desc" style="margin:12px 0 0;">예시: SOXL σ가 5.8%라면 k = 5.8 ÷ 3.6 ≈ 1.61 → 분할 수 6×√1.61 ≈ 7.6 → 8분할, 2단계 주기 14 ÷ 1.61² ≈ 5.4 → 5일, 손절모드 12%×1.61 ≈ -19.3%. 분할 수는 낙폭 깊이(σ에 비례)를 버틸 자금 여유를, 주기는 같은 % 가격 이동에 걸리는 시간(1/σ²에 비례)을 반영합니다. 백테스트 최적은 분할 수 ${ENGINE_SPLITS_GRID.join("·")} (2단계는 대기 없이 ×${STAGE2_MULT} 고정) = ${valid.length}개 조합을 최근 200봉에 돌린 뒤, 한 조합만 튀는 과최적화를 피하려고 상하좌우 인접 조합 수익률 평균이 가장 높은 조합을 고릅니다. 과거 200봉 기준 결과이므로 미래 성과를 보장하지 않습니다. V0.72부터 2단계는 주기 대기 대신 분할을 ×3로 잘게 나눠 조건이 맞을 때마다 매수합니다(위 14÷k² 주기는 옛 규칙 비교용).</p>
   `;
 }
 
@@ -2995,7 +3049,7 @@ var __paramsMute = false;
 /* 기기 간 동기화되는 설정: 적용 모드·시드 (+ 직접 입력 모드일 때 분할 수·주기). 규칙/최적 모드의 분할·주기는 각 기기가 같은 시세로 다시 계산한다 */
 function paramsCore(pm) {
   const o = { mode: (pm && pm.mode) || "rule", seed: String((pm && pm.seed) || "") };
-  if (o.mode === "manual") { o.splits = String(pm.splits || ""); o.cycle = String(pm.cycle || ""); }
+  if (o.mode === "manual") { o.splits = String(pm.splits || ""); o.mult = String(pm.mult || ""); }
   return o;
 }
 function loadParamMode() {
@@ -3007,8 +3061,9 @@ function saveParamMode(extra) {
   const cur = Object.assign(loadParamMode(), extra || {}, {
     seed: document.getElementById("seedSimSeed1").value,
     splits: document.getElementById("seedSimSplits1").value,
-    cycle: document.getElementById("seedSimCycle1").value
+    mult: document.getElementById("seedSimCycle1").value
   });
+  delete cur.cycle;    // V0.71 이전 '2단계 주기(일)' 값은 더 이상 쓰지 않음
   try { localStorage.setItem(PARAM_MODE_KEY, JSON.stringify(cur)); } catch (e) {}
   if (!__paramsMute && !window.__MUHAN_BOT__ && JSON.stringify(paramsCore(cur)) !== __before) {
     try { const m = syncMeta(); if (m.last > 0) { m.paramsAt = Date.now(); m.dirty = true; saveSyncMeta(m); syncSchedule(1500); } } catch (e) {}
@@ -3033,7 +3088,7 @@ function restoreParamInputs() {
   const pm = loadParamMode();
   if (pm.seed) document.getElementById("seedSimSeed1").value = pm.seed;
   if (pm.splits) document.getElementById("seedSimSplits1").value = pm.splits;
-  if (pm.cycle) document.getElementById("seedSimCycle1").value = pm.cycle;
+  if (pm.mult) document.getElementById("seedSimCycle1").value = pm.mult;
 }
 const MODE_LABEL = { rule: "① 규칙 기반", bt: "② 백테스트 최적", manual: "✎ 직접 입력" };
 function updateRuleChips() {
@@ -3041,7 +3096,7 @@ function updateRuleChips() {
   const sp = document.getElementById("seedSimSplits1").value, cy = document.getElementById("seedSimCycle1").value;
   const pending = pm.mode !== "manual" && !engineRecs;
   const html = `<span class="rc-mode rc-${pm.mode}">${MODE_LABEL[pm.mode]} 적용 중</span>` +
-    `<span class="rc-val">${sp}분할 · 2단계 ${cy}일</span>` +
+    `<span class="rc-val">${sp}분할 · 2단계 ×${cy} (${sp * cy}분할 연속)</span>` +
     (pending ? `<span class="rc-note">시세를 불러오면 오늘 변동성으로 재계산</span>` : "");
   document.querySelectorAll("[data-rule-chip]").forEach(el => { el.innerHTML = html; el.className = "rule-chip rc-wrap-" + pm.mode; });
   document.querySelectorAll("[data-engine-apply]").forEach(b => {
@@ -3071,7 +3126,7 @@ function applyEngineRec(kind) {
   updateBuyQtyHint();
   renderSeedSimCards();
   renderLocGuideCard();
-  showBanner(`${kind === "rule" ? "규칙 기반" : "백테스트 최적"} 파라미터(${r.splits}분할 · 2단계 주기 ${r.cycle}일)를 시뮬레이션과 LOC 가이드에 적용했습니다.`, true);
+  showBanner(`${kind === "rule" ? "규칙 기반" : "백테스트 최적"} 파라미터(${r.splits}분할 · 2단계 ×${r.cycle} = ${r.splits * r.cycle}분할 연속)를 시뮬레이션과 LOC 가이드에 적용했습니다.`, true);
 }
 
 /* ------------------------ 상단 이동 탭 (QLD V0.12 구조) ------------------------ */
@@ -3299,6 +3354,122 @@ function mergeDocs(local, remote) {
   return { records: sortRecs([...map.values()]), skip, tombs, trades };
 }
 
+
+/* ======================== 💼 메리츠 체결 → 나의 매수 기록 · 사이클 기록 자동 등록 (V0.72) ========================
+   자동주문 봇이 동기화 Gist에 남기는 muhan-account.json(계좌 보유 + 체결내역 전 기간 → 사이클 복원)을 읽어
+   · 이번 사이클 매수 기록 = 메리츠 체결 그대로 (스냅숏이 반영한 날짜 이후에 직접 넣은 기록은 유지)
+   · 끝난 사이클 = 사이클 기록에 자동 추가 (같은 날·±3일 같은 수량의 직접 기록이 있으면 그대로 둠)
+   바꾸기 전 기록은 이 기기에 백업 → [되돌리기]. 끄면 예전처럼 직접 입력 + 종가 추정 자동 저장.
+   복원이 불완전하면(입고·액면분할 등으로 '보유 0' 시점을 못 찾음) 아무것도 바꾸지 않는다. */
+const ACCT_KEY = "muhan_account_v1";
+const API_SYNC_KEY = LEV_TICKER.toLowerCase() + "_api_sync_v1";
+const API_BACKUP_KEY = LEV_TICKER.toLowerCase() + "_api_backup_v1";
+function acctData() { try { const a = JSON.parse(lsGet(ACCT_KEY) || "null"); return a && typeof a === "object" ? a : null; } catch (e) { return null; } }
+function acctSym() { const a = acctData(); return a && a.symbols && a.symbols[LEV_TICKER] ? a.symbols[LEV_TICKER] : null; }
+function apiSyncOn() { return lsGet(API_SYNC_KEY) !== "off"; }
+function apiActive() { const s = acctSym(); return !!(apiSyncOn() && syncTok() && syncGist() && s && s.complete && s.current); }
+function apiIdOf(key, kind) { const d = String(key).replace(/\D/g, "").slice(-14); return Number(d) * 10 + (kind || 1); }
+const apiR4 = x => Math.round(Number(x) * 1e4) / 1e4;
+const apiDayGap = (a, b) => Math.abs((Date.parse(a + "T00:00:00Z") - Date.parse(b + "T00:00:00Z")) / 864e5);
+function apiWhen(iso) { const d = new Date(iso); return isNaN(d) ? "-" : d.toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }); }
+function apiInfoLine() { const a = acctData(); return `💼 메리츠 체결내역으로 자동 등록 중 (${a ? apiWhen(a.as_of) : "-"} 기준) — 종가 추정 자동 저장은 쉬고 있습니다`; }
+function apiReconcile(m, g) {
+  try {
+    const f = g && g.files && g.files["muhan-account.json"];
+    if (f && f.content) { const a = JSON.parse(f.content); if (a && typeof a === "object") lsSet(ACCT_KEY, f.content); }
+  } catch (e) {}
+  if (!apiActive()) return "";
+  const a = acctData(), s = acctSym();
+  const covered = a.covered || a.et_date || "";
+  if (!covered) return "";
+  const notes = [];
+  /* ① 이번 사이클 매수 기록 */
+  const want = (s.current.records || []).filter(x => x.date <= covered)
+    .map(x => ({ id: apiIdOf(x.key, x.synthetic ? 9 : 1), date: x.date, qty: Number(x.qty), price: apiR4(x.price), api: true, synthetic: !!x.synthetic }));
+  const keep = (m.records || []).filter(r => r.date > covered && !r.api);
+  const next = sortRecs([...want, ...keep]);
+  const canon = arr => JSON.stringify(sortRecs(arr).map(r => [r.date, +r.qty, apiR4(r.price)]));
+  const wantKeys = new Set(want.map(recKeyOf));
+  let changed = false;
+  if (canon(next) !== canon(m.records || [])) {
+    try { lsSet(API_BACKUP_KEY, JSON.stringify({ at: Date.now(), records: m.records || [], trades: m.trades || [] })); } catch (e) {}
+    const nk = new Set(next.map(recKeyOf));
+    const removed = (m.records || []).map(recKeyOf).filter(k => !nk.has(k));
+    m.tombs = [...new Set([...(m.tombs || []), ...removed])].slice(-500);
+    m.records = next;
+    notes.push(`매수 기록 ${want.length}건을 메리츠 체결로 맞춤`);
+    changed = true;
+  }
+  m.tombs = (m.tombs || []).filter(k => !wantKeys.has(k));      // 체결 기록은 지움 표시보다 우선
+  /* ② 끝난 사이클 */
+  let added = 0, upd = 0;
+  const trades = (m.trades || []).slice();
+  for (const c of s.cycles || []) {
+    if (!c.sell_date || c.sell_date > covered) continue;
+    const tr = { id: apiIdOf(c.key, 3), sellDate: c.sell_date, sellPrice: apiR4(c.sell_price), qty: Number(c.qty), avg: Number(c.avg), cost: Number(c.cost),
+                 proceeds: Number(c.proceeds), profit: Number(c.profit), pct: Number(c.pct), rounds: c.rounds, firstBuy: c.first_buy,
+                 auto: true, api: true, limit: null, note: "메리츠 체결", buys: (c.buys || []).map(b => ({ date: b.date, qty: Number(b.qty), price: apiR4(b.price), auto: true })) };
+    const i = trades.findIndex(t => t.sellDate === c.sell_date || (apiDayGap(t.sellDate, c.sell_date) <= 3 && Math.abs(t.qty - c.qty) < 1e-6));
+    if (i === -1) { trades.push(tr); added++; }
+    else if (trades[i].auto && !trades[i].api && trades[i].sellDate === c.sell_date) {
+      ["splits", "mult", "tdays", "mdd"].forEach(k => { if (trades[i][k] !== undefined) tr[k] = trades[i][k]; });
+      trades[i] = tr; upd++;
+    }
+  }
+  if (added || upd) {
+    if (!changed) { try { lsSet(API_BACKUP_KEY, JSON.stringify({ at: Date.now(), records: m.records || [], trades: m.trades || [] })); } catch (e) {} }
+    m.trades = trades.sort((x, y) => x.sellDate < y.sellDate ? -1 : x.sellDate > y.sellDate ? 1 : x.id - y.id);
+    const live = new Set(m.trades.map(tradeTombOf));
+    m.tombs = (m.tombs || []).filter(k => !live.has(k));
+    if (added) notes.push(`끝난 사이클 ${added}건 추가`);
+    if (upd) notes.push(`사이클 ${upd}건을 실제 체결가로 갱신`);
+  }
+  return notes.length ? "💼 메리츠 체결 반영: " + notes.join(" · ") : "";
+}
+function apiStripHtml(where) {
+  if (!syncTok() || !syncGist()) return "";
+  const a = acctData(), s = acctSym(), on = apiSyncOn();
+  const e = x => String(x == null ? "" : x).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const go = `<a class="as-a" href="api.html">💼 계좌 다시 읽기 ›</a>`;
+  if (!a || !a.symbols) return `<div class="api-strip off"><div class="as-h"><b>💼 메리츠 체결 자동 등록</b><span>준비 전</span></div>
+    메리츠 자동주문 앱에서 <b>[💼 계좌 현황]</b>을 한 번 누르면(또는 봇이 다음에 돌면) 체결내역으로 매수 기록·사이클 기록이 자동으로 채워집니다.${a && a.error ? `<br>⚠ ${e(a.error)}` : ""}<div class="as-btns">${go}</div></div>`;
+  const bk = (() => { try { return JSON.parse(lsGet(API_BACKUP_KEY) || "null"); } catch (x) { return null; } })();
+  const undo = bk ? `<button type="button" data-api-act="undo">↩ 되돌리기 (${apiWhen(new Date(bk.at).toISOString())} 이전)</button>` : "";
+  const tog = `<button type="button" data-api-act="toggle">${on ? "자동 등록 끄기" : "자동 등록 켜기"}</button>`;
+  if (!s) return `<div class="api-strip off"><div class="as-h"><b>💼 메리츠 체결</b><span>${apiWhen(a.as_of)}</span></div>${LEV_TICKER} 정보가 없습니다.<div class="as-btns">${go}</div></div>`;
+  const recs = sortedBuyRecords(), q = recs.reduce((x, r) => x + r.qty, 0), avg = q ? recs.reduce((x, r) => x + r.qty * r.price, 0) / q : 0;
+  const same = Math.abs(q - s.qty) < 1e-6 && (!q || Math.abs(avg / s.avg - 1) < 0.002);
+  const acctTxt = `계좌 <b>${Number(s.qty).toLocaleString("en-US")}주</b>${s.qty ? ` @ ${usd(s.avg)}` : ""}` + (a.symbols[LEV_TICKER].price ? ` · 현재가 ${usd(a.symbols[LEV_TICKER].price)}` : "");
+  const matchTxt = same ? `<span class="ok">= 앱 기록 일치 ✓</span>` : `<span class="bad">앱 기록 ${q.toLocaleString("en-US")}주${q ? " @ " + usd(avg) : ""}</span>`;
+  if (!on) return `<div class="api-strip off"><div class="as-h"><b>💼 메리츠 체결 자동 등록 꺼짐</b><span>${apiWhen(a.as_of)}</span></div>${acctTxt} · ${matchTxt}<br>직접 입력과 종가 추정 자동 저장을 씁니다.<div class="as-btns">${tog}${undo}${go}</div></div>`;
+  if (!s.complete) return `<div class="api-strip warn"><div class="as-h"><b>💼 자동 맞춤 보류</b><span>${apiWhen(a.as_of)}</span></div>${acctTxt} · ${matchTxt}<br>⚠ ${e(s.why || "체결 복원 불완전")} — 기록은 그대로 두고 직접 입력·종가 추정 자동 저장을 씁니다.<div class="as-btns">${tog}${go}</div></div>`;
+  const body = where === "cy"
+    ? `체결내역으로 복원한 끝난 사이클 <b>${(s.cycles || []).length}건</b>${s.since ? ` (${e(s.since)}부터)` : ""} · 같은 날 직접 기록이 있으면 그대로 둡니다`
+    : `${acctTxt} · ${matchTxt}<br>이번 사이클 체결 <b>${(s.current.records || []).length}건</b>${s.current.start ? ` (${e(s.current.start)}부터)` : ""} · ${e(a.covered || a.et_date)} 장까지 반영${s.note ? `<br>ℹ️ ${e(s.note)}` : ""}`;
+  return `<div class="api-strip"><div class="as-h"><b>💼 메리츠 체결 자동 등록 ON</b><span>${apiWhen(a.as_of)}</span></div>${body}<div class="as-btns">${tog}${undo}${go}</div></div>`;
+}
+function renderApiStrips() {
+  const r = document.getElementById("apiRecStrip"), c = document.getElementById("apiCyStrip");
+  if (r) r.innerHTML = apiStripHtml("rec");
+  if (c) c.innerHTML = apiStripHtml("cy");
+}
+document.addEventListener("click", ev => {
+  const b = ev.target.closest("[data-api-act]"); if (!b) return;
+  if (b.dataset.apiAct === "toggle") {
+    const on = apiSyncOn();
+    if (on) { lsSet(API_SYNC_KEY, "off"); showCopyToast("💼 체결 자동 등록을 껐습니다 (이 기기)", true); }
+    else { lsDel(API_SYNC_KEY); showCopyToast("💼 체결 자동 등록을 켰습니다 — 동기화 중…", true); syncNow("manual"); }
+    renderApiStrips(); renderBuyRecords(); renderLocGuideCard();
+  } else if (b.dataset.apiAct === "undo") {
+    let bk = null; try { bk = JSON.parse(lsGet(API_BACKUP_KEY) || "null"); } catch (x) {}
+    if (!bk || !confirm(`체결 자동 등록 전 기록(매수 ${(bk.records || []).length}건 · 사이클 ${(bk.trades || []).length}건)으로 되돌리고 자동 등록을 끌까요?`)) return;
+    lsSet(API_SYNC_KEY, "off");
+    saveBuyRecordsToStorage(bk.records || []); saveTrades(bk.trades || []); lsDel(API_BACKUP_KEY);
+    showCopyToast("↩ 되돌렸습니다 · 자동 등록 꺼짐", true);
+    renderApiStrips(); renderBuyRecords(); renderLocGuideCard();
+  }
+});
+
 let __syncBusy = false, __syncAgain = false, __syncErr = "";
 async function syncNow(why) {
   if (!syncTok() || !syncGist()) { syncRender(); return; }
@@ -3314,6 +3485,7 @@ async function syncNow(why) {
     const meta = syncMeta();
     const local = { records: loadBuyRecords(), skip: loadAutoSkip(), tombs: meta.tombs, trades: loadTrades() };
     const m = mergeDocs(local, remote);
+    const apiNote = apiReconcile(m, g);          // 💼 메리츠 체결 → 매수 기록·사이클 (켜져 있고 복원이 완전할 때만)
     const recLocalChanged = canonTrades(m.trades) !== canonTrades(local.trades) || canonRecs(m.records) !== canonRecs(local.records) || JSON.stringify(m.skip) !== JSON.stringify([...(local.skip || [])].sort().slice(-60));
     /* 설정 동기화: 마지막으로 바꾼 기기가 이김(같으면 원격 우선 → 기기끼리 덮어쓰기 반복 없음) */
     const pLocal = paramsCore(loadParamMode()), pRemote = remote.params || null;
@@ -3335,6 +3507,7 @@ async function syncNow(why) {
       note = dT > 0 ? `다른 기기에서 끝난 사이클 ${dT}건 반영` : d > 0 ? `다른 기기 기록 ${d}건 추가됨` : d < 0 ? `다른 기기에서 지운 ${-d}건 반영` : "다른 기기 변경 반영";
       try { renderBuyRecords(); renderLocGuideCard(); if (typeof updateBuyQtyHint === "function") updateBuyQtyHint(); } catch (e) {}
     }
+    if (apiNote) { note = apiNote; try { renderBuyRecords(); renderLocGuideCard(); } catch (e) {} }
     /* 사이클 Markdown 일지: 내용이 달라졌을 때만 다시 씀 */
     const md = buildCycleMarkdown(), remoteMd = (g.files && g.files[CYCLE_MD_FILE] && g.files[CYCLE_MD_FILE].content) || "";
     const mdChanged = (m.trades.length > 0 || remoteMd !== "") && md !== remoteMd;
@@ -3350,6 +3523,7 @@ async function syncNow(why) {
     saveSyncMeta(meta);
     __syncErr = "";
     if (note && why !== "load") showCopyToast("☁ " + note, true);
+    try { renderApiStrips(); } catch (e) {}
   } catch (e) {
     __syncErr = e.message;
   } finally {
@@ -3417,6 +3591,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden && Da
 window.addEventListener("online", () => syncSchedule(500));
 setInterval(() => { if (!document.hidden) syncSchedule(100); }, 90000);
 syncRender();
+try { renderApiStrips(); } catch (e) {}
 syncSchedule(400);
 /* ======================== 🤖 메리츠 자동주문 — 상태 한 줄 ========================
    설정·실행·주문은 허브의 ‘🔌 메리츠 자동주문’ 앱(api.html). 이 앱은 오늘의 LOC 계획(lastLocOrder · bot 필드)을 계산해 주고,
