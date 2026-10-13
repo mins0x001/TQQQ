@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="release-date" content="261008">
+<meta name="release-date" content="261013">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="무한매수">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -71,22 +71,27 @@
 <div class="wrap">
   <header>
     <h1>무한매수 허브<span class="app-pill" id="appPill" hidden>앱</span></h1>
-    <p>SOXL · TQQQ · KODEX 반도체레버리지 <span class="ver">· 허브 V1.7 (261008)</span></p>
+    <p>메리츠 자동주문 · SOXL · TQQQ · KODEX 반도체레버리지 <span class="ver">· 허브 V1.8 (261013)</span></p>
   </header>
 
+  <a class="dash" href="api.html" style="--c:#2ECC71;">
+    <span class="tk" style="font-size:20px;">🔌</span>
+    <span class="info"><span class="nm">메리츠 자동주문 <small>V1.0</small></span><span class="st" id="st-api">오늘의 LOC · ☑매수/매도 · ⚡ 지금 실전 주문</span></span>
+    <span class="go">›</span>
+  </a>
   <a class="dash" href="soxl.html" style="--c:var(--amber);">
     <span class="tk">SOXL</span>
-    <span class="info"><span class="nm">SOXL 무한매수 <small>V0.66</small></span><span class="st" id="st-soxl">기록 확인 중…</span></span>
+    <span class="info"><span class="nm">SOXL 무한매수 <small>V0.71</small></span><span class="st" id="st-soxl">기록 확인 중…</span></span>
     <span class="go">›</span>
   </a>
   <a class="dash" href="tqqq.html" style="--c:var(--glow);">
     <span class="tk">TQQQ</span>
-    <span class="info"><span class="nm">TQQQ 무한매수 <small>V0.39</small></span><span class="st" id="st-tqqq">기록 확인 중…</span></span>
+    <span class="info"><span class="nm">TQQQ 무한매수 <small>V0.44</small></span><span class="st" id="st-tqqq">기록 확인 중…</span></span>
     <span class="go">›</span>
   </a>
   <a class="dash" href="kodex.html" style="--c:var(--violet);">
     <span class="tk" style="font-size:11.5px;line-height:1.15;text-align:center;">KODEX<br>2X</span>
-    <span class="info"><span class="nm">KODEX 반도체레버리지 <small>V0.1</small></span><span class="st" id="st-kodex">기록 확인 중…</span></span>
+    <span class="info"><span class="nm">KODEX 반도체레버리지 <small>V0.2</small></span><span class="st" id="st-kodex">기록 확인 중…</span></span>
     <span class="go">›</span>
   </a>
 
@@ -109,7 +114,7 @@
   <p class="note">매수 기록은 각 화면 💾 백업 탭의 <b>☁️ PC·모바일 동기화</b>를 켜면 PC와 폰이 같은 기록을 씁니다. 이 목록은 이 기기에 마지막으로 맞춰진 기록입니다.</p>
 </div>
 <script>
-const HUB_VERSION = "V1.7", HUB_RELEASE = "261008";
+const HUB_VERSION = "V1.8", HUB_RELEASE = "261013";
 function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
 function realized(tk, won){
   const t = readJSON(tk + "_trades_v1");
@@ -132,6 +137,24 @@ function renderSummary(){
   document.getElementById("st-kodex").innerHTML = summary(readJSON("kodex_buy_records_v1"), true) + realized("kodex", true);
   }
 renderSummary();
+/* 🔌 메리츠 자동주문: 모드·최근 결과 (동기화 Gist에서 직접 — 모든 기기 공통) */
+(function apiStatus(){
+  const el = document.getElementById("st-api"); if (!el) return;
+  const OV = { done:"✅ 접수 완료", dry:"◎ 리허설 통과", blocked:"⛔ 확인 필요", error:"✖ 오류", checked:"🔧 점검 통과", closed:"🌙 휴장", off:"⏸ 꺼짐", running:"⏳ 실행 중", none:"주문 없음", skipped:"⏱ 시간 밖" };
+  const show = (cfg, st) => {
+    const mode = cfg ? (cfg.mode === "live" ? "매일 실전" : cfg.mode === "dry" ? "매일 리허설" : "수동") : "설정 전";
+    const t = st && st.run_at ? new Date(st.run_at).toLocaleString("ko-KR", { month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit" }) : "";
+    el.innerHTML = `<b>${mode}</b>` + (st ? ` · 최근 ${t} ${OV[st.overall] || st.overall}` : " · 오늘의 LOC · ⚡ 지금 실전 주문");
+  };
+  const tok = localStorage.getItem("muhansync_token"), gid = localStorage.getItem("muhansync_gist");
+  if (!tok || !gid) return;
+  fetch("https://api.github.com/gists/" + gid, { headers: { Authorization: "Bearer " + tok }, cache: "no-store" })
+    .then(r => r.ok ? r.json() : null).then(g => {
+      if (!g || !g.files) return;
+      const P = n => { try { return g.files[n] ? JSON.parse(g.files[n].content) : null; } catch (e) { return null; } };
+      const cfg = P("muhan-bot.json"); if (cfg) show(cfg, P("muhan-bot-status.json"));
+    }).catch(() => {});
+})();
 
 /* ---------- 홈 화면에 앱 설치 ----------
    안드로이드(크롬): beforeinstallprompt → 버튼 한 번으로 설치 (크롬 기반 앱 창, 크롬과 같은 기록)
