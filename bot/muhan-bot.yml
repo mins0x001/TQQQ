@@ -1,0 +1,53 @@
+# 무한매수 LOC 자동주문 봇 — 메리츠증권 Open API · MUHANBOT V1.0 (261013)
+# 이 파일은 앱의 🤖 카드 [봇 설치] 버튼이 비공개 저장소 muhan-bot 의 .github/workflows/ 에 자동으로 넣습니다.
+#
+# 실행 시각: 미국 정규장 중 (월~금 UTC 15:10 = 한국 00:10, 예비 UTC 17:10 = 한국 02:10)
+#   · 서머타임과 무관하게 두 시각 모두 정규장(09:30~16:00 ET) 안입니다.
+#   · 예비 실행은 이미 접수된 주문을 다시 내지 않습니다(중복 방지 검수 V8).
+# Secrets (앱이 자동 등록): MERITZ_APP_KEY · MERITZ_APP_SECRET · MUHAN_TOKEN · GIST_ID · (선택) NTFY_TOPIC
+name: 무한매수 자동주문
+
+on:
+  schedule:
+    - cron: "10 15 * * 1-5"
+    - cron: "10 17 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "config = 앱에서 고른 모드 그대로 / dry = 리허설(주문 안 냄)"
+        required: false
+        default: "dry"
+        type: choice
+        options: [dry, config]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: muhan-bot
+  cancel-in-progress: false
+
+jobs:
+  order:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 앱 실행 도구 설치 (Playwright · Chromium)
+        run: |
+          pip install --quiet playwright==1.47.0
+          python -m playwright install --with-deps chromium
+      - name: 검수 → 주문 → 대조 → 보고
+        env:
+          MERITZ_APP_KEY: ${{ secrets.MERITZ_APP_KEY }}
+          MERITZ_APP_SECRET: ${{ secrets.MERITZ_APP_SECRET }}
+          MUHAN_TOKEN: ${{ secrets.MUHAN_TOKEN }}
+          GIST_ID: ${{ secrets.GIST_ID }}
+          APP_BASE: ${{ secrets.APP_BASE }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          RUN_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'config' }}
+          RUN_TRIGGER: ${{ github.event_name }}
+        run: python muhan_bot.py
