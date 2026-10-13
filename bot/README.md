@@ -1,4 +1,4 @@
-# 🤖 무한매수 LOC 자동주문 봇 · MUHANBOT V1.0 (261013)
+# 🤖 무한매수 LOC 자동주문 봇 · MUHANBOT V1.1 (261013)
 
 메리츠증권 Open API로 SOXL·TQQQ 무한매수 앱의 **오늘의 LOC 주문**을 매일 자동 접수하는 비공개 봇입니다.
 이 저장소는 무한매수 앱의 🤖 카드 **[봇 설치]** 가 만들었습니다. 설정은 앱에서 바꾸세요 — 여기서 고칠 것은 없습니다.
@@ -23,7 +23,7 @@
 
 ## 모드 (앱 🤖 카드)
 - **끄기** — 아무것도 안 함 · **리허설** — 검수까지 하고 주문은 안 냄 · **실전** — 주문 접수
-- 수동 실행(Actions → 무한매수 자동주문 → Run workflow)은 기본이 리허설입니다
+- 앱의 [▶ 지금 리허설]과 수동 실행(Actions → Run workflow)은 모드가 ‘끄기’여도 언제나 리허설로 돕니다 (주문 없음)
 
 ## Secrets (앱이 자동 등록 · 값은 GitHub도 되읽지 못함)
 `MERITZ_APP_KEY` · `MERITZ_APP_SECRET` · `MUHAN_TOKEN` · `GIST_ID` · `APP_BASE` · (선택) `NTFY_TOPIC`

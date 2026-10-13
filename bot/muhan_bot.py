@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-무한매수 LOC 자동주문 봇 — 메리츠증권 Open API                     MUHANBOT V1.0 (261013)
+무한매수 LOC 자동주문 봇 — 메리츠증권 Open API                     MUHANBOT V1.1 (261013)
 
 매일 미국 정규장 중(한국시간 00:10 무렵) GitHub Actions에서 실행됩니다.
 
@@ -30,7 +30,7 @@ import urllib.parse
 import urllib.request
 from zoneinfo import ZoneInfo
 
-VERSION = "MUHANBOT V1.0 (261013)"
+VERSION = "MUHANBOT V1.1 (261013)"
 MERITZ_BASE = os.environ.get("MERITZ_BASE_URL", "https://openapi.imeritz.com:9443").rstrip("/")
 ET, KST = ZoneInfo("America/New_York"), ZoneInfo("Asia/Seoul")
 APP_PAGES = {"SOXL": "soxl.html", "TQQQ": "tqqq.html"}
@@ -439,8 +439,8 @@ def run() -> int:
     except ValueError:
         cfg = dict(DEFAULT_CONFIG)
     mode = cfg.get("mode", "dry")
-    if force_mode == "dry" and mode == "live":
-        mode = "dry"                                    # 수동 실행은 리허설로만 낮출 수 있다
+    if force_mode == "dry":
+        mode = "dry"        # [지금 리허설]은 모드(끄기·실전)와 상관없이 언제나 리허설 — 주문은 절대 내지 않는다
     try:
         prev = json.loads(files.get(STATUS_FILE) or "{}")
     except ValueError:
