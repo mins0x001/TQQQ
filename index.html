@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="release-date" content="261013">
+<meta name="release-date" content="261015">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="무한매수">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -71,12 +71,17 @@
 <div class="wrap">
   <header>
     <h1>무한매수 허브<span class="app-pill" id="appPill" hidden>앱</span></h1>
-    <p>메리츠 자동주문(해외) · SOXL · TQQQ · KODEX 반도체레버리지 <span class="ver">· 허브 V2.4 (261013)</span></p>
+    <p>메리츠 자동주문(해외·국내) · SOXL · TQQQ · K반도체레버리지 <span class="ver">· 허브 V2.5 (261015)</span></p>
   </header>
 
   <a class="dash" href="api.html" style="--c:#2ECC71;">
     <span class="tk" style="font-size:20px;">🔌</span>
-    <span class="info"><span class="nm">메리츠 자동주문(해외) <small>V2.1</small></span><span class="st" id="st-api">⏰ 자동 실전 · 📒 SOXL·TQQQ 기록 · 🧾 결과 · 💾 백업</span></span>
+    <span class="info"><span class="nm">메리츠 자동주문(해외) <small>V2.2</small></span><span class="st" id="st-api">⏰ 자동 실전 · 📒 SOXL·TQQQ 기록 · 🧾 결과 · 💾 백업</span></span>
+    <span class="go">›</span>
+  </a>
+  <a class="dash" href="api-kr.html" style="--c:#4FA3FF;">
+    <span class="tk" style="font-size:20px;">🇰🇷</span>
+    <span class="info"><span class="nm">메리츠 자동주문(국내) <small>V1.0</small></span><span class="st" id="st-apikr">⏰ 15:20 종가 단일가 자동 · 📒 KODEX 기록 · 🧾 결과 · 💾 백업</span></span>
     <span class="go">›</span>
   </a>
   <a class="dash" href="soxl.html" style="--c:var(--amber);">
@@ -91,7 +96,7 @@
   </a>
   <a class="dash" href="kodex.html" style="--c:var(--violet);">
     <span class="tk" style="font-size:11.5px;line-height:1.15;text-align:center;">KODEX<br>2X</span>
-    <span class="info"><span class="nm">KODEX 반도체레버리지 <small>V0.2</small></span><span class="st" id="st-kodex">기록 확인 중…</span></span>
+    <span class="info"><span class="nm">K반도체레버리지 AI분석 <small>V0.3</small></span><span class="st" id="st-kodex">기록 확인 중…</span></span>
     <span class="go">›</span>
   </a>
 
@@ -114,7 +119,7 @@
   <p class="note">매수 기록은 각 화면 💾 백업 탭의 <b>☁️ PC·모바일 동기화</b>를 켜면 PC와 폰이 같은 기록을 씁니다. 이 목록은 이 기기에 마지막으로 맞춰진 기록입니다.</p>
 </div>
 <script>
-const HUB_VERSION = "V2.4", HUB_RELEASE = "261013";
+const HUB_VERSION = "V2.5", HUB_RELEASE = "261015";
 function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
 function realized(tk, won){
   const t = readJSON(tk + "_trades_v1");
@@ -153,6 +158,9 @@ renderSummary();
       if (!g || !g.files) return;
       const P = n => { try { return g.files[n] ? JSON.parse(g.files[n].content) : null; } catch (e) { return null; } };
       const cfg = P("muhan-bot.json"); if (cfg) show(cfg, P("muhan-bot-status.json"));
+      const kc = P("muhan-bot-kr.json"), ke = document.getElementById("st-apikr");
+      if (kc && ke) { const ks = P("muhan-bot-kr-status.json"), t = ks && ks.run_at ? new Date(ks.run_at).toLocaleString("ko-KR", { month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit" }) : "";
+        ke.innerHTML = `<b>${kc.mode === "live" ? "⏰ 자동 실전 15:20" : "⏸ 자동 꺼짐"}</b>` + (ks ? ` · 최근 ${t} ${OV[ks.overall] || ks.overall}` : " · 오늘의 종가 주문"); }
     }).catch(() => {});
 })();
 

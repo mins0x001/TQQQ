@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080D18">
+<meta name="version" content="V1.0-261015-MeritzAutoOrderDomestic-KODEX">
+<meta name="release-date" content="261015">
+<title>메리츠 자동주문(국내) (V1.0 - 261015)</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#080D18; --panel:#0F182A; --panel-2:#0B1322; --panel-3:#131F36; --border:#1C2842; --border-soft:#162137;
+    --text:#E9EDF7; --text-dim:#8E9AB0; --text-faint:#5E6B84;
+    --amber:#F5A524; --violet:#9B8CFF; --up:#38D98C; --down:#F0475A; --glow:#5EEAD4; --radius:18px;
+    font-size:16px; color-scheme:dark;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;-webkit-text-size-adjust:100%;}
+  body{background:radial-gradient(900px 520px at 85% -8%, rgba(56,217,140,0.10) 0%, transparent 60%) fixed,
+      radial-gradient(900px 600px at -10% 10%, rgba(155,140,255,0.08) 0%, transparent 55%) fixed, var(--bg);
+    color:var(--text);font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;
+    padding-bottom:calc(40px + env(safe-area-inset-bottom));letter-spacing:-0.005em;}
+  .app{max-width:540px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 16px 0;}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;}
+  b{font-weight:800;}
+  a{color:var(--glow);}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .top a{font-size:13px;color:var(--text-dim);text-decoration:none;font-weight:700;}
+  h1{margin:6px 0 2px;font-size:22px;font-weight:900;letter-spacing:-0.3px;}
+  .sub{font-size:12.5px;color:var(--text-dim);margin:0;}
+  .sub .mono{color:var(--text-faint);}
+  .sess{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.55;border:1px solid var(--border);background:var(--panel-2);color:var(--text-dim);}
+  .sess b{color:var(--text);}
+  section.card{margin-top:14px;background:linear-gradient(180deg,var(--panel) 0%,#0D1526 100%);border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px 16px 18px;position:relative;overflow:hidden;box-shadow:0 14px 40px -28px rgba(0,0,0,0.9);}
+  section.card::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--c,var(--glow)),transparent 70%);}
+  .card-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+  .card-icon{width:40px;height:40px;flex:none;border-radius:12px;display:grid;place-items:center;font-size:19px;
+    background:color-mix(in srgb,var(--c,var(--glow)) 14%,transparent);border:1px solid color-mix(in srgb,var(--c,var(--glow)) 35%,transparent);}
+  .card-kicker{font-size:11.5px;font-weight:800;letter-spacing:0.1em;color:var(--c,var(--glow));font-family:'JetBrains Mono',monospace;margin-bottom:2px;}
+  .card h2{font-size:18px;margin:0;font-weight:800;letter-spacing:-0.015em;line-height:1.3;}
+  .bk-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .bk-btn{min-height:44px;border-radius:12px;border:1px solid var(--border);background:var(--panel-3);color:var(--text);font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;padding:0 10px;}
+  .bk-btn:active{transform:scale(0.98);} .bk-btn:disabled{opacity:.5;}
+  .bk-btn.live{border-color:#2ecc71;color:#2ecc71;background:rgba(46,204,113,0.10);font-size:15px;min-height:52px;}
+  .bk-btn.live.armed{background:#2ecc71;color:#04211C;}
+  .sync-state{font-size:13px;line-height:1.6;color:var(--text-dim);padding:10px 12px;border-radius:12px;background:var(--panel-2);border:1px solid var(--border);margin:10px 0 0;overflow-wrap:anywhere;}
+  .sync-state.ok{color:var(--glow);border-color:rgba(94,234,212,0.4);} .sync-state.err{color:var(--amber);border-color:rgba(245,165,36,0.45);}
+  .sync-input{width:100%;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);
+    font-family:'JetBrains Mono',monospace;font-size:13px;margin-bottom:8px;}
+  .sync-input:focus{outline:none;border-color:rgba(94,234,212,0.55);}
+  /* 오늘의 LOC */
+  .sym{border:1px solid var(--border);border-radius:16px;padding:12px;margin-top:10px;background:rgba(8,13,24,0.35);}
+  .sym-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;}
+  .sym-h b{font-size:16px;font-family:'JetBrains Mono',monospace;}
+  .sym-h .meta{font-size:11.5px;color:var(--text-faint);text-align:right;overflow-wrap:anywhere;}
+  .loc-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;}
+  .loc-box{border-radius:14px;padding:10px 10px 12px;border:1px solid;min-width:0;}
+  .loc-box.buy{background:rgba(94,234,212,0.08);border-color:rgba(94,234,212,0.4);}
+  .loc-box.sell{background:rgba(56,217,140,0.08);border-color:rgba(56,217,140,0.4);}
+  .loc-box.off{background:rgba(75,90,115,0.08);border-color:var(--border-soft);}
+  .loc-top{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px;}
+  .loc-tag{font-size:11.5px;color:var(--text-dim);font-weight:700;}
+  .chk{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:800;color:var(--text);cursor:pointer;white-space:nowrap;}
+  .chk input{width:18px;height:18px;accent-color:#2ecc71;margin:0;}
+  .loc-price{font-size:clamp(19px,6vw,24px);font-weight:800;font-family:'JetBrains Mono',monospace;line-height:1.2;}
+  .loc-box.buy .loc-price{color:var(--glow);} .loc-box.sell .loc-price{color:var(--up);} .loc-box.off .loc-price{color:var(--text-faint);}
+  .loc-qty{font-size:14px;font-weight:800;margin-top:2px;}
+  .loc-sub{font-size:11.5px;color:var(--text-faint);margin-top:4px;line-height:1.45;overflow-wrap:anywhere;}
+  .loc-sub.warn{color:var(--amber);}
+  .busy{font-size:13px;color:var(--text-dim);padding:18px 8px;text-align:center;}
+  .busy.err{color:var(--amber);}
+  /* 모드·실행 */
+  .seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:10px;}
+  .seg button{min-height:42px;border-radius:12px;border:1px solid var(--border);background:var(--panel-2);color:var(--text-dim);font-weight:800;font-size:13.5px;font-family:inherit;}
+  .seg button.on.m-off{color:var(--text);border-color:var(--text-faint);}
+  .seg button.on.m-dry{color:var(--glow);border-color:var(--glow);background:rgba(94,234,212,0.10);}
+  .seg button.on.m-live{color:#2ecc71;border-color:#2ecc71;background:rgba(46,204,113,0.12);}
+  .hint{font-size:12px;color:var(--text-faint);line-height:1.6;margin:8px 2px 0;}
+  .hint b{color:var(--text-dim);}
+  .preview{margin-top:10px;font-size:12.5px;line-height:1.6;padding:10px 12px;border-radius:12px;border:1px dashed rgba(46,204,113,0.45);background:rgba(46,204,113,0.05);}
+  .preview .row{display:flex;justify-content:space-between;gap:8px;font-variant-numeric:tabular-nums;}
+  /* 결과 */
+  .bot-run{font-size:12.5px;padding:8px 10px;border-radius:12px;border:1px solid var(--border);background:var(--panel-2);margin-bottom:8px;overflow-wrap:anywhere;}
+  .bot-run a{white-space:nowrap;margin-left:4px;}
+  .bot-run.run{border-color:rgba(245,165,36,0.45);} .bot-run.ok{border-color:rgba(46,204,113,0.45);} .bot-run.bad{border-color:rgba(240,71,90,0.5);}
+  .bot-last{border:1px solid var(--border);border-radius:14px;padding:10px 12px;background:rgba(8,13,24,0.35);}
+  .bot-last.blocked,.bot-last.error{border-color:rgba(240,71,90,0.5);} .bot-last.done{border-color:rgba(46,204,113,0.45);}
+  .bot-last-h{font-size:13px;margin-bottom:6px;}
+  .bot-sym{border-top:1px solid rgba(255,255,255,0.06);padding-top:8px;margin-top:8px;font-size:12.5px;}
+  .bot-sym-h{margin-bottom:6px;overflow-wrap:anywhere;}
+  .bot-ord{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px;padding:6px 8px;border-radius:10px;background:var(--panel-2);margin-bottom:5px;font-variant-numeric:tabular-nums;}
+  .bot-why{grid-column:1/-1;font-size:11.5px;color:var(--text-faint);overflow-wrap:anywhere;}
+  .bot-checks{margin:6px 0 0;padding-left:18px;font-size:11.5px;line-height:1.55;}
+  .bot-checks li.ok{color:var(--text-dim);} .bot-checks li.ok::marker{content:"✓ ";color:#2ecc71;}
+  .bot-checks li.warn{color:var(--amber);} .bot-checks li.warn::marker{content:"! ";}
+  .bot-checks li.bad{color:var(--down);} .bot-checks li.bad::marker{content:"✕ ";}
+  details summary{cursor:pointer;font-size:12px;color:var(--text-dim);}
+  /* 설정 */
+  .bot-step{border:1px solid var(--border);border-radius:14px;padding:10px 12px;margin-bottom:8px;background:rgba(8,13,24,0.35);}
+  .bot-step.ok{border-color:rgba(46,204,113,0.35);}
+  .bs-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 8px;margin-bottom:8px;}
+  .bs-n{width:22px;height:22px;border-radius:50%;display:inline-grid;place-items:center;font-size:12px;font-weight:800;background:var(--panel-2);border:1px solid var(--border);color:var(--text-dim);flex:none;}
+  .bot-step.ok .bs-n{background:rgba(46,204,113,0.18);border-color:#2ecc71;color:#2ecc71;}
+  .bs-sub{font-size:11.5px;color:var(--text-faint);flex-basis:100%;padding-left:30px;overflow-wrap:anywhere;}
+  .opt{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-dim);}
+  .opt input{width:110px;min-height:36px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);padding:0 8px;font-size:13px;}
+  .msg{margin-top:12px;}
+  .foot{margin:22px 4px 0;font-size:11.5px;color:var(--text-faint);line-height:1.7;}
+  .page{display:none;} .page.on{display:block;animation:pgIn .18s ease-out;}
+  @keyframes pgIn{from{opacity:.4;transform:translateY(4px);}to{opacity:1;transform:none;}}
+  body{padding-bottom:calc(84px + env(safe-area-inset-bottom));}
+  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;
+    padding:6px 10px calc(6px + env(safe-area-inset-bottom));background:rgba(10,17,32,0.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-top:1px solid var(--border);}
+  .tb{min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;background:none;color:var(--text-faint);
+    font-family:inherit;cursor:pointer;border-radius:12px;position:relative;-webkit-tap-highlight-color:transparent;}
+  .tb .ic{font-size:19px;line-height:1;filter:grayscale(0.7);opacity:0.75;} .tb .tx{font-size:12px;font-weight:800;}
+  .tb.on{color:var(--glow);background:rgba(94,234,212,0.10);} .tb.on .ic{filter:none;opacity:1;}
+  .tabbar[hidden]{display:none;}
+  .tb.alert::after{content:"";position:absolute;top:7px;right:calc(50% - 18px);width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 2px var(--bg);}
+  .tabbar.seven{grid-template-columns:repeat(6,minmax(0,1fr));gap:2px;padding-left:4px;padding-right:4px;}
+  .tabbar.seven .tb .tx{font-size:11px;letter-spacing:-0.3px;} .tabbar.seven .tb .ic{font-size:18px;}
+  /* 📒 KODEX 탭 = 같은 앱 파일을 화면 가득 (기능 중복 없음) */
+  .app-frame{position:fixed;left:0;right:0;top:0;width:100%;height:calc(100dvh - 64px - env(safe-area-inset-bottom));border:0;background:var(--bg);z-index:40;}
+  /* 🧾 결과 */
+  .rs-day{margin:14px 2px 6px;font-size:12.5px;font-weight:800;color:var(--text-dim);}
+  .rs{border:1px solid var(--border);border-radius:12px;padding:9px 10px;margin-bottom:6px;background:rgba(8,13,24,0.35);font-size:12.5px;}
+  .rs.bad{border-color:rgba(240,71,90,0.5);} .rs.ok{border-color:rgba(46,204,113,0.4);}
+  .rs-h{display:flex;justify-content:space-between;gap:8px;margin-bottom:4px;} .rs-h i{font-style:normal;color:var(--text-faint);}
+  .rs-o{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 8px;font-variant-numeric:tabular-nums;}
+  .rs-o .w{grid-column:1/-1;font-size:11px;color:var(--text-faint);overflow-wrap:anywhere;}
+  .help p{font-size:13px;line-height:1.7;color:var(--text-dim);margin:0 0 10px;} .help b{color:var(--text);}
+  .help h3{font-size:14px;margin:14px 0 6px;} .help h3:first-child{margin-top:0;}
+  .sched{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0;}
+  .sched input{min-height:44px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);padding:0 10px;font-size:16px;font-family:'JetBrains Mono',monospace;}
+  .seg.two{grid-template-columns:repeat(2,minmax(0,1fr));}
+  /* 💼 계좌 현황 */
+  .bk-btn.acct-btn{width:100%;margin-top:10px;border-color:rgba(155,140,255,0.55);color:#C9C1FF;background:rgba(155,140,255,0.10);}
+  .bk-btn.acct-btn.on{background:rgba(155,140,255,0.22);}
+  .acct{margin-top:10px;border:1px solid rgba(155,140,255,0.45);border-radius:16px;padding:12px;background:rgba(155,140,255,0.05);}
+  .acct-h{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;margin-bottom:8px;}
+  .acct-h span{font-size:11.5px;color:var(--text-faint);text-align:right;}
+  .acct-h button{border:1px solid var(--border);background:var(--panel-3);color:var(--text);border-radius:9px;min-height:30px;padding:0 10px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;}
+  .acct-row{border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:8px;background:rgba(8,13,24,0.45);}
+  .ar-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px;}
+  .ar-top b{font-family:'JetBrains Mono',monospace;font-size:15px;} .ar-top .nm{font-size:11px;color:var(--text-faint);margin-left:6px;font-weight:600;}
+  .ar-pl{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:14px;text-align:right;white-space:nowrap;}
+  .up{color:var(--up);} .dn{color:var(--down);}
+  .ar-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;}
+  .ar-grid div{background:var(--panel-2);border-radius:8px;padding:5px 6px;min-width:0;}
+  .ar-grid span{display:block;font-size:10.5px;color:var(--text-faint);} .ar-grid b{display:block;font-size:12.5px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;}
+  .ar-sub{font-size:11.5px;color:var(--text-dim);margin-top:6px;overflow-wrap:anywhere;}
+  .acct-tot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:4px;}
+  .acct-tot div{border:1px solid var(--border);border-radius:10px;padding:7px 8px;background:var(--panel-2);min-width:0;}
+  .acct-tot span{display:block;font-size:10.5px;color:var(--text-faint);} .acct-tot b{display:block;font-size:13px;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;}
+  @media (max-width:440px){ .ar-grid{grid-template-columns:repeat(2,minmax(0,1fr));} .acct-tot{grid-template-columns:repeat(2,minmax(0,1fr));} .acct-tot div:last-child{grid-column:1/-1;} }
+  /* 🧪 리허설 */
+  .bk-btn.rh{width:100%;min-height:52px;font-size:15px;border-color:var(--glow);color:var(--glow);background:rgba(94,234,212,0.10);}
+  .rh-hist{margin-top:10px;font-size:12.5px;}
+  .rh-hist .h{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;padding:7px 8px;border-radius:10px;background:var(--panel-2);margin-bottom:5px;}
+  .rh-hist .h i{font-style:normal;color:var(--text-faint);font-size:11.5px;white-space:nowrap;} .rh-hist .h div{overflow-wrap:anywhere;}
+  .plan-frame{position:fixed;left:-2000px;top:0;width:412px;height:900px;border:0;opacity:0;pointer-events:none;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><a href="./">‹ 허브</a><span class="sub mono" id="ver">V1.0 (261015)</span></div>
+  <h1>🔌 메리츠 자동주문(국내)</h1>
+  <p class="sub">KODEX 반도체레버리지(494310) 종가 주문 → 메리츠증권 Open API · 국내 계좌</p>
+  <div class="sess" id="sess">시각 확인 중…</div>
+
+  <div id="connect"></div>
+
+  <div class="page on" id="pg-main" role="tabpanel" aria-label="주문">
+  <section class="card" style="--c:var(--glow);" id="cardPlan">
+    <div class="card-head"><div class="card-icon">⚡</div><div><div class="card-kicker">TODAY'S CLOSE ORDER · KRX</div><h2>오늘의 종가 주문</h2></div></div>
+    <div id="plan"></div>
+    <button class="bk-btn acct-btn" type="button" data-act="acct" id="acctBtn">💼 계좌 현황 · 보유 종목 · 평단 · 평가손익</button>
+    <div id="acct"></div>
+    <div class="bk-row" style="margin-top:10px;"><button class="bk-btn" type="button" data-act="recalc">↻ 다시 계산</button><button class="bk-btn" type="button" data-act="openapp">앱에서 자세히 ›</button></div>
+  </section>
+
+  <section class="card" style="--c:#2ecc71;" id="cardRun">
+    <div class="card-head"><div class="card-icon">⏰</div><div><div class="card-kicker">AUTO RUN · 15:20 CLOSING AUCTION</div><h2>자동 실행</h2></div></div>
+    <div id="run"></div>
+  </section>
+
+
+  </div>
+
+
+  <div class="page" id="pg-kodex" role="tabpanel" aria-label="KODEX"><iframe class="app-frame" title="KODEX 주문·사이클" data-src="kodex.html?embed=panel"></iframe></div>
+
+  <div class="page" id="pg-result" role="tabpanel" aria-label="자동주문결과">
+  <section class="card" style="--c:var(--violet);" id="cardResult">
+    <div class="card-head"><div class="card-icon">🧾</div><div><div class="card-kicker">AUTO ORDER RESULTS</div><h2>자동주문 결과</h2></div></div>
+    <div id="result"></div>
+  </section>
+  </div>
+
+  <div class="page" id="pg-backup" role="tabpanel" aria-label="백업">
+  <section class="card" style="--c:var(--glow);" id="cardBackup">
+    <div class="card-head"><div class="card-icon">💾</div><div><div class="card-kicker">BACKUP · KODEX</div><h2>백업 · 복원</h2></div></div>
+    <div id="backup"></div>
+    <div class="bk-row" style="margin-top:10px;"><button class="bk-btn" type="button" data-act="bkFile">💾 백업 파일 받기</button><button class="bk-btn" type="button" data-act="bkCopy">📋 백업 복사</button></div>
+    <textarea class="sync-input" id="bkText" rows="4" style="margin-top:10px;min-height:90px;" placeholder="백업 텍스트를 붙여넣고 [📥 복원] (예전 KODEX 앱 백업도 됩니다)"></textarea>
+    <div class="bk-row"><label class="bk-btn" style="display:grid;place-items:center;">📂 파일 열기<input type="file" id="bkFile" accept=".json,application/json,text/plain" hidden></label><button class="bk-btn" type="button" data-act="bkRestore" id="bkRestoreBtn">📥 복원</button></div>
+    <p class="hint">백업에는 K반도체레버리지의 매수 기록 · 사이클 기록 · 설정 · 계좌 캐시가 들어갑니다. GitHub 토큰·메리츠 앱키는 넣지 않습니다(보안). 동기화를 켜 두면 Gist에도 자동으로 보관됩니다.</p>
+  </section>
+  </div>
+
+  <div class="page" id="pg-help" role="tabpanel" aria-label="설명">
+  <section class="card help" style="--c:var(--text-dim);" id="cardHelp">
+    <div class="card-head"><div class="card-icon">📖</div><div><div class="card-kicker">HOW IT WORKS</div><h2>설명</h2></div></div>
+    <h3>🇰🇷 LOC 대신 종가 단일가</h3>
+    <p>국내 ETF에는 LOC 주문이 없습니다. 봇은 <b>15:20~15:30 종가 단일가</b> 시간에 오늘의 가격으로 <b>지정가</b> 주문을 냅니다. 15:30에 정해지는 종가가 매수 지정가 <b>이하</b>(매도는 <b>이상</b>)면 <b>그 종가로</b> 체결 → 미국 LOC와 결과가 같습니다. 예) 매수 지정가 75,595원 · 15:30 종가 75,000원 → 75,000원에 체결 / 종가 76,000원 → 체결 안 됨. 주문은 KRX로만 보냅니다(NXT에는 종가 단일가가 없음).</p>
+    <h3>⏰ 언제 · 어디서 도나</h3>
+    <p>내 GitHub 비공개 저장소 <b>muhan-bot-kr</b>(해외 봇과 별도)의 <b>Actions(클라우드)</b>에서 돕니다. 허브·앱·폰을 꺼 둬도 됩니다. 평일 <b>14:45</b>에 시작해 계좌·체결을 맞추고, 이 앱(kodex.html)을 클라우드에서 그대로 열어 오늘 주문을 계산·검수한 뒤 <b>15:20까지 기다렸다 접수</b>합니다. GitHub 예약 실행은 붐비면 늦거나 빠질 수 있어 14:57 · 15:09 · 15:36에 예비 실행이 있습니다(이미 낸 주문은 다시 내지 않음). 종가 단일가를 놓치면 <b>장후 시간외 종가(15:40~16:00)</b>로 넘어가, 오늘 종가가 LOC 조건에 맞을 때만 종가로 주문합니다. 국내 휴장일과 수능일 같은 시각 변경은 메리츠 영업일·장운영 조회로 자동 반영됩니다. 16:12에는 계좌·체결을 읽어 매수 기록·사이클 기록을 자동으로 맞춥니다.</p>
+    <h3>💲 가격·수량</h3>
+    <p>가격·수량은 K반도체레버리지 AI분석 앱을 이 화면 안에서 그대로 실행해 받은 값입니다(같은 코드 · 같은 동기화 기록). 호가단위는 5원(2,000원 이상 ETF)이라 매수가는 5원 단위 <b>내림</b>, 매도가는 5원 단위 <b>올림</b>입니다. <b>☑매수</b>는 규칙상 매수 없음이어도 같은 공식으로 주문하고(2단계는 시드÷(분할×3)씩), <b>☑매도</b>는 주문 직전 계좌 보유 수량 <b>전량</b>을 다시 읽어 그 수량으로 냅니다.</p>
+    <h3>🛡 검수</h3>
+    <p>V1 계획 최신(직전 영업일 종가) · V2 같은 공식 재계산 · V3 메리츠 기준가(전일 종가) 대조 · V4 계좌 보유 = 앱 기록 · V5 주문가능금액 · V6 매도 = 보유 전량 · V7 매수 1건 한도 · V8 같은 날 같은 매매 중복 방지(MTS 주문·예약주문 포함) · V9 호가단위·상하한가. 접수 직후 당일 주문내역을 다시 읽어 대조하고, 다르면 즉시 취소합니다. 메리츠 경고는 자동으로 확인하지 않습니다.</p>
+    <h3>🔐 계좌 · 보안</h3>
+    <p>해외 자동주문과 <b>다른 메리츠 계좌</b>의 앱키를 써도 됩니다 — 이 앱의 앱키는 muhan-bot-kr 저장소 금고(Actions Secrets)에만 봉인 저장되고, 해외 봇(muhan-bot)의 키와 섞이지 않습니다. 기록 동기화(☁️ Gist)는 SOXL·TQQQ와 같은 것을 쓰되 파일이 따로입니다(muhan-bot-kr.json · muhan-bot-kr-status.json · muhan-account-kr.json). 봇 저장소는 반드시 비공개여야 합니다.</p>
+    <p>수수료·세금은 반영하지 않으며 투자 판단과 결과의 책임은 본인에게 있습니다.</p>
+  </section>
+  </div>
+
+  <div class="page" id="pg-setup" role="tabpanel" aria-label="설정">
+  <section class="card" style="--c:var(--amber);" id="cardSetup">
+    <div class="card-head"><div class="card-icon">🛠</div><div><div class="card-kicker">SETUP · ONE TIME</div><h2>설정</h2></div></div>
+    <div id="setup"></div>
+  </section>
+
+  </div>
+
+  <div class="msg" id="msg"></div>
+  <p class="foot">메리츠 자동주문(국내) · 자세한 동작은 <b data-goto="pg-help" style="cursor:pointer;text-decoration:underline;">📖 설명</b> 탭</p>
+</div>
+<nav class="tabbar seven" id="tabbar" role="tablist" aria-label="화면 전환">
+  <button class="tb on" type="button" role="tab" data-p="pg-main" aria-selected="true"><span class="ic">⚡</span><span class="tx">주문</span></button>
+  <button class="tb" type="button" role="tab" data-p="pg-kodex" aria-selected="false"><span class="ic">📒</span><span class="tx">KODEX</span></button>
+  <button class="tb" type="button" role="tab" data-p="pg-result" aria-selected="false"><span class="ic">🧾</span><span class="tx">결과</span></button>
+  <button class="tb" type="button" role="tab" data-p="pg-backup" aria-selected="false"><span class="ic">💾</span><span class="tx">백업</span></button>
+  <button class="tb" type="button" role="tab" data-p="pg-help" aria-selected="false"><span class="ic">📖</span><span class="tx">설명</span></button>
+  <button class="tb" type="button" role="tab" data-p="pg-setup" aria-selected="false"><span class="ic">🛠</span><span class="tx">설정</span></button>
+</nav>
+<script>
+const API_VERSION = "V1.0", API_RELEASE = "261015";
+const BOT_VERSION = "MUHANBOT-KR V1.0 (261015)";
+/* 봇 파일 내장 — 이 파일만 올리면 [실행] 때 비공개 봇 저장소가 자동으로 같은 버전이 된다 */
+const BOT_FILES = [["muhan_bot_kr.py", "#!/usr/bin/env python3\n# -*- coding: utf-8 -*-\n\"\"\"\n무한매수 국내 종가 자동주문 봇 — 메리츠증권 Open API (국내주식)        MUHANBOT-KR V1.0 (261015)\n대상: KODEX 반도체레버리지 (494310 · KRX)\n\n한국 시장에는 LOC 주문이 없습니다. 그래서 LOC와 '같은 결과'가 나오는 두 가지 방법을 씁니다.\n  ① 종가 단일가(15:20~15:30)에 지정가(01) 주문 — 15:30에 정해지는 종가가 매수 지정가 이하(매도는 이상)면\n     그 종가로 체결된다 = 미국 LOC 와 동일. (KRX 거래소로만 보냄: NXT 에는 종가 단일가가 없음)\n  ② ①을 놓쳤을 때만 장후 시간외 종가(71, 15:40~16:00) — 오늘 종가를 직접 보고 LOC 조건이 맞을 때만\n     종가로 주문한다. 조건이 안 맞으면 내지 않는다(LOC 였어도 체결되지 않았을 주문).\n\nGitHub 예약 실행은 늦거나 빠질 수 있어서 14:45 부터 시작해 계획·검수를 미리 끝내 두고 15:20 까지 기다린 뒤 주문합니다.\n예비 실행(14:57 · 15:09 · 15:36)은 이미 낸 주문을 다시 내지 않습니다(중복 방지 V8).\n\n  ① 계획   K반도체레버리지 AI분석 앱(kodex.html)을 클라우드에서 그대로 열어 '오늘의 종가 주문'을 받는다 (앱과 같은 코드)\n  ② 검수   V1~V9 — 하나라도 어긋나면 그 주문은 내지 않는다\n  ③ 주문   종가 단일가 지정가(01 · KRX) 또는 장후 시간외 종가(71)\n  ④ 대조   접수 직후 당일 주문내역을 다시 읽어 종목·매매·수량·가격 확인 → 다르면 즉시 취소\n  ⑤ 보고   Gist muhan-bot-kr-status.json → ‘메리츠 자동주문(국내)’ 앱에 모든 기기 공통 표시\n  ⑥ 계좌   보유·평단·평가손익·주문가능금액 + 체결내역으로 사이클 복원 → Gist muhan-account-kr.json\n\n실행 모드(RUN_MODE): config(정기) · live(지금 실전) · check(연결 점검) · account(계좌·체결 동기화만)\n앱키·시크릿은 GitHub Actions Secrets 에만 있습니다(MERITZ_APP_KEY / MERITZ_APP_SECRET) — 해외 봇과 다른 계좌의 키를 씁니다.\n표준 라이브러리 + Playwright(앱 실행용)만 사용합니다.\n\"\"\"\nfrom __future__ import annotations\n\nimport datetime as dt\nimport hashlib\nimport json\nimport math\nimport os\nimport sys\nimport time\nimport urllib.error\nimport urllib.parse\nimport urllib.request\nfrom zoneinfo import ZoneInfo\n\nVERSION = \"MUHANBOT-KR V1.0 (261015)\"\nMERITZ_BASE = os.environ.get(\"MERITZ_BASE_URL\", \"https://openapi.imeritz.com:9443\").rstrip(\"/\")\nKST = ZoneInfo(\"Asia/Seoul\")\nSYM, CODE = \"KODEX\", \"494310\"            # 앱의 LEV_TICKER · KRX 단축코드\nISCD = \"A\" + CODE\nAPP_PAGES = {SYM: \"kodex.html\"}\nCONFIG_FILE, STATUS_FILE, ACCOUNT_FILE = \"muhan-bot-kr.json\", \"muhan-bot-kr-status.json\", \"muhan-account-kr.json\"\nDEFAULT_CONFIG = {\"mode\": \"off\", \"symbols\": {SYM: True}, \"sides\": {SYM: {\"buy\": True, \"sell\": True}}, \"max_order_krw\": 10_000_000, \"app_base\": \"\"}\n# 장 시각 기본값(KST, 분) — 실행 때 메리츠 '국내 장운영 조회'로 그날 실제 시각을 읽어 덮어쓴다 (수능일·연초 지연 개장 등)\nDEFAULT_HOURS = {\"auction\": (15 * 60 + 20, 15 * 60 + 30), \"after\": (15 * 60 + 40, 16 * 60)}\nEARLY_LIMIT_MIN = 70        # 수동 [지금 실전]이 종가 단일가보다 70분 넘게 이르면 기다리지 않고 안내\n\n\n# ───────────────────────────────────────────── 공통\ndef log(msg: str) -> None:\n    print(f\"[{dt.datetime.now(KST):%H:%M:%S}] {msg}\", flush=True)\n\n\ndef tick_of(p: float) -> int:               # KRX ETF 호가단위: 2,000원 미만 1원 · 이상 5원 (앱과 같은 규칙)\n    return 1 if p < 2000 else 5\n\n\ndef floor_tick(p: float, t: int | None = None) -> int:\n    t = t or tick_of(p)\n    return int(math.floor(p / t + 1e-9) * t)\n\n\ndef ceil_tick(p: float, t: int | None = None) -> int:\n    t = t or tick_of(p)\n    return int(math.ceil(p / t - 1e-9) * t)\n\n\ndef won(x) -> str:\n    return f\"{float(x):,.0f}원\"\n\n\ndef num(v, default=0.0) -> float:\n    try:\n        return float(str(v).replace(\",\", \"\").strip())\n    except (TypeError, ValueError):\n        return default\n\n\ndef http(method: str, url: str, headers: dict | None = None, body=None, form=None, timeout=20):\n    data = None\n    headers = dict(headers or {})\n    headers.setdefault(\"User-Agent\", f\"muhan-bot/{VERSION.split()[1]}\")\n    if form is not None:\n        data = urllib.parse.urlencode(form).encode()\n        headers[\"content-type\"] = \"application/x-www-form-urlencoded\"\n    elif body is not None:\n        data = json.dumps(body, ensure_ascii=False).encode(\"utf-8\")\n        headers.setdefault(\"content-type\", \"application/json; charset=utf-8\")\n    req = urllib.request.Request(url, data=data, method=method, headers=headers)\n    try:\n        with urllib.request.urlopen(req, timeout=timeout) as r:\n            status, raw = r.status, r.read()\n    except urllib.error.HTTPError as e:            # 메리츠는 업무 오류도 HTTP 500 + rsp_cd 로 준다\n        status, raw = e.code, e.read()\n    except (urllib.error.URLError, TimeoutError, OSError) as e:\n        return 0, {\"rsp_cd\": \"\", \"rsp_msg\": f\"연결 실패: {e}\"}\n    text = raw.decode(\"utf-8\", \"replace\")\n    try:\n        return status, json.loads(text) if text else {}\n    except ValueError:\n        return status, text\n\n\n# ───────────────────────────────────────────── 메리츠 Open API\nclass MeritzError(RuntimeError):\n    def __init__(self, msg, code=\"\"):\n        super().__init__(msg)\n        self.code = code\n\n\nQUERY_OK = {\"0000\", \"5762\", \"5766\", \"5820\", \"5822\"}      # 5762 = 연속조회 남음\nTOKEN_DEAD = {\"EGW00121\", \"EGW00123\"}\n# 메리츠 공식 응답 코드표(docs/errors.md · 명세 2026-10-13) → 무엇을 하면 되는지\nHINTS = {\n    \"EGW00103\": \"앱키(App Key)가 틀렸습니다 — 포털의 운영 앱키를 다시 등록하세요 (재발급으로 풀리지 않음)\",\n    \"EGW00121\": \"토큰이 무효입니다 — 자동으로 다시 발급합니다\",\n    \"EGW00123\": \"토큰이 만료됐습니다 — 자동으로 다시 발급합니다\",\n    \"EGW00200\": \"초당 호출 한도 초과 — 잠시 뒤 자동 재시도\",\n    \"EGW00202\": \"권한 없음 — 포털에서 이 앱키의 API 권한(해외주식)을 확인하세요\",\n    \"EGW00002\": \"메리츠 서버 오류 — 앱키 문제가 아닙니다. 잠시 뒤 다시 실행\",\n    \"0760\": \"이 앱키·계좌에 해당 API 권한이 없습니다 — 포털에서 해외주식 권한 신청 (재시도로 풀리지 않음)\",\n    \"IGW50024\": \"필수 헤더(mac_address) 누락\",\n    \"IGW50004\": \"전문 길이 초과·필수값 누락\",\n    \"IGW50006\": \"시장구분코드 오류\",\n    \"5806\": \"거래소 벤더코드 오류\",\n    \"7936\": \"필수 입력 누락\",\n    \"IGW50002\": \"필수 항목 누락\",\n}\n\n\ndef explain(code, msg=\"\", sub=\"\"):\n    code = str(code or \"\")\n    t = f\"{code} {msg or ''}\".strip() + (f\" ({sub})\" if sub and sub != msg else \"\")\n    return t + (f\" → {HINTS[code]}\" if code in HINTS else \"\")\n\n\nclass Meritz:\n    def __init__(self, app_key: str, app_secret: str, base: str = MERITZ_BASE):\n        if not app_key or not app_secret:\n            raise MeritzError(\"MERITZ_APP_KEY / MERITZ_APP_SECRET 이 없습니다 → 앱의 🤖 카드에서 [앱키 등록]\", \"NO_KEY\")\n        self.key, self.secret, self.base = app_key, app_secret, base\n        # 게이트웨이 필수 헤더(12자리). 실행 서버가 매번 바뀌므로 앱키로 고정값을 만든다.\n        self.mac = hashlib.sha256(app_key.encode()).hexdigest()[:12].upper()\n        self._token, self._exp = None, 0.0\n\n    def token(self) -> str:\n        if self._token and time.time() < self._exp:\n            return self._token\n        for wait in (0, 1.5, 3.0):                  # 토큰 발급은 주문이 아니라 재시도해도 안전\n            time.sleep(wait)\n            st, d = http(\"POST\", self.base + \"/oauth2/token\",\n                         form={\"grant_type\": \"client_credentials\", \"client_id\": self.key,\n                               \"client_secret\": self.secret, \"scope\": \"login\"})\n            if st != 0:\n                break\n        if st != 200 or not isinstance(d, dict) or \"access_token\" not in d:\n            code = (d.get(\"rsp_cd\") or d.get(\"error\") or \"\") if isinstance(d, dict) else \"\"\n            msg = (d.get(\"rsp_msg\") or d.get(\"error_description\") or \"\") if isinstance(d, dict) else str(d)[:80]\n            if st == 0:\n                raise MeritzError(\"메리츠 서버에 연결하지 못했습니다 (네트워크·해외 접속 차단 가능성)\", \"UNREACHABLE\")\n            raise MeritzError(f\"토큰 발급 실패 (HTTP {st}) \" + explain(code, msg), code or \"AUTH\")\n        self._token = d[\"access_token\"]\n        self._exp = time.time() + int(d.get(\"expires_in\", 43200)) - 120\n        return self._token\n\n    def _req(self, method, path, params=None, _retry=True):\n        time.sleep(0.12)                            # API별 초당 10건 한도\n        h = {\"authorization\": \"Bearer \" + self.token(), \"mac_address\": self.mac}\n        url = self.base + path\n        if method == \"GET\":\n            if params:\n                url += \"?\" + urllib.parse.urlencode(params, quote_via=urllib.parse.quote)   # 연속조회 키의 공백도 원본 그대로\n            st, body = http(\"GET\", url, h)\n            # 조회는 몇 번 다시 해도 안전 — 순간 끊김(SSL EOF·연결 재설정·시간 초과)이면 1.5초·3초 뒤 재시도.\n            # 주문(POST)은 결과가 애매할 때 다시 보내면 중복 위험이 있어 재시도하지 않는다.\n            for wait in (1.5, 3.0):\n                if st != 0:\n                    break\n                log(f\"  ↻ {path.rsplit('/', 1)[-1]} 연결 끊김 → {wait:g}초 뒤 다시 조회 ({str(body.get('rsp_msg', ''))[:60]})\")\n                time.sleep(wait)\n                st, body = http(\"GET\", url, h)\n        else:\n            st, body = http(\"POST\", url, h, body=params or {})\n        code = body.get(\"rsp_cd\") if isinstance(body, dict) else None\n        if code in TOKEN_DEAD and _retry:\n            self._token = None\n            return self._req(method, path, params, _retry=False)\n        if code == \"EGW00200\" and _retry:          # 초당 한도 — 1초 뒤 한 번 더\n            time.sleep(1.1)\n            return self._req(method, path, params, _retry=False)\n        return st, body\n\n    def query(self, path, params=None) -> list:\n        st, body = self._req(\"GET\", path, params)\n        if not isinstance(body, dict):\n            raise MeritzError(f\"{path}: 응답 형식 오류 (HTTP {st})\", \"BAD_RESPONSE\")\n        code = str(body.get(\"rsp_cd\") or \"\")\n        if st != 200 or code not in QUERY_OK:\n            raise MeritzError(f\"{path.rsplit('/', 2)[-2]}/{path.rsplit('/', 1)[-1]}: \" + explain(code, body.get('rsp_msg', ''), body.get('rsp_sub_msg', '')), code)\n        data = body.get(\"data\")\n        if data in (None, \"\", {}):\n            return []\n        return data if isinstance(data, list) else [data]\n\n    # ── 국내주식 조회\n    def market_days(self) -> dict:\n        r = self.query(\"/reference/v1/market-days\")\n        return r[0] if r else {}\n\n    def market_hours(self) -> dict:\n        r = self.query(\"/reference/v1/market-hours\", {\"mkpl_cls_code\": \"01\"})      # 01 = 유가증권(ETF 포함)\n        return r[0] if r else {}\n\n    def price(self) -> dict:\n        r = self.query(\"/market/v1/prices\", {\"mrkt_div_code\": \"J\", \"iscd\": CODE})\n        if not r:\n            raise MeritzError(\"현재가 조회 결과가 비어 있습니다\", \"EMPTY\")\n        return r[0]\n\n    def candles(self) -> list:\n        return self.query(\"/market/v1/candles/days\", {\"mrkt_div_code\": \"J\", \"iscd\": CODE})\n\n    def holdings(self) -> list:\n        return [r for r in self.query(\"/accounts/v1/me/holdings\")\n                if str(r.get(\"pros_trgt_cls_code\", \"1\")) == \"1\" and str(r.get(\"iscd\", \"\")).upper().startswith((\"A\", \"Q\"))]\n\n    def orderable(self, price: float) -> float | None:\n        r = self.query(\"/trading/v1/orders/estimate\", {\"iscd\": ISCD, \"oder_unpr\": int(price), \"oder_cls_code\": \"01\"})\n        return num(r[0].get(\"cash_oder_able_amt\")) if r else None\n\n    def orders_day(self, ymd: str, cntg: str = \"0\", iscd: str | None = ISCD, max_pages: int = 20) -> list:\n        \"\"\"하루치 주문내역(연속조회 포함). 휴장일·주말은 6102 → 빈 목록.\"\"\"\n        out, key = [], None\n        for _ in range(max_pages):\n            p = {\"oder_date\": ymd, \"deal_cls_code\": \"0\", \"cntg_cls_code\": cntg, \"sort_stnd_code\": \"2\"}\n            if iscd:\n                p[\"iscd\"] = iscd\n            if key is not None:\n                p.update(tr_cont=\"1\", tr_cont_key=key)\n            st, body = self._req(\"GET\", \"/trading/v1/orders/history\", p)\n            if not isinstance(body, dict):\n                raise MeritzError(f\"orders/history: 응답 형식 오류 (HTTP {st})\", \"BAD_RESPONSE\")\n            code = str(body.get(\"rsp_cd\") or \"\")\n            if code in (\"6102\", \"5820\"):\n                return out\n            if st != 200 or code not in QUERY_OK:\n                raise MeritzError(\"orders/history: \" + explain(code, body.get(\"rsp_msg\", \"\"), body.get(\"rsp_sub_msg\", \"\")), code)\n            data = body.get(\"data\") or []\n            out += data if isinstance(data, list) else [data]\n            if str(body.get(\"tr_cont\", \"0\")).strip() == \"1\" and body.get(\"tr_cont_key\") not in (None, \"\"):\n                key = body[\"tr_cont_key\"]\n            else:\n                break\n        return out\n\n    def reserved_live(self) -> list:\n        k = dt.datetime.now(KST).date()\n        rows = self.query(\"/trading/v1/reserved-orders\", {\n            \"oder_sta_date\": (k - dt.timedelta(days=7)).strftime(\"%Y%m%d\"), \"oder_fin_date\": (k + dt.timedelta(days=10)).strftime(\"%Y%m%d\"),\n            \"iqry_cls_code\": \"1\", \"deal_cls_code\": \"0\"})\n        today = k.strftime(\"%Y%m%d\")\n        return [r for r in rows if str(r.get(\"iscd\", \"\")).upper().endswith(CODE) and str(r.get(\"cncl_cls_code\", \"01\")) == \"01\"\n                and str(r.get(\"oder_sta_date\") or today) <= today <= str(r.get(\"oder_fin_date\") or today)]\n\n    # ── 국내주식 주문\n    def place(self, side: str, price: int, qty: int, cls: str = \"01\") -> dict:\n        \"\"\"cls \"01\" = 지정가(종가 단일가 시간에 내면 종가로 체결) · \"71\" = 장후 시간외 종가. 항상 KRX(01).\"\"\"\n        st, body = self._req(\"POST\", \"/trading/v1/orders/\" + (\"buy\" if side == \"buy\" else \"sell\"), {\n            \"iscd\": ISCD, \"oder_unpr\": int(price), \"odqt\": int(qty), \"oder_cls_code\": cls, \"oder_cond_cls_code\": \"0\",\n            \"orgl_oder_no\": 0, \"whol_rctf_cncl_yn\": \"N\", \"warn_cnfr_yn\": \"N\", \"exch_kind_code\": \"01\"})\n        return judge_order(st, body)\n\n    def cancel(self, oder_no, qty: int) -> dict:\n        st, body = self._req(\"POST\", \"/trading/v1/orders/cancel\", {\n            \"iscd\": ISCD, \"orgl_oder_no\": int(oder_no), \"whol_rctf_cncl_yn\": \"Y\", \"odqt\": int(qty),\n            \"oder_cond_cls_code\": \"0\", \"exch_kind_code\": \"01\"})\n        return judge_order(st, body)\n\n\ndef judge_order(st, body, ok_code=\"0001\", no_key=\"oder_no\") -> dict:\n    \"\"\"접수 판정 — HTTP 200 만으로 성공이라 하지 않는다.\n    rsp_cd \"0001\" 이고 warn_cls_code \"0\" 일 때만 접수. 경고는 사람이 확인해야 하므로 자동 재전송하지 않는다.\"\"\"\n    if not isinstance(body, dict):\n        return {\"ok\": False, \"why\": f\"응답 형식 오류 (HTTP {st})\"}\n    code = str(body.get(\"rsp_cd\") or \"\")\n    data = body.get(\"data\") if isinstance(body.get(\"data\"), dict) else {}\n    if st != 200 or code != ok_code:\n        return {\"ok\": False, \"code\": code if st else \"UNREACHABLE\", \"why\": explain(code, body.get('rsp_msg', ''), body.get('rsp_sub_msg', ''))}\n    warn = str(data.get(\"warn_cls_code\", body.get(\"warn_cls_code\", \"0\")) or \"0\").strip()\n    if warn != \"0\":\n        return {\"ok\": False, \"warn\": warn, \"code\": code, \"why\": f\"접수 보류(warn_cls_code={warn}) {data.get('warn_msg', '')} — MTS에서 직접 확인하세요\".strip()}\n    return {\"ok\": True, \"oder_no\": data.get(no_key)}\n\n\n# ───────────────────────────────────────────── GitHub Gist (앱과 공유하는 상태)\nclass Gist:\n    def __init__(self, token, gist_id):\n        self.h = {\"Authorization\": \"Bearer \" + token, \"Accept\": \"application/vnd.github+json\"}\n        self.id = gist_id\n\n    def files(self) -> dict:\n        st, g = http(\"GET\", f\"https://api.github.com/gists/{self.id}\", self.h)\n        if st != 200:\n            raise RuntimeError(f\"Gist 읽기 실패 HTTP {st} — MUHAN_TOKEN·GIST_ID 확인\")\n        return {k: (v.get(\"content\") or \"\") for k, v in (g.get(\"files\") or {}).items()}\n\n    def write(self, name, obj):\n        st, _ = http(\"PATCH\", f\"https://api.github.com/gists/{self.id}\", self.h,\n                     body={\"files\": {name: {\"content\": json.dumps(obj, ensure_ascii=False, indent=1)}}})\n        if st != 200:\n            log(f\"⚠ 상태 기록 실패 HTTP {st}\")\n\n\n\n# ───────────────────────────────────────────── ② 검수\nclass Checks:\n    def __init__(self):\n        self.items, self.block_buy, self.block_sell = [], [], []\n\n    def ok(self, msg):\n        self.items.append({\"ok\": True, \"msg\": msg})\n\n    def warn(self, msg):\n        self.items.append({\"ok\": None, \"msg\": msg})\n\n    def fail(self, msg, side=\"both\"):\n        self.items.append({\"ok\": False, \"msg\": msg})\n        if side in (\"both\", \"buy\"):\n            self.block_buy.append(msg)\n        if side in (\"both\", \"sell\"):\n            self.block_sell.append(msg)\n\n\n\ndef _cycle_doc(buys, sells):\n    bq, bc = sum(f[\"qty\"] for f in buys), sum(f[\"amt\"] for f in buys)\n    sq, sp = sum(f[\"qty\"] for f in sells), sum(f[\"amt\"] for f in sells)\n    avg = bc / bq if bq else 0.0\n    sell_avg = sp / sq if sq else 0.0\n    return {\"key\": \"api:\" + sells[-1][\"key\"], \"first_buy\": buys[0][\"date\"] if buys else sells[0][\"date\"], \"sell_date\": sells[-1][\"date\"],\n            \"sell_price\": round(sell_avg, 4), \"qty\": sq, \"avg\": round(avg, 6), \"cost\": round(bc, 2), \"proceeds\": round(sp, 2),\n            \"profit\": round(sp - bc, 2), \"pct\": round((sell_avg / avg - 1) * 100, 4) if avg else 0.0, \"rounds\": len(buys),\n            \"buys\": [{\"key\": f[\"key\"], \"date\": f[\"date\"], \"qty\": f[\"qty\"], \"price\": f[\"price\"]} for f in buys],\n            \"sells\": [{\"key\": f[\"key\"], \"date\": f[\"date\"], \"qty\": f[\"qty\"], \"price\": f[\"price\"]} for f in sells]}\n\n\ndef reconstruct(fills: list, cur_qty: float) -> dict:\n    \"\"\"한 종목의 체결 목록 + 현재 보유수량 → 사이클 복원.\n    ① 현재 보유에서 체결을 거꾸로 되돌려 '보유 0'이 되는 지점을 찾는다(그 이후로는 음수가 되면 안 됨).\n    ② 그 지점부터 앞으로 걸으며 보유가 0으로 돌아오는 매도마다 사이클 1개를 닫는다(평균단가법).\n    ③ 마지막 0 지점 이후의 매수 = 지금 사이클의 '나의 매수 기록'. 부분 매도가 끼었으면 남은 수량·평단을 1건으로 합친다.\n    보유 0 지점을 못 찾으면(입고·액면분할·조회기간 밖 매수) complete=False → 앱은 자동으로 맞추지 않는다.\"\"\"\n    eps = 1e-6\n    n = len(fills)\n    before, pos = [0.0] * n, float(cur_qty)\n    for i in range(n - 1, -1, -1):\n        f = fills[i]\n        pos = pos - f[\"qty\"] if f[\"side\"] == \"buy\" else pos + f[\"qty\"]\n        before[i] = pos\n    suffix_min, m = [0.0] * n, float(\"inf\")\n    for i in range(n - 1, -1, -1):\n        m = min(m, before[i])\n        suffix_min[i] = m\n    start = next((i for i in range(n) if abs(before[i]) < eps and suffix_min[i] > -eps), None)\n    if start is None:\n        ok = n == 0 and cur_qty < eps\n        why = \"\" if ok else (\"체결내역에서 보유 0 시점을 찾지 못함 (입고·분할·조회기간 밖 매수)\" if n else \"보유 중이지만 체결내역이 없음\")\n        return {\"complete\": ok, \"why\": why, \"cycles\": [], \"current\": {\"records\": [], \"qty\": 0.0, \"avg\": 0.0, \"start\": \"\"}}\n    cycles, buys, sells, pos, cost = [], [], [], 0.0, 0.0\n    for f in fills[start:]:\n        if f[\"side\"] == \"buy\":\n            buys.append(f)\n            pos += f[\"qty\"]\n            cost += f[\"amt\"]\n        else:\n            avg = cost / pos if pos > eps else 0.0\n            sells.append(f)\n            pos -= f[\"qty\"]\n            cost -= f[\"qty\"] * avg\n            if pos < eps:\n                cycles.append(_cycle_doc(buys, sells))\n                buys, sells, pos, cost = [], [], 0.0, 0.0\n    recs = []\n    if buys:\n        if sells:                                      # 부분 매도 뒤 남은 몫을 1건으로 (수량·평단 보존)\n            last_sell = sells[-1]\n            kept = [f for f in buys if (f[\"date\"], f[\"ts\"], f[\"key\"]) > (last_sell[\"date\"], last_sell[\"ts\"], last_sell[\"key\"])]\n            kq = sum(f[\"qty\"] for f in kept)\n            kc = sum(f[\"amt\"] for f in kept)\n            rq, rc = pos - kq, cost - kc\n            if rq > eps:\n                recs.append({\"key\": \"rest:\" + last_sell[\"key\"], \"date\": last_sell[\"date\"], \"qty\": round(rq, 6),\n                             \"price\": round(rc / rq, 4), \"synthetic\": True})\n            buys_out = kept\n        else:\n            buys_out = buys\n        recs += [{\"key\": f[\"key\"], \"date\": f[\"date\"], \"qty\": f[\"qty\"], \"price\": f[\"price\"]} for f in buys_out]\n    return {\"complete\": True, \"why\": \"\", \"since\": fills[start][\"date\"] if n else \"\", \"cycles\": cycles,\n            \"current\": {\"records\": recs, \"qty\": round(pos, 6), \"avg\": round(cost / pos, 6) if pos > eps else 0.0,\n                        \"start\": buys[0][\"date\"] if buys else \"\"}}\n\n\n\n# ───────────────────────────────────────────── ① 앱 실행 → 오늘의 종가 주문 계획\ndef plan_from_app(page_url: str, token: str, gist_id: str, inject_bars=None, ctx_hook=None) -> dict:\n    \"\"\"앱을 그대로 띄워 동기화(기록·설정) → [시세 조회] → 화면과 같은 lastLocOrder 를 받는다.\n    inject_bars: 시세 파일(data/kodex.json)에 아직 없는 직전 거래일 봉을 메리츠 값으로 채워 넣는다(앱이 없는 날짜만 합침).\"\"\"\n    from playwright.sync_api import sync_playwright\n    boot = (\"try{localStorage.setItem('muhansync_token',\" + json.dumps(token) + \");\"\n            \"localStorage.setItem('muhansync_gist',\" + json.dumps(gist_id) + \");}catch(e){}\"\n            \"window.__MUHAN_BOT__=true;window.__BOT_BARS__=\" + json.dumps(inject_bars or []) + \";\")\n    with sync_playwright() as p:\n        b = p.chromium.launch()\n        ctx = b.new_context(timezone_id=\"Asia/Seoul\", locale=\"ko-KR\", service_workers=\"block\", viewport={\"width\": 412, \"height\": 900})\n        ctx.add_init_script(boot)\n        if ctx_hook:\n            ctx_hook(ctx)\n        page = ctx.new_page()\n        errors = []\n        page.on(\"pageerror\", lambda e: errors.append(str(e)))\n\n        def why():\n            try:\n                return page.evaluate(\"() => [typeof __syncErr!=='undefined'?__syncErr:'', (document.getElementById('errorBanner')||{}).textContent||''].join(' ').trim().slice(0,200)\")\n            except Exception:  # noqa: BLE001\n                return \"\"\n\n        def step(name, fn):\n            try:\n                return fn()\n            except Exception as e:  # noqa: BLE001\n                raise RuntimeError(f\"[{name}] {str(e).splitlines()[0][:120]} {why()} {'· 앱 오류: ' + errors[0][:120] if errors else ''}\".strip()) from None\n\n        url = page_url + (\"&\" if \"?\" in page_url else \"?\") + \"embed=api&bot=\" + str(int(time.time()))\n        step(\"앱 열기\", lambda: page.goto(url, wait_until=\"load\", timeout=60000))\n        if not page.evaluate(\"() => typeof syncMeta==='function' && typeof lastLocOrder!=='undefined'\"):\n            raise RuntimeError(f\"[앱 버전] {page_url} 이 자동주문 지원 버전(V0.3 이상)이 아닙니다 — kodex.html 을 새 버전으로 올리세요\")\n        step(\"기록 동기화\", lambda: page.wait_for_function(\"() => syncMeta().last>0 && !__syncBusy\", timeout=60000))\n        err = page.evaluate(\"() => __syncErr || ''\")\n        if err:\n            raise RuntimeError(\"[기록 동기화] \" + err)\n        t0 = page.evaluate(\"() => Date.now()\")\n        page.click(\"#fetchBtn\")\n        step(\"시세 조회·계산\", lambda: page.wait_for_function(f\"() => lastLocOrder && Date.parse(lastLocOrder.generated_at) >= {t0}\", timeout=120000))\n        page.wait_for_timeout(2500)\n        step(\"체결 기록 저장\", lambda: page.wait_for_function(\"() => !__syncBusy && !syncMeta().dirty\", timeout=60000))\n        page.wait_for_timeout(800)\n        plan = page.evaluate(\"() => JSON.parse(JSON.stringify(lastLocOrder))\")\n        banner = why()\n        b.close()\n    if errors:\n        log(\"  앱 스크립트 경고: \" + \" | \".join(errors[:3]))\n    plan[\"_banner\"] = banner\n    return plan\n\n\n# ───────────────────────────────────────────── ② 검수\ndef verify_plan(plan: dict, expect_basis: str, now_utc: dt.datetime, c: \"Checks\"):\n    \"\"\"V1 형식·신선도 · V2 같은 공식으로 재계산(앱 계산 오류·변조 차단).\"\"\"\n    if plan.get(\"schema\") != \"loc-order/1\" or str(plan.get(\"symbol\", \"\")).upper() != SYM:\n        c.fail(\"V1 계획 형식이 아닙니다\")\n        return\n    gen = dt.datetime.fromisoformat(str(plan[\"generated_at\"]).replace(\"Z\", \"+00:00\"))\n    age = (now_utc - gen).total_seconds() / 60\n    if not (-2 <= age <= 90):\n        c.fail(f\"V1 계획이 {age:.0f}분 전 것입니다\")\n    if plan.get(\"basis_close_date\") != expect_basis:\n        c.fail(f\"V1 기준 종가일 {plan.get('basis_close_date')} ≠ 직전 영업일 {expect_basis} (시세 미갱신)\")\n    else:\n        c.ok(f\"V1 계획 최신 · 기준 종가일 {expect_basis}\")\n    b = plan.get(\"bot\") or {}\n    if any(b.get(k) in (None, \"\") for k in (\"last_close\", \"sell_pct\", \"per_split\", \"qty_unit\")):\n        c.fail(\"V2 재계산 정보(bot)가 없습니다 — kodex.html 을 V0.3 이상으로 올리세요\")\n        return\n    last, pct, per, unit = float(b[\"last_close\"]), float(b[\"sell_pct\"]), float(b[\"per_split\"]), int(b[\"qty_unit\"])\n    avg = b.get(\"avg_exact\")\n    hold = int(plan.get(\"holding_qty\") or 0)\n    for o in plan.get(\"orders\") or []:\n        price, qty = float(o[\"price\"]), int(o[\"qty\"])\n        if qty < 1 or price != int(price) or not (100 <= price <= 10_000_000):\n            c.fail(f\"V2 {o.get('side')} 주문 형식 이상: {price} × {qty}\", o.get(\"side\"))\n            continue\n        if o[\"side\"] == \"buy\":\n            exp_p = floor_tick(min(float(avg), last)) if (avg and hold > 0) else floor_tick(last)\n            exp_q = (math.floor(per / exp_p) // unit) * unit\n            if price != exp_p or qty != exp_q:\n                c.fail(f\"V2 매수 재계산 불일치: 앱 {won(price)}×{qty} ≠ 검산 {won(exp_p)}×{exp_q}\", \"buy\")\n            elif price > last:\n                c.fail(f\"V2 매수가 {won(price)} > 전일 종가 {won(last)}\", \"buy\")\n            else:\n                c.ok(f\"V2 매수 검산 일치 {won(price)} × {qty} (전일종가 {won(last)}{f' · 평단 {float(avg):,.2f}' if avg else ''})\")\n        elif o[\"side\"] == \"sell\":\n            if not avg or hold <= 0:\n                c.fail(\"V2 보유 없음인데 매도 주문\", \"sell\")\n                continue\n            exp_p = ceil_tick(float(avg) * (1 + pct / 100))\n            if price != exp_p or qty != hold:\n                c.fail(f\"V2 매도 재계산 불일치: 앱 {won(price)}×{qty} ≠ 검산 {won(exp_p)}×{hold}\", \"sell\")\n            elif price <= float(avg):\n                c.fail(f\"V2 매도가 {won(price)} ≤ 평단 {float(avg):,.2f}\", \"sell\")\n            else:\n                c.ok(f\"V2 매도 검산 일치 {won(price)} × {qty} (평단 {float(avg):,.2f} × (1+{pct:g}%) 호가 올림)\")\n\n\ndef build_orders(plan: dict, sides: dict, acct: dict, c: \"Checks\") -> list:\n    \"\"\"☑매수·☑매도에 따라 최종 주문.\n    · 매수: 앱 계획에 있으면 그대로 · 규칙상 매수 없음이어도 ☑면 같은 공식(min(평단, 전일종가) 호가 내림 · 이번 회차 1분할 수량)\n    · 매도: 수량 = 계좌 보유 전량 · 가격 = 평단 × (1+익절%) 호가 올림 (앱 평단, 없으면 계좌 평단)\"\"\"\n    b = plan.get(\"bot\") or {}\n    last, pct, per, unit = float(b[\"last_close\"]), float(b[\"sell_pct\"]), float(b[\"per_split\"]), int(b[\"qty_unit\"])\n    avg_app = float(b[\"avg_exact\"]) if b.get(\"avg_exact\") else None\n    hold_app = int(plan.get(\"holding_qty\") or 0)\n    plan_by = {o[\"side\"]: o for o in plan.get(\"orders\") or []}\n    out = []\n    if sides.get(\"buy\"):\n        if \"buy\" in plan_by:\n            o = plan_by[\"buy\"]\n            out.append({\"side\": \"buy\", \"price\": int(o[\"price\"]), \"qty\": int(o[\"qty\"]), \"src\": \"앱 계획\"})\n        else:\n            price = floor_tick(min(avg_app, last)) if (avg_app and hold_app > 0) else floor_tick(last)\n            qty = (math.floor(per / price) // unit) * unit if price > 0 else 0\n            if qty >= 1:\n                out.append({\"side\": \"buy\", \"price\": price, \"qty\": int(qty), \"src\": f\"규칙상 대기({plan.get('stage', '')}) → ☑매수로 주문\"})\n                c.ok(f\"V2 매수(체크) 계산 {won(price)} × {qty} = min(평단, 전일종가 {won(last)}) · 1분할 {won(per)}\")\n            else:\n                c.warn(\"매수: 1분할 금액이 1주 가격보다 작아 매수 없음\")\n    if sides.get(\"sell\"):\n        q = int(math.floor(acct[\"qty\"] + 1e-9))\n        if q < 1:\n            c.warn(\"매도: 계좌 보유 0주 — 매도 없음\")\n        else:\n            basis, src = (avg_app, \"앱 평단\") if (avg_app and hold_app > 0) else (acct[\"avg\"], \"계좌 평단\")\n            if not basis:\n                c.fail(\"매도: 평단을 알 수 없어 매도가를 계산할 수 없습니다\", \"sell\")\n            else:\n                price = ceil_tick(basis * (1 + pct / 100))\n                out.append({\"side\": \"sell\", \"price\": price, \"qty\": q, \"src\": f\"계좌 보유 {q}주 전량 · {src} {basis:,.2f} × (1+{pct:g}%)\"})\n                c.ok(f\"V6 매도 = 계좌 보유 {q}주 전량 @ {won(price)} ({src} {basis:,.2f} × (1+{pct:g}%) 호가 올림)\")\n    return out\n\n\ndef side_rows(rows, side):\n    \"\"\"당일 주문 중 이 매매의 '살아 있거나 체결된' 원주문 (취소·거부 제외).\"\"\"\n    code = \"2\" if side == \"buy\" else \"1\"\n    return [r for r in rows if str(r.get(\"iscd\", \"\")).upper().endswith(CODE) and str(r.get(\"deal_cls_code\")) == code\n            and str(r.get(\"rctf_cncl_cls_code\", \"1\")) == \"1\" and str(r.get(\"oder_pros_stat_cls_code\", \"1\")) != \"3\"\n            and num(r.get(\"odqt\")) - num(r.get(\"cncl_qty\")) > 0]\n\n\ndef api_rows_any(rows, side):\n    \"\"\"오늘 Open API(채널 120)로 낸 이 매매의 원주문 — 취소된 것 포함. 사람이 취소한 주문을 예비 실행이 다시 내지 않도록.\"\"\"\n    code = \"2\" if side == \"buy\" else \"1\"\n    return [r for r in rows if str(r.get(\"iscd\", \"\")).upper().endswith(CODE) and str(r.get(\"deal_cls_code\")) == code\n            and str(r.get(\"rctf_cncl_cls_code\", \"1\")) == \"1\" and str(r.get(\"chan_type_cls_code\", \"\")) == \"120\"]\n\n\ndef same_order(r, o) -> bool:\n    return abs(num(r.get(\"odqt\")) - int(o[\"qty\"])) < 1e-6 and (o.get(\"cls\") == \"71\" or abs(num(r.get(\"oder_unpr\")) - int(o[\"price\"])) < 0.5)\n\n\n# ───────────────────────────────────────────── 장 시각\ndef hm_of(v) -> int | None:\n    s = \"\".join(ch for ch in str(v or \"\") if ch.isdigit())\n    if len(s) < 4 or s.startswith(\"0000\"):\n        return None\n    m = int(s[:2]) * 60 + int(s[2:4])\n    return m if 8 * 60 <= m <= 20 * 60 else None\n\n\ndef day_hours(api) -> dict:\n    h = {k: list(v) for k, v in DEFAULT_HOURS.items()}\n    try:\n        r = api.market_hours()\n        a0, a1 = hm_of(r.get(\"clpr_untp_begn_time\")), hm_of(r.get(\"clpr_untp_fin_time\"))\n        f0, f1 = hm_of(r.get(\"mkfa_ovtm_begn_time\")), hm_of(r.get(\"mkfa_ovtm_fin_time\"))\n        if a0 and a1 and a0 < a1:\n            h[\"auction\"] = [a0, a1]\n        if f0 and f1 and f0 < f1 and f0 >= h[\"auction\"][1]:\n            h[\"after\"] = [f0, f1]\n    except Exception as e:  # noqa: BLE001\n        log(f\"  장운영 조회 실패 → 기본 시각 사용: {e}\")\n    return h\n\n\ndef at_min(m: int, sec: int = 0) -> dt.datetime:\n    n = dt.datetime.now(KST)\n    return n.replace(hour=m // 60, minute=m % 60, second=sec, microsecond=0)\n\n\ndef hhmm(m: int) -> str:\n    return f\"{m // 60:02d}:{m % 60:02d}\"\n\n\ndef phase_now(h: dict) -> str:\n    n = dt.datetime.now(KST)\n    if n < at_min(h[\"auction\"][1]) - dt.timedelta(seconds=50):\n        return \"auction\"\n    if n < at_min(h[\"after\"][1]) - dt.timedelta(seconds=70):\n        return \"after\"\n    return \"late\"\n\n\ndef wait_until(t: dt.datetime, why: str):\n    n = dt.datetime.now(KST)\n    if t <= n:\n        return\n    log(f\"⏳ {t:%H:%M:%S} 까지 대기 ({why}, {int((t - n).total_seconds() // 60)}분)\")\n    while True:\n        left = (t - dt.datetime.now(KST)).total_seconds()\n        if left <= 0:\n            return\n        time.sleep(min(30.0, left))\n\n\n# ───────────────────────────────────────────── ⑥ 계좌 · 체결내역 → 사이클 복원\ndef parse_fill(r) -> dict | None:\n    if str(r.get(\"rctf_cncl_cls_code\", \"1\")) != \"1\" or not str(r.get(\"iscd\", \"\")).upper().endswith(CODE):\n        return None\n    q, p = num(r.get(\"total_cntg_qty\")), num(r.get(\"cntg_unpr\"))\n    if q <= 0 or p <= 0:\n        return None\n    ymd = str(r.get(\"oder_date\") or \"\")\n    try:\n        no = int(float(str(r.get(\"oder_no\") or 0)))\n    except ValueError:\n        no = 0\n    return {\"sym\": SYM, \"side\": \"sell\" if str(r.get(\"deal_cls_code\")) == \"1\" else \"buy\", \"qty\": q, \"price\": round(p, 4), \"amt\": round(q * p, 2),\n            \"date\": f\"{ymd[:4]}-{ymd[4:6]}-{ymd[6:8]}\", \"ts\": ymd + str(r.get(\"oder_pros_sta_time\") or \"\")[:6], \"key\": f\"{ymd}-{no:07d}\",\n            \"cls\": str(r.get(\"oder_cls_code\") or \"\")}\n\n\ndef collect_fills(api, prev: dict, today: dt.date) -> tuple[list, str]:\n    \"\"\"체결내역은 하루 단위 조회라, 지난번까지 읽은 날짜(fetched_through) 이후만 새로 읽고 나머지는 Gist 캐시를 쓴다.\n    처음에는 최근 400일을 한 번 훑는다(약 1~2분).\"\"\"\n    cache = {f[\"key\"]: f for f in (prev.get(\"fills\") or []) if isinstance(f, dict) and f.get(\"key\")}\n    thr = str(prev.get(\"fetched_through\") or \"\")\n    try:\n        start = dt.date.fromisoformat(thr) - dt.timedelta(days=5)\n    except ValueError:\n        start = today - dt.timedelta(days=400)\n    d, n = start, 0\n    while d <= today:\n        if d.weekday() < 5:\n            for r in api.orders_day(d.strftime(\"%Y%m%d\"), cntg=\"1\"):\n                f = parse_fill(r)\n                if f:\n                    cache[f[\"key\"]] = f\n            n += 1\n        d += dt.timedelta(days=1)\n    log(f\"  체결내역 {start}~{today} ({n}일 조회) · 누적 체결 {len(cache)}건\")\n    return sorted(cache.values(), key=lambda f: (f[\"date\"], f[\"ts\"], f[\"key\"])), today.isoformat()\n\n\ndef account_snapshot(api, gist, prev_bsdy: str, today_is_bsdy: bool) -> dict:\n    now = dt.datetime.now(KST)\n    try:\n        prev = json.loads(gist.files().get(ACCOUNT_FILE) or \"{}\")\n    except Exception:  # noqa: BLE001\n        prev = {}\n    holds = api.holdings()\n    fills, through = collect_fills(api, prev, now.date())\n    hl = []\n    for r in holds:\n        q = num(r.get(\"rmnd_qty\")) + num(r.get(\"rmnd_dqty\"))\n        if q <= 0:\n            continue\n        a, p = num(r.get(\"byng_unpr\")), num(r.get(\"psnt_prc\"))\n        val, cost = num(r.get(\"vltn_amt\")) or q * p, num(r.get(\"byng_amt\")) or q * a\n        code = str(r.get(\"iscd\", \"\")).upper().lstrip(\"AQ\")\n        hl.append({\"symbol\": SYM if code == CODE else code, \"code\": code, \"name\": str(r.get(\"isnm\") or \"\"), \"kind\": str(r.get(\"mksc_cls_name\") or \"\"),\n                   \"qty\": q, \"sellable\": math.floor(q + 1e-9), \"avg\": a, \"price\": p, \"value\": round(val), \"cost\": round(cost),\n                   \"pl\": round(num(r.get(\"vltn_prls_amt\")) if r.get(\"vltn_prls_amt\") not in (None, \"\") else val - cost),\n                   \"pl_pct\": num(r.get(\"ert\")) if r.get(\"ert\") not in (None, \"\") else ((p / a - 1) * 100 if a else 0.0)})\n    mine = [h for h in hl if h[\"symbol\"] == SYM]\n    q = sum(h[\"qty\"] for h in mine)\n    avg = (sum(h[\"cost\"] for h in mine) / q) if q else 0.0\n    price = mine[0][\"price\"] if mine else 0.0\n    try:\n        cash = api.orderable(price or num(api.price().get(\"stck_prpr\")))\n    except Exception as e:  # noqa: BLE001\n        cash = None\n        log(f\"  주문가능금액 조회 실패: {e}\")\n    rc = reconstruct([f for f in fills if f[\"sym\"] == SYM], q)\n    cur = rc[\"current\"]\n    if rc[\"complete\"] and q and cur[\"avg\"] and avg and abs(cur[\"avg\"] / avg - 1) > 0.002:\n        rc[\"note\"] = f\"체결 복원 평단 {cur['avg']:,.2f} · 계좌 평단 {avg:,.2f} (수수료 포함 여부 차이일 수 있음)\"\n    # 시간외 종가(~16:00)까지 끝난 뒤면 오늘까지, 아니면 직전 영업일까지 반영된 스냅숏\n    covered = now.date().isoformat() if (today_is_bsdy and now.hour * 60 + now.minute >= 16 * 60 + 5) else prev_bsdy\n    return {\"schema\": \"muhan-account-kr/1\", \"version\": VERSION, \"as_of\": now.isoformat(timespec=\"seconds\"), \"covered\": covered, \"et_date\": covered,\n            \"cash_krw\": cash, \"holdings\": hl, \"symbols\": {SYM: {\"qty\": q, \"avg\": round(avg, 4), \"price\": price, **rc, \"cycles\": rc[\"cycles\"][-60:]}},\n            \"fills_n\": len(fills), \"fills\": fills[-3000:], \"fetched_through\": through,\n            \"total\": {\"value\": sum(h[\"value\"] for h in hl), \"cost\": sum(h[\"cost\"] for h in hl), \"pl\": sum(h[\"pl\"] for h in hl)}}\n\n\ndef bsdy_info(api) -> tuple[str, str, bool]:\n    \"\"\"(오늘 YYYY-MM-DD, 직전 영업일 YYYY-MM-DD, 오늘이 영업일인가). 메리츠 영업일 조회 기준.\"\"\"\n    md = api.market_days()\n    iso = lambda s: f\"{s[:4]}-{s[4:6]}-{s[6:8]}\" if len(str(s)) >= 8 else \"\"   # noqa: E731\n    today = dt.datetime.now(KST).date().isoformat()\n    t, b = iso(str(md.get(\"tday_bsdy\", \"\"))), iso(str(md.get(\"bef_bsdy\", \"\")))\n    is_b = t == today\n    prev = b if is_b else (t if t and t < today else b)      # 휴장일이면 tday_bsdy 가 직전/다음 영업일일 수 있음\n    return today, prev, is_b\n\n\ndef account_sync(api, gist, prev_bsdy: str, is_b: bool) -> dict:\n    snap = account_snapshot(api, gist, prev_bsdy, is_b)\n    gist.write(ACCOUNT_FILE, snap)\n    v = snap[\"symbols\"][SYM]\n    log(f\"  계좌 {SYM} {v['qty']:g}주 @{v['avg']:,.2f} · 사이클 {len(v['cycles'])}건 · 이번 사이클 매수 {len(v['current']['records'])}건\"\n        + (\"\" if v[\"complete\"] else f\" · ⚠ 자동 맞춤 안 함: {v['why']}\"))\n    return snap\n\n\n# ───────────────────────────────────────────── 실행\ndef run() -> int:\n    t_start = time.time()\n    trigger = os.environ.get(\"RUN_TRIGGER\", \"schedule\")\n    force_mode = (os.environ.get(\"RUN_MODE\") or \"config\").strip()\n    gist = Gist(os.environ[\"MUHAN_TOKEN\"], os.environ[\"GIST_ID\"])\n    if force_mode == \"account\":\n        return run_account(gist)\n    files = gist.files()\n    try:\n        cfg = {**DEFAULT_CONFIG, **json.loads(files.get(CONFIG_FILE) or \"{}\")}\n    except ValueError:\n        cfg = dict(DEFAULT_CONFIG)\n    mode = cfg.get(\"mode\") if cfg.get(\"mode\") in (\"live\", \"off\") else \"off\"\n    if force_mode in (\"config\", \"\") and mode == \"off\" and trigger == \"schedule\":\n        log(f\"{VERSION} · 자동 실행 꺼짐 — 아무것도 하지 않음\")\n        return 0\n    if force_mode == \"live\":\n        mode = \"live\"\n    elif force_mode == \"check\":\n        mode = \"check\"\n    try:\n        prev = json.loads(files.get(STATUS_FILE) or \"{}\")\n    except ValueError:\n        prev = {}\n    status = {\"schema\": \"muhan-bot-status/1\", \"market\": \"KR\", \"version\": VERSION, \"run_at\": dt.datetime.now(KST).isoformat(timespec=\"seconds\"),\n              \"et_date\": dt.datetime.now(KST).date().isoformat(), \"mode\": mode, \"trigger\": trigger, \"results\": {}, \"overall\": \"ok\"}\n    log(f\"{VERSION} · 모드 {mode} · {dt.datetime.now(KST):%Y-%m-%d %H:%M} KST · {trigger}\")\n    written = {\"v\": False}\n\n    def running(note):\n        written[\"v\"] = True\n        gist.write(STATUS_FILE, {**status, \"overall\": \"running\", \"note\": note, \"history\": (prev.get(\"history\") or [])[-60:]})\n\n    def finish(overall, note=\"\"):\n        status[\"overall\"], status[\"note\"] = overall, note\n        status[\"elapsed_sec\"] = round(time.time() - t_start)\n        hist = (prev.get(\"history\") or [])[-119:]\n        hist.append({\"at\": status[\"run_at\"], \"mode\": mode, \"overall\": overall, \"trig\": trigger,\n                     \"r\": {s: v.get(\"summary\", \"\") for s, v in status[\"results\"].items()}, \"note\": note,\n                     \"o\": {s: [{k: o.get(k) for k in (\"side\", \"price\", \"qty\", \"state\", \"how\", \"oder_no\", \"why\")} for o in v.get(\"orders\", [])]\n                           for s, v in status[\"results\"].items() if v.get(\"orders\")}})\n        status[\"history\"] = hist\n        gist.write(STATUS_FILE, status)\n        summary_md(status)\n        notify(status)\n        return 2 if overall in (\"blocked\", \"error\") else 0\n\n    def work():\n        if mode == \"check\":\n            running(\"연결 점검 중… (30초)\")\n            return run_check(cfg, status, finish)\n        api = Meritz(os.environ.get(\"MERITZ_APP_KEY\", \"\"), os.environ.get(\"MERITZ_APP_SECRET\", \"\"))\n        try:\n            api.token()\n            today, basis, is_b = bsdy_info(api)\n        except MeritzError as e:\n            running(\"메리츠 연결 실패\")\n            return finish(\"error\", str(e))\n        if not is_b:\n            if trigger == \"schedule\":\n                log(f\"휴장일 {today} — 아무것도 하지 않음\")\n                return 0\n            running(\"휴장일 확인\")\n            return finish(\"closed\", f\"오늘({today})은 국내 휴장일입니다\")\n        h = day_hours(api)\n        ph = phase_now(h)\n        if ph == \"late\":\n            if trigger == \"schedule\":\n                log(\"오늘 주문 시간이 지났음 — 아무것도 하지 않음\")\n                return 0\n            running(\"시간 확인\")\n            return finish(\"skipped\", f\"오늘 주문 시간(종가 단일가 {hhmm(h['auction'][0])}~{hhmm(h['auction'][1])} · 시간외 종가 ~{hhmm(h['after'][1])})이 지났습니다\")\n        mins_to = (at_min(h[\"auction\"][0]) - dt.datetime.now(KST)).total_seconds() / 60\n        if trigger != \"schedule\" and mins_to > EARLY_LIMIT_MIN:\n            running(\"시간 확인\")\n            return finish(\"skipped\", f\"종가 주문은 {hhmm(h['auction'][0])} 종가 단일가에 접수됩니다 — {hhmm(h['auction'][0] - EARLY_LIMIT_MIN)} 이후에 누르거나 🟢 자동 실전에 맡기세요\")\n        sides_cfg = cfg.get(\"sides\") or {}\n        sides = {\"buy\": True, \"sell\": True, **(sides_cfg.get(SYM) or {})}\n        if not (cfg.get(\"symbols\") or {}).get(SYM, True):\n            sides = {\"buy\": False, \"sell\": False}\n        # 예비 실행: 켜진 매매가 모두 오늘 이미 접수돼 있으면 조용히 끝 (결과 기록도 그대로)\n        try:\n            rows0 = api.orders_day(today.replace(\"-\", \"\"))\n        except MeritzError:\n            rows0 = None\n        want = [s for s in (\"buy\", \"sell\") if sides[s]]\n        if rows0 is not None and want and all(side_rows(rows0, s) for s in want) and trigger == \"schedule\":\n            log(\"오늘 주문이 이미 모두 접수돼 있음 — 예비 실행 종료\")\n            return 0\n        how_txt = f\"종가 단일가 지정가 ({hhmm(h['auction'][0])}~{hhmm(h['auction'][1])})\" if ph == \"auction\" else f\"시간외 종가 ({hhmm(h['after'][0])}~{hhmm(h['after'][1])})\"\n        running(f\"GitHub에서 실행 중… 계획·검수 → {how_txt} 접수\")\n        status[\"session\"] = {\"date\": today, \"basis\": basis, \"phase\": ph, \"hours\": h}\n        log(f\"오늘 {today} · 기준 종가일 {basis} · {how_txt}\")\n        snap = None\n        try:\n            snap = account_sync(api, gist, basis, is_b)\n            status[\"account_sync\"] = {\"at\": snap[\"as_of\"], \"ok\": True}\n        except Exception as e:  # noqa: BLE001\n            log(f\"계좌·체결 동기화 실패(계획은 기존 기록으로 계속): {e}\")\n            status[\"account_sync\"] = {\"at\": dt.datetime.now(KST).isoformat(timespec=\"seconds\"), \"ok\": False, \"why\": str(e)[:200]}\n        res = {\"state\": \"\", \"summary\": \"\", \"orders\": [], \"checks\": [], \"sides\": sides}\n        status[\"results\"][SYM] = res\n        if not (sides[\"buy\"] or sides[\"sell\"]):\n            res.update(state=\"none\", summary=\"매수·매도 체크 해제\")\n            return finish(\"none\", \"매수·매도가 모두 체크 해제돼 있습니다\")\n        c = Checks()\n        try:\n            pr = api.price()\n        except MeritzError as e:\n            return finish(\"error\", f\"현재가 조회 실패: {e}\")\n        sdpr, mxpr, llam = num(pr.get(\"sdpr\")), num(pr.get(\"mxpr\")), num(pr.get(\"llam\"))\n        unit_tick = int(num(pr.get(\"aspr_unit\"))) or None\n        inject = []\n        try:\n            for r in api.candles():\n                if str(r.get(\"date\")) == basis.replace(\"-\", \"\"):\n                    inject = [[basis, num(r.get(\"oprc\")), num(r.get(\"hprc\")), num(r.get(\"lprc\")), sdpr or num(r.get(\"stck_clpr\"))]]\n        except MeritzError as e:\n            log(f\"  일봉 조회 실패(주입 생략): {e}\")\n        app_base = (cfg.get(\"app_base\") or os.environ.get(\"APP_BASE\") or \"\").rstrip(\"/\") + \"/\"\n        try:\n            plan = plan_from_app(app_base + APP_PAGES[SYM], os.environ[\"MUHAN_TOKEN\"], os.environ[\"GIST_ID\"], inject)\n        except Exception as e:  # noqa: BLE001\n            res.update(state=\"error\", summary=f\"앱 실행 실패: {str(e)[:200]}\")\n            return finish(\"blocked\", \"앱 실행 실패\")\n        res[\"plan\"] = {k: plan.get(k) for k in (\"basis_close_date\", \"stage\", \"avg_price\", \"holding_qty\", \"orders\", \"version\", \"bot\")}\n        verify_plan(plan, basis, dt.datetime.now(dt.timezone.utc), c)\n        mine = [x for x in ((snap or {}).get(\"holdings\") or []) if x.get(\"symbol\") == SYM]\n        if snap is None:\n            try:\n                rows = [r for r in api.holdings() if str(r.get(\"iscd\", \"\")).upper().endswith(CODE)]\n                q = sum(num(r.get(\"rmnd_qty\")) + num(r.get(\"rmnd_dqty\")) for r in rows)\n                mine = [{\"qty\": q, \"avg\": (sum(num(r.get(\"byng_amt\")) for r in rows) / q) if q else 0.0}]\n            except MeritzError as e:\n                c.fail(f\"V4 계좌 잔고 조회 실패 → 매도는 내지 않음: {e}\", \"sell\")\n        acct = {\"qty\": sum(x[\"qty\"] for x in mine), \"avg\": (sum(x[\"qty\"] * x[\"avg\"] for x in mine) / sum(x[\"qty\"] for x in mine)) if sum(x[\"qty\"] for x in mine) else 0.0}\n        status[\"account\"] = {SYM: acct}\n        hold_app = int(plan.get(\"holding_qty\") or 0)\n        if abs(acct[\"qty\"] - hold_app) > 1e-6:\n            c.warn(f\"V4 앱 기록 {hold_app}주 · 계좌 {acct['qty']:g}주 — 매도는 계좌 수량 기준\")\n        else:\n            c.ok(f\"V4 계좌 보유 {acct['qty']:g}주 = 앱 기록\")\n        last_close = float((plan.get(\"bot\") or {}).get(\"last_close\") or 0)\n        if sdpr and last_close:\n            diff = abs(sdpr / last_close - 1) * 100\n            (c.fail if diff > 0.3 else c.ok)(f\"V3 전일 종가 {'불일치' if diff > 0.3 else '대조 일치'}: 메리츠 기준가 {won(sdpr)} · 앱 {won(last_close)}\" + (f\" ({diff:.2f}%)\" if diff > 0.3 else \"\"))\n        else:\n            c.warn(\"V3 메리츠 기준가를 읽지 못해 대조 생략\")\n        orders = build_orders(plan, sides, acct, c) if not any(not x[\"ok\"] and \"V2 재계산 정보\" in x[\"msg\"] for x in c.items) else []\n        skip = {}\n        for o in orders:\n            t = unit_tick or tick_of(o[\"price\"])\n            if o[\"price\"] % t:\n                c.fail(f\"V9 {o['side']} 가격 {won(o['price'])} 이 호가단위 {t}원의 배수가 아님\", o[\"side\"])\n            if o[\"side\"] == \"buy\" and llam and o[\"price\"] < llam:\n                skip[\"buy\"] = f\"매수 지정가 {won(o['price'])} < 오늘 하한가 {won(llam)} — 오늘은 체결될 수 없어 내지 않음\"\n            if o[\"side\"] == \"sell\" and mxpr and o[\"price\"] > mxpr:\n                skip[\"sell\"] = f\"매도 지정가 {won(o['price'])} > 오늘 상한가 {won(mxpr)} — 오늘은 체결될 수 없어 내지 않음\"\n            if o[\"side\"] == \"buy\":\n                amt = o[\"price\"] * o[\"qty\"]\n                lim = float(cfg.get(\"max_order_krw\") or DEFAULT_CONFIG[\"max_order_krw\"])\n                if amt > lim:\n                    c.fail(f\"V7 매수 {won(amt)} > 1건 한도 {won(lim)}\", \"buy\")\n                try:\n                    cash = api.orderable(o[\"price\"])\n                    if cash is not None:\n                        (c.ok if cash + 1e-6 >= amt else lambda m: c.fail(m, \"buy\"))(f\"V5 주문가능 {won(cash)} {'≥' if cash + 1e-6 >= amt else '<'} 매수 {won(amt)}\")\n                except MeritzError as e:\n                    c.warn(f\"V5 주문가능금액 조회 실패: {e}\")\n        try:\n            rsv = api.reserved_live()\n        except MeritzError as e:\n            rsv = None\n            c.warn(f\"V8 예약주문 조회 실패: {e}\")\n        res[\"checks\"] = c.items\n        if not orders:\n            res.update(state=\"none\", summary=\"주문 없음 · \" + str(plan.get(\"stage\", \"\")))\n            if c.block_buy or c.block_sell:\n                res[\"state\"] = \"blocked\"\n                res[\"summary\"] += \" · ⚠ \" + (c.block_buy + c.block_sell)[0]\n            return finish(\"blocked\" if res[\"state\"] == \"blocked\" else \"none\", res[\"summary\"])\n\n        # ── 주문 시각까지 대기 → 직전 재확인 → 접수\n        ph = phase_now(h)\n        close_now = None\n        if ph == \"auction\":\n            wait_until(at_min(h[\"auction\"][0], 15), \"종가 단일가 시작\")\n        elif ph == \"after\":\n            wait_until(at_min(h[\"auction\"][1], 70), \"정규장 종가 확정\")\n            try:\n                close_now = num(api.price().get(\"stck_prpr\"))\n            except MeritzError as e:\n                return finish(\"error\", f\"오늘 종가 조회 실패: {e}\")\n            wait_until(at_min(h[\"after\"][0], 10), \"장후 시간외 종가 시작\")\n        else:\n            return finish(\"skipped\", \"주문 시간이 지났습니다\")\n        try:\n            rows = api.orders_day(today.replace(\"-\", \"\"))\n        except MeritzError as e:\n            rows = None\n            c.fail(f\"V8 당일 주문내역 조회 실패: {e}\")\n        any_block = False\n        for o in orders:\n            side, kr = o[\"side\"], (\"매수\" if o[\"side\"] == \"buy\" else \"매도\")\n            how = \"종가 단일가 지정가\" if ph == \"auction\" else \"시간외 종가\"\n            item = {\"side\": side, \"price\": o[\"price\"], \"qty\": o[\"qty\"], \"state\": \"\", \"why\": \"\", \"src\": o.get(\"src\", \"\"), \"how\": how}\n            res[\"orders\"].append(item)\n            blocks = c.block_buy if side == \"buy\" else c.block_sell\n            if blocks:\n                item.update(state=\"blocked\", why=blocks[0])\n                any_block = True\n                continue\n            if side in skip:\n                item.update(state=\"skip\", why=skip[side])\n                continue\n            if rows is None:\n                item.update(state=\"blocked\", why=\"당일 주문내역을 못 읽어 중복 확인 불가\")\n                any_block = True\n                continue\n            ex = side_rows(rows, side)\n            if not ex and api_rows_any(rows, side):\n                item.update(state=\"exists\", why=\"오늘 이 매매를 이미 Open API로 냈다가 취소됨 — 다시 내지 않음 (MTS에서 직접)\")\n                continue\n            if ex:\n                if any(same_order(r, o) for r in ex):\n                    item.update(state=\"exists\", why=\"같은 주문이 이미 접수돼 있음 — 다시 내지 않음\")\n                else:\n                    item.update(state=\"blocked\", why=\"같은 매매의 다른 주문이 오늘 이미 있음 — MTS에서 확인·취소 후 다시\")\n                    any_block = True\n                continue\n            if rsv and any(str(r.get(\"deal_cls_code\")) == (\"2\" if side == \"buy\" else \"1\") for r in rsv):\n                item.update(state=\"blocked\", why=\"오늘 실행될 예약주문이 이미 있음 — MTS에서 확인\")\n                any_block = True\n                continue\n            if side == \"sell\":                        # 직전 재확인: 보유 수량\n                try:\n                    rq = sum(num(r.get(\"rmnd_qty\")) + num(r.get(\"rmnd_dqty\")) for r in api.holdings() if str(r.get(\"iscd\", \"\")).upper().endswith(CODE))\n                    if rq + 1e-6 < o[\"qty\"]:\n                        item.update(state=\"blocked\", why=f\"직전 재확인: 보유 {rq:g}주 < 매도 {o['qty']}주\")\n                        any_block = True\n                        continue\n                except MeritzError as e:\n                    c.warn(f\"매도 직전 잔고 재확인 실패(시작 때 값 사용): {e}\")\n            if mode != \"live\":\n                item.update(state=\"dry\", why=\"주문 안 냄(점검)\")\n                continue\n            if ph == \"auction\":\n                if phase_now(h) != \"auction\":\n                    item.update(state=\"missed\", why=\"종가 단일가 시간이 지나 내지 않음 — 15:36 예비 실행이 시간외 종가로 처리\")\n                    continue\n                r = api.place(side, o[\"price\"], o[\"qty\"], \"01\")\n            else:\n                ok = (close_now <= o[\"price\"]) if side == \"buy\" else (close_now >= o[\"price\"])\n                if not ok:\n                    item.update(state=\"skip\", why=f\"오늘 종가 {won(close_now)} {'>' if side == 'buy' else '<'} 지정가 {won(o['price'])} — LOC 조건 불충족이라 내지 않음\")\n                    continue\n                o[\"cls\"], item[\"price\"] = \"71\", int(close_now)\n                r = api.place(side, int(close_now), o[\"qty\"], \"71\")\n                if not r[\"ok\"] and r.get(\"code\") not in (None, \"\", \"UNREACHABLE\") and not r.get(\"warn\"):\n                    r2 = api.place(side, 0, o[\"qty\"], \"71\")          # 단가 0 으로 한 번 더 (시간외 종가는 종가로만 체결)\n                    r = r2 if r2[\"ok\"] else {\"ok\": False, \"why\": f\"{r['why']} / 단가0: {r2['why']}\"}\n            if not r[\"ok\"]:\n                item.update(state=\"rejected\", why=r[\"why\"])\n                any_block = True\n                continue\n            item[\"oder_no\"] = r.get(\"oder_no\")\n            time.sleep(1.5)\n            try:\n                got = [x for x in api.orders_day(today.replace(\"-\", \"\")) if str(int(num(x.get(\"oder_no\")))) == str(int(num(r.get(\"oder_no\"))))]\n            except MeritzError as e:\n                got = []\n                item[\"why\"] = f\"대조 조회 실패: {e}\"\n            if got and same_order(got[0], o) and str(got[0].get(\"deal_cls_code\")) == (\"2\" if side == \"buy\" else \"1\"):\n                item.update(state=\"placed\", why=f\"{how} 접수 · 대조 일치 (주문번호 {r.get('oder_no')})\")\n            elif got:\n                cx = api.cancel(r.get(\"oder_no\"), o[\"qty\"])\n                item.update(state=\"cancelled\", why=f\"접수 내용 불일치 → 즉시 취소 {'성공' if cx['ok'] else '실패: ' + cx['why']}\")\n                any_block = True\n            else:\n                item.update(state=\"placed?\", why=f\"접수됨({r.get('oder_no')}) · 내역에서 아직 안 보임 — MTS에서 확인\")\n                any_block = True\n            log(f\"  {kr} {item['price']:,} × {o['qty']} → {item['state']} {item['why']}\")\n        icon = {\"placed\": \"✅\", \"exists\": \"☑\", \"dry\": \"◎\", \"blocked\": \"⛔\", \"rejected\": \"✖\", \"cancelled\": \"↩\", \"placed?\": \"❔\", \"skip\": \"·\", \"missed\": \"⏱\"}\n        res[\"summary\"] = \" · \".join(f\"{icon.get(i['state'], '')} {'매수' if i['side'] == 'buy' else '매도'} {i['price']:,}×{i['qty']}\" for i in res[\"orders\"])\n        res[\"state\"] = \"blocked\" if any_block else (\"done\" if any(i[\"state\"] in (\"placed\", \"exists\") for i in res[\"orders\"]) else \"none\")\n        overall = \"blocked\" if any_block else (\"done\" if res[\"state\"] == \"done\" else \"none\")\n        return finish(overall, f\"{today} · {how_txt if ph == 'auction' else '시간외 종가 (종가 ' + won(close_now) + ')'}\")\n\n    try:\n        return work()\n    except Exception as e:  # noqa: BLE001\n        log(f\"✖ 봇 오류: {e}\")\n        if not written[\"v\"]:\n            status[\"results\"] = {}\n        return finish(\"error\", f\"봇 오류: {str(e)[:300]}\")\n\n\ndef run_account(gist) -> int:\n    log(f\"{VERSION} · 💼 계좌·체결 동기화\")\n    try:\n        api = Meritz(os.environ.get(\"MERITZ_APP_KEY\", \"\"), os.environ.get(\"MERITZ_APP_SECRET\", \"\"))\n        _, basis, is_b = bsdy_info(api)\n        snap = account_sync(api, gist, basis, is_b)\n        log(f\"완료 · 체결 {snap['fills_n']}건 · 보유 {len(snap['holdings'])}종목 · 주문가능 {won(snap['cash_krw']) if snap['cash_krw'] is not None else '-'}\")\n        return 0\n    except Exception as e:  # noqa: BLE001\n        log(f\"✖ 계좌 동기화 실패: {e}\")\n        try:\n            prev = json.loads(gist.files().get(ACCOUNT_FILE) or \"{}\")\n        except Exception:  # noqa: BLE001\n            prev = {}\n        prev.update(schema=\"muhan-account-kr/1\", error=str(e)[:300], error_at=dt.datetime.now(KST).isoformat(timespec=\"seconds\"))\n        gist.write(ACCOUNT_FILE, prev)\n        return 2\n\n\ndef run_check(cfg, status, finish) -> int:\n    \"\"\"🔧 연결 점검 — 주문 없이 메리츠 국내 API·앱 주소를 하나씩 확인.\"\"\"\n    res = {\"state\": \"\", \"summary\": \"\", \"orders\": [], \"checks\": []}\n    status[\"results\"][\"연결 점검\"] = res\n    c = Checks()\n\n    def t(label, fn):\n        try:\n            c.ok(f\"{label} — {fn()}\")\n            return True\n        except Exception as e:  # noqa: BLE001\n            c.fail(f\"{label} — {e}\")\n            return False\n\n    api = None\n    try:\n        api = Meritz(os.environ.get(\"MERITZ_APP_KEY\", \"\"), os.environ.get(\"MERITZ_APP_SECRET\", \"\"))\n    except MeritzError as e:\n        c.fail(f\"① 앱키 — {e}\")\n    if api and t(\"① 토큰 발급\", lambda: (api.token(), f\"정상 · mac {api.mac}\")[1]):\n        def h():\n            rows = api.holdings()\n            mine = [r for r in rows if str(r.get(\"iscd\", \"\")).upper().endswith(CODE)]\n            q = sum(num(r.get(\"rmnd_qty\")) + num(r.get(\"rmnd_dqty\")) for r in mine)\n            status[\"account\"] = {SYM: {\"qty\": q, \"avg\": (sum(num(r.get(\"byng_amt\")) for r in mine) / q) if q else 0.0}}\n            return f\"국내 {len(rows)}종목 보유 · KODEX 반도체레버리지 {q:g}주\" + (f\" @{num(mine[0].get('byng_unpr')):,.0f}\" if mine else \"\")\n        t(\"② 국내 잔고\", h)\n        t(\"③ 주문가능금액\", lambda: (lambda v: won(v) if v is not None else \"응답 없음\")(api.orderable(num(api.price().get(\"sdpr\")) or 10000)))\n        t(\"④ 당일 주문내역\", lambda: f\"{len(api.orders_day(dt.datetime.now(KST).strftime('%Y%m%d')))}건\")\n\n        def d():\n            today, basis, is_b = bsdy_info(api)\n            hh = day_hours(api)\n            return f\"오늘 {today} {'영업일' if is_b else '휴장'} · 직전 영업일 {basis} · 종가 단일가 {hhmm(hh['auction'][0])}~{hhmm(hh['auction'][1])} · 시간외 종가 {hhmm(hh['after'][0])}~{hhmm(hh['after'][1])}\"\n        t(\"⑤ 영업일·장운영\", d)\n\n        def p():\n            r = api.price()\n            return f\"현재가 {won(num(r.get('stck_prpr')))} · 기준가(전일 종가) {won(num(r.get('sdpr')))} · 호가단위 {num(r.get('aspr_unit')):g}원 · 상한 {won(num(r.get('mxpr')))} · 하한 {won(num(r.get('llam')))}\"\n        t(\"⑥ 494310 시세\", p)\n    base = (cfg.get(\"app_base\") or os.environ.get(\"APP_BASE\") or \"\").rstrip(\"/\") + \"/\"\n\n    def app():\n        st, txt = http(\"GET\", base + \"kodex.html?t=\" + str(int(time.time())))\n        if st != 200 or not isinstance(txt, str):\n            raise RuntimeError(f\"{base}kodex.html 응답 {st}\")\n        import re as _re\n        v = _re.search(r'const APP_VERSION = \"(V[\\d.]+)\"', txt)\n        if \"lastLocOrder\" not in txt or \"bot: {\" not in txt or \"__BOT_BARS__\" not in txt:\n            raise RuntimeError(f\"앱 {v.group(1) if v else '?'} 은 국내 자동주문 미지원 — kodex.html 을 V0.3 이상으로\")\n        return f\"{base} · K반도체레버리지 AI분석 {v.group(1) if v else '?'}\"\n    t(\"⑦ 앱 주소\", app)\n    res[\"checks\"] = c.items\n    n = sum(1 for x in c.items if x[\"ok\"])\n    res[\"summary\"] = f\"{n}/{len(c.items)} 통과\"\n    res[\"state\"] = \"ok\" if n == len(c.items) else \"blocked\"\n    return finish(\"checked\" if n == len(c.items) else \"error\",\n                  \"모든 연결 정상 — 🟢 자동 실전을 켜거나 ⚡ 지금 실전 주문\" if n == len(c.items) else \"⛔ 항목의 안내대로 고친 뒤 다시 점검하세요\")\n\n\ndef summary_md(st):\n    path = os.environ.get(\"GITHUB_STEP_SUMMARY\")\n    lines = [f\"## 🤖 무한매수 국내 자동주문 · {st['mode']} · {st['overall']}\", f\"{st['run_at']} (KST) · {st.get('note', '')}\", \"\"]\n    for sym, r in st[\"results\"].items():\n        lines.append(f\"### {sym} — {r.get('summary', '')}\")\n        for o in r.get(\"orders\", []):\n            lines.append(f\"- {'매수' if o['side'] == 'buy' else '매도'} {o.get('how', '')} {o['price']:,}원 × {o['qty']} → **{o['state']}** {o.get('why', '')}\")\n        for ch in r.get(\"checks\", []):\n            lines.append(f\"  - {'✅' if ch['ok'] else ('⚠️' if ch['ok'] is None else '⛔')} {ch['msg']}\")\n    text = \"\\n\".join(lines)\n    print(text)\n    if path:\n        with open(path, \"a\", encoding=\"utf-8\") as f:\n            f.write(text + \"\\n\")\n\n\ndef notify(st):\n    topic = os.environ.get(\"NTFY_TOPIC\", \"\").strip()\n    if not topic:\n        return\n    title = {\"none\": \"국내 주문 없음\", \"checked\": \"🔧 국내 연결 점검 통과\", \"done\": \"✅ 국내 종가 주문 접수\", \"blocked\": \"⛔ 국내 자동주문 확인 필요\",\n             \"error\": \"✖ 국내 자동주문 오류\", \"closed\": \"국내 휴장\", \"skipped\": \"국내 주문 시간 밖\"}.get(st[\"overall\"], st[\"overall\"])\n    body = \"\\n\".join(f\"{s}: {r.get('summary', '')}\" for s, r in st[\"results\"].items()) or st.get(\"note\", \"\")\n    try:\n        http(\"POST\", \"https://ntfy.sh/\", body={\"topic\": topic, \"title\": title, \"message\": body[:900],\n                                               \"priority\": 4 if st[\"overall\"] in (\"blocked\", \"error\") else 3}, timeout=10)\n    except Exception as e:  # noqa: BLE001\n        log(f\"알림 실패: {e}\")\n\n\nif __name__ == \"__main__\":\n    try:\n        sys.exit(run())\n    except Exception as e:  # noqa: BLE001\n        log(f\"✖ 오류: {e}\")\n        sys.exit(9)\n"], [".github/workflows/muhan-bot-kr.yml", "# 무한매수 국내 종가 자동주문 봇 — 메리츠증권 Open API (국내주식) · MUHANBOT-KR V1.0 (261015)\n# 이 파일은 무한매수 허브 ‘메리츠 자동주문(국내)’ 앱의 [봇 설치] 버튼이 비공개 저장소 muhan-bot-kr 의 .github/workflows/ 에 자동으로 넣습니다.\n#\n# 대상: KODEX 반도체레버리지(494310). 한국에는 LOC 가 없어 15:20~15:30 종가 단일가에 지정가로 주문합니다(= LOC 와 같은 결과).\n# 실행 시각(평일, 한국): 14:45 시작 → 계획·검수를 끝내고 15:20 까지 기다렸다 접수\n#   · 예비 14:57 · 15:09 (GitHub 예약 실행이 늦거나 빠질 때) — 이미 낸 주문은 다시 내지 않음\n#   · 15:36 마지막 예비: 종가 단일가를 놓쳤으면 장후 시간외 종가(15:40~16:00)로, 오늘 종가가 LOC 조건에 맞을 때만\n#   · 16:12 계좌·체결 동기화 — 그날 체결을 앱의 매수 기록·사이클 기록에 반영\n#   · 국내 휴장일은 메리츠 영업일 조회로 자동으로 건너뜁니다.\n# Secrets (앱이 자동 등록): MERITZ_APP_KEY · MERITZ_APP_SECRET (국내 주문 계좌) · MUHAN_TOKEN · GIST_ID · APP_BASE · (선택) NTFY_TOPIC\nname: 무한매수 국내 자동주문\n\non:\n  schedule:\n    - cron: \"45 5 * * 1-5\"    # 한국 14:45 시작 → 15:20 종가 단일가 접수\n    - cron: \"57 5 * * 1-5\"    # 예비 14:57\n    - cron: \"9 6 * * 1-5\"     # 예비 15:09\n    - cron: \"36 6 * * 1-5\"    # 예비 15:36 → 놓쳤으면 시간외 종가\n    - cron: \"12 7 * * 1-5\"    # 16:12 계좌·체결 동기화\n  workflow_dispatch:\n    inputs:\n      mode:\n        description: \"live = 지금 실전 주문(15:20 종가 단일가에 접수) / check = 연결 점검(30초) / account = 계좌·체결 동기화 / config = 앱 모드\"\n        required: false\n        default: \"check\"\n        type: choice\n        options: [live, check, account, config]\n\npermissions:\n  contents: write    # 60일 무활동 시 GitHub가 예약 실행을 멈추지 않도록 빈 커밋(keepalive)용\n\nconcurrency:\n  group: muhan-bot-kr\n  cancel-in-progress: false\n\njobs:\n  order:\n    runs-on: ubuntu-latest\n    timeout-minutes: 85\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-python@v5\n        with:\n          python-version: \"3.12\"\n      - name: 앱 실행 도구 설치 (Playwright · Chromium)\n        if: ${{ !(github.event_name == 'workflow_dispatch' && (inputs.mode == 'check' || inputs.mode == 'account')) && github.event.schedule != '12 7 * * 1-5' }}\n        run: |\n          pip install --quiet playwright==1.47.0\n          python -m playwright install --with-deps chromium\n      - name: 예약 실행 유지 (50일마다 빈 커밋)\n        run: |\n          last=$(git log -1 --format=%ct); now=$(date +%s)\n          if [ $((now-last)) -gt 4320000 ]; then\n            git config user.name muhan-bot; git config user.email muhan-bot@users.noreply.github.com\n            git commit --allow-empty -m \"keepalive (예약 실행 유지)\" && git push || true\n          fi\n      - name: 검수 → 주문 → 대조 → 보고\n        env:\n          MERITZ_APP_KEY: ${{ secrets.MERITZ_APP_KEY }}\n          MERITZ_APP_SECRET: ${{ secrets.MERITZ_APP_SECRET }}\n          MUHAN_TOKEN: ${{ secrets.MUHAN_TOKEN }}\n          GIST_ID: ${{ secrets.GIST_ID }}\n          APP_BASE: ${{ secrets.APP_BASE }}\n          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}\n          RUN_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || (github.event.schedule == '12 7 * * 1-5' && 'account' || 'config') }}\n          RUN_TRIGGER: ${{ github.event_name }}\n        run: python muhan_bot_kr.py\n"], ["README.md", "# 🤖 무한매수 국내 종가 자동주문 봇 · MUHANBOT-KR V1.0 (261015)\n\n메리츠증권 Open API(국내주식)로 **KODEX 반도체레버리지(494310)** 무한매수의 오늘 주문을 매일 자동 접수하는 비공개 봇입니다.\n이 저장소는 무한매수 허브 **‘메리츠 자동주문(국내)’** 앱의 **[봇 설치]** 가 만들었고, 앱이 새 버전이면 실행 전에 자동으로 업데이트합니다. 설정은 앱에서 바꾸세요.\n\n## LOC 대신 종가 단일가\n한국 시장에는 LOC가 없습니다. 봇은 **15:20~15:30 종가 단일가** 시간에 **지정가(01 · KRX)** 로 주문합니다.\n15:30 종가가 매수 지정가 이하(매도는 이상)면 **그 종가로** 체결되므로 LOC와 결과가 같습니다.\n종가 단일가를 놓친 경우에만 **장후 시간외 종가(71, 15:40~16:00)** 로, 오늘 종가가 LOC 조건에 맞을 때만 종가로 주문합니다.\n\n## 매일 하는 일 (평일 · 국내 휴장일 자동 건너뜀)\n| 한국 시각 | 하는 일 |\n|---|---|\n| 14:45 | 계좌·체결 동기화 → 앱(kodex.html)을 클라우드에서 열어 오늘 주문 계산 → 검수 → **15:20까지 대기 → 접수 → 대조** |\n| 14:57 · 15:09 | 예비 실행 (GitHub 예약이 늦거나 빠질 때) — 이미 낸 주문은 다시 내지 않음 |\n| 15:36 | 마지막 예비 — 종가 단일가를 놓쳤으면 시간외 종가(조건 맞을 때만) |\n| 16:12 | 💼 계좌·체결 동기화만 — 앱의 매수 기록·사이클 기록 자동 반영 |\n\n장 시각은 실행 때 메리츠 **국내 장운영 조회**로 그날 실제 시각을 읽습니다(수능일 등 변경 자동 반영).\n\n## 검수\nV1 계획 최신(직전 영업일 종가) · V2 같은 공식 재계산(호가단위 5원) · V3 메리츠 기준가 ↔ 앱 종가 · V4 계좌 보유 ↔ 앱 기록 · V5 주문가능금액 · V6 매도 = 보유 전량 · V7 매수 1건 한도 · V8 같은 날 같은 매매 중복 방지(MTS·예약주문 포함) · V9 호가단위·상하한가\n\n## Secrets (앱이 자동 등록)\n`MERITZ_APP_KEY` · `MERITZ_APP_SECRET` (국내 주문 계좌 — 해외 봇과 다른 계좌 가능) · `MUHAN_TOKEN` · `GIST_ID` · `APP_BASE` · (선택) `NTFY_TOPIC`\n\n## 멈추고 싶을 때\n허브 ‘메리츠 자동주문(국내)’ **[⏸ 끄기]** · 또는 이 저장소 Actions → 워크플로 → **Disable workflow**\n\n> 이 저장소는 반드시 **Private** 로 두세요. 수수료·세금은 반영하지 않으며, 투자 판단과 결과의 책임은 본인에게 있습니다.\n"]];
+const SYMS = ["KODEX"];
+
+/* ── 동기화(무한매수 앱과 같은 토큰·Gist — 같은 사이트라 자동 공유) */
+const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+const syncTok = () => lsGet("muhansync_token") || "";
+const syncGist = () => lsGet("muhansync_gist") || "";
+const syncDevice = () => (/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent) ? "모바일" : "PC") + "·국내API앱";
+const SYNC_DESC = "muhan-sync (무한매수 기록 동기화 · 지우지 마세요)";
+async function gh(path, opt) {
+  opt = opt || {};
+  const headers = { Authorization: "Bearer " + syncTok(), Accept: "application/vnd.github+json" };
+  if (opt.body) headers["Content-Type"] = "application/json";
+  let r;
+  try { r = await fetch("https://api.github.com" + path, { method: opt.method || "GET", headers, body: opt.body, cache: "no-store" }); }
+  catch (e) { throw new Error("인터넷 연결 없음"); }
+  if (r.status === 401) throw new Error("GitHub 토큰이 틀렸거나 만료됐습니다");
+  if (r.status === 403 || r.status === 404) throw new Error("토큰 권한 또는 동기화 Gist 확인 필요 (" + r.status + ")");
+  if (!r.ok) throw new Error("GitHub 응답 오류 " + r.status);
+  return r.json();
+}
+const BOT = { cfg: null, status: null, acct: null, acctOpen: false, cfgFile: "muhan-bot-kr.json", statusFile: "muhan-bot-kr-status.json", acctFile: "muhan-account-kr.json", busy: "", msg: "", msgOk: true, liveArm: 0, modeArm: 0, poll: 0 };
+const BOT_DEFAULT = { mode: "off", symbols: { KODEX: true }, sides: { KODEX: { buy: true, sell: true } }, max_order_krw: 10000000, repo: "muhan-bot-kr" };
+const botCfg = () => { const c = Object.assign({}, BOT_DEFAULT, BOT.cfg || {}); c.sides = Object.assign({}, BOT_DEFAULT.sides, c.sides || {}); return c; };
+function botLoadFromGist(g) {
+  try { const f = g.files && g.files[BOT.cfgFile]; if (f && f.content) BOT.cfg = JSON.parse(f.content); } catch (e) {}
+  try { const f = g.files && g.files[BOT.statusFile]; if (f && f.content) BOT.status = JSON.parse(f.content); } catch (e) {}
+  try { const f = g.files && g.files[BOT.acctFile]; if (f && f.content) { BOT.acct = JSON.parse(f.content); lsSet("muhan_account_kr_v1", f.content); } } catch (e) {}
+  render();
+}
+let __loading = false;
+async function syncNow() {
+  if (!syncTok() || !syncGist() || __loading) return;
+  __loading = true;
+  try { botLoadFromGist(await gh("/gists/" + syncGist())); } catch (e) { BOT.msg = "⚠ " + e.message; BOT.msgOk = false; render(); }
+  finally { __loading = false; }
+}
+
+/* GitHub API — 실패해도 throw 하지 않고 상태코드를 돌려준다 (권한 안내를 정확히 하기 위해) */
+async function botApi(path, opt) {
+  opt = opt || {};
+  const headers = { Authorization: "Bearer " + syncTok(), Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" };
+  if (opt.body) headers["Content-Type"] = "application/json";
+  let r;
+  try { r = await fetch("https://api.github.com" + path, { method: opt.method || "GET", headers, body: opt.body ? JSON.stringify(opt.body) : undefined, cache: "no-store" }); }
+  catch (e) { return { status: 0, data: null, headers: new Headers() }; }
+  let data = null;
+  try { data = r.status === 204 ? null : await r.json(); } catch (e) {}
+  return { status: r.status, data, headers: r.headers };
+}
+function botNeed(res, what) {
+  if (res.status === 0) throw new Error("인터넷 연결을 확인하세요");
+  if (res.status === 401) throw new Error("GitHub 토큰이 만료됐습니다 — 위 ☁️ 동기화에서 새 토큰으로 다시 연결하세요");
+  if (res.status === 403 || res.status === 404) throw new Error(`${what}: 권한이 없습니다(${res.status}). 토큰에 repo · workflow 권한을 추가하세요 (설명 탭 ‘🤖 자동주문’ 참고)`);
+  if (res.status >= 300) throw new Error(`${what}: GitHub 오류 ${res.status} ${(res.data && res.data.message) || ""}`);
+  return res.data;
+}
+const botB64 = bytes => { let s = ""; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(s); };
+const botUnB64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+
+/* BLAKE2b(RFC 7693) — 봉인 상자 nonce 계산용 (libsodium crypto_box_seal 호환 검증 완료) */
+const BOT_B2 = (() => {
+  const IV = [0xf3bcc908,0x6a09e667,0x84caa73b,0xbb67ae85,0xfe94f82b,0x3c6ef372,0x5f1d36f1,0xa54ff53a,0xade682d1,0x510e527f,0x2b3e6c1f,0x9b05688c,0xfb41bd6b,0x1f83d9ab,0x137e2179,0x5be0cd19];
+  const S = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,14,10,4,8,9,15,13,6,1,12,0,2,11,7,5,3,11,8,12,0,5,2,15,13,10,14,3,6,7,1,9,4,7,9,3,1,13,12,11,14,2,6,5,10,4,0,15,8,9,0,5,7,2,4,10,15,14,1,11,12,6,8,3,13,2,12,6,10,0,11,8,3,4,13,7,5,15,14,1,9,12,5,1,15,14,13,4,10,0,7,6,3,9,2,8,11,13,11,7,14,12,1,3,9,5,0,15,4,8,6,2,10,6,15,14,9,11,3,0,8,12,2,13,7,1,4,10,5,10,2,8,4,7,6,1,5,15,11,9,14,3,12,13,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,14,10,4,8,9,15,13,6,1,12,0,2,11,7,5,3].map(x => x * 2);
+  const v = new Uint32Array(32), m = new Uint32Array(32);
+  function add64(a, i, j) { const lo = a[i] + a[j]; let hi = a[i + 1] + a[j + 1]; if (lo >= 0x100000000) hi++; a[i] = lo; a[i + 1] = hi; }
+  function add64c(a, i, b0, b1) { let lo = a[i] + b0; if (b0 < 0) lo += 0x100000000; let hi = a[i + 1] + b1; if (lo >= 0x100000000) hi++; a[i] = lo; a[i + 1] = hi; }
+  function g(a, b, c, d, ix, iy) {
+    const x0 = m[ix], x1 = m[ix + 1], y0 = m[iy], y1 = m[iy + 1];
+    add64(v, a, b); add64c(v, a, x0, x1);
+    let xo = v[d] ^ v[a], xh = v[d + 1] ^ v[a + 1]; v[d] = xh; v[d + 1] = xo;
+    add64(v, c, d);
+    xo = v[b] ^ v[c]; xh = v[b + 1] ^ v[c + 1]; v[b] = (xo >>> 24) ^ (xh << 8); v[b + 1] = (xh >>> 24) ^ (xo << 8);
+    add64(v, a, b); add64c(v, a, y0, y1);
+    xo = v[d] ^ v[a]; xh = v[d + 1] ^ v[a + 1]; v[d] = (xo >>> 16) ^ (xh << 16); v[d + 1] = (xh >>> 16) ^ (xo << 16);
+    add64(v, c, d);
+    xo = v[b] ^ v[c]; xh = v[b + 1] ^ v[c + 1]; v[b] = (xh >>> 31) ^ (xo << 1); v[b + 1] = (xo >>> 31) ^ (xh << 1);
+  }
+  function compress(ctx, last) {
+    for (let i = 0; i < 16; i++) { v[i] = ctx.h[i]; v[i + 16] = IV[i]; }
+    v[24] ^= ctx.t; v[25] ^= ctx.t / 0x100000000;
+    if (last) { v[28] = ~v[28]; v[29] = ~v[29]; }
+    for (let i = 0; i < 32; i++) m[i] = ctx.b[4 * i] ^ (ctx.b[4 * i + 1] << 8) ^ (ctx.b[4 * i + 2] << 16) ^ (ctx.b[4 * i + 3] << 24);
+    for (let i = 0; i < 12; i++) {
+      const s = S.slice(i * 16, i * 16 + 16);
+      g(0, 8, 16, 24, s[0], s[1]); g(2, 10, 18, 26, s[2], s[3]); g(4, 12, 20, 28, s[4], s[5]); g(6, 14, 22, 30, s[6], s[7]);
+      g(0, 10, 20, 30, s[8], s[9]); g(2, 12, 22, 24, s[10], s[11]); g(4, 14, 16, 26, s[12], s[13]); g(6, 8, 18, 28, s[14], s[15]);
+    }
+    for (let i = 0; i < 16; i++) ctx.h[i] = ctx.h[i] ^ v[i] ^ v[i + 16];
+  }
+  return function (input, outlen) {
+    const ctx = { b: new Uint8Array(128), h: new Uint32Array(16), t: 0, c: 0 };
+    for (let i = 0; i < 16; i++) ctx.h[i] = IV[i];
+    ctx.h[0] ^= 0x01010000 ^ outlen;
+    for (let i = 0; i < input.length; i++) { if (ctx.c === 128) { ctx.t += ctx.c; compress(ctx, false); ctx.c = 0; } ctx.b[ctx.c++] = input[i]; }
+    ctx.t += ctx.c; while (ctx.c < 128) ctx.b[ctx.c++] = 0; compress(ctx, true);
+    const out = new Uint8Array(outlen);
+    for (let i = 0; i < outlen; i++) out[i] = ctx.h[i >> 2] >> (8 * (i & 3));
+    return out;
+  };
+})();
+function botSeal(pkB64, text) {           // libsodium crypto_box_seal: epk ‖ box(m, blake2b(epk‖pk), pk, esk)
+  const nacl = window.nacl, pk = botUnB64(pkB64), e = nacl.box.keyPair();
+  const nin = new Uint8Array(64); nin.set(e.publicKey); nin.set(pk, 32);
+  const c = nacl.box(new TextEncoder().encode(text), BOT_B2(nin, 24), pk, e.secretKey);
+  const out = new Uint8Array(32 + c.length); out.set(e.publicKey); out.set(c, 32);
+  return botB64(out);
+}
+async function botRepoInfo() {
+  const me = botNeed(await botApi("/user"), "계정 확인");
+  return { owner: me.login, repo: botCfg().repo || "muhan-bot-kr" };
+}
+async function botPutSecrets(owner, repo, pairs) {
+  const pk = botNeed(await botApi(`/repos/${owner}/${repo}/actions/secrets/public-key`), "금고 공개키");
+  for (const [name, value] of pairs) {
+    botNeed(await botApi(`/repos/${owner}/${repo}/actions/secrets/${name}`, { method: "PUT", body: { encrypted_value: botSeal(pk.key, value), key_id: pk.key_id } }), name + " 저장");
+  }
+}
+async function botSaveCfg(patch) {
+  const g = await gh("/gists/" + syncGist());
+  let cur = {};
+  try { const f = g.files && g.files[BOT.cfgFile]; if (f && f.content) cur = JSON.parse(f.content); } catch (e) {}
+  const next = Object.assign({}, BOT_DEFAULT, cur, patch, { updated: new Date().toISOString(), by: syncDevice() });
+  await gh("/gists/" + syncGist(), { method: "PATCH", body: JSON.stringify({ files: { [BOT.cfgFile]: { content: JSON.stringify(next, null, 1) } } }) });
+  BOT.cfg = next;
+  try { const f = g.files && g.files[BOT.statusFile]; if (f && f.content) BOT.status = JSON.parse(f.content); } catch (e) {}
+}
+async function botTask(name, fn) {
+  if (BOT.busy) return;
+  BOT.busy = name; BOT.msg = ""; botRender();
+  try { const m = await fn(); BOT.msg = m || ""; BOT.msgOk = true; }
+  catch (e) { BOT.msg = "⚠ " + e.message; BOT.msgOk = false; }
+  finally { BOT.busy = ""; botRender(); }
+}
+
+/* ① 봇 설치/업데이트: 비공개 저장소 생성 → 봇 파일 3개 → 금고(Secrets)에 동기화 토큰·Gist·앱 주소 */
+function botInstall() { return botTask("install", () => botInstallCore()); }
+async function botInstallCore(auto) {
+  {
+    const { owner, repo } = await botRepoInfo();
+    let info = await botApi(`/repos/${owner}/${repo}`);
+    if (info.status === 404) {
+      botNeed(await botApi("/user/repos", { method: "POST", body: { name: repo, private: true, auto_init: true, description: "무한매수 국내 종가 자동주문 봇 (비공개 · 메리츠 Open API · KODEX 반도체레버리지)" } }), "비공개 저장소 만들기");
+      await new Promise(r => setTimeout(r, 2500));
+      info = await botApi(`/repos/${owner}/${repo}`);
+    }
+    const r = botNeed(info, "저장소 확인");
+    if (!r.private) throw new Error(`${owner}/${repo} 가 공개 저장소입니다. 실행 기록에 계좌 내용이 보이므로 GitHub에서 Private 로 바꾼 뒤 다시 누르세요`);
+    const branch = r.default_branch || "main";
+    let changed = 0;
+    if (!BOT_FILES.length) throw new Error("이 앱에 봇 파일이 없습니다 — 앱을 새 버전으로 올리세요");
+    for (const [path, text0] of BOT_FILES) {
+      const text = typeof botFileText === "function" ? botFileText(path, text0) : text0;
+      const content = botB64(new TextEncoder().encode(text));
+      const cur = await botApi(`/repos/${owner}/${repo}/contents/${path}?ref=${branch}`);
+      if (cur.status === 200 && cur.data && String(cur.data.content || "").replace(/\n/g, "") === content) continue;
+      botNeed(await botApi(`/repos/${owner}/${repo}/contents/${path}`, { method: "PUT", body: {
+        message: `${BOT_VERSION} 설치 (${syncDevice()})`, content, branch, ...(cur.status === 200 && cur.data ? { sha: cur.data.sha } : {}) } }),
+        path.startsWith(".github") ? "실행 일정(workflow) 파일 저장 — 토큰에 workflow 권한 필요" : path + " 저장");
+      changed++;
+    }
+    await botPutSecrets(owner, repo, [["MUHAN_TOKEN", syncTok()], ["GIST_ID", syncGist()], ["APP_BASE", location.href.replace(/[?#].*$/, "").replace(/[^/]*$/, "")]]);
+    await botSaveCfg({ owner, repo, installed_at: new Date().toISOString(), bot_version: BOT_VERSION, bot_sched: typeof botSchedKey === "function" ? botSchedKey() : "", app_base: location.href.replace(/[?#].*$/, "").replace(/[^/]*$/, "") });
+    if (auto) return changed;
+    return `✅ 봇 ${changed ? "설치·업데이트" : "확인"} 완료 · ${BOT_VERSION.split(" ")[1]} · ${owner}/${repo} (비공개)` + (botCfg().keys ? "" : " · 다음: ② 앱키 등록");
+  }
+}
+/* 실행 직전: 금고에 있는 봇이 이 앱과 같은 버전인지 확인하고, 아니면 자동 업데이트 */
+async function botEnsureLatest() {
+  const c = botCfg();
+  if (c.bot_version === BOT_VERSION && (typeof botSchedKey !== "function" || c.bot_sched === botSchedKey())) return 0;
+  return botInstallCore(true);
+}
+
+
+/* ── ② 앱키 · 알림 · 옵션 */
+function botSaveKeys() {
+  const k = document.getElementById("botKey"), s = document.getElementById("botSecret");
+  const key = (k.value || "").trim(), sec = (s.value || "").trim();
+  if (key.length < 8 || sec.length < 8) { BOT.msg = "⚠ App Key와 App Secret을 모두 붙여넣으세요"; BOT.msgOk = false; render(); return; }
+  return botTask("keys", async () => {
+    const c = botCfg();
+    if (!c.installed_at) throw new Error("먼저 ① 봇 설치를 누르세요");
+    await botPutSecrets(c.owner, c.repo, [["MERITZ_APP_KEY", key], ["MERITZ_APP_SECRET", sec]]);
+    k.value = ""; s.value = "";
+    await botSaveCfg({ keys: { at: new Date().toISOString(), tail: key.slice(-4), device: syncDevice() } });
+    return "🔐 앱키를 GitHub 금고에 봉인 저장했습니다 (이 기기에는 남지 않음) · 다음: 🔧 연결 점검";
+  });
+}
+function botSaveNtfy() {
+  const t = (document.getElementById("botNtfy").value || "").trim();
+  if (t && !/^[A-Za-z0-9_-]{6,64}$/.test(t)) { BOT.msg = "⚠ 알림 주제는 영문·숫자·-·_ 6~64자"; BOT.msgOk = false; render(); return; }
+  return botTask("ntfy", async () => {
+    const c = botCfg();
+    if (!c.installed_at) throw new Error("먼저 ① 봇 설치를 누르세요");
+    await botPutSecrets(c.owner, c.repo, [["NTFY_TOPIC", t]]);
+    await botSaveCfg({ ntfy: t });
+    return t ? `🔔 알림 주제 저장 · ntfy 앱에서 ‘${t}’ 구독` : "🔕 알림을 껐습니다";
+  });
+}
+function botSetOpt(patch, msg) { return botTask("opt", async () => { await botSaveCfg(patch); return msg || "저장됨 · 모든 기기 공통"; }); }
+
+/* ── ③ 실행: check(연결 점검 30초) · dry(리허설) · live(⚡ 지금 실전 — 장 밖이면 다음 정규장 LOC 예약) */
+function botDispatch(kind) {
+  return botTask(kind, async () => {
+    const c = botCfg();
+    if (!c.installed_at) throw new Error("먼저 🛠 설정 탭에서 ① 봇 설치를 누르세요");
+    if (!c.keys) throw new Error("먼저 🛠 설정 탭에서 ② 앱키를 등록하세요");
+    const up = await botEnsureLatest();
+    const repo = botNeed(await botApi(`/repos/${c.owner}/${c.repo}`), "저장소 확인");
+    if (up) await new Promise(r => setTimeout(r, 1500));
+    let res;
+    for (let k = 0; k < 4; k++) {     // 봇을 막 업데이트했으면 GitHub가 새 실행 모드(account 등)를 알아보기까지 몇 초 걸린다
+      res = await botApi(`/repos/${c.owner}/${c.repo}/actions/workflows/muhan-bot-kr.yml/dispatches`, { method: "POST", body: { ref: repo.default_branch || "main", inputs: { mode: kind } } });
+      if (res.status !== 422) break;
+      await new Promise(r => setTimeout(r, 2500));
+    }
+    botNeed(res, "실행 요청 — 토큰에 workflow 권한 필요");
+    BOT.run = { status: "queued", at: new Date().toISOString(), url: `https://github.com/${c.owner}/${c.repo}/actions` };
+    botWatchRun();
+    const pre = up ? "🔄 봇을 " + BOT_VERSION.split(" ")[1] + "로 자동 업데이트 · " : "";
+    if (kind === "check") return pre + "🔧 연결 점검 요청 · 30초~1분 뒤 이 설정 탭에 결과가 뜹니다";
+    if (kind === "account") { BOT.acctReq = Date.now(); return pre + "💼 계좌·체결 조회 요청 · 20~40초 뒤 계좌 현황이 새로 뜹니다 (주문 없음)"; }
+    if (kind === "live") return pre + "⚡ 실전 주문 요청 · " + sessionInfo().how + " · 접수되면 결과가 뜹니다";
+    return pre + "요청됨";
+  });
+}
+function botLiveNow() {
+  const c = botCfg();
+  if (!c.installed_at || !c.keys) { BOT.msg = "⚠ 실전은 🛠 설정 탭의 ① 봇 설치 · ② 앱키 등록 뒤에 할 수 있습니다"; BOT.msgOk = false; render(); return; }
+  if (!SYMS.some(s => c.sides[s].buy || c.sides[s].sell)) { BOT.msg = "⚠ ☑매수·☑매도가 모두 해제돼 있습니다"; BOT.msgOk = false; render(); return; }
+  if (Date.now() - BOT.liveArm > 6000) { BOT.liveArm = Date.now(); BOT.msg = "⚡ 실제 계좌로 주문이 나갑니다. 위 ‘보낼 주문’을 확인하고 6초 안에 한 번 더 누르세요"; BOT.msgOk = false; render(); setTimeout(render, 6100); return; }
+  BOT.liveArm = 0;
+  return botDispatch("live");
+}
+function botSetMode(mode) {
+  const c = botCfg();
+  if (mode === "live") {
+    if (!c.installed_at || !c.keys) { BOT.msg = "⚠ 매일 실전은 🛠 설정 탭의 ① 봇 설치 · ② 앱키 등록 뒤에 켤 수 있습니다"; BOT.msgOk = false; render(); return; }
+    if (Date.now() - BOT.modeArm > 5000) { BOT.modeArm = Date.now(); BOT.msg = `🟢 자동 실전: 국내 영업일마다 15:20 종가 단일가에 실제 주문이 나갑니다. 5초 안에 한 번 더 누르세요`; BOT.msgOk = false; render(); return; }
+  }
+  return botTask("mode", async () => { await botSaveCfg({ mode }); return mode === "live" ? `🟢 자동 실전 켜짐 · 국내 영업일 15:20 종가 단일가` : "⏸ 자동 실행 꺼짐 (⚡ 지금 실전 주문은 그대로 사용 가능 · 14:10 이후)"; });
+}
+
+/* ── GitHub 실행 상태 (봇이 결과를 못 남겨도 멈춘 단계가 보인다) */
+async function botRunsRefresh() {
+  const c = botCfg();
+  if (!c.installed_at || !syncTok()) return;
+  const r = await botApi(`/repos/${c.owner}/${c.repo}/actions/runs?per_page=1`);
+  if (r.status !== 200 || !r.data || !(r.data.workflow_runs || []).length) { render(); return; }
+  const w = r.data.workflow_runs[0];
+  const run = { id: w.id, status: w.status, conclusion: w.conclusion, at: w.run_started_at || w.created_at, url: w.html_url, failStep: "" };
+  if (w.status === "completed" && w.conclusion && w.conclusion !== "success") {
+    const j = await botApi(`/repos/${c.owner}/${c.repo}/actions/runs/${w.id}/jobs`);
+    const job = j.data && (j.data.jobs || [])[0];
+    const st = job && (job.steps || []).find(x => x.conclusion === "failure");
+    run.failStep = st ? st.name : (job ? job.name : "");
+  }
+  const was = BOT.run && BOT.run.status;
+  BOT.run = run;
+  if (run.status === "completed" && was && was !== "completed") syncNow();
+  render();
+  return run;
+}
+function botWatchRun() {
+  BOT.poll = Date.now(); clearTimeout(BOT.pollT);
+  const tick = async () => {
+    if (Date.now() - BOT.poll > 10 * 60000) return;
+    let run = null;
+    try { run = await botRunsRefresh(); } catch (e) {}
+    if (!run || run.status !== "completed" || Date.now() - BOT.poll < 20000) BOT.pollT = setTimeout(tick, 8000);
+    else syncNow();
+  };
+  BOT.pollT = setTimeout(tick, 4000);
+}
+
+/* ── ⏰ 자동 실행 시각 (한국 시각 · Gist 영구 저장 → 봇 저장소 workflow 일정에 반영) */
+const RUN_DEFAULT = "00:10";
+const botTime = () => /^\d{2}:\d{2}$/.test(botCfg().run_kst || "") ? botCfg().run_kst : RUN_DEFAULT;
+function botCron(hhmm) {                 // 한국 HH:MM → GitHub cron(UTC). 미국 거래일(월~금 ET)에 맞는 한국 요일만
+  const [h, m] = hhmm.split(":").map(Number);
+  const kd = h >= 14 ? [1, 2, 3, 4, 5] : h < 13 ? [2, 3, 4, 5, 6] : [1, 2, 3, 4, 5, 6];   // 14시 이후 = 같은 날 · 13시 전 = 미국 전날
+  const ud = kd.map(d => (d - (h < 9 ? 1 : 0) + 7) % 7).sort((a, b) => a - b);
+  return `${m} ${(h + 15) % 24} * * ${ud.join(",")}`;
+}
+/* GitHub 예약 실행은 정각(:00·:30)에 몰려 늦거나 빠지기 쉽다 → 정각이면 7분 앞당기고, 30분·90분 뒤 재시도 2번 (같은 주문은 다시 안 냄) */
+function botCrons(hhmm) {
+  let [h, m] = hhmm.split(":").map(Number);
+  let t = h * 60 + m; if (m % 30 === 0) t = (t + 1440 - 7) % 1440;
+  const at = d => { const x = (t + d) % 1440; return `${String(Math.floor(x / 60)).padStart(2, "0")}:${String(x % 60).padStart(2, "0")}`; };
+  return [botCron(at(0)), botCron(at(30)), botCron(at(90))];
+}
+const botSchedKey = () => botTime() + "|" + botCrons(botTime()).join("|");
+function botFileText(path, text) {       // 설치 때 workflow 일정 블록만 바꿔 넣는다 (봇 파일 원본은 그대로)
+  if (!path.endsWith(".yml")) return text;
+  const cr = botCrons(botTime());
+  return text.replace(/(# @sched-begin[^\n]*\n)[\s\S]*?(\s*# @sched-end)/, `$1    - cron: "${cr[0]}"    # 한국 ${botTime()} (정각 피함)\n    - cron: "${cr[1]}"    # 재시도 +30분\n    - cron: "${cr[2]}"    # 재시도 +90분$2`);
+}
+function botSaveSchedule() {
+  const v = (document.getElementById("botTime").value || "").trim();
+  if (!/^\d{2}:\d{2}$/.test(v)) { BOT.msg = "⚠ 시각을 HH:MM으로 입력하세요"; BOT.msgOk = false; render(); return; }
+  return botTask("sched", async () => {
+    await botSaveCfg({ run_kst: v });
+    const c = botCfg();
+    if (c.installed_at) await botInstallCore(true);
+    return `⏰ 자동 실행 시각 한국 ${v} 저장 (모든 기기 · 영구)` + (c.installed_at ? ` · 봇 일정 반영 완료 (cron ${botCrons(v).join(" / ")} UTC)` : " · 봇 설치 때 반영");
+  });
+}
+
+/* ── 국내 장 시각 (화면 표시용 — 실제 주문 시각·휴장은 봇이 메리츠 영업일·장운영 조회로 확인) */
+const KRX_HOLIDAYS = ["2026-01-01","2026-02-16","2026-02-17","2026-02-18","2026-03-02","2026-05-01","2026-05-05","2026-05-25","2026-06-03","2026-08-17","2026-09-24","2026-09-25","2026-10-05","2026-10-09","2026-12-25","2026-12-31",
+  "2027-01-01","2027-02-08","2027-02-09","2027-03-01","2027-05-05","2027-05-13","2027-08-16","2027-09-14","2027-09-15","2027-09-16","2027-10-04","2027-10-11","2027-12-27","2027-12-31"];
+function kstParts(d) {
+  const p = Object.fromEntries(new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(d).map(x => [x.type, x.value]));
+  return { date: `${p.year}-${p.month}-${p.day}`, hm: +p.hour * 60 + +p.minute };
+}
+const isTD = ds => { const w = new Date(ds + "T12:00:00Z").getUTCDay(); return w > 0 && w < 6 && !KRX_HOLIDAYS.includes(ds); };
+const addDay = (ds, n) => { const d = new Date(ds + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+function sessionInfo() {
+  const { date, hm } = kstParts(new Date());
+  const nextTD = () => { let t = addDay(date, 1); while (!isTD(t)) t = addDay(t, 1); return t.slice(5).replace("-", "/"); };
+  if (!isTD(date)) return { regular: false, how: `휴장 → ${nextTD()} 15:20 종가 단일가 지정가` };
+  if (hm < 15 * 60 + 29) return { regular: true, how: hm < 15 * 60 + 20 ? "오늘 15:20~15:30 종가 단일가 지정가 (그때까지 기다렸다 접수)" : "지금 종가 단일가 중 → 바로 지정가 접수" };
+  if (hm < 15 * 60 + 59) return { regular: false, how: "종가 단일가 지남 → 15:40~16:00 시간외 종가 (오늘 종가가 조건에 맞을 때만)" };
+  return { regular: false, how: `오늘 주문 시간 지남 → ${nextTD()} 15:20 종가 단일가` };
+}
+function botNextRun() {                  // 다음 자동 실행(국내 영업일 14:45 시작 · 15:20 접수) — 화면 표시용
+  let { date, hm } = kstParts(new Date());
+  let d = (isTD(date) && hm < 15 * 60 + 20) ? date : addDay(date, 1);
+  while (!isTD(d)) d = addDay(d, 1);
+  return new Date(d + "T15:20:00+09:00");
+}
+
+/* ── 오늘의 LOC: 무한매수 앱을 이 화면 안에서 보이지 않게 실행 → lastLocOrder (봇과 같은 값) */
+const PLAN = { KODEX: { st: "idle" } };
+function computePlan(sym) {
+  return new Promise((resolve, reject) => {
+    const f = document.createElement("iframe");
+    f.className = "plan-frame"; f.setAttribute("aria-hidden", "true"); f.tabIndex = -1;
+    f.src = `${sym.toLowerCase()}.html?embed=api&t=${Date.now()}`;
+    const t0 = Date.now(); let clicked = 0, mark = 0;
+    const done = (err, val) => { try { f.remove(); } catch (e) {} err ? reject(err) : resolve(val); };
+    const tick = () => {
+      let w; try { w = f.contentWindow; } catch (e) {}
+      const ev = x => w.eval(x);
+      try {
+        if (Date.now() - t0 > 120000) {
+          let why = ""; try { why = ev("((document.getElementById('errorBanner')||{}).textContent||'').trim()"); } catch (e) {}
+          return done(new Error("시간 초과 " + why.slice(0, 120)));
+        }
+        if (w && !clicked) {
+          if (ev("typeof syncMeta==='function'") && !ev("typeof lastLocOrder!=='undefined'")) return done(new Error(`${sym} 앱이 자동주문 지원 버전이 아닙니다 — ${sym.toLowerCase()}.html 을 새 버전으로 올리세요`));
+          if (ev("typeof syncMeta==='function' && typeof lastLocOrder!=='undefined' && (!syncTok() || (syncMeta().last>0 && !__syncBusy))")) {
+            mark = ev("Date.now()"); clicked = Date.now(); w.document.getElementById("fetchBtn").click();
+          }
+        } else if (w && clicked && Date.now() - clicked > 2500 && ev(`!!lastLocOrder && Date.parse(lastLocOrder.generated_at) >= ${mark} && !__syncBusy && !syncMeta().dirty`)) {
+          return done(null, JSON.parse(ev("JSON.stringify(lastLocOrder)")));
+        }
+      } catch (e) {}
+      setTimeout(tick, 400);
+    };
+    f.addEventListener("load", () => setTimeout(tick, 300));
+    document.body.appendChild(f);
+  });
+}
+async function recalc() {
+  for (const s of SYMS) { PLAN[s] = { st: "busy" }; }
+  render();
+  for (const s of SYMS) {
+    try { PLAN[s] = { st: "ok", plan: await computePlan(s), at: Date.now() }; }
+    catch (e) { PLAN[s] = { st: "err", err: e.message }; }
+    render();
+  }
+}
+const tickOf = p => p < 2000 ? 1 : 5;   // KRX ETF 호가단위
+const floorCent = x => { const t = tickOf(x); return Math.floor(x / t + 1e-9) * t; }, ceilCent = x => { const t = tickOf(x); return Math.ceil(x / t - 1e-9) * t; };
+const usd = n => Math.round(Number(n)).toLocaleString("ko-KR") + "원";
+/* 봇과 같은 규칙으로 '보낼 주문'을 만든다 */
+function planOrders(sym) {
+  const P = PLAN[sym].plan; if (!P || !P.bot) return null;
+  const b = P.bot, c = botCfg(), side = c.sides[sym] || {};
+  const last = +b.last_close, pct = +b.sell_pct, per = +b.per_split, unit = +b.qty_unit, avgApp = b.avg_exact ? +b.avg_exact : null, holdApp = +P.holding_qty || 0;
+  const pb = (P.orders || []).find(o => o.side === "buy");
+  let buy;
+  if (pb) buy = { price: +pb.price, qty: +pb.qty, forced: false };
+  else { const price = (avgApp && holdApp > 0) ? floorCent(Math.min(avgApp, last)) : floorCent(last); buy = { price, qty: Math.floor(Math.floor(per / price) / unit) * unit, forced: true }; }
+  const acct = acctFor(sym);
+  const basis = (avgApp && holdApp > 0) ? avgApp : (acct && acct.avg) || null;
+  const sell = basis ? { price: ceilCent(basis * (1 + pct / 100)), qty: acct ? Math.floor(acct.sellable + 1e-9) : holdApp, fromAcct: !!acct, basisSrc: (avgApp && holdApp > 0) ? "앱 평단" : "계좌 평단", basis } : null;
+  return { P, b, buy, sell, side, acct, holdApp };
+}
+
+/* ── 💼 계좌 현황: 봇(account 모드)이 메리츠 잔고·체결을 읽어 Gist muhan-account.json 에 남긴 값 */
+function acctFor(sym) {           // 매도 수량 기준: 계좌 현황과 실행 기록 중 더 최근 것
+  const A = BOT.acct, st = BOT.status;
+  const a = A && A.holdings ? A : null;
+  const fromA = a ? (() => { const rows = a.holdings.filter(h => h.symbol === sym); const q = rows.reduce((x, h) => x + h.qty, 0);
+    return { qty: q, sellable: rows.reduce((x, h) => x + h.sellable, 0), avg: q ? rows.reduce((x, h) => x + h.qty * h.avg, 0) / q : 0, at: Date.parse(a.as_of) || 0 }; })() : null;
+  const fromS = st && st.account && st.account[sym] ? Object.assign({ at: Date.parse(st.run_at) || 0 }, st.account[sym]) : null;
+  if (fromA && (!fromS || fromA.at >= fromS.at)) return fromA;
+  return fromS;
+}
+const money = (n, d) => (n < 0 ? "-" : "") + Math.abs(+n).toLocaleString("ko-KR", { maximumFractionDigits: d === 4 ? 2 : 0 }) + "원";
+const sgn = n => (n >= 0 ? "+" : "-");
+function botAcct() {
+  const c = botCfg();
+  if (!c.installed_at || !c.keys) { BOT.acctOpen = true; BOT.msg = "⚠ 계좌 조회는 🛠 설정 탭의 ① 봇 설치 · ② 앱키 등록 뒤에 할 수 있습니다"; BOT.msgOk = false; render(); return; }
+  const fresh = BOT.acct && BOT.acct.as_of && Date.now() - Date.parse(BOT.acct.as_of) < 3 * 60000;
+  if (BOT.acctOpen && (fresh || BOT.busy === "account" || (BOT.acctReq && Date.now() - BOT.acctReq < 120000))) { BOT.acctOpen = false; render(); return; }
+  BOT.acctOpen = true; render();
+  if (!fresh && !(BOT.acctReq && Date.now() - BOT.acctReq < 120000)) return botDispatch("account");
+}
+function acctHtml() {
+  if (!BOT.acctOpen) return "";
+  const A = BOT.acct, waiting = BOT.busy === "account" || (BOT.acctReq && Date.now() - BOT.acctReq < 120000 && !(A && Date.parse(A.as_of) > BOT.acctReq - 5000));
+  const head = `<div class="acct-h"><b>💼 계좌 현황</b><span>${A && A.as_of ? when(A.as_of) + " 기준" : ""} ${waiting ? "· ⏳ 새로 읽는 중…" : `<button type="button" data-act="acctRefresh">↻ 새로 읽기</button>`}</span></div>`;
+  if (!A || !A.holdings) return `<div class="acct">${head}<div class="busy">${waiting ? "⏳ 메리츠 계좌를 읽는 중… (20~40초)" : "아직 계좌 정보가 없습니다 — ↻ 새로 읽기"}</div>${A && A.error ? `<div class="loc-sub warn">⚠ ${esc(A.error)}</div>` : ""}</div>`;
+  const rows = A.holdings.slice().sort((x, y) => (SYMS.indexOf(x.symbol) + 1 || 9) - (SYMS.indexOf(y.symbol) + 1 || 9) || y.value - x.value).map(h => {
+    const S = A.symbols && A.symbols[h.symbol], cls = h.pl >= 0 ? "up" : "dn";
+    const P = PLAN[h.symbol] && PLAN[h.symbol].plan, appQ = P ? +P.holding_qty || 0 : null;
+    const match = appQ === null ? "" : Math.abs(appQ - h.qty) < 1e-6 ? " · 앱 기록 일치 ✓" : ` · 앱 기록 ${appQ}주 ≠ 계좌`;
+    const cyc = S ? (S.complete ? ` · 이번 사이클 매수 ${(S.current.records || []).length}회 · 끝난 사이클 ${(S.cycles || []).length}건` : " · 체결 복원 보류") : "";
+    return `<div class="acct-row"><div class="ar-top"><span><b>${esc(h.symbol)}</b><span class="nm">${esc(h.name || "")}</span></span><span class="ar-pl ${cls}">${sgn(h.pl)}${money(Math.abs(h.pl))}<br><small>${sgn(h.pl_pct)}${Math.abs(h.pl_pct).toFixed(2)}%</small></span></div>
+      <div class="ar-grid"><div><span>보유</span><b>${(+h.qty).toLocaleString("en-US")}주</b></div><div><span>평단</span><b>${money(h.avg, 4)}</b></div><div><span>현재가</span><b>${money(h.price)}</b></div><div><span>평가금액</span><b>${money(h.value, 0)}</b></div></div>
+      <div class="ar-sub">매도가능 ${(+h.sellable).toLocaleString("en-US")}주 · 매수금액 ${money(h.cost, 0)}${match}${cyc}</div></div>`;
+  }).join("") || `<div class="busy">보유 종목이 없습니다.</div>`;
+  const T = A.total || { value: 0, cost: 0, pl: 0 }, tp = T.cost ? T.pl / T.cost * 100 : 0;
+  return `<div class="acct">${head}${rows}
+    <div class="acct-tot"><div><span>평가 합계</span><b>${money(T.value, 0)}</b></div><div><span>평가손익</span><b class="${T.pl >= 0 ? "up" : "dn"}">${sgn(T.pl)}${money(Math.abs(T.pl), 0)} (${sgn(tp)}${Math.abs(tp).toFixed(2)}%)</b></div><div><span>주문가능 금액</span><b>${A.cash_krw == null ? "-" : money(A.cash_krw)}</b></div></div>
+    ${A.error ? `<div class="loc-sub warn">⚠ 마지막 조회 실패(${when(A.error_at)}): ${esc(A.error)} — 위는 그 전 값</div>` : ""}
+    <div class="loc-sub">메리츠 잔고(보유·평단·현재가·평가손익)와 체결내역을 봇이 읽은 값 · 체결로 K반도체레버리지 앱의 매수 기록·사이클 기록이 자동으로 맞춰집니다 · 장 마감 뒤(16:12)에도 자동 갱신</div></div>`;
+}
+function statusHtml(st, c) {
+  const ov = BOT_OVERALL[st.overall] || ["", st.overall];
+  const rows = Object.entries(st.results || {}).map(([s, r]) => {
+    const orders = (r.orders || []).map(o => `<div class="bot-ord"><span>${o.side === "buy" ? "매수" : "매도"} ${esc(o.how || "종가")} ${Number(o.price).toLocaleString("ko-KR")}원 × ${o.qty}</span><b>${BOT_STATE[o.state] || esc(o.state)}</b><div class="bot-why">${esc(o.why)}${o.src ? " · " + esc(o.src) : ""}</div></div>`).join("");
+    const checks = (r.checks || []).map(x => `<li class="${x.ok ? "ok" : x.ok === null ? "warn" : "bad"}">${esc(x.msg)}</li>`).join("");
+    return `<div class="bot-sym"><div class="bot-sym-h"><b>${esc(s)}</b> ${esc(r.summary || "")}</div>${orders}${checks ? `<details><summary>검수 ${(r.checks || []).filter(x => x.ok).length}/${(r.checks || []).length} 통과 · 자세히</summary><ul class="bot-checks">${checks}</ul></details>` : ""}</div>`;
+  }).join("");
+  return `<div class="bot-last ${st.overall}"><div class="bot-last-h">${ov[0]} <b>${ov[1]}</b> · ${when(st.run_at)} · ${st.mode === "live" ? "실전" : st.mode === "dry" ? "리허설" : st.mode === "check" ? "연결 점검" : esc(st.mode)}</div>${st.note ? `<div class="bot-why">${esc(st.note)}</div>` : ""}${rows}
+    ${c.owner ? `<a href="https://github.com/${esc(c.owner)}/${esc(c.repo)}/actions" target="_blank" rel="noopener" style="display:block;margin-top:10px;font-size:12.5px;">GitHub 실행 기록 전체 보기 ↗</a>` : ""}</div>`;
+}
+
+/* ── 🧾 자동주문 결과 (봇이 실행마다 남기는 history: 날짜·시각·자동/수동·종목별 주문) */
+function resultHtml(st, c) {
+  if (!st) return `<div class="sync-state" style="margin:0;">아직 실행 기록이 없습니다.</div>`;
+  const hist = (st.history || []).filter(h => h.mode !== "check" && h.overall !== "running").slice().reverse();
+  const wk = ["일", "월", "화", "수", "목", "금", "토"];
+  let day = "", out = botRunBox();
+  hist.forEach(h => {
+    const d = new Date(h.at), ds = isNaN(d) ? "" : `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")} (${wk[d.getDay()]})`;
+    if (ds !== day) { day = ds; out += `<div class="rs-day">📅 ${ds}</div>`; }
+    const ov = BOT_OVERALL[h.overall] || ["", h.overall], bad = ["blocked", "error"].includes(h.overall);
+    const trig = h.trig === "schedule" ? "⏰ 자동" : h.trig ? "👆 수동" : "";
+    const orders = Object.entries(h.o || {}).map(([sym, os]) => os.map(o => `<div class="rs-o"><b>${esc(sym)}</b><span>${o.side === "buy" ? "매수" : "매도"} ${esc(o.how || "종가")} ${Number(o.price).toLocaleString("ko-KR")}원 × ${o.qty}</span><b>${BOT_STATE[o.state] || esc(o.state)}</b>${o.why ? `<div class="w">${esc(o.why)}</div>` : ""}</div>`).join("")).join("");
+    const summ = orders || Object.entries(h.r || {}).map(([k, v]) => `<div><b>${esc(k)}</b> ${esc(v)}</div>`).join("");
+    out += `<div class="rs ${bad ? "bad" : h.overall === "done" ? "ok" : ""}"><div class="rs-h"><span>${ov[0]} <b>${ov[1]}</b> ${trig}</span><i>${d.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</i></div>${summ || ""}${h.note ? `<div class="rs-o"><div class="w">${esc(h.note)}</div></div>` : ""}</div>`;
+  });
+  return out + (hist.length ? "" : `<div class="sync-state" style="margin:0;">자동주문 기록이 아직 없습니다.</div>`)
+    + (c.owner ? `<a href="https://github.com/${esc(c.owner)}/${esc(c.repo)}/actions" target="_blank" rel="noopener" style="display:block;margin-top:10px;font-size:12.5px;">GitHub 실행 기록 전체 보기 ↗</a>` : "");
+}
+
+/* ── 💾 백업 (KODEX · 예전 앱 백업도 복원) */
+const BK_PREFIX = ["kodex_", "muhan_account_kr", "muhansync_kodex_meta"];
+function bkCollect() {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (BK_PREFIX.some(p => k.startsWith(p))) data[k] = localStorage.getItem(k); }
+  return { schema: "dash-backup/2", app: "KODEX", version: API_VERSION, saved: new Date().toISOString(), data };
+}
+function backupInfoHtml() {
+  const n = k => { try { const a = JSON.parse(localStorage.getItem(k) || "[]"); return Array.isArray(a) ? a.length : 0; } catch (e) { return 0; } };
+  return `<div class="sync-state ok" style="margin:0;">KODEX 매수 ${n("kodex_buy_records_v1")}건 · 사이클 ${n("kodex_trades_v1")}건${syncGist() ? ` · ☁ Gist 동기화 켜짐 <a href="https://gist.github.com/${esc(syncGist())}" target="_blank" rel="noopener">보기 ↗</a>` : ""}</div>`;
+}
+function bkDownload() {
+  const b = bkCollect(), a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(b)], { type: "application/json" }));
+  a.download = `무한매수백업_${new Date().toISOString().slice(0, 10).replace(/-/g, "")}.json`; a.click();
+  BOT.msg = `💾 백업 파일 저장 · ${Object.keys(b.data).length}개 항목`; BOT.msgOk = true; render();
+}
+async function bkCopyText() {
+  const t = JSON.stringify(bkCollect()); document.getElementById("bkText").value = t;
+  try { await navigator.clipboard.writeText(t); BOT.msg = "📋 백업 복사 완료 — 새 기기에서 붙여넣고 [📥 복원]"; BOT.msgOk = true; }
+  catch (e) { BOT.msg = "자동 복사가 막혔습니다 — 아래 텍스트를 직접 복사하세요"; BOT.msgOk = false; }
+  render();
+}
+let __bkArm = 0;
+function bkRestore() {
+  let b; try { b = JSON.parse(document.getElementById("bkText").value.trim()); } catch (e) { BOT.msg = "⚠ 백업 텍스트 형식이 아닙니다"; BOT.msgOk = false; render(); return; }
+  if (!b || !/^dash-backup\/[12]$/.test(b.schema || "") || !b.data) { BOT.msg = "⚠ 백업 텍스트가 아닙니다"; BOT.msgOk = false; render(); return; }
+  const keys = Object.keys(b.data).filter(k => BK_PREFIX.some(p => k.startsWith(p)));
+  if (!keys.length) { BOT.msg = "⚠ 복원할 항목이 없습니다"; BOT.msgOk = false; render(); return; }
+  if (Date.now() - __bkArm > 5000) { __bkArm = Date.now(); BOT.msg = `⚠ ${b.app || ""} 백업(${keys.length}개 항목 · ${String(b.saved || "").slice(0, 10)})으로 덮어씁니다. 5초 안에 [📥 복원]을 한 번 더`; BOT.msgOk = false; render(); return; }
+  keys.forEach(k => localStorage.setItem(k, b.data[k]));
+  ["kodex"].forEach(a => { const mk = `muhansync_${a}_meta`; try { const m = JSON.parse(localStorage.getItem(mk) || "{}"); m.dirty = true; localStorage.setItem(mk, JSON.stringify(m)); } catch (e) {} });
+  BOT.msg = "✅ 복원 완료 · KODEX 탭을 열면 반영·동기화됩니다"; BOT.msgOk = true;
+  document.querySelectorAll(".app-frame").forEach(f => { if (f.src) f.src = f.dataset.src + "&t=" + Date.now(); });
+  render();
+}
+document.addEventListener("change", e => { if (e.target.id === "bkFile" && e.target.files[0]) e.target.files[0].text().then(t => { document.getElementById("bkText").value = t; BOT.msg = "📂 파일을 읽었습니다 — [📥 복원]을 누르세요"; BOT.msgOk = true; render(); }); });
+
+/* ── 화면 */
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const when = iso => { const d = new Date(iso); return isNaN(d) ? "-" : d.toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }); };
+const BOT_OVERALL = { running: ["⏳", "실행 중"], checked: ["🔧", "연결 점검 통과"], done: ["✅", "접수 완료"], dry: ["◎", "리허설 · 검수 통과"], blocked: ["⛔", "확인 필요"], error: ["✖", "오류"], closed: ["🌙", "미국 휴장"], off: ["⏸", "꺼짐"], skipped: ["⏱", "주문 시간 밖"], none: ["·", "주문 없음"] };
+const BOT_STATE = { skip: "· 조건 밖", missed: "⏱ 시간 지남", placed: "✅ 접수", exists: "☑ 이미 접수", dry: "◎ 리허설", blocked: "⛔ 차단", rejected: "✖ 거부", cancelled: "↩ 취소함", "placed?": "❔ 확인 필요" };
+function render() {
+  const connected = !!(syncTok() && syncGist()), c = botCfg(), dis = BOT.busy ? "disabled" : "";
+  const S = sessionInfo();
+  document.getElementById("sess").innerHTML = `🕒 지금 주문하면: <b>${S.how}</b>`;
+  document.getElementById("connect").innerHTML = connected ? "" : `<section class="card" style="--c:var(--amber);"><div class="card-head"><div class="card-icon">☁️</div><div><div class="card-kicker">CONNECT</div><h2>동기화 연결</h2></div></div>
+    <input class="sync-input" type="password" id="tok" placeholder="ghp_ 또는 github_pat_ 로 시작하는 토큰" autocomplete="off" spellcheck="false">
+    <button class="bk-btn" style="width:100%" type="button" data-act="connect">☁️ 연결</button>
+    <div class="hint">SOXL·TQQQ·K반도체레버리지 앱(💾 백업 탭)에서 동기화를 켰다면 같은 브라우저에서는 자동으로 연결됩니다. 토큰에는 gist · repo · workflow 권한이 필요합니다.</div></section>`;
+  ["cardPlan", "cardRun", "cardResult", "cardSetup", "cardBackup"].forEach(id => document.getElementById(id).hidden = !connected);
+  document.getElementById("tabbar").hidden = !connected;
+  if (!connected) { document.getElementById("msg").innerHTML = BOT.msg ? `<div class="sync-state ${BOT.msgOk ? "ok" : "err"}">${esc(BOT.msg)}</div>` : ""; return; }
+
+  /* 오늘의 LOC */
+  document.getElementById("plan").innerHTML = SYMS.map(sym => {
+    const st = PLAN[sym], sd = c.sides[sym] || {};
+    const chk = (k, lab) => `<label class="chk"><input type="checkbox" data-side="${sym}:${k}" ${sd[k] ? "checked" : ""} ${dis}>${lab}</label>`;
+    if (st.st !== "ok") return `<div class="sym"><div class="sym-h"><b>${sym}</b><span class="meta">${chk("buy", "매수")} ${chk("sell", "매도")}</span></div>
+      <div class="busy ${st.st === "err" ? "err" : ""}">${st.st === "busy" ? `⏳ ${sym} 앱 실행 중 · 시세 조회·계산…` : st.st === "err" ? "⚠ " + esc(st.err) : "↻ 다시 계산을 눌러 주세요"}</div></div>`;
+    const o = planOrders(sym);
+    if (!o) return `<div class="sym"><div class="sym-h"><b>${sym}</b></div><div class="busy err">⚠ 앱 계획에 자동주문 정보가 없습니다 — 앱을 새 버전으로 올리세요</div></div>`;
+    const buyOff = !sd.buy, sellOff = !sd.sell || !o.sell || o.sell.qty < 1;
+    const buyBox = `<div class="loc-box ${buyOff || o.buy.qty < 1 ? "off" : "buy"}"><div class="loc-top"><span class="loc-tag">매수 지정가 (종가)</span>${chk("buy", "매수")}</div>
+      <div class="loc-price">${usd(o.buy.price)}</div><div class="loc-qty">${o.buy.qty > 0 ? o.buy.qty.toLocaleString("en-US") + "주" : "수량 0"}</div>
+      <div class="loc-sub ${o.buy.forced && sd.buy ? "warn" : ""}">${o.buy.forced ? `규칙상 대기(${esc(o.P.stage)}) · ☑이면 이 값으로 주문` : esc(o.P.stage)}</div></div>`;
+    const sellQtyTxt = !o.sell ? "보유 없음" : o.sell.fromAcct ? `${o.sell.qty.toLocaleString("en-US")}주 (계좌 전량)` : `앱 기록 ${o.holdApp}주`;
+    const sellBox = `<div class="loc-box ${sellOff ? "off" : "sell"}"><div class="loc-top"><span class="loc-tag">매도 지정가 (익절)</span>${chk("sell", "매도")}</div>
+      <div class="loc-price">${o.sell ? usd(o.sell.price) : "--"}</div><div class="loc-qty">${sellQtyTxt}</div>
+      <div class="loc-sub">${o.sell ? `${o.sell.basisSrc} ${(+o.sell.basis).toLocaleString("ko-KR", { maximumFractionDigits: 2 })} × (1+${(+o.b.sell_pct).toFixed(2)}%) · 수량은 주문 직전 계좌에서 다시 확인` : "계좌·앱 모두 보유 없음"}</div></div>`;
+    const acctTxt = o.acct ? `계좌 ${(+o.acct.qty).toLocaleString("en-US")}주 · 앱 ${o.holdApp}주${o.b.records_src === "meritz" ? " (체결 자동)" : ""}` : `앱 ${o.holdApp}주 · 계좌는 💼 계좌 현황에서`;
+    return `<div class="sym"><div class="sym-h"><b>${sym}</b><span class="meta">전일 종가 ${o.P.basis_close_date} ${usd(o.b.last_close)}<br>${acctTxt}</span></div><div class="loc-grid">${buyBox}${sellBox}</div></div>`;
+  }).join("");
+
+  /* 실행 */
+  const live = c.mode === "live";
+  const seg = ["off", "live"].map(m => `<button type="button" class="${(live ? "live" : "off") === m ? "on m-" + m : ""}" data-mode="${m}" ${dis}>${{ off: "⏸ 끄기", live: "🟢 자동 실전" }[m]}</button>`).join("");
+  const lines = [];
+  SYMS.forEach(sym => {
+    const o = PLAN[sym].st === "ok" ? planOrders(sym) : null, sd = c.sides[sym] || {};
+    if (sd.buy) lines.push(`<div class="row"><span>${sym} 매수 종가지정가</span><b>${o ? usd(o.buy.price) + " × " + o.buy.qty + "주" : "계산 전"}</b></div>`);
+    if (sd.sell) lines.push(`<div class="row"><span>${sym} 매도 종가지정가</span><b>${o && o.sell ? usd(o.sell.price) + " × 계좌 전량" : "보유 시 계좌 전량"}</b></div>`);
+  });
+  const armed = Date.now() - BOT.liveArm < 6000, nx = botNextRun();
+  document.getElementById("run").innerHTML = `
+    <div class="seg two">${seg}</div>
+    <div class="sched"><span>국내 영업일 <b>14:45</b> 시작 → <b>15:20~15:30 종가 단일가</b> 접수 · 놓치면 15:40 시간외 종가</span></div>
+    <div class="sync-state" style="margin:0 0 10px;">${live ? `🟢 자동 실전 켜짐 · 다음 실행 <b>${nx ? when(nx.toISOString()) : "-"}</b> (예비 14:57 · 15:09 · 15:36 · 16:12 계좌 동기화) · 앱을 꺼 둬도 GitHub 클라우드에서 실행` : "⏸ 자동 실행 꺼짐 — 영업일이 와도 아무것도 하지 않습니다"}</div>
+    <button class="bk-btn live ${armed ? "armed" : ""}" style="width:100%" type="button" data-act="live" ${dis}>${BOT.busy === "live" ? "요청 중…" : armed ? "⚡ 한 번 더 누르면 실제 주문" : "⚡ 지금 실전 주문"}</button>
+    <div class="preview"><b>보낼 주문</b> · ${esc(S.how)}${lines.length ? lines.join("") : '<div class="row"><span>☑매수·☑매도가 모두 해제됨</span></div>'}</div>`;
+
+  /* 최근 실행 */
+  const st = BOT.status;
+  document.getElementById("result").innerHTML = resultHtml(st, c);
+  document.getElementById("acct").innerHTML = acctHtml();
+  const ab = document.getElementById("acctBtn"); ab.classList.toggle("on", BOT.acctOpen); ab.disabled = BOT.busy === "account";
+  ab.textContent = BOT.busy === "account" ? "💼 계좌 조회 요청 중…" : BOT.acctOpen ? "💼 계좌 현황 닫기" : "💼 계좌 현황 · 보유 종목 · 평단 · 평가손익";
+  document.getElementById("backup").innerHTML = backupInfoHtml();
+
+  /* 설정 */
+  const step = (n, ok, title, sub, inner) => `<div class="bot-step ${ok ? "ok" : ""}"><div class="bs-h"><span class="bs-n">${ok ? "✓" : n}</span><b>${title}</b><span class="bs-sub">${sub}</span></div>${inner || ""}</div>`;
+  document.getElementById("setup").innerHTML = `
+    ${step(1, !!c.installed_at, "봇 설치", c.installed_at ? `${esc(c.owner)}/${esc(c.repo)} 비공개 · ${esc((c.bot_version || "").split(" ")[1] || "")} · ${when(c.installed_at)}` : "내 GitHub에 비공개 저장소 muhan-bot-kr 생성 (해외 봇과 별도 · 토큰에 repo · workflow 권한)",
+      `<button class="bk-btn" style="width:100%" type="button" data-act="install" ${dis}>${BOT.busy === "install" ? "설치 중…" : c.installed_at ? "↻ 봇 업데이트" : "🤖 봇 설치"}</button>`)}
+    ${step(2, !!c.keys, "메리츠 앱키", c.keys ? `등록됨 · 끝 …${esc(c.keys.tail)} · ${when(c.keys.at)} ${esc(c.keys.device || "")}` : "국내 주문 계좌의 운영 앱키 (해외 자동주문과 다른 계좌 가능 · openapi.imeritz.com)",
+      `<input class="sync-input" type="password" id="botKey" placeholder="App Key" autocomplete="off" spellcheck="false">
+       <input class="sync-input" type="password" id="botSecret" placeholder="App Secret" autocomplete="off" spellcheck="false">
+       <button class="bk-btn" style="width:100%" type="button" data-act="keys" ${dis}>${BOT.busy === "keys" ? "암호화 저장 중…" : c.keys ? "🔐 새 앱키로 교체" : "🔐 GitHub 금고에 저장"}</button>`)}
+    ${step(3, true, "매수 1건 한도", `☑매수 강제 주문 포함 · 매도는 계좌 전량`, `<label class="opt">₩ <input type="number" id="botMax" min="100000" step="100000" inputmode="numeric" value="${c.max_order_krw || 10000000}" ${dis} style="width:140px;"></label>`)}
+    ${step(4, !!c.ntfy, "폰 알림 (선택)", c.ntfy ? `ntfy 주제 ‘${esc(c.ntfy)}’` : "ntfy 앱으로 결과 푸시",
+      `<div class="bk-row"><input class="sync-input" id="botNtfy" placeholder="예: muhan-${Math.random().toString(36).slice(2, 8)}" value="${esc(c.ntfy || "")}" autocomplete="off" spellcheck="false" style="margin:0;"><button class="bk-btn" type="button" data-act="ntfy" ${dis}>저장</button></div>`)}
+    ${step(5, st && st.mode === "check" && st.overall === "checked", "연결 점검", "주문 없이 메리츠 토큰·잔고·체결내역·시세·앱 주소 확인 (30초)",
+      `<button class="bk-btn" style="width:100%" type="button" data-act="check" ${dis}>${BOT.busy === "check" ? "요청 중…" : "🔧 연결 점검"}</button>${st && st.mode === "check" ? `<div style="margin-top:8px;">${botRunBox()}${statusHtml(st, c)}</div>` : ""}`)}`;
+  document.getElementById("msg").innerHTML = BOT.msg ? `<div class="sync-state ${BOT.msgOk ? "ok" : "err"}">${esc(BOT.msg)}</div>` : "";
+  const need = tabAlert();
+  if (__firstTab && BOT.cfg !== null) { __firstTab = false; let saved = null; try { saved = sessionStorage.getItem("muhanapikr_tab"); } catch (e) {} const hs = location.hash.slice(1); goTab((hs && document.getElementById(hs)) ? hs : (saved || (need ? "pg-setup" : "pg-main"))); }
+  try { localStorage.setItem("muhanapikr_hub", JSON.stringify({ mode: c.mode, overall: st && st.overall, at: st && st.run_at, keys: !!c.keys })); } catch (e) {}
+}
+function botRender() { render(); }
+function botRunBox() {
+  const R = BOT.run; if (!R) return "";
+  const BOTSTEP = "검수 → 주문 → 대조 → 보고";
+  let lab, cls = "", tip = "";
+  if (R.status !== "completed") { lab = R.status === "queued" || R.status === "waiting" ? "⏳ 대기 중" : "⏳ 실행 중"; cls = "run"; }
+  else if (R.conclusion === "success") { lab = "✅ 정상 종료"; cls = "ok"; }
+  else if (R.failStep === BOTSTEP) { lab = "⚠ 봇이 확인 필요 결과를 남김"; cls = "bad"; tip = "아래 ⛔·✖ 항목을 보세요"; }
+  else { lab = "✖ 실패"; cls = "bad"; tip = R.failStep ? `GitHub 단계 ‘${esc(R.failStep)}’에서 멈춤 — 일시 오류면 다시 실행, 반복되면 로그 확인` : ""; }
+  return `<div class="bot-run ${cls}">GitHub 실행 <b>${lab}</b> · ${when(R.at)} <a href="${esc(R.url)}" target="_blank" rel="noopener">로그 ↗</a>${tip ? `<div class="bot-why">${tip}</div>` : ""}</div>`;
+}
+async function connect() {
+  const tok = (document.getElementById("tok").value || "").trim();
+  if (!/^(ghp_|github_pat_)[A-Za-z0-9_]{20,}$/.test(tok)) { BOT.msg = "⚠ 토큰 형식이 아닙니다"; BOT.msgOk = false; render(); return; }
+  lsSet("muhansync_token", tok);
+  try {
+    let id = "";
+    for (let page = 1; page <= 3 && !id; page++) {
+      const list = await gh(`/gists?per_page=100&page=${page}`);
+      const hit = list.find(x => x.description === SYNC_DESC); if (hit) id = hit.id;
+      if (list.length < 100) break;
+    }
+    if (!id) throw new Error("동기화 Gist가 없습니다 — SOXL·TQQQ·K반도체레버리지 앱 💾 백업 탭에서 먼저 동기화를 켜세요");
+    lsSet("muhansync_gist", id); BOT.msg = "☁️ 연결됨"; BOT.msgOk = true;
+    await syncNow(); recalc();
+  } catch (e) { try { localStorage.removeItem("muhansync_token"); } catch (x) {} BOT.msg = "⚠ " + e.message; BOT.msgOk = false; render(); }
+}
+document.addEventListener("click", e => {
+  const m = e.target.closest("[data-mode]"); if (m) { botSetMode(m.dataset.mode); return; }
+  const a = e.target.closest("[data-act]"); if (!a) return;
+  ({ install: botInstall, keys: botSaveKeys, ntfy: botSaveNtfy, check: () => botDispatch("check"), live: botLiveNow, sched: botSaveSchedule,
+     bkFile: bkDownload, bkCopy: bkCopyText, bkRestore: bkRestore,
+     acct: botAcct, acctRefresh: () => { BOT.acctOpen = true; return botDispatch("account"); },
+     recalc, connect, openapp: () => { location.href = "kodex.html"; } })[a.dataset.act]();
+});
+document.addEventListener("change", e => {
+  const s = e.target.closest("[data-side]");
+  if (s) { const [sym, k] = s.dataset.side.split(":"); const c = botCfg(); const sides = JSON.parse(JSON.stringify(c.sides)); sides[sym] = Object.assign({}, sides[sym], { [k]: s.checked });
+    const symbols = Object.fromEntries(SYMS.map(x => [x, !!(sides[x].buy || sides[x].sell)]));
+    botSetOpt({ sides, symbols }, `${sym} ${k === "buy" ? "매수" : "매도"} ${s.checked ? "☑ 주문함" : "☐ 주문 안 함"} · 모든 기기 공통`); return; }
+  if (e.target.id === "botMax") { const v = Math.round(parseFloat(e.target.value)); if (v >= 10000) botSetOpt({ max_order_krw: v }); }
+});
+/* ── 탭: ⚡주문 · 📒KODEX · 🧾결과 · 💾백업 · 📖설명 · 🛠설정 (마지막 탭 기억 · 주소 #pg-… · 설정 미완료면 알림 점) */
+function goTab(id) {
+  if (!document.getElementById(id)) id = "pg-main";
+  const fr = document.querySelector(`#${id} .app-frame`); if (fr && !fr.src) fr.src = fr.dataset.src + "&t=" + Date.now();   // 항상 최신 파일 (캐시 우회)
+  document.querySelectorAll(".page").forEach(p => p.classList.toggle("on", p.id === id));
+  document.querySelectorAll("#tabbar .tb").forEach(b => { const on = b.dataset.p === id; b.classList.toggle("on", on); b.setAttribute("aria-selected", on ? "true" : "false"); });
+  try { sessionStorage.setItem("muhanapikr_tab", id); } catch (e) {}
+  window.scrollTo(0, 0);
+}
+document.getElementById("tabbar").addEventListener("click", e => { const b = e.target.closest(".tb"); if (b) goTab(b.dataset.p); });
+document.addEventListener("click", e => { const g = e.target.closest("[data-goto]"); if (g) goTab(g.dataset.goto); });
+function tabAlert() {
+  const c = botCfg(), need = !!(syncTok() && syncGist() && BOT.cfg !== null && (!c.installed_at || !c.keys));
+  const t = document.querySelector('#tabbar .tb[data-p="pg-setup"]'); if (t) t.classList.toggle("alert", need);
+  return need;
+}
+let __firstTab = true;
+document.addEventListener("visibilitychange", () => { if (!document.hidden) { syncNow(); botRunsRefresh().catch(() => {}); } });
+setInterval(() => { if (!document.hidden) render(); }, 60000);
+document.getElementById("ver").textContent = `${API_VERSION} (${API_RELEASE}) · ${BOT_VERSION.split(" ")[1]}`;
+render();
+if (syncTok() && syncGist()) { syncNow().then(() => { recalc(); botRunsRefresh().catch(() => {}); }); }
+</script>
+<script>!function(i){"use strict";var v=function(r){var t,n=new Float64Array(16);if(r)for(t=0;t<r.length;t++)n[t]=r[t];return n},h=function(){throw new Error("no PRNG")},o=new Uint8Array(16),n=new Uint8Array(32);n[0]=9;var s=v(),u=v([1]),p=v([56129,1]),c=v([30883,4953,19914,30187,55467,16705,2637,112,59544,30585,16505,36039,65139,11119,27886,20995]),y=v([61785,9906,39828,60374,45398,33411,5274,224,53552,61171,33010,6542,64743,22239,55772,9222]),e=v([54554,36645,11616,51542,42930,38181,51040,26924,56412,64982,57905,49316,21502,52590,14035,8553]),a=v([26200,26214,26214,26214,26214,26214,26214,26214,26214,26214,26214,26214,26214,26214,26214,26214]),l=v([41136,18958,6951,50414,58488,44335,6150,12099,55207,15867,153,11085,57099,20417,9344,11139]);function f(r,t,n,e){r[t]=n>>24&255,r[t+1]=n>>16&255,r[t+2]=n>>8&255,r[t+3]=255&n,r[t+4]=e>>24&255,r[t+5]=e>>16&255,r[t+6]=e>>8&255,r[t+7]=255&e}function w(r,t,n,e,o){var i,h=0;for(i=0;i<o;i++)h|=r[t+i]^n[e+i];return(1&h-1>>>8)-1}function b(r,t,n,e){return w(r,t,n,e,16)}function g(r,t,n,e){return w(r,t,n,e,32)}function A(r,t,n,e){!function(r,t,n,e){for(var o,i=255&e[0]|(255&e[1])<<8|(255&e[2])<<16|(255&e[3])<<24,h=255&n[0]|(255&n[1])<<8|(255&n[2])<<16|(255&n[3])<<24,a=255&n[4]|(255&n[5])<<8|(255&n[6])<<16|(255&n[7])<<24,f=255&n[8]|(255&n[9])<<8|(255&n[10])<<16|(255&n[11])<<24,s=255&n[12]|(255&n[13])<<8|(255&n[14])<<16|(255&n[15])<<24,u=255&e[4]|(255&e[5])<<8|(255&e[6])<<16|(255&e[7])<<24,c=255&t[0]|(255&t[1])<<8|(255&t[2])<<16|(255&t[3])<<24,y=255&t[4]|(255&t[5])<<8|(255&t[6])<<16|(255&t[7])<<24,l=255&t[8]|(255&t[9])<<8|(255&t[10])<<16|(255&t[11])<<24,w=255&t[12]|(255&t[13])<<8|(255&t[14])<<16|(255&t[15])<<24,v=255&e[8]|(255&e[9])<<8|(255&e[10])<<16|(255&e[11])<<24,p=255&n[16]|(255&n[17])<<8|(255&n[18])<<16|(255&n[19])<<24,b=255&n[20]|(255&n[21])<<8|(255&n[22])<<16|(255&n[23])<<24,g=255&n[24]|(255&n[25])<<8|(255&n[26])<<16|(255&n[27])<<24,A=255&n[28]|(255&n[29])<<8|(255&n[30])<<16|(255&n[31])<<24,_=255&e[12]|(255&e[13])<<8|(255&e[14])<<16|(255&e[15])<<24,U=i,d=h,E=a,x=f,M=s,m=u,B=c,S=y,k=l,K=w,Y=v,L=p,T=b,z=g,R=A,P=_,N=0;N<20;N+=2)U^=(o=(T^=(o=(k^=(o=(M^=(o=U+T|0)<<7|o>>>25)+U|0)<<9|o>>>23)+M|0)<<13|o>>>19)+k|0)<<18|o>>>14,m^=(o=(d^=(o=(z^=(o=(K^=(o=m+d|0)<<7|o>>>25)+m|0)<<9|o>>>23)+K|0)<<13|o>>>19)+z|0)<<18|o>>>14,Y^=(o=(B^=(o=(E^=(o=(R^=(o=Y+B|0)<<7|o>>>25)+Y|0)<<9|o>>>23)+R|0)<<13|o>>>19)+E|0)<<18|o>>>14,P^=(o=(L^=(o=(S^=(o=(x^=(o=P+L|0)<<7|o>>>25)+P|0)<<9|o>>>23)+x|0)<<13|o>>>19)+S|0)<<18|o>>>14,U^=(o=(x^=(o=(E^=(o=(d^=(o=U+x|0)<<7|o>>>25)+U|0)<<9|o>>>23)+d|0)<<13|o>>>19)+E|0)<<18|o>>>14,m^=(o=(M^=(o=(S^=(o=(B^=(o=m+M|0)<<7|o>>>25)+m|0)<<9|o>>>23)+B|0)<<13|o>>>19)+S|0)<<18|o>>>14,Y^=(o=(K^=(o=(k^=(o=(L^=(o=Y+K|0)<<7|o>>>25)+Y|0)<<9|o>>>23)+L|0)<<13|o>>>19)+k|0)<<18|o>>>14,P^=(o=(R^=(o=(z^=(o=(T^=(o=P+R|0)<<7|o>>>25)+P|0)<<9|o>>>23)+T|0)<<13|o>>>19)+z|0)<<18|o>>>14;U=U+i|0,d=d+h|0,E=E+a|0,x=x+f|0,M=M+s|0,m=m+u|0,B=B+c|0,S=S+y|0,k=k+l|0,K=K+w|0,Y=Y+v|0,L=L+p|0,T=T+b|0,z=z+g|0,R=R+A|0,P=P+_|0,r[0]=U>>>0&255,r[1]=U>>>8&255,r[2]=U>>>16&255,r[3]=U>>>24&255,r[4]=d>>>0&255,r[5]=d>>>8&255,r[6]=d>>>16&255,r[7]=d>>>24&255,r[8]=E>>>0&255,r[9]=E>>>8&255,r[10]=E>>>16&255,r[11]=E>>>24&255,r[12]=x>>>0&255,r[13]=x>>>8&255,r[14]=x>>>16&255,r[15]=x>>>24&255,r[16]=M>>>0&255,r[17]=M>>>8&255,r[18]=M>>>16&255,r[19]=M>>>24&255,r[20]=m>>>0&255,r[21]=m>>>8&255,r[22]=m>>>16&255,r[23]=m>>>24&255,r[24]=B>>>0&255,r[25]=B>>>8&255,r[26]=B>>>16&255,r[27]=B>>>24&255,r[28]=S>>>0&255,r[29]=S>>>8&255,r[30]=S>>>16&255,r[31]=S>>>24&255,r[32]=k>>>0&255,r[33]=k>>>8&255,r[34]=k>>>16&255,r[35]=k>>>24&255,r[36]=K>>>0&255,r[37]=K>>>8&255,r[38]=K>>>16&255,r[39]=K>>>24&255,r[40]=Y>>>0&255,r[41]=Y>>>8&255,r[42]=Y>>>16&255,r[43]=Y>>>24&255,r[44]=L>>>0&255,r[45]=L>>>8&255,r[46]=L>>>16&255,r[47]=L>>>24&255,r[48]=T>>>0&255,r[49]=T>>>8&255,r[50]=T>>>16&255,r[51]=T>>>24&255,r[52]=z>>>0&255,r[53]=z>>>8&255,r[54]=z>>>16&255,r[55]=z>>>24&255,r[56]=R>>>0&255,r[57]=R>>>8&255,r[58]=R>>>16&255,r[59]=R>>>24&255,r[60]=P>>>0&255,r[61]=P>>>8&255,r[62]=P>>>16&255,r[63]=P>>>24&255}(r,t,n,e)}function _(r,t,n,e){!function(r,t,n,e){for(var o,i=255&e[0]|(255&e[1])<<8|(255&e[2])<<16|(255&e[3])<<24,h=255&n[0]|(255&n[1])<<8|(255&n[2])<<16|(255&n[3])<<24,a=255&n[4]|(255&n[5])<<8|(255&n[6])<<16|(255&n[7])<<24,f=255&n[8]|(255&n[9])<<8|(255&n[10])<<16|(255&n[11])<<24,s=255&n[12]|(255&n[13])<<8|(255&n[14])<<16|(255&n[15])<<24,u=255&e[4]|(255&e[5])<<8|(255&e[6])<<16|(255&e[7])<<24,c=255&t[0]|(255&t[1])<<8|(255&t[2])<<16|(255&t[3])<<24,y=255&t[4]|(255&t[5])<<8|(255&t[6])<<16|(255&t[7])<<24,l=255&t[8]|(255&t[9])<<8|(255&t[10])<<16|(255&t[11])<<24,w=255&t[12]|(255&t[13])<<8|(255&t[14])<<16|(255&t[15])<<24,v=255&e[8]|(255&e[9])<<8|(255&e[10])<<16|(255&e[11])<<24,p=255&n[16]|(255&n[17])<<8|(255&n[18])<<16|(255&n[19])<<24,b=255&n[20]|(255&n[21])<<8|(255&n[22])<<16|(255&n[23])<<24,g=255&n[24]|(255&n[25])<<8|(255&n[26])<<16|(255&n[27])<<24,A=255&n[28]|(255&n[29])<<8|(255&n[30])<<16|(255&n[31])<<24,_=255&e[12]|(255&e[13])<<8|(255&e[14])<<16|(255&e[15])<<24,U=0;U<20;U+=2)i^=(o=(b^=(o=(l^=(o=(s^=(o=i+b|0)<<7|o>>>25)+i|0)<<9|o>>>23)+s|0)<<13|o>>>19)+l|0)<<18|o>>>14,u^=(o=(h^=(o=(g^=(o=(w^=(o=u+h|0)<<7|o>>>25)+u|0)<<9|o>>>23)+w|0)<<13|o>>>19)+g|0)<<18|o>>>14,v^=(o=(c^=(o=(a^=(o=(A^=(o=v+c|0)<<7|o>>>25)+v|0)<<9|o>>>23)+A|0)<<13|o>>>19)+a|0)<<18|o>>>14,_^=(o=(p^=(o=(y^=(o=(f^=(o=_+p|0)<<7|o>>>25)+_|0)<<9|o>>>23)+f|0)<<13|o>>>19)+y|0)<<18|o>>>14,i^=(o=(f^=(o=(a^=(o=(h^=(o=i+f|0)<<7|o>>>25)+i|0)<<9|o>>>23)+h|0)<<13|o>>>19)+a|0)<<18|o>>>14,u^=(o=(s^=(o=(y^=(o=(c^=(o=u+s|0)<<7|o>>>25)+u|0)<<9|o>>>23)+c|0)<<13|o>>>19)+y|0)<<18|o>>>14,v^=(o=(w^=(o=(l^=(o=(p^=(o=v+w|0)<<7|o>>>25)+v|0)<<9|o>>>23)+p|0)<<13|o>>>19)+l|0)<<18|o>>>14,_^=(o=(A^=(o=(g^=(o=(b^=(o=_+A|0)<<7|o>>>25)+_|0)<<9|o>>>23)+b|0)<<13|o>>>19)+g|0)<<18|o>>>14;r[0]=i>>>0&255,r[1]=i>>>8&255,r[2]=i>>>16&255,r[3]=i>>>24&255,r[4]=u>>>0&255,r[5]=u>>>8&255,r[6]=u>>>16&255,r[7]=u>>>24&255,r[8]=v>>>0&255,r[9]=v>>>8&255,r[10]=v>>>16&255,r[11]=v>>>24&255,r[12]=_>>>0&255,r[13]=_>>>8&255,r[14]=_>>>16&255,r[15]=_>>>24&255,r[16]=c>>>0&255,r[17]=c>>>8&255,r[18]=c>>>16&255,r[19]=c>>>24&255,r[20]=y>>>0&255,r[21]=y>>>8&255,r[22]=y>>>16&255,r[23]=y>>>24&255,r[24]=l>>>0&255,r[25]=l>>>8&255,r[26]=l>>>16&255,r[27]=l>>>24&255,r[28]=w>>>0&255,r[29]=w>>>8&255,r[30]=w>>>16&255,r[31]=w>>>24&255}(r,t,n,e)}var U=new Uint8Array([101,120,112,97,110,100,32,51,50,45,98,121,116,101,32,107]);function d(r,t,n,e,o,i,h){var a,f,s=new Uint8Array(16),u=new Uint8Array(64);for(f=0;f<16;f++)s[f]=0;for(f=0;f<8;f++)s[f]=i[f];for(;64<=o;){for(A(u,s,h,U),f=0;f<64;f++)r[t+f]=n[e+f]^u[f];for(a=1,f=8;f<16;f++)a=a+(255&s[f])|0,s[f]=255&a,a>>>=8;o-=64,t+=64,e+=64}if(0<o)for(A(u,s,h,U),f=0;f<o;f++)r[t+f]=n[e+f]^u[f];return 0}function E(r,t,n,e,o){var i,h,a=new Uint8Array(16),f=new Uint8Array(64);for(h=0;h<16;h++)a[h]=0;for(h=0;h<8;h++)a[h]=e[h];for(;64<=n;){for(A(f,a,o,U),h=0;h<64;h++)r[t+h]=f[h];for(i=1,h=8;h<16;h++)i=i+(255&a[h])|0,a[h]=255&i,i>>>=8;n-=64,t+=64}if(0<n)for(A(f,a,o,U),h=0;h<n;h++)r[t+h]=f[h];return 0}function x(r,t,n,e,o){var i=new Uint8Array(32);_(i,e,o,U);for(var h=new Uint8Array(8),a=0;a<8;a++)h[a]=e[a+16];return E(r,t,n,h,i)}function M(r,t,n,e,o,i,h){var a=new Uint8Array(32);_(a,i,h,U);for(var f=new Uint8Array(8),s=0;s<8;s++)f[s]=i[s+16];return d(r,t,n,e,o,f,a)}var m=function(r){var t,n,e,o,i,h,a,f;this.buffer=new Uint8Array(16),this.r=new Uint16Array(10),this.h=new Uint16Array(10),this.pad=new Uint16Array(8),this.leftover=0,t=255&r[this.fin=0]|(255&r[1])<<8,this.r[0]=8191&t,n=255&r[2]|(255&r[3])<<8,this.r[1]=8191&(t>>>13|n<<3),e=255&r[4]|(255&r[5])<<8,this.r[2]=7939&(n>>>10|e<<6),o=255&r[6]|(255&r[7])<<8,this.r[3]=8191&(e>>>7|o<<9),i=255&r[8]|(255&r[9])<<8,this.r[4]=255&(o>>>4|i<<12),this.r[5]=i>>>1&8190,h=255&r[10]|(255&r[11])<<8,this.r[6]=8191&(i>>>14|h<<2),a=255&r[12]|(255&r[13])<<8,this.r[7]=8065&(h>>>11|a<<5),f=255&r[14]|(255&r[15])<<8,this.r[8]=8191&(a>>>8|f<<8),this.r[9]=f>>>5&127,this.pad[0]=255&r[16]|(255&r[17])<<8,this.pad[1]=255&r[18]|(255&r[19])<<8,this.pad[2]=255&r[20]|(255&r[21])<<8,this.pad[3]=255&r[22]|(255&r[23])<<8,this.pad[4]=255&r[24]|(255&r[25])<<8,this.pad[5]=255&r[26]|(255&r[27])<<8,this.pad[6]=255&r[28]|(255&r[29])<<8,this.pad[7]=255&r[30]|(255&r[31])<<8};function B(r,t,n,e,o,i){var h=new m(i);return h.update(n,e,o),h.finish(r,t),0}function S(r,t,n,e,o,i){var h=new Uint8Array(16);return B(h,0,n,e,o,i),b(r,t,h,0)}function k(r,t,n,e,o){var i;if(n<32)return-1;for(M(r,0,t,0,n,e,o),B(r,16,r,32,n-32,r),i=0;i<16;i++)r[i]=0;return 0}function K(r,t,n,e,o){var i,h=new Uint8Array(32);if(n<32)return-1;if(x(h,0,32,e,o),0!==S(t,16,t,32,n-32,h))return-1;for(M(r,0,t,0,n,e,o),i=0;i<32;i++)r[i]=0;return 0}function Y(r,t){var n;for(n=0;n<16;n++)r[n]=0|t[n]}function L(r){var t,n,e=1;for(t=0;t<16;t++)n=r[t]+e+65535,e=Math.floor(n/65536),r[t]=n-65536*e;r[0]+=e-1+37*(e-1)}function T(r,t,n){for(var e,o=~(n-1),i=0;i<16;i++)e=o&(r[i]^t[i]),r[i]^=e,t[i]^=e}function z(r,t){var n,e,o,i=v(),h=v();for(n=0;n<16;n++)h[n]=t[n];for(L(h),L(h),L(h),e=0;e<2;e++){for(i[0]=h[0]-65517,n=1;n<15;n++)i[n]=h[n]-65535-(i[n-1]>>16&1),i[n-1]&=65535;i[15]=h[15]-32767-(i[14]>>16&1),o=i[15]>>16&1,i[14]&=65535,T(h,i,1-o)}for(n=0;n<16;n++)r[2*n]=255&h[n],r[2*n+1]=h[n]>>8}function R(r,t){var n=new Uint8Array(32),e=new Uint8Array(32);return z(n,r),z(e,t),g(n,0,e,0)}function P(r){var t=new Uint8Array(32);return z(t,r),1&t[0]}function N(r,t){var n;for(n=0;n<16;n++)r[n]=t[2*n]+(t[2*n+1]<<8);r[15]&=32767}function O(r,t,n){for(var e=0;e<16;e++)r[e]=t[e]+n[e]}function C(r,t,n){for(var e=0;e<16;e++)r[e]=t[e]-n[e]}function F(r,t,n){var e,o,i=0,h=0,a=0,f=0,s=0,u=0,c=0,y=0,l=0,w=0,v=0,p=0,b=0,g=0,A=0,_=0,U=0,d=0,E=0,x=0,M=0,m=0,B=0,S=0,k=0,K=0,Y=0,L=0,T=0,z=0,R=0,P=n[0],N=n[1],O=n[2],C=n[3],F=n[4],I=n[5],Z=n[6],G=n[7],q=n[8],D=n[9],V=n[10],X=n[11],j=n[12],H=n[13],J=n[14],Q=n[15];i+=(e=t[0])*P,h+=e*N,a+=e*O,f+=e*C,s+=e*F,u+=e*I,c+=e*Z,y+=e*G,l+=e*q,w+=e*D,v+=e*V,p+=e*X,b+=e*j,g+=e*H,A+=e*J,_+=e*Q,h+=(e=t[1])*P,a+=e*N,f+=e*O,s+=e*C,u+=e*F,c+=e*I,y+=e*Z,l+=e*G,w+=e*q,v+=e*D,p+=e*V,b+=e*X,g+=e*j,A+=e*H,_+=e*J,U+=e*Q,a+=(e=t[2])*P,f+=e*N,s+=e*O,u+=e*C,c+=e*F,y+=e*I,l+=e*Z,w+=e*G,v+=e*q,p+=e*D,b+=e*V,g+=e*X,A+=e*j,_+=e*H,U+=e*J,d+=e*Q,f+=(e=t[3])*P,s+=e*N,u+=e*O,c+=e*C,y+=e*F,l+=e*I,w+=e*Z,v+=e*G,p+=e*q,b+=e*D,g+=e*V,A+=e*X,_+=e*j,U+=e*H,d+=e*J,E+=e*Q,s+=(e=t[4])*P,u+=e*N,c+=e*O,y+=e*C,l+=e*F,w+=e*I,v+=e*Z,p+=e*G,b+=e*q,g+=e*D,A+=e*V,_+=e*X,U+=e*j,d+=e*H,E+=e*J,x+=e*Q,u+=(e=t[5])*P,c+=e*N,y+=e*O,l+=e*C,w+=e*F,v+=e*I,p+=e*Z,b+=e*G,g+=e*q,A+=e*D,_+=e*V,U+=e*X,d+=e*j,E+=e*H,x+=e*J,M+=e*Q,c+=(e=t[6])*P,y+=e*N,l+=e*O,w+=e*C,v+=e*F,p+=e*I,b+=e*Z,g+=e*G,A+=e*q,_+=e*D,U+=e*V,d+=e*X,E+=e*j,x+=e*H,M+=e*J,m+=e*Q,y+=(e=t[7])*P,l+=e*N,w+=e*O,v+=e*C,p+=e*F,b+=e*I,g+=e*Z,A+=e*G,_+=e*q,U+=e*D,d+=e*V,E+=e*X,x+=e*j,M+=e*H,m+=e*J,B+=e*Q,l+=(e=t[8])*P,w+=e*N,v+=e*O,p+=e*C,b+=e*F,g+=e*I,A+=e*Z,_+=e*G,U+=e*q,d+=e*D,E+=e*V,x+=e*X,M+=e*j,m+=e*H,B+=e*J,S+=e*Q,w+=(e=t[9])*P,v+=e*N,p+=e*O,b+=e*C,g+=e*F,A+=e*I,_+=e*Z,U+=e*G,d+=e*q,E+=e*D,x+=e*V,M+=e*X,m+=e*j,B+=e*H,S+=e*J,k+=e*Q,v+=(e=t[10])*P,p+=e*N,b+=e*O,g+=e*C,A+=e*F,_+=e*I,U+=e*Z,d+=e*G,E+=e*q,x+=e*D,M+=e*V,m+=e*X,B+=e*j,S+=e*H,k+=e*J,K+=e*Q,p+=(e=t[11])*P,b+=e*N,g+=e*O,A+=e*C,_+=e*F,U+=e*I,d+=e*Z,E+=e*G,x+=e*q,M+=e*D,m+=e*V,B+=e*X,S+=e*j,k+=e*H,K+=e*J,Y+=e*Q,b+=(e=t[12])*P,g+=e*N,A+=e*O,_+=e*C,U+=e*F,d+=e*I,E+=e*Z,x+=e*G,M+=e*q,m+=e*D,B+=e*V,S+=e*X,k+=e*j,K+=e*H,Y+=e*J,L+=e*Q,g+=(e=t[13])*P,A+=e*N,_+=e*O,U+=e*C,d+=e*F,E+=e*I,x+=e*Z,M+=e*G,m+=e*q,B+=e*D,S+=e*V,k+=e*X,K+=e*j,Y+=e*H,L+=e*J,T+=e*Q,A+=(e=t[14])*P,_+=e*N,U+=e*O,d+=e*C,E+=e*F,x+=e*I,M+=e*Z,m+=e*G,B+=e*q,S+=e*D,k+=e*V,K+=e*X,Y+=e*j,L+=e*H,T+=e*J,z+=e*Q,_+=(e=t[15])*P,h+=38*(d+=e*O),a+=38*(E+=e*C),f+=38*(x+=e*F),s+=38*(M+=e*I),u+=38*(m+=e*Z),c+=38*(B+=e*G),y+=38*(S+=e*q),l+=38*(k+=e*D),w+=38*(K+=e*V),v+=38*(Y+=e*X),p+=38*(L+=e*j),b+=38*(T+=e*H),g+=38*(z+=e*J),A+=38*(R+=e*Q),i=(e=(i+=38*(U+=e*N))+(o=1)+65535)-65536*(o=Math.floor(e/65536)),h=(e=h+o+65535)-65536*(o=Math.floor(e/65536)),a=(e=a+o+65535)-65536*(o=Math.floor(e/65536)),f=(e=f+o+65535)-65536*(o=Math.floor(e/65536)),s=(e=s+o+65535)-65536*(o=Math.floor(e/65536)),u=(e=u+o+65535)-65536*(o=Math.floor(e/65536)),c=(e=c+o+65535)-65536*(o=Math.floor(e/65536)),y=(e=y+o+65535)-65536*(o=Math.floor(e/65536)),l=(e=l+o+65535)-65536*(o=Math.floor(e/65536)),w=(e=w+o+65535)-65536*(o=Math.floor(e/65536)),v=(e=v+o+65535)-65536*(o=Math.floor(e/65536)),p=(e=p+o+65535)-65536*(o=Math.floor(e/65536)),b=(e=b+o+65535)-65536*(o=Math.floor(e/65536)),g=(e=g+o+65535)-65536*(o=Math.floor(e/65536)),A=(e=A+o+65535)-65536*(o=Math.floor(e/65536)),_=(e=_+o+65535)-65536*(o=Math.floor(e/65536)),i=(e=(i+=o-1+37*(o-1))+(o=1)+65535)-65536*(o=Math.floor(e/65536)),h=(e=h+o+65535)-65536*(o=Math.floor(e/65536)),a=(e=a+o+65535)-65536*(o=Math.floor(e/65536)),f=(e=f+o+65535)-65536*(o=Math.floor(e/65536)),s=(e=s+o+65535)-65536*(o=Math.floor(e/65536)),u=(e=u+o+65535)-65536*(o=Math.floor(e/65536)),c=(e=c+o+65535)-65536*(o=Math.floor(e/65536)),y=(e=y+o+65535)-65536*(o=Math.floor(e/65536)),l=(e=l+o+65535)-65536*(o=Math.floor(e/65536)),w=(e=w+o+65535)-65536*(o=Math.floor(e/65536)),v=(e=v+o+65535)-65536*(o=Math.floor(e/65536)),p=(e=p+o+65535)-65536*(o=Math.floor(e/65536)),b=(e=b+o+65535)-65536*(o=Math.floor(e/65536)),g=(e=g+o+65535)-65536*(o=Math.floor(e/65536)),A=(e=A+o+65535)-65536*(o=Math.floor(e/65536)),_=(e=_+o+65535)-65536*(o=Math.floor(e/65536)),i+=o-1+37*(o-1),r[0]=i,r[1]=h,r[2]=a,r[3]=f,r[4]=s,r[5]=u,r[6]=c,r[7]=y,r[8]=l,r[9]=w,r[10]=v,r[11]=p,r[12]=b,r[13]=g,r[14]=A,r[15]=_}function I(r,t){F(r,t,t)}function Z(r,t){var n,e=v();for(n=0;n<16;n++)e[n]=t[n];for(n=253;0<=n;n--)I(e,e),2!==n&&4!==n&&F(e,e,t);for(n=0;n<16;n++)r[n]=e[n]}function G(r,t){var n,e=v();for(n=0;n<16;n++)e[n]=t[n];for(n=250;0<=n;n--)I(e,e),1!==n&&F(e,e,t);for(n=0;n<16;n++)r[n]=e[n]}function q(r,t,n){var e,o,i=new Uint8Array(32),h=new Float64Array(80),a=v(),f=v(),s=v(),u=v(),c=v(),y=v();for(o=0;o<31;o++)i[o]=t[o];for(i[31]=127&t[31]|64,i[0]&=248,N(h,n),o=0;o<16;o++)f[o]=h[o],u[o]=a[o]=s[o]=0;for(a[0]=u[0]=1,o=254;0<=o;--o)T(a,f,e=i[o>>>3]>>>(7&o)&1),T(s,u,e),O(c,a,s),C(a,a,s),O(s,f,u),C(f,f,u),I(u,c),I(y,a),F(a,s,a),F(s,f,c),O(c,a,s),C(a,a,s),I(f,a),C(s,u,y),F(a,s,p),O(a,a,u),F(s,s,a),F(a,u,y),F(u,f,h),I(f,c),T(a,f,e),T(s,u,e);for(o=0;o<16;o++)h[o+16]=a[o],h[o+32]=s[o],h[o+48]=f[o],h[o+64]=u[o];var l=h.subarray(32),w=h.subarray(16);return Z(l,l),F(w,w,l),z(r,w),0}function D(r,t){return q(r,t,n)}function V(r,t){return h(t,32),D(r,t)}function X(r,t,n){var e=new Uint8Array(32);return q(e,n,t),_(r,o,e,U)}m.prototype.blocks=function(r,t,n){for(var e,o,i,h,a,f,s,u,c,y,l,w,v,p,b,g,A,_,U,d=this.fin?0:2048,E=this.h[0],x=this.h[1],M=this.h[2],m=this.h[3],B=this.h[4],S=this.h[5],k=this.h[6],K=this.h[7],Y=this.h[8],L=this.h[9],T=this.r[0],z=this.r[1],R=this.r[2],P=this.r[3],N=this.r[4],O=this.r[5],C=this.r[6],F=this.r[7],I=this.r[8],Z=this.r[9];16<=n;)y=c=0,y+=(E+=8191&(e=255&r[t+0]|(255&r[t+1])<<8))*T,y+=(x+=8191&(e>>>13|(o=255&r[t+2]|(255&r[t+3])<<8)<<3))*(5*Z),y+=(M+=8191&(o>>>10|(i=255&r[t+4]|(255&r[t+5])<<8)<<6))*(5*I),y+=(m+=8191&(i>>>7|(h=255&r[t+6]|(255&r[t+7])<<8)<<9))*(5*F),c=(y+=(B+=8191&(h>>>4|(a=255&r[t+8]|(255&r[t+9])<<8)<<12))*(5*C))>>>13,y&=8191,y+=(S+=a>>>1&8191)*(5*O),y+=(k+=8191&(a>>>14|(f=255&r[t+10]|(255&r[t+11])<<8)<<2))*(5*N),y+=(K+=8191&(f>>>11|(s=255&r[t+12]|(255&r[t+13])<<8)<<5))*(5*P),y+=(Y+=8191&(s>>>8|(u=255&r[t+14]|(255&r[t+15])<<8)<<8))*(5*R),l=c+=(y+=(L+=u>>>5|d)*(5*z))>>>13,l+=E*z,l+=x*T,l+=M*(5*Z),l+=m*(5*I),c=(l+=B*(5*F))>>>13,l&=8191,l+=S*(5*C),l+=k*(5*O),l+=K*(5*N),l+=Y*(5*P),c+=(l+=L*(5*R))>>>13,l&=8191,w=c,w+=E*R,w+=x*z,w+=M*T,w+=m*(5*Z),c=(w+=B*(5*I))>>>13,w&=8191,w+=S*(5*F),w+=k*(5*C),w+=K*(5*O),w+=Y*(5*N),v=c+=(w+=L*(5*P))>>>13,v+=E*P,v+=x*R,v+=M*z,v+=m*T,c=(v+=B*(5*Z))>>>13,v&=8191,v+=S*(5*I),v+=k*(5*F),v+=K*(5*C),v+=Y*(5*O),p=c+=(v+=L*(5*N))>>>13,p+=E*N,p+=x*P,p+=M*R,p+=m*z,c=(p+=B*T)>>>13,p&=8191,p+=S*(5*Z),p+=k*(5*I),p+=K*(5*F),p+=Y*(5*C),b=c+=(p+=L*(5*O))>>>13,b+=E*O,b+=x*N,b+=M*P,b+=m*R,c=(b+=B*z)>>>13,b&=8191,b+=S*T,b+=k*(5*Z),b+=K*(5*I),b+=Y*(5*F),g=c+=(b+=L*(5*C))>>>13,g+=E*C,g+=x*O,g+=M*N,g+=m*P,c=(g+=B*R)>>>13,g&=8191,g+=S*z,g+=k*T,g+=K*(5*Z),g+=Y*(5*I),A=c+=(g+=L*(5*F))>>>13,A+=E*F,A+=x*C,A+=M*O,A+=m*N,c=(A+=B*P)>>>13,A&=8191,A+=S*R,A+=k*z,A+=K*T,A+=Y*(5*Z),_=c+=(A+=L*(5*I))>>>13,_+=E*I,_+=x*F,_+=M*C,_+=m*O,c=(_+=B*N)>>>13,_&=8191,_+=S*P,_+=k*R,_+=K*z,_+=Y*T,U=c+=(_+=L*(5*Z))>>>13,U+=E*Z,U+=x*I,U+=M*F,U+=m*C,c=(U+=B*O)>>>13,U&=8191,U+=S*N,U+=k*P,U+=K*R,U+=Y*z,E=y=8191&(c=(c=((c+=(U+=L*T)>>>13)<<2)+c|0)+(y&=8191)|0),x=l+=c>>>=13,M=w&=8191,m=v&=8191,B=p&=8191,S=b&=8191,k=g&=8191,K=A&=8191,Y=_&=8191,L=U&=8191,t+=16,n-=16;this.h[0]=E,this.h[1]=x,this.h[2]=M,this.h[3]=m,this.h[4]=B,this.h[5]=S,this.h[6]=k,this.h[7]=K,this.h[8]=Y,this.h[9]=L},m.prototype.finish=function(r,t){var n,e,o,i,h=new Uint16Array(10);if(this.leftover){for(i=this.leftover,this.buffer[i++]=1;i<16;i++)this.buffer[i]=0;this.fin=1,this.blocks(this.buffer,0,16)}for(n=this.h[1]>>>13,this.h[1]&=8191,i=2;i<10;i++)this.h[i]+=n,n=this.h[i]>>>13,this.h[i]&=8191;for(this.h[0]+=5*n,n=this.h[0]>>>13,this.h[0]&=8191,this.h[1]+=n,n=this.h[1]>>>13,this.h[1]&=8191,this.h[2]+=n,h[0]=this.h[0]+5,n=h[0]>>>13,h[0]&=8191,i=1;i<10;i++)h[i]=this.h[i]+n,n=h[i]>>>13,h[i]&=8191;for(h[9]-=8192,e=(1^n)-1,i=0;i<10;i++)h[i]&=e;for(e=~e,i=0;i<10;i++)this.h[i]=this.h[i]&e|h[i];for(this.h[0]=65535&(this.h[0]|this.h[1]<<13),this.h[1]=65535&(this.h[1]>>>3|this.h[2]<<10),this.h[2]=65535&(this.h[2]>>>6|this.h[3]<<7),this.h[3]=65535&(this.h[3]>>>9|this.h[4]<<4),this.h[4]=65535&(this.h[4]>>>12|this.h[5]<<1|this.h[6]<<14),this.h[5]=65535&(this.h[6]>>>2|this.h[7]<<11),this.h[6]=65535&(this.h[7]>>>5|this.h[8]<<8),this.h[7]=65535&(this.h[8]>>>8|this.h[9]<<5),o=this.h[0]+this.pad[0],this.h[0]=65535&o,i=1;i<8;i++)o=(this.h[i]+this.pad[i]|0)+(o>>>16)|0,this.h[i]=65535&o;r[t+0]=this.h[0]>>>0&255,r[t+1]=this.h[0]>>>8&255,r[t+2]=this.h[1]>>>0&255,r[t+3]=this.h[1]>>>8&255,r[t+4]=this.h[2]>>>0&255,r[t+5]=this.h[2]>>>8&255,r[t+6]=this.h[3]>>>0&255,r[t+7]=this.h[3]>>>8&255,r[t+8]=this.h[4]>>>0&255,r[t+9]=this.h[4]>>>8&255,r[t+10]=this.h[5]>>>0&255,r[t+11]=this.h[5]>>>8&255,r[t+12]=this.h[6]>>>0&255,r[t+13]=this.h[6]>>>8&255,r[t+14]=this.h[7]>>>0&255,r[t+15]=this.h[7]>>>8&255},m.prototype.update=function(r,t,n){var e,o;if(this.leftover){for(n<(o=16-this.leftover)&&(o=n),e=0;e<o;e++)this.buffer[this.leftover+e]=r[t+e];if(n-=o,t+=o,this.leftover+=o,this.leftover<16)return;this.blocks(this.buffer,0,16),this.leftover=0}if(16<=n&&(o=n-n%16,this.blocks(r,t,o),t+=o,n-=o),n){for(e=0;e<n;e++)this.buffer[this.leftover+e]=r[t+e];this.leftover+=n}};var j=k,H=K;var J=[1116352408,3609767458,1899447441,602891725,3049323471,3964484399,3921009573,2173295548,961987163,4081628472,1508970993,3053834265,2453635748,2937671579,2870763221,3664609560,3624381080,2734883394,310598401,1164996542,607225278,1323610764,1426881987,3590304994,1925078388,4068182383,2162078206,991336113,2614888103,633803317,3248222580,3479774868,3835390401,2666613458,4022224774,944711139,264347078,2341262773,604807628,2007800933,770255983,1495990901,1249150122,1856431235,1555081692,3175218132,1996064986,2198950837,2554220882,3999719339,2821834349,766784016,2952996808,2566594879,3210313671,3203337956,3336571891,1034457026,3584528711,2466948901,113926993,3758326383,338241895,168717936,666307205,1188179964,773529912,1546045734,1294757372,1522805485,1396182291,2643833823,1695183700,2343527390,1986661051,1014477480,2177026350,1206759142,2456956037,344077627,2730485921,1290863460,2820302411,3158454273,3259730800,3505952657,3345764771,106217008,3516065817,3606008344,3600352804,1432725776,4094571909,1467031594,275423344,851169720,430227734,3100823752,506948616,1363258195,659060556,3750685593,883997877,3785050280,958139571,3318307427,1322822218,3812723403,1537002063,2003034995,1747873779,3602036899,1955562222,1575990012,2024104815,1125592928,2227730452,2716904306,2361852424,442776044,2428436474,593698344,2756734187,3733110249,3204031479,2999351573,3329325298,3815920427,3391569614,3928383900,3515267271,566280711,3940187606,3454069534,4118630271,4000239992,116418474,1914138554,174292421,2731055270,289380356,3203993006,460393269,320620315,685471733,587496836,852142971,1086792851,1017036298,365543100,1126000580,2618297676,1288033470,3409855158,1501505948,4234509866,1607167915,987167468,1816402316,1246189591];function Q(r,t,n,e){for(var o,i,h,a,f,s,u,c,y,l,w,v,p,b,g,A,_,U,d,E,x,M,m,B,S=new Int32Array(16),k=new Int32Array(16),K=r[0],Y=r[1],L=r[2],T=r[3],z=r[4],R=r[5],P=r[6],N=r[7],O=t[0],C=t[1],F=t[2],I=t[3],Z=t[4],G=t[5],q=t[6],D=t[7],V=0;128<=e;){for(_=0;_<16;_++)U=8*_+V,S[_]=n[U+0]<<24|n[U+1]<<16|n[U+2]<<8|n[U+3],k[_]=n[U+4]<<24|n[U+5]<<16|n[U+6]<<8|n[U+7];for(_=0;_<80;_++)if(o=Y,i=L,h=T,c=C,y=F,l=I,x=65535&(E=D),M=E>>>16,m=65535&(d=N),B=d>>>16,x+=65535&(E=((w=Z)>>>14|(a=z)<<18)^(Z>>>18|z<<14)^(z>>>9|Z<<23)),M+=E>>>16,m+=65535&(d=(z>>>14|Z<<18)^(z>>>18|Z<<14)^(Z>>>9|z<<23)),B+=d>>>16,x+=65535&(E=Z&(v=G)^~Z&(p=q)),M+=E>>>16,m+=65535&(d=z&(f=R)^~z&(s=P)),B+=d>>>16,d=J[2*_],x+=65535&(E=J[2*_+1]),M+=E>>>16,m+=65535&d,B+=d>>>16,d=S[_%16],M+=(E=k[_%16])>>>16,m+=65535&d,B+=d>>>16,m+=(M+=(x+=65535&E)>>>16)>>>16,x=65535&(E=A=65535&x|M<<16),M=E>>>16,m=65535&(d=g=65535&m|(B+=m>>>16)<<16),B=d>>>16,x+=65535&(E=(O>>>28|K<<4)^(K>>>2|O<<30)^(K>>>7|O<<25)),M+=E>>>16,m+=65535&(d=(K>>>28|O<<4)^(O>>>2|K<<30)^(O>>>7|K<<25)),B+=d>>>16,M+=(E=O&C^O&F^C&F)>>>16,m+=65535&(d=K&Y^K&L^Y&L),B+=d>>>16,u=65535&(m+=(M+=(x+=65535&E)>>>16)>>>16)|(B+=m>>>16)<<16,b=65535&x|M<<16,x=65535&(E=l),M=E>>>16,m=65535&(d=h),B=d>>>16,M+=(E=A)>>>16,m+=65535&(d=g),B+=d>>>16,Y=K,L=o,T=i,z=h=65535&(m+=(M+=(x+=65535&E)>>>16)>>>16)|(B+=m>>>16)<<16,R=a,P=f,N=s,K=u,C=O,F=c,I=y,Z=l=65535&x|M<<16,G=w,q=v,D=p,O=b,_%16==15)for(U=0;U<16;U++)d=S[U],x=65535&(E=k[U]),M=E>>>16,m=65535&d,B=d>>>16,d=S[(U+9)%16],x+=65535&(E=k[(U+9)%16]),M+=E>>>16,m+=65535&d,B+=d>>>16,g=S[(U+1)%16],x+=65535&(E=((A=k[(U+1)%16])>>>1|g<<31)^(A>>>8|g<<24)^(A>>>7|g<<25)),M+=E>>>16,m+=65535&(d=(g>>>1|A<<31)^(g>>>8|A<<24)^g>>>7),B+=d>>>16,g=S[(U+14)%16],M+=(E=((A=k[(U+14)%16])>>>19|g<<13)^(g>>>29|A<<3)^(A>>>6|g<<26))>>>16,m+=65535&(d=(g>>>19|A<<13)^(A>>>29|g<<3)^g>>>6),B+=d>>>16,B+=(m+=(M+=(x+=65535&E)>>>16)>>>16)>>>16,S[U]=65535&m|B<<16,k[U]=65535&x|M<<16;x=65535&(E=O),M=E>>>16,m=65535&(d=K),B=d>>>16,d=r[0],M+=(E=t[0])>>>16,m+=65535&d,B+=d>>>16,B+=(m+=(M+=(x+=65535&E)>>>16)>>>16)>>>16,r[0]=K=65535&m|B<<16,t[0]=O=65535&x|M<<16,x=65535&(E=C),M=E>>>16,m=65535&(d=Y),B=d>>>16,d=r[1],M+=(E=t[1])>>>16,m+=65535&d,B+=d>>>16,B+=(m+=(M+=(x+=65535&E)>>>16)>>>16)>>>16,r[1]=Y=65535&m|B<<16,t[1]=C=65535&x|M<<16,x=65535&(E=F),M=E>>>16,m=65535&(d=L),B=d>>>16,d=r[2],M+=(E=t[2])>>>16,m+=65535&d,B+=d>>>16,B+=(m+=(M+=(x+=65535&E)>>>16)>>>16)>>>16,r[2]=L=65535&m|B<<16,t[2]=F=65535&x|M<<16,x=65535&(E=I),M=E>>>16,m=65535&(d=T),B=d>>>16,d=r[3],M+=(E=t[3])>>>16,m+=65535&d,B+=d>>>16,B+=(m+=(M+=(x+=65535&E)>>>16)>>>16)>>>16,r[3]=T=65535&m|B<<16,t[3]=I=65535&x|M<<16,x=65535&(E=Z),M=E>>>16,m=65535&(d=z),B=d>>>16,d=r[4],M+=(E=t[4])>>>16,m+=65535&d,B+=d>>>16,B+=(m+=(M+=(x+=65535&E)>>>16)>>>16)>>>16,r[4]=z=65535&m|B<<16,t[4]=Z=65535&x|M<<16,x=65535&(E=G),M=E>>>16,m=65535&(d=R),B=d>>>16,d=r[5],M+=(E=t[5])>>>16,m+=65535&d,B+=d>>>16,B+=(m+=(M+=(x+=65535&E)>>>16)>>>16)>>>16,r[5]=R=65535&m|B<<16,t[5]=G=65535&x|M<<16,x=65535&(E=q),M=E>>>16,m=65535&(d=P),B=d>>>16,d=r[6],M+=(E=t[6])>>>16,m+=65535&d,B+=d>>>16,B+=(m+=(M+=(x+=65535&E)>>>16)>>>16)>>>16,r[6]=P=65535&m|B<<16,t[6]=q=65535&x|M<<16,x=65535&(E=D),M=E>>>16,m=65535&(d=N),B=d>>>16,d=r[7],M+=(E=t[7])>>>16,m+=65535&d,B+=d>>>16,B+=(m+=(M+=(x+=65535&E)>>>16)>>>16)>>>16,r[7]=N=65535&m|B<<16,t[7]=D=65535&x|M<<16,V+=128,e-=128}return e}function W(r,t,n){var e,o=new Int32Array(8),i=new Int32Array(8),h=new Uint8Array(256),a=n;for(o[0]=1779033703,o[1]=3144134277,o[2]=1013904242,o[3]=2773480762,o[4]=1359893119,o[5]=2600822924,o[6]=528734635,o[7]=1541459225,i[0]=4089235720,i[1]=2227873595,i[2]=4271175723,i[3]=1595750129,i[4]=2917565137,i[5]=725511199,i[6]=4215389547,i[7]=327033209,Q(o,i,t,n),n%=128,e=0;e<n;e++)h[e]=t[a-n+e];for(h[n]=128,h[(n=256-128*(n<112?1:0))-9]=0,f(h,n-8,a/536870912|0,a<<3),Q(o,i,h,n),e=0;e<8;e++)f(r,8*e,o[e],i[e]);return 0}function $(r,t){var n=v(),e=v(),o=v(),i=v(),h=v(),a=v(),f=v(),s=v(),u=v();C(n,r[1],r[0]),C(u,t[1],t[0]),F(n,n,u),O(e,r[0],r[1]),O(u,t[0],t[1]),F(e,e,u),F(o,r[3],t[3]),F(o,o,y),F(i,r[2],t[2]),O(i,i,i),C(h,e,n),C(a,i,o),O(f,i,o),O(s,e,n),F(r[0],h,a),F(r[1],s,f),F(r[2],f,a),F(r[3],h,s)}function rr(r,t,n){var e;for(e=0;e<4;e++)T(r[e],t[e],n)}function tr(r,t){var n=v(),e=v(),o=v();Z(o,t[2]),F(n,t[0],o),F(e,t[1],o),z(r,e),r[31]^=P(n)<<7}function nr(r,t,n){var e,o;for(Y(r[0],s),Y(r[1],u),Y(r[2],u),Y(r[3],s),o=255;0<=o;--o)rr(r,t,e=n[o/8|0]>>(7&o)&1),$(t,r),$(r,r),rr(r,t,e)}function er(r,t){var n=[v(),v(),v(),v()];Y(n[0],e),Y(n[1],a),Y(n[2],u),F(n[3],e,a),nr(r,n,t)}function or(r,t,n){var e,o=new Uint8Array(64),i=[v(),v(),v(),v()];for(n||h(t,32),W(o,t,32),o[0]&=248,o[31]&=127,o[31]|=64,er(i,o),tr(r,i),e=0;e<32;e++)t[e+32]=r[e];return 0}var ir=new Float64Array([237,211,245,92,26,99,18,88,214,156,247,162,222,249,222,20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16]);function hr(r,t){var n,e,o,i;for(e=63;32<=e;--e){for(n=0,o=e-32,i=e-12;o<i;++o)t[o]+=n-16*t[e]*ir[o-(e-32)],n=Math.floor((t[o]+128)/256),t[o]-=256*n;t[o]+=n,t[e]=0}for(o=n=0;o<32;o++)t[o]+=n-(t[31]>>4)*ir[o],n=t[o]>>8,t[o]&=255;for(o=0;o<32;o++)t[o]-=n*ir[o];for(e=0;e<32;e++)t[e+1]+=t[e]>>8,r[e]=255&t[e]}function ar(r){var t,n=new Float64Array(64);for(t=0;t<64;t++)n[t]=r[t];for(t=0;t<64;t++)r[t]=0;hr(r,n)}function fr(r,t,n,e){var o,i,h=new Uint8Array(64),a=new Uint8Array(64),f=new Uint8Array(64),s=new Float64Array(64),u=[v(),v(),v(),v()];W(h,e,32),h[0]&=248,h[31]&=127,h[31]|=64;var c=n+64;for(o=0;o<n;o++)r[64+o]=t[o];for(o=0;o<32;o++)r[32+o]=h[32+o];for(W(f,r.subarray(32),n+32),ar(f),er(u,f),tr(r,u),o=32;o<64;o++)r[o]=e[o];for(W(a,r,n+64),ar(a),o=0;o<64;o++)s[o]=0;for(o=0;o<32;o++)s[o]=f[o];for(o=0;o<32;o++)for(i=0;i<32;i++)s[o+i]+=a[o]*h[i];return hr(r.subarray(32),s),c}function sr(r,t,n,e){var o,i=new Uint8Array(32),h=new Uint8Array(64),a=[v(),v(),v(),v()],f=[v(),v(),v(),v()];if(n<64)return-1;if(function(r,t){var n=v(),e=v(),o=v(),i=v(),h=v(),a=v(),f=v();if(Y(r[2],u),N(r[1],t),I(o,r[1]),F(i,o,c),C(o,o,r[2]),O(i,r[2],i),I(h,i),I(a,h),F(f,a,h),F(n,f,o),F(n,n,i),G(n,n),F(n,n,o),F(n,n,i),F(n,n,i),F(r[0],n,i),I(e,r[0]),F(e,e,i),R(e,o)&&F(r[0],r[0],l),I(e,r[0]),F(e,e,i),R(e,o))return 1;P(r[0])===t[31]>>7&&C(r[0],s,r[0]),F(r[3],r[0],r[1])}(f,e))return-1;for(o=0;o<n;o++)r[o]=t[o];for(o=0;o<32;o++)r[o+32]=e[o];if(W(h,r,n),ar(h),nr(a,f,h),er(f,t.subarray(32)),$(a,f),tr(i,a),n-=64,g(t,0,i,0)){for(o=0;o<n;o++)r[o]=0;return-1}for(o=0;o<n;o++)r[o]=t[o+64];return n}function ur(r,t){if(32!==r.length)throw new Error("bad key size");if(24!==t.length)throw new Error("bad nonce size")}function cr(){for(var r=0;r<arguments.length;r++)if(!(arguments[r]instanceof Uint8Array))throw new TypeError("unexpected type, use Uint8Array")}function yr(r){for(var t=0;t<r.length;t++)r[t]=0}i.lowlevel={crypto_core_hsalsa20:_,crypto_stream_xor:M,crypto_stream:x,crypto_stream_salsa20_xor:d,crypto_stream_salsa20:E,crypto_onetimeauth:B,crypto_onetimeauth_verify:S,crypto_verify_16:b,crypto_verify_32:g,crypto_secretbox:k,crypto_secretbox_open:K,crypto_scalarmult:q,crypto_scalarmult_base:D,crypto_box_beforenm:X,crypto_box_afternm:j,crypto_box:function(r,t,n,e,o,i){var h=new Uint8Array(32);return X(h,o,i),j(r,t,n,e,h)},crypto_box_open:function(r,t,n,e,o,i){var h=new Uint8Array(32);return X(h,o,i),H(r,t,n,e,h)},crypto_box_keypair:V,crypto_hash:W,crypto_sign:fr,crypto_sign_keypair:or,crypto_sign_open:sr,crypto_secretbox_KEYBYTES:32,crypto_secretbox_NONCEBYTES:24,crypto_secretbox_ZEROBYTES:32,crypto_secretbox_BOXZEROBYTES:16,crypto_scalarmult_BYTES:32,crypto_scalarmult_SCALARBYTES:32,crypto_box_PUBLICKEYBYTES:32,crypto_box_SECRETKEYBYTES:32,crypto_box_BEFORENMBYTES:32,crypto_box_NONCEBYTES:24,crypto_box_ZEROBYTES:32,crypto_box_BOXZEROBYTES:16,crypto_sign_BYTES:64,crypto_sign_PUBLICKEYBYTES:32,crypto_sign_SECRETKEYBYTES:64,crypto_sign_SEEDBYTES:32,crypto_hash_BYTES:64,gf:v,D:c,L:ir,pack25519:z,unpack25519:N,M:F,A:O,S:I,Z:C,pow2523:G,add:$,set25519:Y,modL:hr,scalarmult:nr,scalarbase:er},i.randomBytes=function(r){var t=new Uint8Array(r);return h(t,r),t},i.secretbox=function(r,t,n){cr(r,t,n),ur(n,t);for(var e=new Uint8Array(32+r.length),o=new Uint8Array(e.length),i=0;i<r.length;i++)e[i+32]=r[i];return k(o,e,e.length,t,n),o.subarray(16)},i.secretbox.open=function(r,t,n){cr(r,t,n),ur(n,t);for(var e=new Uint8Array(16+r.length),o=new Uint8Array(e.length),i=0;i<r.length;i++)e[i+16]=r[i];return e.length<32||0!==K(o,e,e.length,t,n)?null:o.subarray(32)},i.secretbox.keyLength=32,i.secretbox.nonceLength=24,i.secretbox.overheadLength=16,i.scalarMult=function(r,t){if(cr(r,t),32!==r.length)throw new Error("bad n size");if(32!==t.length)throw new Error("bad p size");var n=new Uint8Array(32);return q(n,r,t),n},i.scalarMult.base=function(r){if(cr(r),32!==r.length)throw new Error("bad n size");var t=new Uint8Array(32);return D(t,r),t},i.scalarMult.scalarLength=32,i.scalarMult.groupElementLength=32,i.box=function(r,t,n,e){var o=i.box.before(n,e);return i.secretbox(r,t,o)},i.box.before=function(r,t){cr(r,t),function(r,t){if(32!==r.length)throw new Error("bad public key size");if(32!==t.length)throw new Error("bad secret key size")}(r,t);var n=new Uint8Array(32);return X(n,r,t),n},i.box.after=i.secretbox,i.box.open=function(r,t,n,e){var o=i.box.before(n,e);return i.secretbox.open(r,t,o)},i.box.open.after=i.secretbox.open,i.box.keyPair=function(){var r=new Uint8Array(32),t=new Uint8Array(32);return V(r,t),{publicKey:r,secretKey:t}},i.box.keyPair.fromSecretKey=function(r){if(cr(r),32!==r.length)throw new Error("bad secret key size");var t=new Uint8Array(32);return D(t,r),{publicKey:t,secretKey:new Uint8Array(r)}},i.box.publicKeyLength=32,i.box.secretKeyLength=32,i.box.sharedKeyLength=32,i.box.nonceLength=24,i.box.overheadLength=i.secretbox.overheadLength,i.sign=function(r,t){if(cr(r,t),64!==t.length)throw new Error("bad secret key size");var n=new Uint8Array(64+r.length);return fr(n,r,r.length,t),n},i.sign.open=function(r,t){if(cr(r,t),32!==t.length)throw new Error("bad public key size");var n=new Uint8Array(r.length),e=sr(n,r,r.length,t);if(e<0)return null;for(var o=new Uint8Array(e),i=0;i<o.length;i++)o[i]=n[i];return o},i.sign.detached=function(r,t){for(var n=i.sign(r,t),e=new Uint8Array(64),o=0;o<e.length;o++)e[o]=n[o];return e},i.sign.detached.verify=function(r,t,n){if(cr(r,t,n),64!==t.length)throw new Error("bad signature size");if(32!==n.length)throw new Error("bad public key size");var e,o=new Uint8Array(64+r.length),i=new Uint8Array(64+r.length);for(e=0;e<64;e++)o[e]=t[e];for(e=0;e<r.length;e++)o[e+64]=r[e];return 0<=sr(i,o,o.length,n)},i.sign.keyPair=function(){var r=new Uint8Array(32),t=new Uint8Array(64);return or(r,t),{publicKey:r,secretKey:t}},i.sign.keyPair.fromSecretKey=function(r){if(cr(r),64!==r.length)throw new Error("bad secret key size");for(var t=new Uint8Array(32),n=0;n<t.length;n++)t[n]=r[32+n];return{publicKey:t,secretKey:new Uint8Array(r)}},i.sign.keyPair.fromSeed=function(r){if(cr(r),32!==r.length)throw new Error("bad seed size");for(var t=new Uint8Array(32),n=new Uint8Array(64),e=0;e<32;e++)n[e]=r[e];return or(t,n,!0),{publicKey:t,secretKey:n}},i.sign.publicKeyLength=32,i.sign.secretKeyLength=64,i.sign.seedLength=32,i.sign.signatureLength=64,i.hash=function(r){cr(r);var t=new Uint8Array(64);return W(t,r,r.length),t},i.hash.hashLength=64,i.verify=function(r,t){return cr(r,t),0!==r.length&&0!==t.length&&(r.length===t.length&&0===w(r,0,t,0,r.length))},i.setPRNG=function(r){h=r},function(){var o="undefined"!=typeof self?self.crypto||self.msCrypto:null;if(o&&o.getRandomValues){i.setPRNG(function(r,t){var n,e=new Uint8Array(t);for(n=0;n<t;n+=65536)o.getRandomValues(e.subarray(n,n+Math.min(t-n,65536)));for(n=0;n<t;n++)r[n]=e[n];yr(e)})}else"undefined"!=typeof require&&(o=require("crypto"))&&o.randomBytes&&i.setPRNG(function(r,t){var n,e=o.randomBytes(t);for(n=0;n<t;n++)r[n]=e[n];yr(e)})}()}("undefined"!=typeof module&&module.exports?module.exports:self.nacl=self.nacl||{});</script>
+</body>
+</html>
