@@ -1,8 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# 무한매수 로컬 실행기 설치 — Android (Termux) · MUHAN-RUNNER V1.01 (261015)
+# 무한매수 로컬 실행기 설치 — Android (Termux) · MUHAN-RUNNER V1.02 (261015)
 # Termux(F-Droid 판)에 한 줄:  curl -fsSL https://mins0x001.github.io/TQQQ/runner/install_android.sh | bash
 # 브라우저 엔진(Chromium)은 Termux 에서 직접 못 돌아서, Termux 안에 Ubuntu(proot)를 깔고 그 안에서 실행합니다.
 set -e
+# curl | bash 로 실행되면 키 입력이 막히므로 파일로 받아 터미널에서 다시 실행
+if [ ! -t 0 ] && [ -z "$MUHAN_REEXEC" ]; then
+  curl -fsSL https://mins0x001.github.io/TQQQ/runner/install_android.sh -o $HOME/muhan_install.sh
+  MUHAN_REEXEC=1 exec bash $HOME/muhan_install.sh < /dev/tty
+fi
 echo "① Termux 패키지 (2~3분)"
 pkg update -y >/dev/null && pkg install -y proot-distro cronie termux-services curl >/dev/null
 echo "② Ubuntu + 파이썬 + 브라우저 엔진 (10~20분 · 와이파이 권장)"
@@ -16,7 +21,7 @@ exec proot-distro login ubuntu -- python3 /root/muhan/muhan_runner.py "${@:-stat
 EOS
 chmod +x $PREFIX/bin/muhan
 echo "③ 키 입력"
-muhan setup < /dev/tty
+proot-distro login ubuntu -- python3 /root/muhan/muhan_runner.py setup
 ( crontab -l 2>/dev/null | grep -v muhan; echo "*/5 * * * * $PREFIX/bin/muhan tick >/dev/null 2>&1" ) | crontab -
 mkdir -p ~/.termux/boot
 printf '#!/data/data/com.termux/files/usr/bin/sh\ntermux-wake-lock\ncrond\n' > ~/.termux/boot/start-muhan && chmod +x ~/.termux/boot/start-muhan

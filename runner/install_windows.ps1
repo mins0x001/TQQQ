@@ -1,4 +1,4 @@
-# MUHAN-RUNNER V1.01 (261015) installer for Windows 11  (ASCII only - safe for Windows PowerShell 5.1)
+# MUHAN-RUNNER V1.02 (261015) installer for Windows 11  (ASCII only - safe for Windows PowerShell 5.1)
 # Run in PowerShell:  irm https://mins0x001.github.io/TQQQ/runner/install_windows.ps1 | iex
 $ErrorActionPreference = "Stop"
 $H = "$env:USERPROFILE\muhan"; New-Item -ItemType Directory -Force $H | Out-Null
