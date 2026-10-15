@@ -1,5 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# 무한매수 로컬 실행기 설치 — Android (Termux) · MUHAN-RUNNER V1.00 (261015)
+# 무한매수 로컬 실행기 설치 — Android (Termux) · MUHAN-RUNNER V1.01 (261015)
 # Termux(F-Droid 판)에 한 줄:  curl -fsSL https://mins0x001.github.io/TQQQ/runner/install_android.sh | bash
 # 브라우저 엔진(Chromium)은 Termux 에서 직접 못 돌아서, Termux 안에 Ubuntu(proot)를 깔고 그 안에서 실행합니다.
 set -e

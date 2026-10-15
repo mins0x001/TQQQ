@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-무한매수 로컬 실행기 — MUHAN-RUNNER V1.00 (261015)
+무한매수 로컬 실행기 — MUHAN-RUNNER V1.01 (261015)
 Windows 11(작업 스케줄러) · Android(Termux + Ubuntu)에서 5분마다 `tick` 으로 실행됩니다.
 
   · 각 허브(무한매수 · 평생매수 · K무한매수)의 자동 실행 시각이 되면, 허브에 올라간 최신 앱(api.html)에서
@@ -26,7 +26,7 @@ import urllib.request
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-VERSION = "MUHAN-RUNNER V1.00 (261015)"
+VERSION = "MUHAN-RUNNER V1.01 (261015)"
 BASE = "https://mins0x001.github.io"
 SELF_URL = BASE + "/TQQQ/runner/muhan_runner.py"
 KST = ZoneInfo("Asia/Seoul")
