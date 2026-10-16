@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.00-261015-SOXL-Panel-Unified">
-<meta name="release-date" content="261015">
-<title>SOXL 무한매수 AI (V1.00 - 261015)</title>
+<meta name="version" content="V1.01-261016-SOXL-Panel-Unified">
+<meta name="release-date" content="261016">
+<title>SOXL 무한매수 AI (V1.01 - 261016)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -789,8 +789,8 @@
   </section>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">SOXL무한매수_V1_00_261015.HTML</span>)</button>
-  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.00 (261015)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">SOXL무한매수_V1_01_261016.HTML</span>)</button>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.01 (261016)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>
   </footer>
 
   </div>
@@ -999,8 +999,8 @@
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V1.00";
-const RELEASE_DATE = "261015";
+const APP_VERSION = "V1.01";
+const RELEASE_DATE = "261016";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
 const FINNHUB_API_KEY = "daik4m9r01qr9o8hnfj0daik4m9r01qr9o8hnfjg";
@@ -1075,7 +1075,7 @@ async function fhFetch(endpoint, params = {}) {
   const url = new URL(`${FINNHUB_BASE_URL}${endpoint}`);
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
   url.searchParams.set("token", FINNHUB_API_KEY);
-  const res = await fetch(url.toString());
+  const res = await fetchRetry(url.toString());
   if (!res.ok) throw new Error(`HTTP 오류 (${res.status})`);
   const data = await res.json();
   if (data.error) throw new Error(data.error);
@@ -1097,7 +1097,7 @@ async function tdFetchTimeSeries(symbol, outputsize) {
   url.searchParams.set("interval", "1day");
   url.searchParams.set("outputsize", outputsize);
   url.searchParams.set("apikey", TWELVE_DATA_API_KEY);
-  const res = await fetch(url.toString());
+  const res = await fetchRetry(url.toString());
   if (!res.ok) throw new Error(`HTTP 오류 (${res.status})`);
   const data = await res.json();
   if (data.status === "error" || !data.values) {
@@ -3246,6 +3246,17 @@ function goTab(id, opts) {
    · ?embed=panel : 메리츠 자동주문(해외) 앱의 SOXL·TQQQ 탭 안 → 📒 주문·사이클 화면만
    · ?embed=api   : 메리츠 앱이 보이지 않게 띄워 오늘의 LOC 계산 (화면 무관)
    · 단독 실행     : AI 분석 앱 → 주문·사이클·백업은 메리츠 자동주문(해외)로 안내 */
+
+/* 공통: 시세 재시도 */
+async function fetchRetry(u, opt) {        // 무료 시세 API 는 여러 앱이 동시에 부르면 한도(429)·순간 끊김으로 'Failed to fetch' — 1.5·4·8초 뒤 다시
+  let last;
+  for (const w of [0, 1500, 4000, 8000]) {
+    if (w) await new Promise(r => setTimeout(r, w));
+    try { const r = await fetch(u, opt); if (r.status !== 429) return r; last = new Error("요청 한도 초과(429)"); }
+    catch (e) { last = e; }
+  }
+  throw new Error((last && last.message) + " — 4번 시도 실패 (인터넷 연결 또는 시세 API 한도 · 1분 뒤 다시)");
+}
 const EMBED = (new URLSearchParams(location.search).get("embed") || "").toLowerCase();
 function applyViewMode() {
   if (EMBED === "panel") {
@@ -3257,6 +3268,8 @@ function applyViewMode() {
     return;
   }
   if (EMBED) return;
+  document.body.insertAdjacentHTML("afterbegin", '<a href="./" class="hub-top" style="position:fixed;top:10px;left:10px;z-index:99;padding:6px 12px;border-radius:999px;background:rgba(10,16,28,0.85);border:1px solid rgba(255,255,255,0.15);color:#cfe;font-size:13px;font-weight:700;text-decoration:none;">‹ 허브</a>');
+  setTimeout(() => { const b = document.getElementById("fetchBtn"); if (b && !b.disabled && typeof lastLocOrder !== "undefined" && !lastLocOrder) b.click(); }, 700);   // 열면 시세 자동 1회
   ["pg-order", "pg-backup"].forEach(id => { const b = document.querySelector(`#tabbar .tb[data-p="${id}"]`); if (b) b.remove(); });
   const tb = document.getElementById("tabbar"); if (tb) tb.style.gridTemplateColumns = `repeat(${tb.querySelectorAll(".tb").length},minmax(0,1fr))`;
   const eng = document.getElementById("pg-engine");
