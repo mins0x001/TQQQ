@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.04-261016-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.05-261016-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261016">
-<title>QLD 평생매수AI분석 (V1.04 - 261016)</title>
+<title>QLD 평생매수AI분석 (V1.05 - 261016)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -668,8 +668,8 @@
   </section>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_04_261016.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.04 (261016)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_05_261016.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.05 (261016)</code></div>
   </footer>
 
   </div>
@@ -942,7 +942,7 @@
 </nav>
 
 <script>
-const APP_VERSION = "V1.04";
+const APP_VERSION = "V1.05";
 const RELEASE_DATE = "261016";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -2835,6 +2835,8 @@ function applyViewMode() {
     return;
   }
   if (EMBED) return;
+  { const bb = document.querySelector('#tabbar .tb[data-p="pg-backup"]'), tb = document.getElementById("tabbar");   // 💾 백업 탭 숨김 — ☁️ Gist 자동 동기화로 충분
+    if (bb && tb) { bb.remove(); tb.style.gridTemplateColumns = `repeat(${tb.querySelectorAll(".tb").length},minmax(0,1fr))`; if (document.getElementById("pg-backup").classList.contains("on")) goTab("pg-order"); } }
   document.body.insertAdjacentHTML("afterbegin", '<a href="./" class="hub-top" style="position:fixed;top:10px;left:10px;z-index:99;padding:6px 12px;border-radius:999px;background:rgba(10,16,28,0.85);border:1px solid rgba(255,255,255,0.15);color:#cfe;font-size:13px;font-weight:700;text-decoration:none;">‹ 허브</a>');
   setTimeout(() => { const b = document.getElementById("fetchBtn"); if (b && !b.disabled && typeof lastLocOrder !== "undefined" && !lastLocOrder) b.click(); }, 700);   // 열면 시세 자동 1회
   const o = document.getElementById("pg-order");
