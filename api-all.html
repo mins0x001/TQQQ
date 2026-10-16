@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="version" content="V1.00-261016-MeritzAutoOrder-All">
+<meta name="release-date" content="261016">
+<meta name="theme-color" content="#0B1220">
+<link rel="manifest" href="manifest.webmanifest">
+<title>메리츠 자동주문(통합) (V1.00 - 261016)</title>
+<style>
+  :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
+  *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
+  .app{max-width:560px;margin:0 auto;padding:12px 16px 90px;}
+  .top{display:flex;justify-content:space-between;align-items:center;font-size:13px;} .top a{color:var(--text-dim);text-decoration:none;font-weight:700;}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;} h1{font-size:21px;margin:8px 0 2px;} .sub{color:var(--text-dim);font-size:13px;margin:0 0 12px;}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:14px;margin:12px 0;}
+  .kick{font-size:10.5px;font-weight:800;letter-spacing:.1em;color:var(--glow);} h2{font-size:17px;margin:2px 0 10px;}
+  .sym{border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin:8px 0;background:var(--panel-2);}
+  .sym-h{display:flex;justify-content:space-between;align-items:center;gap:8px;} .sym-h b{font-size:15px;}
+  .row{display:flex;justify-content:space-between;font-size:13.5px;margin:4px 0;} .row b{font-family:'JetBrains Mono',monospace;}
+  .rl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0 2px;}
+  .rp{font-size:11.5px;font-weight:900;padding:3px 9px;border-radius:999px;border:1.5px solid;white-space:nowrap;}
+  .rp.rule{color:#1A1203;background:var(--amber);border-color:var(--amber);} .rp.bt{color:#04211C;background:var(--glow);border-color:var(--glow);}
+  .rp.manual{color:var(--text);background:rgba(75,90,115,.25);border-color:var(--border);} .rp.st{color:var(--amber);background:rgba(245,165,36,.12);border-color:rgba(245,165,36,.55);font-weight:800;white-space:normal;}
+  .rv{font-size:12px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--text-dim);}
+  .chk{display:inline-flex;gap:4px;align-items:center;font-size:13px;font-weight:700;margin-left:8px;} .chk input{width:18px;height:18px;}
+  .btn{min-height:44px;border-radius:12px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);font-size:15px;font-weight:800;padding:0 14px;cursor:pointer;}
+  .btn.live{width:100%;background:linear-gradient(90deg,#F0475A,#F5A524);border:0;color:#fff;margin-top:6px;} .btn.live.armed{background:#F0475A;animation:pulse 1s infinite;}
+  @keyframes pulse{50%{opacity:.7}} .btn:disabled{opacity:.5;}
+  select,input[type=text]{min-height:44px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);padding:0 10px;font-size:15px;width:100%;}
+  .msg{font-size:13px;margin:8px 0;padding:9px 11px;border-radius:10px;background:var(--panel-2);border:1px solid var(--border);} .msg.ok{border-color:var(--up);} .msg.err{border-color:var(--down);}
+  .hint{font-size:12px;color:var(--text-dim);line-height:1.6;} .busy{color:var(--text-faint);font-size:13px;}
+  .page{display:none;} .page.on{display:block;}
+  .tabbar{position:fixed;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(3,1fr);background:rgba(11,18,32,.96);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom);}
+  .tb{background:none;border:0;color:var(--text-faint);padding:9px 0 8px;font-size:12px;font-weight:700;} .tb.on{color:var(--glow);} .tb .ic{display:block;font-size:19px;}
+  .seed{display:grid;grid-template-columns:110px 1fr;gap:8px;align-items:center;margin:8px 0;} .seed label{font-weight:800;font-size:14px;}
+  .plan-frame{position:fixed;left:-2000px;top:0;width:412px;height:900px;border:0;opacity:0;pointer-events:none;}
+  .res{border-left:3px solid var(--border);padding:6px 10px;margin:8px 0;font-size:13px;} .res.done{border-color:var(--up);} .res.blocked,.res.error{border-color:var(--down);}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><a href="./">‹ 허브</a><span class="mono" id="ver" style="color:var(--text-faint)">V1.00 (261016)</span></div>
+  <h1>🔌 메리츠 자동주문(통합)</h1>
+  <p class="sub">SOXL · TQQQ · QLD무한매수 · QLD평생매수 — 열면 4종목 계산, ⚡ 한 번에 실제 주문</p>
+  <div id="msg"></div>
+
+  <div class="page on" id="pg-main">
+    <section class="card">
+      <div class="kick">ORDER CODE · 공통</div><h2>주문코드</h2>
+      <select id="code"></select>
+      <div class="hint" style="margin-top:6px;">4종목 모두 이 코드로 주문합니다 (각 봇 설정에 함께 저장 · 모든 기기 동기화 · 영구). 시장가 계열은 단가 0.</div>
+    </section>
+    <section class="card">
+      <div class="kick">TODAY'S LOC · API ORDER</div><h2>오늘의 LOC 주문</h2>
+      <div id="plans"></div>
+      <button class="btn live" id="live" type="button">⚡ 바로 실행 (4종목 실제 주문)</button>
+      <div class="hint" style="margin-top:6px;">한 번 누르면 확인, 6초 안에 한 번 더 누르면 실제 주문. 메리츠 실제 주문내역에 같은 주문이 있으면 🔁 중복으로 건너뜁니다. SOXL·TQQQ = A계좌 봇, QLD 두 개 = B계좌 봇.</div>
+      <button class="btn" id="recalc" type="button" style="width:100%;margin-top:8px;">↻ 다시 계산</button>
+    </section>
+  </div>
+
+  <div class="page" id="pg-result">
+    <section class="card"><div class="kick">RESULTS</div><h2>최근 실행 결과</h2><div id="results" class="busy">불러오는 중…</div>
+      <button class="btn" id="reload" type="button" style="width:100%;margin-top:8px;">↻ 새로고침</button></section>
+  </div>
+
+  <div class="page" id="pg-setup">
+    <section class="card"><div class="kick">SEED · 영구 저장</div><h2>종목별 시드</h2>
+      <div id="seeds" class="busy">불러오는 중…</div>
+      <button class="btn" id="seedSave" type="button" style="width:100%;margin-top:6px;">💾 시드 저장 (모든 기기 · 클라우드 봇 동기화)</button>
+      <div class="hint" style="margin-top:6px;">SOXL·TQQQ·QLD무한매수 = 무한매수 전체 시드 · QLD평생매수 = 🤖 시드 배분 엔진 전체 시드. 저장하면 각 분석 앱과 봇이 다음 계산부터 이 값을 씁니다.</div>
+    </section>
+    <section class="card"><div class="kick">BOTS</div><h2>봇 · 앱키 · 텔레그램 · cron</h2>
+      <div class="hint">봇 설치·메리츠 앱키·텔레그램·cron-job.org·실행 시각은 각 앱의 🛠 설정에서 한 번만 하면 됩니다.<br>
+      <a style="color:var(--glow)" href="api-soxl.html">SOXL무한매수</a> · <a style="color:var(--glow)" href="api-tqqq.html">TQQQ무한매수</a> (A계좌 · 같은 봇) · <a style="color:var(--glow)" href="api-qm.html">QLD무한매수</a> · <a style="color:var(--glow)" href="api-qld.html">QLD평생매수</a> (B계좌)</div>
+      <div id="bots" class="hint" style="margin-top:8px;"></div></section>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar">
+  <button class="tb on" data-p="pg-main"><span class="ic">⚡</span>주문</button>
+  <button class="tb" data-p="pg-result"><span class="ic">🧾</span>결과</button>
+  <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
+</nav>
+<script>
+const APP_VERSION = "V1.00", RELEASE_DATE = "261016";
+/* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
+const S = [
+  { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
+  { id: "TQQQ", name: "TQQQ 무한매수", app: "tqqq.html", cfg: "muhan-bot.json", sync: "tqqq.json", key: "TQQQ", seedDef: 36000 },
+  { id: "QLDM", name: "QLD 무한매수", app: "qldm.html", cfg: "muhan-bot-qldm.json", sync: "qldm.json", key: "QLD", seedDef: 70000 },
+  { id: "QLDL", name: "QLD 평생매수", app: "qld.html", cfg: "muhan-bot-qld.json", sync: "qld.json", key: "QLD", seedDef: 370000, life: true },
+];
+const CFGS = ["muhan-bot.json", "muhan-bot-qldm.json", "muhan-bot-qld.json"];
+const CODES = [["01","지정가"],["05","시장가"],["31","LOO (장 개시 지정가)"],["32","LOC (장 마감 지정가)"],["33","MOO (장 개시 시장가)"],["34","MOC (장 마감 시장가)"],["35","Limit VWAP"],["36","Limit TWAP"],["37","VWAP"],["38","TWAP"]];
+const MKT = ["05","33","34","37","38"], ML = { rule: "① 규칙 기반", bt: "② 백테스트 최적", manual: "✎ 직접 입력" };
+const tok = () => { try { return localStorage.getItem("muhansync_token") || ""; } catch (e) { return ""; } };
+const gid = () => { try { return localStorage.getItem("muhansync_gist") || ""; } catch (e) { return ""; } };
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const usd = v => "$" + (+v || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const $0 = v => "$" + Math.round(+v || 0).toLocaleString("en-US");
+const G = { files: {}, cfg: {}, plan: {}, err: {}, busy: false };
+function msg(t, ok) { document.getElementById("msg").innerHTML = t ? `<div class="msg ${ok === false ? "err" : ok ? "ok" : ""}">${t}</div>` : ""; }
+
+async function gh(path, opt) {
+  opt = opt || {};
+  const h = { Authorization: "Bearer " + tok(), Accept: "application/vnd.github+json" };
+  if (opt.body) h["Content-Type"] = "application/json";
+  let r; try { r = await fetch("https://api.github.com" + path, { method: opt.method || "GET", headers: h, body: opt.body ? JSON.stringify(opt.body) : undefined, cache: "no-store" }); }
+  catch (e) { throw new Error("인터넷 연결 없음"); }
+  if (r.status === 204) return {};
+  if (!r.ok) throw new Error(`GitHub ${r.status} — 토큰 권한(gist·repo·workflow) 확인`);
+  return r.json();
+}
+const J = (n, d) => { try { return G.files[n] ? JSON.parse(G.files[n]) : d; } catch (e) { return d; } };
+async function loadGist() {
+  const g = await gh("/gists/" + gid());
+  G.files = Object.fromEntries(Object.entries(g.files || {}).map(([k, v]) => [k, v.content]));
+  CFGS.forEach(f => G.cfg[f] = J(f, {}));
+}
+async function writeFiles(map) {           // { 파일명: 객체 } → Gist 한 번에 저장
+  const files = Object.fromEntries(Object.entries(map).map(([k, v]) => [k, { content: JSON.stringify(v, null, 1) }]));
+  await gh("/gists/" + gid(), { method: "PATCH", body: { files } });
+  Object.entries(map).forEach(([k, v]) => G.files[k] = JSON.stringify(v));
+}
+
+/* 오늘의 LOC: 각 분석 앱을 보이지 않게 열어 lastLocOrder 를 받는다 (봇과 같은 코드 · 같은 기록) — 시세 API 한도 때문에 차례로 */
+function computePlan(app) {
+  return new Promise((resolve, reject) => {
+    const f = document.createElement("iframe"); f.className = "plan-frame"; f.setAttribute("aria-hidden", "true"); f.tabIndex = -1;
+    f.src = `${app}?embed=api&t=${Date.now()}`;
+    const t0 = Date.now(); let clicked = 0, mark = 0;
+    const done = (e, v) => { try { f.remove(); } catch (x) {} e ? reject(e) : resolve(v); };
+    const tick = () => {
+      let w; try { w = f.contentWindow; } catch (e) {}
+      const ev = x => w.eval(x);
+      try {
+        if (Date.now() - t0 > 150000) return done(new Error("시간 초과 — 시세 API 한도일 수 있어요. 1분 뒤 ↻ 다시 계산"));
+        if (w && !clicked && ev("typeof syncMeta==='function' && typeof lastLocOrder!=='undefined' && (!syncTok() || (syncMeta().last>0 && !__syncBusy))")) {
+          mark = ev("Date.now()"); clicked = Date.now(); w.document.getElementById("fetchBtn").click();
+        } else if (w && clicked && Date.now() - clicked > 2500 && ev(`!!lastLocOrder && Date.parse(lastLocOrder.generated_at) >= ${mark} && !__syncBusy`)) {
+          return done(null, JSON.parse(ev("JSON.stringify(lastLocOrder)")));
+        }
+      } catch (e) {}
+      setTimeout(tick, 400);
+    };
+    f.addEventListener("load", () => setTimeout(tick, 300));
+    document.body.appendChild(f);
+  });
+}
+async function computeAll() {
+  if (G.busy) return; G.busy = true;
+  S.forEach(s => { G.plan[s.id] = null; G.err[s.id] = ""; }); render();
+  for (const s of S) {
+    try { G.plan[s.id] = await computePlan(s.app); } catch (e) { G.err[s.id] = e.message; }
+    render();
+  }
+  G.busy = false; render();
+}
+
+/* 화면 */
+const sidesOf = s => { const c = G.cfg[s.cfg] || {}; return Object.assign({ buy: true, sell: !s.life && s.id !== "QLDM" }, (c.sides || {})[s.key] || {}); };
+const codeNow = () => String((G.cfg["muhan-bot.json"] || {}).oder_code || "32");
+function rule(P) {
+  const b = P.bot || {};
+  if (b.kind === "lifetime") {
+    const m = b.engine_mode === "rule" ? "rule" : "bt";
+    return `<div class="rl">${b.engine_w ? `<span class="rp ${m}">${ML[m]} 적용 중</span><span class="rv">배분 ${b.engine_w.join("/")}% · ${b.engine_n.join("/")}분할</span>` : ""}</div>
+      <div class="rl"><span class="rp st">${b.engine_tier ? b.engine_tier + "차 구간 · " : ""}기준가 × (1 − ${(+b.pct || 0).toFixed(1)}%) · 주 1회${b.engine_amt ? " · 1회 " + $0(b.engine_amt) : ""}</span></div>`;
+  }
+  const m = ML[b.param_mode] ? b.param_mode : "rule";
+  return `<div class="rl"><span class="rp ${m}">${ML[m]} 적용 중</span>${b.splits ? `<span class="rv">${b.splits}분할${b.mult ? ` · 2단계 ×${b.mult} (${b.splits * b.mult}분할 연속)` : ""}</span>` : ""}</div>
+    <div class="rl"><span class="rp st">${esc(P.stage || "")}</span>${b.sell_pct ? `<span class="rv">익절 +${(+b.sell_pct).toFixed(2)}%</span>` : ""}${b.seed ? `<span class="rv">시드 ${$0(b.seed)}</span>` : ""}</div>`;
+}
+function render() {
+  const code = codeNow(), mk = MKT.includes(code);
+  const sel = document.getElementById("code");
+  if (document.activeElement !== sel) sel.innerHTML = CODES.map(([v, n]) => `<option value="${v}" ${v === code ? "selected" : ""}>"${v}" ${n}</option>`).join("");
+  document.getElementById("plans").innerHTML = S.map(s => {
+    const P = G.plan[s.id], sd = sidesOf(s), inst = !!(G.cfg[s.cfg] || {}).installed_at;
+    const head = `<div class="sym-h"><b>${s.name}</b><span><label class="chk"><input type="checkbox" data-side="${s.id}:buy" ${sd.buy ? "checked" : ""}>매수</label><label class="chk"><input type="checkbox" data-side="${s.id}:sell" ${sd.sell ? "checked" : ""} ${s.life ? "disabled" : ""}>매도</label></span></div>`;
+    if (!P) return `<div class="sym">${head}<div class="busy">${G.err[s.id] ? "⚠ " + esc(G.err[s.id]) : "계산 중…"}</div></div>`;
+    const o = Object.fromEntries((P.orders || []).map(x => [x.side, x]));
+    const line = (side, lab) => o[side] ? `<div class="row"><span>${lab} ${CODES.find(c => c[0] === code)[1]}</span><b>${mk ? "시장가" : usd(o[side].price)} × ${o[side].qty}주</b></div>` : "";
+    return `<div class="sym">${head}${rule(P)}${line("buy", "매수")}${line("sell", "매도")}${!o.buy && !o.sell ? `<div class="busy">오늘 규칙상 주문 없음${sd.buy ? " (☑매수면 봇이 같은 공식으로 주문)" : ""}</div>` : ""}${inst ? "" : `<div class="busy">⚠ 봇 미설치 — 🛠 설정에서 해당 앱으로</div>`}</div>`;
+  }).join("");
+}
+function renderSeeds() {
+  document.getElementById("seeds").innerHTML = S.map(s => {
+    const d = J(s.sync, {}), v = s.life ? ((d.seed && d.seed.v) || s.seedDef) : (+(d.params && d.params.seed) || s.seedDef);
+    return `<div class="seed"><label>${s.name}</label><input type="text" inputmode="numeric" id="seed-${s.id}" value="${Math.round(v).toLocaleString("en-US")}"></div>`;
+  }).join("");
+  document.getElementById("bots").innerHTML = CFGS.map(f => { const c = G.cfg[f] || {}; return `${f.replace(".json", "")}: ${c.installed_at ? `✅ ${esc(c.owner)}/${esc(c.repo)} · ${esc((c.bot_version || "").split(" ")[1] || "")} · ${c.mode === "live" ? "🟢 자동 실전" : "⏸ 꺼짐"}` : "⚠ 미설치"}`; }).join("<br>");
+}
+function renderResults() {
+  document.getElementById("results").innerHTML = CFGS.map(f => {
+    const st = J(f.replace(".json", "-status.json"), null);
+    if (!st) return `<div class="res"><b>${f.replace(".json", "")}</b> · 실행 기록 없음</div>`;
+    const rows = Object.entries(st.results || {}).map(([k, r]) => `${esc(k)}: ${esc(r.summary || "")}`).join("<br>");
+    return `<div class="res ${esc(st.overall)}"><b>${f.replace(".json", "")}</b> · ${esc(st.overall)} · ${esc(String(st.run_at || "").slice(5, 16).replace("T", " "))}<br>${rows || esc(st.note || "")}</div>`;
+  }).join("");
+}
+
+/* 동작 */
+document.getElementById("code").addEventListener("change", async e => {
+  const v = e.target.value;
+  try { const m = {}; CFGS.forEach(f => { if (G.cfg[f] && G.cfg[f].installed_at) m[f] = Object.assign({}, G.cfg[f], { oder_code: v }); G.cfg[f] = Object.assign({}, G.cfg[f], { oder_code: v }); });
+    await writeFiles(m); msg(`주문코드 "${v}" 저장 · 4종목 공통 · 모든 기기 동기화`, true); render(); } catch (x) { msg("⚠ " + x.message, false); }
+});
+document.addEventListener("change", async e => {
+  const t = e.target; if (!t.dataset || !t.dataset.side) return;
+  const [id, side] = t.dataset.side.split(":"), s = S.find(x => x.id === id), c = Object.assign({}, G.cfg[s.cfg] || {});
+  c.sides = Object.assign({}, c.sides || {}); c.sides[s.key] = Object.assign({}, sidesOf(s), { [side]: t.checked });
+  c.symbols = Object.assign({}, c.symbols || {}, { [s.key]: !!(c.sides[s.key].buy || c.sides[s.key].sell) });
+  try { await writeFiles({ [s.cfg]: c }); G.cfg[s.cfg] = c; msg(`${s.name} ${side === "buy" ? "매수" : "매도"} ${t.checked ? "☑ 주문함" : "☐ 주문 안 함"} · 저장`, true); }
+  catch (x) { t.checked = !t.checked; msg("⚠ " + x.message, false); }
+});
+let armed = 0;
+document.getElementById("live").addEventListener("click", async () => {
+  const b = document.getElementById("live");
+  if (Date.now() - armed > 6000) { armed = Date.now(); b.classList.add("armed"); b.textContent = "⚡ 한 번 더 누르면 실제 주문"; setTimeout(() => { b.classList.remove("armed"); b.textContent = "⚡ 바로 실행 (4종목 실제 주문)"; }, 6000); return; }
+  armed = 0; b.disabled = true; b.textContent = "요청 중…";
+  const out = [];
+  for (const f of CFGS) {
+    const c = G.cfg[f] || {};
+    if (!c.installed_at) { out.push(`⚠ ${f.replace(".json", "")} 미설치`); continue; }
+    try { await gh(`/repos/${c.owner}/${c.repo}/actions/workflows/muhan-bot.yml/dispatches`, { method: "POST", body: { ref: "main", inputs: { mode: "live" } } }); out.push(`✅ ${c.repo} 실행 요청`); }
+    catch (x) { out.push(`✖ ${c.repo}: ${esc(x.message)}`); }
+  }
+  msg(out.join("<br>") + "<br>1~3분 뒤 🧾 결과·텔레그램에 실행 결과가 뜹니다", !out.some(x => x.startsWith("✖")));
+  b.disabled = false; b.textContent = "⚡ 바로 실행 (4종목 실제 주문)";
+  setTimeout(() => refresh(), 90000);
+});
+document.getElementById("seedSave").addEventListener("click", async () => {
+  try {
+    await loadGist(); const m = {}, now = Date.now();
+    for (const s of S) {
+      const v = Math.round(parseFloat(String(document.getElementById("seed-" + s.id).value).replace(/[^\d.]/g, "")));
+      if (!(v >= 1000)) throw new Error(`${s.name} 시드는 $1,000 이상`);
+      const d = Object.assign({}, m[s.sync] || J(s.sync, {}));
+      if (s.life) { const old = d.seed && d.seed.v; if (old === v) continue; d.seed = Object.assign({ mode: "opt" }, d.seed || {}, { v, at: new Date(now).toISOString() }); }
+      else { if (+(d.params && d.params.seed) === v) continue; d.params = Object.assign({ mode: "rule" }, d.params || {}, { seed: String(v) }); d.paramsAt = now; }
+      m[s.sync] = d;
+    }
+    if (!Object.keys(m).length) { msg("바뀐 시드가 없습니다", true); return; }
+    await writeFiles(m); renderSeeds();
+    msg(`💾 시드 저장 (${Object.keys(m).join(", ")}) · 모든 기기·봇 동기화 · 오늘의 LOC 다시 계산`, true); computeAll();
+  } catch (x) { msg("⚠ " + x.message, false); }
+});
+document.getElementById("recalc").addEventListener("click", () => computeAll());
+document.getElementById("reload").addEventListener("click", () => refresh());
+document.getElementById("tabbar").addEventListener("click", e => { const b = e.target.closest(".tb"); if (!b) return;
+  document.querySelectorAll(".tb").forEach(x => x.classList.toggle("on", x === b)); document.querySelectorAll(".page").forEach(p => p.classList.toggle("on", p.id === b.dataset.p)); window.scrollTo(0, 0); });
+async function refresh() { try { await loadGist(); render(); renderSeeds(); renderResults(); } catch (x) { msg("⚠ " + x.message, false); } }
+(async () => {
+  render();
+  if (!tok() || !gid()) { msg("☁️ 동기화가 꺼져 있습니다 — SOXL·TQQQ 앱 💾 백업 탭에서 동기화를 먼저 켜세요 (같은 토큰을 씁니다)", false); return; }
+  await refresh(); computeAll();          // 열면 바로 4종목 계산
+})();
+</script>
+</body>
+</html>
