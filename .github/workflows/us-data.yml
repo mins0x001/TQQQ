@@ -100,7 +100,7 @@ jobs:
           import csv, io, json, time, urllib.request
           from datetime import datetime, timedelta
           from zoneinfo import ZoneInfo
-          UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36", "Accept": "application/json,text/csv,*/*"}
+          UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36", "Accept": "application/json,text/plain,*/*", "Referer": "https://edition.cnn.com/", "Origin": "https://edition.cnn.com"}
           def get(url, raw=False):
               last = None
               for w in (0, 5, 15):
@@ -140,15 +140,30 @@ jobs:
                   ser = fred("DEXKOUS", 260); out["fx"] = {"last": ser[-1][1], "date": ser[-1][0], "series": ser}
               except Exception as e2:
                   print("환율 FRED 실패:", e2)
+          def yahoo(sym, rng="1y"):
+              c = get(f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range={rng}&interval=1d")["chart"]["result"][0]
+              return [[datetime.utcfromtimestamp(t).strftime("%Y-%m-%d"), round(v, 3)] for t, v in zip(c["timestamp"], c["indicators"]["quote"][0]["close"]) if v]
+          def bls(sid):      # 미국 노동통계국 공개 API (키 없이 하루 25회) — CPI-U 전체, 비계절조정(발표 기준 전년비)
+              y = datetime.utcnow().year
+              j = json.loads(urllib.request.urlopen(urllib.request.Request("https://api.bls.gov/publicAPI/v1/timeseries/data/", data=json.dumps({"seriesid": [sid], "startyear": str(y - 6), "endyear": str(y)}).encode(), headers={"Content-Type": "application/json", "User-Agent": UA["User-Agent"]}), timeout=30).read().decode())
+              rows = j["Results"]["series"][0]["data"]
+              return sorted([[f"{r['year']}-{r['period'][1:]}-01", float(r["value"])] for r in rows if r["period"].startswith("M") and r["period"] != "M13"])
           try:
-              ser = fred("CPIAUCSL", 73)
+              try:
+                  ser = bls("CUUR0000SA0")[-73:]
+              except Exception as e:
+                  print("CPI BLS 실패:", e); ser = fred("CPIAUCNS", 73)
               yoy = round((ser[-1][1] / ser[-13][1] - 1) * 100, 2)
               out["cpi"] = {"last": ser[-1][1], "date": ser[-1][0], "yoy": yoy, "series": ser}
               print("CPI", ser[-1], "YoY", yoy)
           except Exception as e:
               print("CPI 실패:", e)
           try:
-              ser = fred("DGS10", 260); out["ust"] = {"last": ser[-1][1], "date": ser[-1][0], "series": ser}
+              try:
+                  ser = yahoo("^TNX")
+              except Exception as e:
+                  print("10Y Yahoo 실패:", e); ser = fred("DGS10", 260)
+              out["ust"] = {"last": ser[-1][1], "date": ser[-1][0], "series": ser}
               print("10Y", ser[-1])
           except Exception as e:
               print("10Y 실패:", e)

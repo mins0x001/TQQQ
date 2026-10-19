@@ -84,10 +84,10 @@
 <div class="wrap">
   <header>
     <h1>무한매수 허브<span class="app-pill" id="appPill" hidden>앱</span></h1>
-    <p>메리츠 자동주문(통합) · SOXL · TQQQ (A계좌) · QLD무한매수 · QLD평생매수 (B계좌) <span class="ver">· 허브 V1.24 (261019)</span></p>
+    <p>메리츠 자동주문(통합) · SOXL · TQQQ (A계좌) · QLD무한매수 · QLD평생매수 (B계좌) <span class="ver">· 허브 V1.25 (261019)</span></p>
   </header>
 
-  <a class="mk-row" href="#macro" aria-label="시장 지표 자세히 보기">
+  <a class="mk-row" href="macro.html" aria-label="시장 지표 앱 열기">
     <span class="mk-w"><span class="l">공포·탐욕</span><span class="v" id="mkFg">--</span><span class="s" id="mkFgS">CNN</span></span>
     <span class="mk-w"><span class="l">원/달러</span><span class="v" id="mkFx">--</span><span class="s" id="mkFxS">USD/KRW</span></span>
     <span class="mk-w"><span class="l">미국 CPI</span><span class="v" id="mkCpi">--</span><span class="s" id="mkCpiS">미국</span></span>
@@ -142,21 +142,12 @@
     <span class="go">›</span>
   </a>
 
-  <section class="mk" id="macro" aria-labelledby="mkTitle">
-    <div class="mk-h" id="mkTitle">📈 시장 지표</div>
-    <p class="mk-u" id="mkUpd">매일 한국 10:10 자동 저장 · 불러오는 중…</p>
-    <div class="mk-c"><h3>😨 CNN 공포·탐욕 지수 (최근 100일)</h3><div id="mdFg" class="sub">--</div></div>
-    <div class="mk-c"><h3>💱 원/달러 환율 (1년)</h3><div id="mdFx" class="sub">--</div></div>
-    <div class="mk-c"><h3>🛒 미국 CPI · 전년비 상승률 (5년)</h3><div id="mdCpi" class="sub">--</div></div>
-    <div class="mk-c"><h3>🏦 미국 10년물 국채금리 (1년)</h3><div id="mdUst" class="sub">--</div></div>
-    <div class="mk-c"><h3>🎯 FedWatch · 다음 FOMC 금리 확률</h3>
-      <div class="sub">무료 공개 API가 없어 CME 사이트에서 보고 직접 기록합니다 (이 기기에 저장).</div>
-      <a class="mk-b" href="https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html" target="_blank" rel="noopener">CME FedWatch 열기 ↗</a>
-      <div class="mk-f"><input type="date" id="fedMd" aria-label="FOMC 회의일" style="grid-column:1/-1"><input type="number" id="fedHk" step="0.1" inputmode="decimal" placeholder="인상 %"><input type="number" id="fedHd" step="0.1" inputmode="decimal" placeholder="동결 %"><input type="number" id="fedCt" step="0.1" inputmode="decimal" placeholder="인하 %"></div>
-      <button class="mk-b" id="fedAdd" type="button">＋ 오늘 기록</button> <button class="mk-b" id="fedDel" type="button">마지막 기록 삭제</button>
-      <div id="mdFed" class="sub" style="margin-top:8px;"></div>
-    </div>
-  </section>
+
+  <a class="dash" href="macro.html" style="--c:#38D98C;">
+    <span class="tk" style="font-size:20px;">📈</span>
+    <span class="info"><span class="nm">시장 지표 <small>V1.00</small></span><span class="st">공포·탐욕 · 원달러 · CPI · 10년물 차트 · FedWatch 기록 (매일 10:10 갱신)</span></span>
+    <span class="go">›</span>
+  </a>
 
   <section class="install" id="install" aria-labelledby="insTitle">
     <div class="ins-title" id="insTitle">📲 홈 화면에 앱 설치</div>
@@ -177,7 +168,7 @@
   <p class="note">매수 기록은 자동주문 앱 🛠 설정 탭의 <b>☁️ 동기화</b>를 켜면 PC와 폰이 같은 기록을 씁니다. 이 목록은 이 기기에 마지막으로 맞춰진 기록입니다.</p>
 </div>
 <script>
-const HUB_VERSION = "V1.24", HUB_RELEASE = "261019";
+const HUB_VERSION = "V1.25", HUB_RELEASE = "261019";
 function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
 function realized(tk, won){
   const t = readJSON(tk + "_trades_v1");
@@ -271,51 +262,18 @@ if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) navigat
 window.addEventListener("pageshow", e => { if (e.persisted) renderSummary(); });
 document.addEventListener("visibilitychange", () => { if (!document.hidden) renderSummary(); });
 
-/* 📈 시장 지표: data/macro.json (GitHub Actions 매일 10:10 저장) */
+/* 📈 시장 지표 위젯 (data/macro.json · 매일 10:10 저장) — 자세히는 시장 지표 앱(macro.html) */
 (function () {
   const $ = id => document.getElementById(id), n2 = (v, d = 2) => (+v).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
-  const FG = { "extreme fear": ["극도의 공포", "#F0475A"], fear: ["공포", "#F5A524"], neutral: ["중립", "#8E9AB0"], greed: ["탐욕", "#38D98C"], "extreme greed": ["극도의 탐욕", "#1FA971"] };
-  const fgOf = v => v < 25 ? FG["extreme fear"] : v < 45 ? FG.fear : v < 55 ? FG.neutral : v < 75 ? FG.greed : FG["extreme greed"];
-  function line(ser, col, ref) {
-    if (!ser || ser.length < 2) return "";
-    const W = 320, H = 110, pl = 4, pr = 40, pt = 8, pb = 16, ys = ser.map(p => p[1]).concat(ref != null ? [ref] : []);
-    const lo = Math.min(...ys), hi = Math.max(...ys), sp = hi - lo || 1, X = i => pl + i * (W - pl - pr) / (ser.length - 1), Y = v => pt + (hi - v) / sp * (H - pt - pb);
-    const pts = ser.map((p, i) => X(i).toFixed(1) + "," + Y(p[1]).toFixed(1)).join(" "), last = ser[ser.length - 1];
-    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="추이 차트">${ref != null ? `<line x1="${pl}" x2="${W - pr}" y1="${Y(ref)}" y2="${Y(ref)}" stroke="#5F6B82" stroke-dasharray="3 3"/>` : ""}
-      <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round"/><circle cx="${X(ser.length - 1)}" cy="${Y(last[1])}" r="3.5" fill="${col}"/>
-      <text x="${W - pr + 4}" y="${pt + 8}" font-size="10" fill="#8E9AB0">${n2(hi, hi < 100 ? 2 : 0)}</text><text x="${W - pr + 4}" y="${H - pb}" font-size="10" fill="#8E9AB0">${n2(lo, lo < 100 ? 2 : 0)}</text>
-      <text x="${pl}" y="${H - 3}" font-size="10" fill="#5F6B82">${ser[0][0]}</text><text x="${W - pr}" y="${H - 3}" font-size="10" fill="#5F6B82" text-anchor="end">${last[0]}</text></svg>`;
-  }
-  const chg = (ser, k) => ser && ser.length > k ? ser[ser.length - 1][1] - ser[ser.length - 1 - k][1] : null;
-  const sg = (v, d = 2) => v == null ? "" : (v >= 0 ? "+" : "") + n2(v, d);
+  const fgOf = v => v < 25 ? ["극도의 공포", "#F0475A"] : v < 45 ? ["공포", "#F5A524"] : v < 55 ? ["중립", "#8E9AB0"] : v < 75 ? ["탐욕", "#38D98C"] : ["극도의 탐욕", "#1FA971"];
+  const d1 = s => s && s.length > 1 ? s[s.length - 1][1] - s[s.length - 2][1] : null, sg = (v, d) => (v >= 0 ? "+" : "") + n2(v, d);
   fetch("data/macro.json?h=" + new Date().toISOString().slice(0, 13), { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(m => {
-    if (!m) { $("mkUpd").textContent = "아직 저장된 지표가 없습니다 (매일 10:10 자동 저장)"; return; }
-    $("mkUpd").textContent = `매일 한국 10:10 자동 저장 · 마지막 ${m.updated_kst || "-"}`;
-    if (m.fg) { const [t, c] = fgOf(m.fg.last); $("mkFg").textContent = Math.round(m.fg.last); $("mkFg").style.color = c; $("mkFgS").textContent = t;
-      $("mdFg").innerHTML = `<span class="big" style="color:${c}">${n2(m.fg.last, 1)}</span> <b style="color:${c}">${t}</b> · ${m.fg.date} · 1주 전 ${n2(m.fg.prev_week, 1)}<br>0~25 극도의 공포 · 25~45 공포 · 45~55 중립 · 55~75 탐욕 · 75~100 극도의 탐욕${line(m.fg.series, c, 50)}`; }
-    if (m.fx) { const d = chg(m.fx.series, 1); $("mkFx").textContent = n2(m.fx.last, 1); $("mkFxS").textContent = d == null ? m.fx.date : `${sg(d, 1)}원`;
-      $("mdFx").innerHTML = `<span class="big">${n2(m.fx.last, 2)}원</span> · ${m.fx.date} · 전일 대비 ${sg(d, 2)} · 1개월 ${sg(chg(m.fx.series, 21), 1)}${line(m.fx.series, "#5EEAD4")}`; }
-    if (m.cpi) { const s = m.cpi.series, yo = s.slice(12).map((p, i) => [p[0].slice(0, 7), +((p[1] / s[i][1] - 1) * 100).toFixed(2)]), c = m.cpi.yoy > 3 ? "#F0475A" : m.cpi.yoy > 2.5 ? "#F5A524" : "#38D98C";
-      $("mkCpi").textContent = n2(m.cpi.yoy, 1) + "%"; $("mkCpi").style.color = c; $("mkCpiS").textContent = "전년비 · " + m.cpi.date.slice(5, 7) + "월";
-      $("mdCpi").innerHTML = `<span class="big" style="color:${c}">${n2(m.cpi.yoy, 2)}%</span> 전년비 · ${m.cpi.date.slice(0, 7)} 발표분 · 지수 ${n2(m.cpi.last, 1)} · 점선 = Fed 목표 2%${line(yo, c, 2)}`; }
-    if (m.ust) { const d = chg(m.ust.series, 1); $("mkUst").textContent = n2(m.ust.last, 2) + "%"; $("mkUstS").textContent = d == null ? m.ust.date : `${sg(d * 100, 0)}bp`;
-      $("mdUst").innerHTML = `<span class="big">${n2(m.ust.last, 2)}%</span> · ${m.ust.date} · 전일 대비 ${sg(d * 100, 0)}bp · 1개월 ${sg((chg(m.ust.series, 21) || 0) * 100, 0)}bp${line(m.ust.series, "#A78BFA")}`; }
-  }).catch(() => { $("mkUpd").textContent = "지표를 불러오지 못했습니다 — 잠시 뒤 새로고침"; });
-  /* FedWatch 수동 기록 (예전 QLD 앱 기록 그대로 · 같은 저장 키) */
-  const FK = "qld_fed_log_v1", get = () => { try { const a = JSON.parse(localStorage.getItem(FK) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } };
-  function fed() {
-    const a = get(); if (!a.length) { $("mdFed").textContent = "기록을 저장하면 인상 확률 추이가 표시됩니다."; return; }
-    const L = a[a.length - 1], c = L.hike >= 60 ? "#F0475A" : L.hike >= 30 ? "#F5A524" : "#38D98C";
-    $("mdFed").innerHTML = `회의 ${L.meetingDate} · <b style="color:${c}">인상 ${L.hike}%</b> · 동결 ${L.hold ?? "--"}% · 인하 ${L.cut ?? "--"}% <span style="color:#5F6B82">(${new Date(L.recordedAt).toLocaleDateString("ko-KR")} 기록 · 총 ${a.length}건)</span>${line(a.map(r => [new Date(r.recordedAt).toISOString().slice(5, 10), r.hike]), c)}`;
-  }
-  $("fedAdd").addEventListener("click", () => {
-    const md = $("fedMd").value, v = id => { const x = parseFloat($(id).value); return isNaN(x) ? null : x; }, hk = v("fedHk");
-    if (!md || hk === null) { $("mdFed").textContent = "FOMC 회의일과 인상 확률을 입력하세요."; return; }
-    const a = get(); a.push({ recordedAt: Date.now(), meetingDate: md, hike: hk, hold: v("fedHd"), cut: v("fedCt") });
-    try { localStorage.setItem(FK, JSON.stringify(a)); } catch (e) {} ["fedHk", "fedHd", "fedCt"].forEach(id => $(id).value = ""); fed();
-  });
-  $("fedDel").addEventListener("click", () => { const a = get(); if (!a.length || !confirm("마지막 기록을 삭제할까요?")) return; a.pop(); try { localStorage.setItem(FK, JSON.stringify(a)); } catch (e) {} fed(); });
-  fed();
+    if (!m) return;
+    if (m.fg) { const [t, c] = fgOf(m.fg.last); $("mkFg").textContent = Math.round(m.fg.last); $("mkFg").style.color = c; $("mkFgS").textContent = t; }
+    if (m.fx) { const d = d1(m.fx.series); $("mkFx").textContent = n2(m.fx.last, 1); if (d != null) $("mkFxS").textContent = sg(d, 1) + "원"; }
+    if (m.cpi) { const c = m.cpi.yoy > 3 ? "#F0475A" : m.cpi.yoy > 2.5 ? "#F5A524" : "#38D98C"; $("mkCpi").textContent = n2(m.cpi.yoy, 1) + "%"; $("mkCpi").style.color = c; $("mkCpiS").textContent = "전년비 · " + m.cpi.date.slice(5, 7) + "월"; }
+    if (m.ust) { const d = d1(m.ust.series); $("mkUst").textContent = n2(m.ust.last, 2) + "%"; if (d != null) $("mkUstS").textContent = sg(d * 100, 0) + "bp"; }
+  }).catch(() => {});
 })();
 </script>
 </body>
