@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.06-261019-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.07-261019-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261019">
-<title>QLD 평생매수AI분석 (V1.06 - 261019)</title>
+<title>QLD 평생매수AI분석 (V1.07 - 261019)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -670,8 +670,8 @@
   </section>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_06_261019.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.06 (261019)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_07_261019.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.07 (261019)</code></div>
   </footer>
 
   </div>
@@ -944,7 +944,7 @@
 </nav>
 
 <script>
-const APP_VERSION = "V1.06";
+const APP_VERSION = "V1.07";
 const RELEASE_DATE = "261019";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -1035,7 +1035,31 @@ async function fetchQuote(symbol) {
 }
 
 /* ---------- Twelve Data ---------- */
+/* 📦 매일 한국 10:10 자동 저장된 일봉(data/<심볼>.json)을 먼저 읽음 — 최신이면 시세 API 호출 없음 (한도 초과 실패↓ · 속도↑)
+   유효 판단: 파일의 asof_ny(뉴욕 시각) ≥ 가장 최근 평일 뉴욕 16:15 마감 → 아니면(마감 직후~10:10 등) 기존처럼 API */
+function lastNyClose() {
+  const f = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23", weekday: "short" });
+  for (let k = 0; k < 8; k++) {
+    const p = Object.fromEntries(f.formatToParts(new Date(Date.now() - k * 864e5)).map(o => [o.type, o.value]));
+    if (p.weekday === "Sat" || p.weekday === "Sun" || (k === 0 && `${p.hour}:${p.minute}` < "16:15")) continue;
+    return `${p.year}-${p.month}-${p.day} 16:15`;
+  }
+  return "9999";
+}
+let dataSrc = {};
+async function dataFileBars(symbol, n) {
+  try {
+    const r = await fetch(`data/${symbol}.json?h=${new Date().toISOString().slice(0, 13)}`, { cache: "no-cache" });
+    if (!r.ok) return null;
+    const j = await r.json();
+    if (!j || !Array.isArray(j.bars) || j.bars.length < n - 1 || String(j.asof_ny || "") < lastNyClose()) return null;
+    dataSrc[symbol] = j.updated_kst || "";
+    return j.bars.slice(-n).map(b => ({ d: b[0], x: new Date(b[0]).getTime(), o: b[1], h: b[2], l: b[3], y: b[4] }));
+  } catch (e) { return null; }
+}
 async function tdFetchTimeSeries(symbol, outputsize) {
+  { const c = await dataFileBars(symbol, outputsize); if (c && c.length) return dropIncompleteBar(c); }
+  delete dataSrc[symbol];
   const url = new URL(`${TWELVE_DATA_BASE_URL}/time_series`);
   url.searchParams.set("symbol", symbol);
   url.searchParams.set("interval", "1day");

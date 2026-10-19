@@ -1,0 +1,103 @@
+# 미국 ETF 일봉 자동 저장 V1.00 (261019) — 매일 한국 10:10 (+10:40 예비)
+# 앱(SOXL·TQQQ·QLD 무한매수 / QLD 평생매수)은 이 파일(data/<심볼>.json)을 먼저 읽고, 최신이 아니면 시세 API로 받습니다.
+# 데이터: Twelve Data 일봉(앱과 같은 출처) → 실패 시 Yahoo. 바뀐 게 없으면 커밋하지 않음(주말·휴장일).
+name: 미국 시세 저장
+
+on:
+  schedule:
+    - cron: "10 1 * * *"     # 10:10 KST  (미국장 마감 후 확정 종가)
+    - cron: "40 1 * * *"     # 10:40 KST  예비 (GitHub 예약 지연·실패 대비 — 이미 최신이면 그냥 끝)
+  workflow_dispatch:
+  push:
+    paths: [".github/workflows/us-data.yml"]   # 이 파일을 고치면 바로 1회 실행
+
+permissions:
+  contents: write
+
+concurrency:
+  group: us-data
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: 시세 받기
+        env:
+          TWELVE_DATA_KEY: ${{ secrets.TWELVE_DATA_KEY }}
+        run: |
+          python3 - <<'PYEOF'
+          import json, os, time, urllib.request, urllib.parse
+          from datetime import datetime, timedelta, timezone
+          from zoneinfo import ZoneInfo
+          SYMS = ["QQQ", "TQQQ", "QLD", "SOXX", "SOXL"]
+          N = 600
+          KEY = os.environ.get("TWELVE_DATA_KEY") or "7382ca9c267944f49ae850dbbdb7545f"
+          NY = ZoneInfo("America/New_York")
+          UA = {"User-Agent": "Mozilla/5.0"}
+          def get(url):
+              last = None
+              for w in (0, 5, 15, 30):
+                  time.sleep(w)
+                  try:
+                      with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30) as r:
+                          return json.loads(r.read().decode())
+                  except Exception as e:
+                      last = e
+              raise last
+          def twelve(sym):
+              d = get("https://api.twelvedata.com/time_series?" + urllib.parse.urlencode({"symbol": sym, "interval": "1day", "outputsize": N, "apikey": KEY}))
+              if d.get("status") == "error" or not d.get("values"):
+                  raise RuntimeError(d.get("message", "no values"))
+              return [[v["datetime"][:10], *(round(float(v[k]), 4) for k in ("open", "high", "low", "close"))] for v in reversed(d["values"])]
+          def yahoo(sym):
+              d = get(f"https://query1.finance.yahoo.com/v8/finance/chart/{sym}?range=5y&interval=1d")["chart"]["result"][0]
+              q = d["indicators"]["quote"][0]; out = []
+              for i, t in enumerate(d["timestamp"]):
+                  if None in (q["open"][i], q["high"][i], q["low"][i], q["close"][i]): continue
+                  out.append([datetime.fromtimestamp(t, NY).strftime("%Y-%m-%d"), *(round(q[k][i], 4) for k in ("open", "high", "low", "close"))])
+              return out[-N:]
+          now = datetime.now(NY)
+          exp = now                                     # 가장 최근 평일 뉴욕 16:15 마감
+          if exp.strftime("%H:%M") < "16:15": exp -= timedelta(days=1)
+          while exp.weekday() >= 5: exp -= timedelta(days=1)
+          exp_d = exp.strftime("%Y-%m-%d")
+          os.makedirs("data", exist_ok=True); bad = []
+          for i, s in enumerate(SYMS):
+              if i: time.sleep(9)                       # Twelve Data 무료: 분당 8회
+              bars, src = None, ""
+              for name, fn in (("twelvedata", twelve), ("yahoo", yahoo)):
+                  try:
+                      b = fn(s)
+                      if len(b) >= 420: bars, src = b, name; break
+                  except Exception as e:
+                      print(f"{s} {name} 실패: {e}")
+              if not bars:
+                  bad.append(s); continue
+              bars = [b for b in bars if b[0] <= now.strftime("%Y-%m-%d") and not (b[0] == now.strftime("%Y-%m-%d") and now.strftime("%H:%M") < "16:15")]
+              # 최신 마감까지 들어 있으면 '지금'까지 유효, 아니면(휴장일·지연) 마지막 봉 마감까지만 유효 → 앱이 API로 확인
+              asof = now.strftime("%Y-%m-%d %H:%M") if bars[-1][0] >= exp_d else bars[-1][0] + " 16:15"
+              p = f"data/{s}.json"
+              try:
+                  old = json.load(open(p))
+              except Exception:
+                  old = {}
+              if old.get("bars") == bars and old.get("asof_ny", "") >= exp_d + " 16:15":
+                  print(f"{s} 변경 없음 ({bars[-1][0]})"); continue
+              json.dump({"symbol": s, "source": src, "asof_ny": asof, "updated_kst": datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y-%m-%d %H:%M"),
+                         "fields": "date,open,high,low,close", "bars": bars}, open(p, "w"), separators=(",", ":"))
+              print(f"{s} 저장 {len(bars)}봉 · 마지막 {bars[-1][0]} 종가 {bars[-1][4]} · {src} · 유효 {asof}")
+          if bad:
+              raise SystemExit("실패: " + ", ".join(bad))
+          PYEOF
+      - name: 커밋
+        if: always()
+        run: |
+          git config user.name "us-data-bot"; git config user.email "us-data-bot@users.noreply.github.com"
+          git add data/*.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "미국 시세 자동 저장 $(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M') KST"
+            for i in 1 2 3; do git pull --rebase -q && git push -q && break; sleep 5; done
+          fi
