@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.02-261019-MeritzAutoOrder-All">
+<meta name="version" content="V1.03-261019-MeritzAutoOrder-All">
 <meta name="release-date" content="261019">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>메리츠 자동주문(통합) (V1.02 - 261019)</title>
+<title>메리츠 자동주문(통합) (V1.03 - 261019)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -39,6 +39,7 @@
   .plan-frame{position:fixed;left:-2000px;top:0;width:412px;height:900px;border:0;opacity:0;pointer-events:none;}
   .res{border-left:3px solid var(--border);padding:6px 10px;margin:8px 0;font-size:13px;} .res.done{border-color:var(--up);} .res.blocked,.res.error{border-color:var(--down);}
 .hub-pill{display:inline-flex;align-items:center;gap:3px;vertical-align:middle;margin-left:8px;padding:4px 10px;border-radius:99px;border:1px solid #2F4A7A;background:none;color:#8C98AD;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:0;white-space:nowrap;text-decoration:none;-webkit-text-fill-color:#8C98AD;}.hub-pill:hover{border-color:#4A6FB0;color:#C9D4E5;-webkit-text-fill-color:#C9D4E5;}
+.adj{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0 2px;}.adj .lb{font-size:12px;font-weight:800;color:var(--text-dim);}.adj button{min-width:34px;height:30px;padding:0 10px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:inherit;font-weight:800;cursor:pointer;}.adj button.rs{font-size:11.5px;color:var(--text-dim);}.adj button:disabled{opacity:.4;cursor:default;}.adj .pv{min-width:70px;text-align:center;font-size:15px;}.adj .pv small{display:block;font-size:10px;color:var(--text-dim);}.adj .nt{font-size:11px;color:var(--text-dim);}
 </style>
 </head>
 <body>
@@ -86,7 +87,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.02", RELEASE_DATE = "261016";
+const APP_VERSION = "V1.03", RELEASE_DATE = "261016";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -189,7 +190,7 @@ function render() {
     if (!P) return `<div class="sym">${head}<div class="busy">${G.err[s.id] ? "⚠ " + esc(G.err[s.id]) : "계산 중…"}</div></div>`;
     const o = Object.fromEntries((P.orders || []).map(x => [x.side, x]));
     const line = (side, lab) => o[side] ? `<div class="row"><span>${lab} ${CODES.find(c => c[0] === code)[1]}</span><b>${mk ? "시장가" : usd(o[side].price)} × ${o[side].qty}주</b></div>` : "";
-    return `<div class="sym">${head}${pos(P)}${rule(P)}${line("buy", "매수")}${line("sell", "매도")}${!o.buy && !o.sell ? `<div class="busy">오늘 규칙상 주문 없음${sd.buy ? " (☑매수면 봇이 같은 공식으로 주문)" : ""}</div>` : ""}${inst ? "" : `<div class="busy">⚠ 봇 미설치 — 🛠 설정에서 해당 앱으로</div>`}</div>`;
+    return `<div class="sym">${head}${pos(P)}${rule(P)}${adj(s, P)}${line("buy", "매수")}${line("sell", "매도")}${!o.buy && !o.sell ? `<div class="busy">오늘 규칙상 주문 없음${sd.buy ? " (☑매수면 봇이 같은 공식으로 주문)" : ""}</div>` : ""}${inst ? "" : `<div class="busy">⚠ 봇 미설치 — 🛠 설정에서 해당 앱으로</div>`}</div>`;
   }).join("");
 }
 function renderSeeds() {
@@ -234,6 +235,7 @@ function ovWarn(m, what) {
 let armed = 0;
 document.getElementById("live").addEventListener("click", async () => {
   const b = document.getElementById("live");
+  if (Object.keys(SAVE_T).length) { msg("💾 매도 % 저장 중 — 1초 뒤 다시 누르세요", false); return; }
   if (Date.now() - armed > 6000) { if (!ovWarn(kstMin(), "지금")) return; armed = Date.now(); b.classList.add("armed"); b.textContent = "⚡ 한 번 더 누르면 실제 주문"; setTimeout(() => { b.classList.remove("armed"); b.textContent = "⚡ 바로 실행 (4종목 실제 주문)"; }, 6000); return; }
   armed = 0; b.disabled = true; b.textContent = "요청 중…";
   const out = [];
@@ -262,6 +264,39 @@ document.getElementById("seedSave").addEventListener("click", async () => {
     await writeFiles(m); renderSeeds();
     msg(`💾 시드 저장 (${Object.keys(m).join(", ")}) · 모든 기기·봇 동기화 · 오늘의 LOC 다시 계산`, true); computeAll();
   } catch (x) { msg("⚠ " + x.message, false); }
+});
+
+/* 💹 매도 %: ▲▼ 0.5%씩 → 매도가 즉시 다시 계산 · 분석 앱 설정 + ☁️ Gist(모든 기기·봇) 영구 저장 · ↺ 규칙 기반 */
+const ceilCent = x => Math.ceil(x * 100 - 1e-6) / 100, SAVE_T = {};
+function adj(s, P) {
+  const b = P.bot || {}; if (s.life || !(+b.sell_pct > 0)) return "";
+  const cur = +b.sell_pct, r = +b.sell_pct_rule || cur, man = Math.abs(cur - r) > 1e-9;
+  return `<div class="adj" data-sid="${s.id}"><span class="lb">매도 %</span><button type="button" data-d="-1" aria-label="매도 % 내리기">▼</button><b class="pv">+${cur.toFixed(2)}%<small>${man ? "수동" : "규칙 기반"}</small></b><button type="button" data-d="1" aria-label="매도 % 올리기">▲</button><button type="button" class="rs" data-d="0" ${man ? "" : "disabled"}>↺ 초기화</button><span class="nt">규칙 +${r.toFixed(2)}%</span></div>`;
+}
+function sellSave(s, v) {
+  const key = s.app.replace(".html", "") + "_param_mode_v1";
+  try { const pm = JSON.parse(localStorage.getItem(key) || "null") || { mode: "rule" }; if (v == null) delete pm.sellPct; else pm.sellPct = v; localStorage.setItem(key, JSON.stringify(pm)); } catch (e) {}
+  clearTimeout(SAVE_T[s.id]);
+  SAVE_T[s.id] = setTimeout(async () => {
+    try {
+      await loadGist(); const d = J(s.sync, {});
+      d.params = Object.assign({ mode: "rule" }, d.params || {}); if (v == null) delete d.params.sellPct; else d.params.sellPct = String(v); d.paramsAt = Date.now();
+      await writeFiles({ [s.sync]: d });
+      msg(`💾 ${s.name} 매도 ${v == null ? "규칙 기반" : "+" + v.toFixed(2) + "%"} 저장 · 모든 기기·봇 동기화 (영구)`, true);
+    } catch (x) { msg("⚠ 매도 % 저장 실패: " + x.message, false); }
+    delete SAVE_T[s.id];
+  }, 900);
+}
+document.getElementById("plans").addEventListener("click", e => {
+  const bt = e.target.closest(".adj button"); if (!bt) return;
+  const s = S.find(x => x.id === bt.closest(".adj").dataset.sid), P = G.plan[s.id]; if (!P || !P.bot) return;
+  const b = P.bot, d = +bt.dataset.d, r = +b.sell_pct_rule || +b.sell_pct;
+  if (d === 0 && !confirm(`${s.name} 매도 %를 ‘규칙 기반’ +${r.toFixed(2)}%로 되돌릴까요?`)) return;
+  const v = d === 0 ? r : Math.min(100, Math.max(0.5, Math.round((+b.sell_pct + d * 0.5) * 100) / 100));
+  b.sell_pct = v;
+  const so = (P.orders || []).find(o => o.side === "sell");
+  if (so && +b.avg_exact > 0) so.price = ceilCent(+b.avg_exact * (1 + v / 100));
+  render(); sellSave(s, Math.abs(v - r) < 1e-9 ? null : v);
 });
 document.getElementById("recalc").addEventListener("click", () => computeAll());
 document.getElementById("reload").addEventListener("click", () => refresh());
