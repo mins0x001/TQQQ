@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.07-261019-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.08-261019-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261019">
-<title>QLD 평생매수AI분석 (V1.07 - 261019)</title>
+<title>QLD 평생매수AI분석 (V1.08 - 261019)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -670,8 +670,8 @@
   </section>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_07_261019.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.07 (261019)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_08_261019.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.08 (261019)</code></div>
   </footer>
 
   </div>
@@ -944,7 +944,7 @@
 </nav>
 
 <script>
-const APP_VERSION = "V1.07";
+const APP_VERSION = "V1.08";
 const RELEASE_DATE = "261019";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -2174,7 +2174,7 @@ function renderTodayCard() {
   lastLocOrder = {
     schema: "loc-order/1", app: "QLD평생매수", version: APP_VERSION, release: RELEASE_DATE, symbol: "QLD",
     basis_close_date: fmtDateFull(lastX), generated_at: new Date().toISOString(),
-    stage: `평생매수 · 하락 목표 -${plan.pct.toFixed(1)}%`, avg_price: null, holding_qty: valid.reduce((a, r) => a + r.qty, 0),
+    stage: `평생매수 · 하락 목표 -${plan.pct.toFixed(1)}%`, ...(hs => ({ avg_price: hs ? Number(hs.avg.toFixed(4)) : null, holding_qty: hs ? hs.qty : 0 }))(holdingSummary(valid)),
     orders: qty >= 1 ? [{ side: "buy", type: "LOC", price: Number(plan.locPx.toFixed(2)), qty: Math.floor(qty) }] : [],
     /* V0.21: 메리츠 자동주문(QLD) 봇 검산용 — 매수가 = 기준가 × (1 − 하락목표%) 센트 내림 · 이번 주 아직 안 샀으면 매일 주문(주 1회) · 매도 없음 */
     bot: { kind: "lifetime", last_close: ctx.hist[ctx.hist.length - 1].y, ref_peak: plan.refPeak, pct: plan.pct, loc_px: Number(plan.locPx.toFixed(2)),

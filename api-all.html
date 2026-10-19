@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.01-261019-MeritzAutoOrder-All">
+<meta name="version" content="V1.02-261019-MeritzAutoOrder-All">
 <meta name="release-date" content="261019">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>메리츠 자동주문(통합) (V1.01 - 261019)</title>
+<title>메리츠 자동주문(통합) (V1.02 - 261019)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -19,6 +19,7 @@
   .sym{border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin:8px 0;background:var(--panel-2);}
   .sym-h{display:flex;justify-content:space-between;align-items:center;gap:8px;} .sym-h b{font-size:15px;}
   .row{display:flex;justify-content:space-between;font-size:13.5px;margin:4px 0;} .row b{font-family:'JetBrains Mono',monospace;}
+  .pos{font-size:12.5px;color:var(--text-dim);margin:6px 0 2px;padding:6px 10px;border-radius:9px;background:rgba(255,255,255,0.035);line-height:1.6;} .pos b{color:var(--text,#E6EDF7);} .pos b.up{color:#38D98C;} .pos b.dn{color:#F0475A;}
   .rl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0 2px;}
   .rp{font-size:11.5px;font-weight:900;padding:3px 9px;border-radius:999px;border:1.5px solid;white-space:nowrap;}
   .rp.rule{color:#1A1203;background:var(--amber);border-color:var(--amber);} .rp.bt{color:#04211C;background:var(--glow);border-color:var(--glow);}
@@ -85,7 +86,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.01", RELEASE_DATE = "261016";
+const APP_VERSION = "V1.02", RELEASE_DATE = "261016";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -174,6 +175,10 @@ function rule(P) {
   return `<div class="rl"><span class="rp ${m}">${ML[m]} 적용 중</span>${b.splits ? `<span class="rv">${b.splits}분할${b.mult ? ` · 2단계 ×${b.mult} (${b.splits * b.mult}분할 연속)` : ""}</span>` : ""}</div>
     <div class="rl"><span class="rp st">${esc(P.stage || "")}</span>${b.sell_pct ? `<span class="rv">익절 +${(+b.sell_pct).toFixed(2)}%</span>` : ""}${b.seed ? `<span class="rv">시드 ${$0(b.seed)}</span>` : ""}</div>`;
 }
+function pos(P) {                         // 📦 현재 상태: 앱 계획(lastLocOrder)의 보유수량·평단 · 종가 대비
+  const q = +P.holding_qty || 0, a = +P.avg_price || 0, c = +(P.bot || {}).last_close || 0;
+  return `<div class="pos">📦 보유 <b>${q ? q.toLocaleString("en-US") + "주" : "없음"}</b>${q && a ? ` · 평단 <b>${usd(a)}</b>${c ? ` · 종가 ${usd(c)} <b class="${c >= a ? "up" : "dn"}">${c >= a ? "+" : ""}${((c / a - 1) * 100).toFixed(2)}%</b> · 평가 ${$0(q * c)}` : ""}` : ""}</div>`;
+}
 function render() {
   const code = codeNow(), mk = MKT.includes(code);
   const sel = document.getElementById("code");
@@ -184,7 +189,7 @@ function render() {
     if (!P) return `<div class="sym">${head}<div class="busy">${G.err[s.id] ? "⚠ " + esc(G.err[s.id]) : "계산 중…"}</div></div>`;
     const o = Object.fromEntries((P.orders || []).map(x => [x.side, x]));
     const line = (side, lab) => o[side] ? `<div class="row"><span>${lab} ${CODES.find(c => c[0] === code)[1]}</span><b>${mk ? "시장가" : usd(o[side].price)} × ${o[side].qty}주</b></div>` : "";
-    return `<div class="sym">${head}${rule(P)}${line("buy", "매수")}${line("sell", "매도")}${!o.buy && !o.sell ? `<div class="busy">오늘 규칙상 주문 없음${sd.buy ? " (☑매수면 봇이 같은 공식으로 주문)" : ""}</div>` : ""}${inst ? "" : `<div class="busy">⚠ 봇 미설치 — 🛠 설정에서 해당 앱으로</div>`}</div>`;
+    return `<div class="sym">${head}${pos(P)}${rule(P)}${line("buy", "매수")}${line("sell", "매도")}${!o.buy && !o.sell ? `<div class="busy">오늘 규칙상 주문 없음${sd.buy ? " (☑매수면 봇이 같은 공식으로 주문)" : ""}</div>` : ""}${inst ? "" : `<div class="busy">⚠ 봇 미설치 — 🛠 설정에서 해당 앱으로</div>`}</div>`;
   }).join("");
 }
 function renderSeeds() {
