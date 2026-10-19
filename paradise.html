@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.01-261019-ParadiseCalc">
+<meta name="version" content="V1.02-261019-ParadiseCalc">
 <meta name="release-date" content="261019">
-<title>QLD 낙원계산기 (V1.01 - 261019)</title>
+<title>QLD 낙원계산기 (V1.02 - 261019)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -45,13 +45,14 @@
   .pt{width:100%;border-collapse:separate;border-spacing:3px;margin-top:8px;font:700 11.5px var(--f-mono);text-align:center;}
   .pt th{color:var(--text-faint);font-weight:700;padding:4px 0;} .pt td{padding:7px 0;border-radius:7px;background:var(--panel-2);color:var(--text-dim);}
   .pt td.ok{background:rgba(56,217,140,.16);color:#7EE8B5;} .pt td.me{outline:2px solid var(--glow);color:var(--text);}
+  .chips{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:5px;margin-top:2px;} .chip{border:1px solid var(--border);background:var(--panel-2);color:var(--text-dim);border-radius:99px;padding:4px 9px;font:700 11.5px var(--f-body);cursor:pointer;} .chip.on{border-color:var(--glow);color:var(--glow);} .chips small{flex-basis:100%;font-size:10.5px;color:var(--text-faint);}
   .btn{border:1px solid var(--border);background:none;color:var(--text-dim);border-radius:9px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div><h1>🏝 QLD 낙원계산기 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.01 (261019) · 저축 대신 QLD평생매수·QLD무한매수 시드로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.02 (261019) · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
 
@@ -82,7 +83,7 @@
 
   <section class="card"><div class="kick">HOW · 계산식</div>
     <div class="hint">
-      ① 은퇴 후 자산 = 기타자산×(1+r)<sup>n</sup> + 평생매수 시드×(1+r<sub>평생</sub>)<sup>n</sup> + 무한매수 시드×(1+r<sub>무한</sub>)<sup>n</sup> + 연 추가투자×((1+r)<sup>n</sup>−(1+g)<sup>n</sup>)÷(r−g)<br>
+      ① 은퇴 후 자산 = 평생매수 시드×(1+r<sub>평생</sub>)<sup>n</sup> + 무한매수 시드×(1+r<sub>무한</sub>)<sup>n</sup> (원화 = 달러×환율)<br>      ⓑ 기대 수익률 = QLD 전체 기간(2006~) 일봉으로 두 전략을 은퇴 시기만큼 굴린 <b>롤링 백테스트</b>의 연환산 수익률 — 기본 = 중앙값 · 보수 = 하위 25% · 낙관 = 상위 25% (매일 10:10 갱신)<br>
       ② 실질 수익률 = (1+은퇴 후 명목)÷(1+물가) − 1 · 월 수입(지금 가치) = 은퇴 후 자산×실질÷12÷(1+물가)<sup>n</sup><br>
       ③ 낙원 금액 = 월 소비액×12÷실질 × (1+물가)<sup>n</sup> · 남은 금액 = 낙원 금액 − 은퇴 후 자산<br>
       QLD 기대 수익률은 미래를 보장하지 않습니다 — 보수·기본·낙관으로 바꿔 보며 범위로 판단하세요. 투자 조언이 아닙니다.
@@ -90,19 +91,15 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.01", RELEASE_DATE = "261019";
+const APP_VERSION = "V1.02", RELEASE_DATE = "261019";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
-  ["etc", "기타 보유 자산", "만원", 0, 200000, 100, 5000, "은퇴 뒤에도 소득을 만들어 줄 QLD 외 자산 (예금·주식 등)"],
-  ["etcR", "기타 자산 명목 수익률", "%", 0, 15, 0.5, 5, ""],
   ["life", "QLD평생매수 시드", "$", 0, 2000000, 1000, 370000, "통합 앱 시드에서 자동"],
-  ["lifeR", "QLD평생 기대 수익률", "%", 0, 40, 0.5, 15, "보수 10 · 기본 15 · 낙관 20"],
+  ["lifeR", "QLD평생 기대 수익률", "%", 0, 40, 0.1, 15, ""],
   ["inf", "QLD무한매수 시드", "$", 0, 1000000, 1000, 70000, "통합 앱 시드에서 자동"],
-  ["infR", "QLD무한 기대 수익률", "%", 0, 40, 0.5, 12, "-10% 조건으로 쉬는 기간 반영해 평생보다 낮게"],
+  ["infR", "QLD무한 기대 수익률", "%", 0, 40, 0.1, 12, ""],
   ["fx", "원/달러 환율", "원", 900, 2000, 1, 1330, "매일 10:10 저장 값에서 자동"],
-  ["sav", "연 추가 투자(저축)", "만원", 0, 50000, 100, 1200, "한 해 동안 저축해 QLD에 더 넣을 수 있는 금액"],
-  ["savG", "저축 증가율", "%", 0, 10, 0.5, 3, "해마다 저축을 몇 % 늘리나 (보통 물가만큼)"],
   ["n", "은퇴 시기", "년 후", 1, 40, 1, 10, "은퇴까지 남은 기간"],
 ];
 const F2 = [
@@ -113,6 +110,7 @@ const F2 = [
 const ALL = F1.concat(F2), $ = id => document.getElementById(id);
 let V = Object.fromEntries(ALL.map(f => [f[0], f[6]]));
 try { Object.assign(V, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) {}
+Object.assign(V, { etc: 0, etcR: 5, sav: 0, savG: 3 });   // 기타 자산·저축 없음 (QLD 두 전략만)
 const man = x => { const a = Math.abs(x), s = x < 0 ? "-" : ""; return a >= 10000 ? s + (a / 10000).toFixed(2) + "억" : s + Math.round(a).toLocaleString("ko-KR") + "만"; };
 function fieldHtml(f) {
   const [k, nm, u, mn, mx, st, , d] = f;
@@ -121,7 +119,7 @@ function fieldHtml(f) {
 }
 $("fields").innerHTML = F1.map(fieldHtml).join(""); $("fields2").innerHTML = F2.map(fieldHtml).join("");
 function calc(n) {
-  const r0 = V.etcR / 100, r1 = V.lifeR / 100, r2 = V.infR / 100, g = V.savG / 100;
+  const r0 = (V.sav > 0 ? (V.lifeR + V.infR) / 2 : V.etcR) / 100, r1 = V.lifeR / 100, r2 = V.infR / 100, g = V.savG / 100;
   const usd2man = V.fx / 10000;
   let fv = V.etc * (1 + r0) ** n + V.life * usd2man * (1 + r1) ** n + V.inf * usd2man * (1 + r2) ** n;
   fv += Math.abs(r0 - g) < 1e-9 ? V.sav * n * (1 + r0) ** (n - 1) : V.sav * ((1 + r0) ** n - (1 + g) ** n) / (r0 - g);
@@ -130,6 +128,7 @@ function calc(n) {
   return { fv, real, defl, par, inc: fv * real / 12 / defl };
 }
 function render() {
+  btApply();
   const n = Math.round(V.n), c = calc(n);
   $("oFv").textContent = man(c.fv) + "원"; $("oFvPv").textContent = `지금 가치로 ${man(c.fv / c.defl)}원 · ${n}년 후`;
   $("oInc").textContent = Math.round(c.inc).toLocaleString("ko-KR") + "만원"; $("oIncS").textContent = `실질 ${(c.real * 100).toFixed(1)}% (명목 ${V.postR}%)`;
@@ -160,12 +159,12 @@ function aiPlan() {
   const n = Math.round(V.n), c = calc(n), base = { ...V };
   if (c.fv >= c.par) { $("ai").innerHTML = `<div class="ai"><div class="best">🎉 <b>${n}년 후</b> 이미 낙원 조건 달성 — 월 <b>${Math.round(c.inc).toLocaleString("ko-KR")}만원</b>(지금 가치)까지 쓸 수 있어요. 은퇴를 앞당기거나 위험을 줄여(수익률 ↓) 안정적으로 가도 됩니다.</div></div>`; return; }
   const ok = () => { const k = calc(n); return k.fv >= k.par; };
-  const dR = solve(d => { V.etcR = base.etcR + d; V.lifeR = base.lifeR + d; V.infR = base.infR + d; const r = ok(); Object.assign(V, base); return r; }, 0, 60);
-  const dS = solve(x => { V.sav = base.sav + x; const r = ok(); Object.assign(V, base); return r; }, 0, 1e6);
+  const dR = solve(d => { V.lifeR = base.lifeR + d; V.infR = base.infR + d; const r = ok(); Object.assign(V, base); return r; }, 0, 60);
+  const dS = solve(x => { V.sav = x; const r = ok(); Object.assign(V, base); return r; }, 0, 1e6);
   const sp = Math.floor(c.inc / 10) * 10, ny = (() => { for (let y = n; y <= 60; y++) { const k = calc(y); if (k.fv >= k.par) return y; } return null; })();
   const opts = [
     { t: `📈 수익률을 모두 <b>+${dR.toFixed(1)}%p</b> 올리면 (QLD평생 ${(base.lifeR + dR).toFixed(1)}% · 무한 ${(base.infR + dR).toFixed(1)}%)`, hard: dR / 3 },
-    { t: `💰 연 저축을 <b>+${man(dS)}원</b> 더 (월 ${man(dS / 12)}원)`, hard: dS / Math.max(base.sav, 600) },
+    { t: `💰 해마다 <b>${man(dS)}원</b>씩 QLD에 추가 투자 (월 ${man(dS / 12)}원)`, hard: dS / 1200 },
     { t: `🍃 월 소비를 <b>${sp.toLocaleString("ko-KR")}만원</b>으로 (−${(base.spend - sp).toLocaleString("ko-KR")}만)`, hard: (base.spend - sp) / base.spend * 4 },
     ny ? { t: `⏳ 그대로 두고 은퇴를 <b>${ny}년 후</b>로 (+${ny - n}년)`, hard: (ny - n) / 4 } : null,
   ].filter(Boolean).sort((a, b) => a.hard - b.hard);
@@ -179,6 +178,45 @@ function ptable() {
     return `<td class="${have >= need ? "ok" : ""} ${r === sp0 && c === real ? "me" : ""}">${(need / 10000).toFixed(1)}</td>`; }).join("")}</tr>`).join("")}</table>
     <div class="hint" style="margin-top:4px;">단위: 억원 · 월 소비액(만원) × 12 ÷ 실질 수익률 · 지금 내 자산 ${man(have)}원</div>`;
 }
+
+/* 📊 롤링 백테스트: QLD 전체 일봉(data/QLD_max.json)으로 두 전략을 '은퇴 시기'만큼 매달 시작점을 바꿔 굴려 연환산 수익률 분포를 구함 */
+let QM = null, BT = null;
+function simLife(ys, ds, a, b) {          // 평생매수: 기준가 −15% 도달 시 주 1회 LOC · 1·2·3차 배분 10/80/10 · 분할 10/1/1 (현재 엔진과 같은 규칙)
+  const q = 0.15, cum = [1, 2, 3].map(k => 1 - (1 - q) ** k), per = [0.1 / 10, 0.8, 0.1];
+  let cash = 1, sh = 0, H = ys[a], ref = ys[a], wk = -1;
+  for (let i = a + 1; i <= b; i++) { const y = ys[i]; H = Math.max(H, y); const k = ds[i];
+    if (cash > 1e-9 && k !== wk && y <= ref * (1 - q)) { const d = 1 - y / H, t = d < cum[1] ? 0 : d < cum[2] ? 1 : 2; let amt = Math.min(per[t], cash); if (cash - amt < per[t] * 0.5) amt = cash; sh += amt / y; cash -= amt; ref = y; wk = k; }
+    else ref = Math.max(ref, y); }
+  return sh * ys[b] + cash;
+}
+function simInf(ys, pk, a, b) {           // 무한매수(축적): 1년 고점 −10% 이하 & 종가 ≤ min(평단, 전일종가) 일 때 1/18 씩 · 매도 없음
+  const per = 1 / 18; let cash = 1, sh = 0, cost = 0;
+  for (let i = a + 1; i <= b; i++) { const y = ys[i], lim = sh ? Math.min(cost / sh, ys[i - 1]) : ys[i - 1];
+    if (cash >= per * 0.5 && y <= lim && y <= pk[i] * 0.9) { const amt = Math.min(per, cash); sh += amt / y; cost += amt; cash -= amt; } }
+  return sh * ys[b] + cash;
+}
+function backtest(n) {
+  if (!QM) return null;
+  const ys = QM.bars.map(b => b[1]), ds = QM.bars.map(b => Math.floor(Date.parse(b[0]) / 6048e5)), N = ys.length;
+  if (!QM.pk) { QM.pk = ys.map((_, i) => { let m = 0; for (let j = Math.max(0, i - 251); j <= i; j++) m = Math.max(m, ys[j]); return m; }); }
+  let Hn = Math.round(n * 252); const capped = Hn > N - 252 * 3; if (capped) Hn = N - 252 * 3;
+  const L = [], I = [];
+  for (let a = 0; a + Hn < N; a += 21) { const yrs = Hn / 252; L.push(simLife(ys, ds, a, a + Hn) ** (1 / yrs) - 1); I.push(simInf(ys, QM.pk, a, a + Hn) ** (1 / yrs) - 1); }
+  const pct = (arr, p) => { const s = arr.slice().sort((x, y) => x - y); return s[Math.min(s.length - 1, Math.max(0, Math.round(p * (s.length - 1))))] * 100; };
+  return { n: L.length, yrs: Hn / 252, capped, from: QM.bars[0][0].slice(0, 4), life: [pct(L, .25), pct(L, .5), pct(L, .75)], inf: [pct(I, .25), pct(I, .5), pct(I, .75)] };
+}
+function btApply() {
+  const n = Math.round(V.n), k = n + ":" + (QM ? QM.bars.length : 0); if (!QM || (BT && BT.k === k)) return; BT = backtest(n); if (!BT) return; BT.k = k;
+  [["lifeR", BT.life], ["infR", BT.inf]].forEach(([key, p]) => {
+    if (!TOUCH[key]) { V[key] = +p[1].toFixed(1); $("i_" + key).value = V[key]; $("r_" + key).value = V[key]; }
+    $("s_" + key).innerHTML = ` · 백테스트`;
+    let el = document.getElementById("c_" + key); if (!el) { el = document.createElement("div"); el.id = "c_" + key; el.className = "chips"; $("r_" + key).after(el); }
+    el.innerHTML = [["😟 보수", p[0]], ["🙂 기본", p[1]], ["😀 낙관", p[2]]].map(([t, v]) => `<button type="button" class="chip ${Math.abs(V[key] - v) < 0.05 ? "on" : ""}" data-set="${key}:${v.toFixed(1)}">${t} ${v.toFixed(1)}%</button>`).join("")
+      + `<small>QLD ${BT.from}년~ · ${BT.yrs.toFixed(BT.capped ? 1 : 0)}년씩 ${BT.n}개 구간${BT.capped ? " (데이터 길이로 기간 단축)" : ""}</small>`;
+  });
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-set]"); if (!b) return; const [k, v] = b.dataset.set.split(":"); const el = $("i_" + k); el.value = v; el.dispatchEvent(new Event("input", { bubbles: true })); BT && (BT.k = ""); });
+fetch("data/QLD_max.json?h=" + new Date().toISOString().slice(0, 10), { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(j => { if (j && j.bars && j.bars.length > 1000) { QM = j; render(); } }).catch(() => {});
 /* 저장: 이 기기 + ☁️ Gist(paradise.json, 동기화 켜져 있으면) */
 let saveT = 0, TOUCH = {}; try { TOUCH = JSON.parse(localStorage.getItem(KEY + "_t") || "{}"); } catch (e) {}
 function save() {
