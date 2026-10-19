@@ -89,7 +89,7 @@ const APP_VERSION = "V1.00", RELEASE_DATE = "261019";
       $("mdFg").innerHTML = `<span class="big" style="color:${c}">${n2(m.fg.last, 1)}</span> <b style="color:${c}">${t}</b> · ${m.fg.date} · 1주 전 ${n2(m.fg.prev_week, 1)}<br>0~25 극도의 공포 · 25~45 공포 · 45~55 중립 · 55~75 탐욕 · 75~100 극도의 탐욕${line(m.fg.series, c, 50)}`; }
     if (m.fx) { const d = chg(m.fx.series, 1); $("mkFx").textContent = n2(m.fx.last, 1); $("mkFxS").textContent = d == null ? m.fx.date : `${sg(d, 1)}원`;
       $("mdFx").innerHTML = `<span class="big">${n2(m.fx.last, 2)}원</span> · ${m.fx.date} · 전일 대비 ${sg(d, 2)} · 1개월 ${sg(chg(m.fx.series, 21), 1)}${line(m.fx.series, "#5EEAD4")}`; }
-    if (m.cpi) { const s = m.cpi.series, yo = s.slice(12).map((p, i) => [p[0].slice(0, 7), +((p[1] / s[i][1] - 1) * 100).toFixed(2)]), c = m.cpi.yoy > 3 ? "#F0475A" : m.cpi.yoy > 2.5 ? "#F5A524" : "#38D98C";
+    if (m.cpi) { const s = m.cpi.series, bd = Object.fromEntries(s.map(p => [p[0].slice(0, 7), p[1]])), yo = s.map(p => { const q = bd[(+p[0].slice(0, 4) - 1) + p[0].slice(4, 7)]; return q ? [p[0].slice(0, 7), +((p[1] / q - 1) * 100).toFixed(2)] : null; }).filter(Boolean), c = m.cpi.yoy > 3 ? "#F0475A" : m.cpi.yoy > 2.5 ? "#F5A524" : "#38D98C";
       $("mkCpi").textContent = n2(m.cpi.yoy, 1) + "%"; $("mkCpi").style.color = c; $("mkCpiS").textContent = "전년비 · " + m.cpi.date.slice(5, 7) + "월";
       $("mdCpi").innerHTML = `<span class="big" style="color:${c}">${n2(m.cpi.yoy, 2)}%</span> 전년비 · ${m.cpi.date.slice(0, 7)} 발표분 · 지수 ${n2(m.cpi.last, 1)} · 점선 = Fed 목표 2%${line(yo, c, 2)}`; }
     if (m.ust) { const d = chg(m.ust.series, 1); $("mkUst").textContent = n2(m.ust.last, 2) + "%"; $("mkUstS").textContent = d == null ? m.ust.date : `${sg(d * 100, 0)}bp`;
