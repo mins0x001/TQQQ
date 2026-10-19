@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.13-261019-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.14-261019-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261019">
-<title>QLD 평생매수AI분석 (V1.13 - 261019)</title>
+<title>QLD 평생매수AI분석 (V1.14 - 261019)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -627,8 +627,8 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
   <div hidden><section id="card-excel"></section><button id="xlsxBtn"></button><div id="xlsxMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_13_261019.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.13 (261019)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_14_261019.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.14 (261019)</code></div>
   </footer>
 
   </div>
@@ -807,7 +807,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.13";
+const APP_VERSION = "V1.14";
 const RELEASE_DATE = "261019";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -2045,7 +2045,7 @@ function renderTodayCard() {
     /* V0.21: 메리츠 자동주문(QLD) 봇 검산용 — 매수가 = 기준가 × (1 − 하락목표%) 센트 내림 · 이번 주 아직 안 샀으면 매일 주문(주 1회) · 매도 없음 */
     bot: { kind: "lifetime", last_close: ctx.hist[ctx.hist.length - 1].y, ref_peak: plan.refPeak, pct: plan.pct, loc_px: Number(plan.locPx.toFixed(2)),
            qty_unit: LOC_LOT, order_today: !!isReserveDay, next_session: fmtDateFull(nextSession.getTime()), fx: (liveFx && liveFx.rate) || null,
-           records_src: (typeof qldApiActive === "function" && qldApiActive()) ? "meritz" : "app",
+           records_src: (typeof qldApiActive === "function" && qldApiActive()) ? "meritz" : "app", buy_count: valid.length,
            ...(() => { const E = seedEngine(); return E ? { engine_amt: Math.round(E.amt * 100) / 100, engine_mode: E.mode, engine_w: E.w, engine_n: E.n, engine_tier: E.tier + 1, engine_seed: E.seed, engine_remain: Math.round(E.remain) } : { engine_amt: null }; })() }
   };
   document.title = (isReserveDay ? "🔔 " : "") + document.title.replace(/^🔔 /, "");
