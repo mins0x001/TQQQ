@@ -1,4 +1,4 @@
-# 미국 ETF 일봉 자동 저장 V1.00 (261019) — 매일 한국 10:10 (+10:40 예비)
+# 미국 ETF 일봉 + 시장 지표 자동 저장 V1.01 (261019) — 매일 한국 10:10 (+10:40 예비)
 # 앱(SOXL·TQQQ·QLD 무한매수 / QLD 평생매수)은 이 파일(data/<심볼>.json)을 먼저 읽고, 최신이 아니면 시세 API로 받습니다.
 # 데이터: Twelve Data 일봉(앱과 같은 출처) → 실패 시 Yahoo. 바뀐 게 없으면 커밋하지 않음(주말·휴장일).
 name: 미국 시세 저장
@@ -91,6 +91,70 @@ jobs:
               print(f"{s} 저장 {len(bars)}봉 · 마지막 {bars[-1][0]} 종가 {bars[-1][4]} · {src} · 유효 {asof}")
           if bad:
               raise SystemExit("실패: " + ", ".join(bad))
+          PYEOF
+      - name: 시장 지표 받기 (공포·탐욕 · 원달러 · CPI · 10년물)
+        if: always()
+        continue-on-error: true
+        run: |
+          python3 - <<'PYEOF'
+          import csv, io, json, time, urllib.request
+          from datetime import datetime, timedelta
+          from zoneinfo import ZoneInfo
+          UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36", "Accept": "application/json,text/csv,*/*"}
+          def get(url, raw=False):
+              last = None
+              for w in (0, 5, 15):
+                  time.sleep(w)
+                  try:
+                      with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30) as r:
+                          b = r.read().decode()
+                          return b if raw else json.loads(b)
+                  except Exception as e:
+                      last = e
+              raise last
+          def fred(sid, n):
+              rows = list(csv.reader(io.StringIO(get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}", True))))[1:]
+              return [[d, round(float(v), 4)] for d, v in rows if v not in (".", "")][-n:]
+          try:
+              old = json.load(open("data/macro.json"))
+          except Exception:
+              old = {}
+          out = dict(old)
+          try:
+              d0 = (datetime.utcnow() - timedelta(days=100)).strftime("%Y-%m-%d")
+              j = get(f"https://production.dataviz.cnn.io/index/fearandgreed/graphdata/{d0}")
+              fg = j["fear_and_greed"]
+              ser = [[datetime.utcfromtimestamp(p["x"] / 1000).strftime("%Y-%m-%d"), round(p["y"], 1)] for p in j["fear_and_greed_historical"]["data"]]
+              out["fg"] = {"last": round(fg["score"], 1), "rating": fg["rating"], "date": ser[-1][0] if ser else "", "prev_week": round(fg.get("previous_1_week") or 0, 1), "series": ser[-100:]}
+              print("F&G", out["fg"]["last"], out["fg"]["rating"])
+          except Exception as e:
+              print("F&G 실패:", e)
+          try:
+              c = get("https://query1.finance.yahoo.com/v8/finance/chart/KRW=X?range=1y&interval=1d")["chart"]["result"][0]
+              ser = [[datetime.utcfromtimestamp(t).strftime("%Y-%m-%d"), round(v, 2)] for t, v in zip(c["timestamp"], c["indicators"]["quote"][0]["close"]) if v]
+              out["fx"] = {"last": ser[-1][1], "date": ser[-1][0], "series": ser}
+              print("USD/KRW", ser[-1])
+          except Exception as e:
+              print("환율 Yahoo 실패:", e)
+              try:
+                  ser = fred("DEXKOUS", 260); out["fx"] = {"last": ser[-1][1], "date": ser[-1][0], "series": ser}
+              except Exception as e2:
+                  print("환율 FRED 실패:", e2)
+          try:
+              ser = fred("CPIAUCSL", 73)
+              yoy = round((ser[-1][1] / ser[-13][1] - 1) * 100, 2)
+              out["cpi"] = {"last": ser[-1][1], "date": ser[-1][0], "yoy": yoy, "series": ser}
+              print("CPI", ser[-1], "YoY", yoy)
+          except Exception as e:
+              print("CPI 실패:", e)
+          try:
+              ser = fred("DGS10", 260); out["ust"] = {"last": ser[-1][1], "date": ser[-1][0], "series": ser}
+              print("10Y", ser[-1])
+          except Exception as e:
+              print("10Y 실패:", e)
+          if out != old:
+              out["updated_kst"] = datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y-%m-%d %H:%M")
+              json.dump(out, open("data/macro.json", "w"), ensure_ascii=False, separators=(",", ":"))
           PYEOF
       - name: 커밋
         if: always()
