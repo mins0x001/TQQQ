@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.02-261019-ParadiseCalc">
+<meta name="version" content="V1.03-261019-ParadiseCalc">
 <meta name="release-date" content="261019">
-<title>QLD 낙원계산기 (V1.02 - 261019)</title>
+<title>QLD 낙원계산기 (V1.03 - 261019)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -29,6 +29,9 @@
   .f .v{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-dim);}
   .f input[type=number]{width:96px;min-height:34px;border-radius:9px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);padding:0 8px;font:700 14px var(--f-mono);text-align:right;}
   .f input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--glow);}
+  .krw{grid-column:1/-1;justify-self:start;display:inline-flex;align-items:baseline;gap:6px;margin:1px 0 2px;padding:4px 11px;border-radius:99px;background:linear-gradient(90deg,rgba(245,165,36,.16),rgba(245,165,36,.04));border:1px solid rgba(245,165,36,.35);font:800 13.5px var(--f-body);color:#F5C065;font-variant-numeric:tabular-nums;}
+  .ms{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}.ms div{padding:10px 8px;border-radius:14px;border:1px solid var(--border,#2A3550);background:rgba(94,234,212,.05);text-align:center;}.ms div.ok{border-color:rgba(56,217,140,.45);background:rgba(56,217,140,.08);}.ms span{display:block;font-size:11px;color:var(--text-faint,#8E9AB0);}.ms b{display:block;font-size:16px;white-space:nowrap;letter-spacing:-.3px;font-weight:900;margin:3px 0 1px;color:var(--glow,#5EEAD4);}.ms div.ok b{color:var(--up,#38D98C);}.ms small{display:block;font-size:10px;line-height:1.35;color:var(--text-faint,#8E9AB0);}.ms em{display:inline-block;margin-top:5px;padding:2px 8px;border-radius:99px;font-style:normal;font-size:10.5px;font-weight:800;background:rgba(245,165,36,.15);color:var(--amber,#F5A524);}.ms div.ok em{background:rgba(56,217,140,.18);color:var(--up,#38D98C);}
+  .krw small{all:unset;font:600 11px var(--f-body);color:var(--text-faint);}
   .f small{grid-column:1/-1;font-size:11px;color:var(--text-faint);margin-top:-2px;}
   .big{font:900 28px var(--f-mono);letter-spacing:-.5px;}
   .res{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
@@ -52,7 +55,7 @@
 <body>
 <div class="wrap">
   <div><h1>🏝 QLD 낙원계산기 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.02 (261019) · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.03 (261019) · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
 
@@ -91,7 +94,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.02", RELEASE_DATE = "261019";
+const APP_VERSION = "V1.03", RELEASE_DATE = "261019";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -115,7 +118,7 @@ const man = x => { const a = Math.abs(x), s = x < 0 ? "-" : ""; return a >= 1000
 function fieldHtml(f) {
   const [k, nm, u, mn, mx, st, , d] = f;
   return `<div class="f"><label for="i_${k}">${nm}<span class="src" id="s_${k}"></span></label><span class="v"><input type="number" id="i_${k}" data-k="${k}" min="${mn}" max="${mx}" step="${st}" inputmode="decimal" value="${V[k]}">${u}</span>
-    <input type="range" id="r_${k}" data-k="${k}" min="${mn}" max="${mx}" step="${st}" value="${V[k]}" aria-label="${nm}">${d ? `<small>${d}</small>` : ""}</div>`;
+    <input type="range" id="r_${k}" data-k="${k}" min="${mn}" max="${mx}" step="${st}" value="${V[k]}" aria-label="${nm}">${u === "$" ? `<div class="krw" id="w_${k}"></div>` : ""}${d ? `<small>${d}</small>` : ""}</div>`;
 }
 $("fields").innerHTML = F1.map(fieldHtml).join(""); $("fields2").innerHTML = F2.map(fieldHtml).join("");
 function calc(n) {
@@ -127,8 +130,12 @@ function calc(n) {
   const par = real > 0 ? V.spend * 12 / real * defl : Infinity;
   return { fv, real, defl, par, inc: fv * real / 12 / defl };
 }
+/* 💱 달러 시드 → 원화 (억·만 단위, 환율 연동) */
+const won = m => { m = Math.round(m); const e = Math.floor(m / 10000), r = m % 10000; return (e ? e + "억" + (r ? " " : "") : "") + (r || !e ? r.toLocaleString("ko-KR") + "만" : "") + "원"; };
+function krw() { const t = (V.life + V.inf) * V.fx / 1e4;
+  [["life", ""], ["inf", ` · 두 시드 합계 ${won(t)}`]].forEach(([k, x]) => { const el = $("w_" + k); if (el) el.innerHTML = `₩ ${won(V[k] * V.fx / 1e4)}<small>$1 = ${Math.round(V.fx).toLocaleString("ko-KR")}원${x}</small>`; }); }
 function render() {
-  btApply();
+  btApply(); krw();
   const n = Math.round(V.n), c = calc(n);
   $("oFv").textContent = man(c.fv) + "원"; $("oFvPv").textContent = `지금 가치로 ${man(c.fv / c.defl)}원 · ${n}년 후`;
   $("oInc").textContent = Math.round(c.inc).toLocaleString("ko-KR") + "만원"; $("oIncS").textContent = `실질 ${(c.real * 100).toFixed(1)}% (명목 ${V.postR}%)`;
@@ -141,16 +148,24 @@ function render() {
     : at === 0 ? `🏝 <b>이미 낙원입니다!</b> 지금 자산으로 월 ${V.spend}만원(지금 가치) 생활이 가능합니다.`
     : `🏝 <b>${yr + at}년 (${at}년 후)</b> 낙원 도착 — 그때 자산 ${man(calc(at).fv)}원 ≥ 낙원 금액 ${man(calc(at).par)}원<br>${at <= n ? `은퇴 시기(${n}년 후)보다 <b>${n - at}년 빨리</b> 도착` : `은퇴 시기(${n}년 후)보다 <b style="color:var(--amber)">${at - n}년 늦게</b> 도착 — 은퇴를 ${at}년 후로 미루거나 조건을 바꿔 보세요`}`;
   $("sum").innerHTML = `🏝 ${at === null ? "50년 안에 도착 어려움" : at === 0 ? "<b style='color:var(--up)'>이미 낙원</b>" : `<b style="color:var(--glow)">${yr + at}년</b> 낙원 도착 (${at}년 후)`}<br>${n}년 후 자산 <b>${man(c.fv)}</b> · 낙원 금액 <b>${isFinite(c.par) ? man(c.par) : "∞"}</b> · ${gap <= 0 ? "<b style='color:var(--up)'>달성</b>" : `남은 <b style="color:var(--amber)">${man(gap)}</b>`}`;
-  drawChart(Math.max(n, at === null ? n : at) + 3, at); aiPlan(); ptable();
+  drawChart(Math.max(20, n, at === null ? 0 : Math.min(at, 40)), at); aiPlan(); ptable();
 }
-function drawChart(N, at) {
-  const W = 320, H = 150, pl = 6, pr = 44, pt = 10, pb = 18, pts = [];
+function drawChart(N, at) {      // 0~N년 · 10·15·20년 목표 지점 표시 + 아래 카드
+  const W = 340, H = 190, pl = 8, pr = 8, pt = 26, pb = 20, pts = [], MS = [10, 15, 20];
   for (let y = 0; y <= N; y++) { const k = calc(y); pts.push([y, k.fv, isFinite(k.par) ? k.par : 0]); }
-  const mx = Math.max(...pts.map(p => Math.max(p[1], p[2]))) || 1, X = y => pl + y * (W - pl - pr) / N, Y = v => pt + (1 - v / mx) * (H - pt - pb);
+  const mx = Math.max(...pts.map(p => Math.max(p[1], p[2]))) * 1.08 || 1, X = y => pl + y * (W - pl - pr) / N, Y = v => pt + (1 - v / mx) * (H - pt - pb);
   const line = i => pts.map(p => X(p[0]).toFixed(1) + "," + Y(p[i]).toFixed(1)).join(" ");
-  $("chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="자산과 낙원 금액 추이"><polyline points="${line(2)}" fill="none" stroke="#F5A524" stroke-width="2" stroke-dasharray="4 3"/><polyline points="${line(1)}" fill="none" stroke="#5EEAD4" stroke-width="2.4"/>
-    ${at !== null && at <= N ? `<circle cx="${X(at)}" cy="${Y(pts[at][1])}" r="5" fill="#38D98C"/><text x="${X(at)}" y="${Y(pts[at][1]) - 8}" font-size="10" fill="#38D98C" text-anchor="middle">🏝 ${at}년</text>` : ""}
-    <text x="${W - pr + 4}" y="${pt + 8}" font-size="10" fill="#8E9AB0">${man(mx)}</text><text x="${pl}" y="${H - 4}" font-size="10" fill="#5F6B82">지금</text><text x="${W - pr}" y="${H - 4}" font-size="10" fill="#5F6B82" text-anchor="end">${N}년 후</text></svg>`;
+  const area = `${X(0)},${Y(0)} ${line(1)} ${X(N)},${Y(0)}`, eok = v => v >= 10000 ? (v / 10000).toFixed(v >= 1e6 ? 0 : 1).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "억" : Math.round(v).toLocaleString("ko-KR") + "만";
+  const mk = MS.map(y => { const x = X(y), xl = Math.min(W - pr - 27, Math.max(pl + 27, x)), v = pts[y][1], ok = v >= pts[y][2];
+    return `<line x1="${x}" y1="${pt - 4}" x2="${x}" y2="${H - pb}" stroke="#2A3550" stroke-dasharray="2 3"/><circle cx="${x}" cy="${Y(v)}" r="4.5" fill="${ok ? "#38D98C" : "#5EEAD4"}" stroke="#0B1020" stroke-width="2"/>
+      <rect x="${xl - 26}" y="${pt - 22}" width="52" height="16" rx="8" fill="${ok ? "rgba(56,217,140,.18)" : "rgba(94,234,212,.14)"}"/><text x="${xl}" y="${pt - 10.5}" font-size="10" font-weight="800" fill="${ok ? "#38D98C" : "#5EEAD4"}" text-anchor="middle">${eok(v)}</text>
+      <text x="${Math.min(W - pr - 12, x)}" y="${H - 6}" font-size="10" fill="#8E9AB0" text-anchor="middle">${y}년</text>`; }).join("");
+  $("chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="자산과 낙원 금액 추이"><defs><linearGradient id="gA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5EEAD4" stop-opacity=".28"/><stop offset="1" stop-color="#5EEAD4" stop-opacity="0"/></linearGradient></defs>
+    <polygon points="${area}" fill="url(#gA)"/><polyline points="${line(2)}" fill="none" stroke="#F5A524" stroke-width="2" stroke-dasharray="4 3"/><polyline points="${line(1)}" fill="none" stroke="#5EEAD4" stroke-width="2.4" stroke-linejoin="round"/>${mk}
+    ${at !== null && at > 0 && at <= N && !MS.includes(at) ? `<circle cx="${X(at)}" cy="${Y(pts[at][1])}" r="5" fill="#38D98C"/><text x="${X(at)}" y="${Y(pts[at][1]) - 10}" font-size="10" font-weight="800" fill="#38D98C" text-anchor="middle">🏝 ${at}년 낙원</text>` : ""}
+    <text x="${pl}" y="${H - 6}" font-size="10" fill="#5F6B82">지금</text></svg>
+    <div class="ms">${MS.map(y => { const k = calc(y), ok = k.fv >= k.par, usd = k.fv * 1e4 / V.fx;
+      return `<div class="${ok ? "ok" : ""}"><span>${y}년 후 · ${new Date().getFullYear() + y}</span><b>${eok(k.fv)}</b><small>≈ $${usd >= 1e6 ? (usd / 1e6).toFixed(2) + "M" : Math.round(usd / 1e3).toLocaleString("en-US") + "K"} · 지금 가치 ${eok(k.fv / k.defl)}</small><em>${ok ? "🏝 낙원 달성" : `낙원의 ${Math.round(k.fv / k.par * 100)}%`}</em></div>`; }).join("")}</div>`;
 }
 
 /* 🤖 AI 진단: 은퇴 시기까지 낙원에 닿으려면 — ① 수익률을 얼마나 ② 저축을 얼마나 ③ 소비를 얼마로 */
