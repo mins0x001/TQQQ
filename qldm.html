@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.13-261019-QLD-Panel-Unified">
+<meta name="version" content="V1.14-261019-QLD-Panel-Unified">
 <meta name="release-date" content="261019">
-<title>QLD 무한매수AI분석 (V1.13 - 261019)</title>
+<title>QLD 무한매수AI분석 (V1.14 - 261019)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -743,8 +743,8 @@ body.panel .sell-row{display:none !important;}
   <div hidden><section id="card-backup"></section><div id="backupPanel"></div><button id="bkCopyBtn"></button><button id="bkRestoreBtn"></button><textarea id="bkText"></textarea><div id="bkMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD무한매수_V1_13_261019.HTML</span>)</button>
-  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.13 (261019)</code> · SOXL판(V0.48)과 동일 기능 · QLD 변동성 최적화판</div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD무한매수_V1_14_261019.HTML</span>)</button>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.14 (261019)</code> · SOXL판(V0.48)과 동일 기능 · QLD 변동성 최적화판</div>
   </footer>
 
   </div>
@@ -914,7 +914,7 @@ body.panel .sell-row{display:none !important;}
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V1.13";
+const APP_VERSION = "V1.14";
 const RELEASE_DATE = "261019";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
@@ -2708,7 +2708,7 @@ function renderLocGuideCard() {
     ${cycleBanner}
     <span class="loc-status-badge" style="color:${stageColor};background:${stageBg};border-color:${stageBorder};">${stageLabel}</span>
     ${inStopMode ? `<span class="loc-status-badge" style="color:var(--down);background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.4);margin-left:6px;">⚠ 손절모드 (평단 -${((1 - STRAT2_MODE_RATIO) * 100).toFixed(0)}% 이탈)</span>` : ""}
-    <div class="loc-pos">📦 현재 상태 · 보유 <b>${hasPosition ? summary.totalQty.toLocaleString("en-US") + "주" : "없음"}</b>${hasPosition ? ` · 평단가 <b>${usd(avgPrice)}</b> · 종가 ${usd(lastClose)} (<b style="color:${lastClose >= avgPrice ? "var(--up)" : "var(--down)"};">${lastClose >= avgPrice ? "+" : ""}${((lastClose / avgPrice - 1) * 100).toFixed(2)}%</b>) · 평가 ${usd(summary.totalQty * lastClose)}` : " · 신규 진입 대기"} · 1년 고점 대비 <b style="color:${DD.ok ? "var(--glow)" : "var(--text-dim)"};">${DD.now.toFixed(1)}%</b> (매수 -${DD.gate}% 이하 ${DD.ok ? "✓ 충족" : "대기"})</div>
+    <div class="loc-pos">📦 보유 <b>${hasPosition ? summary.totalQty.toLocaleString("en-US") + "주" : "없음"}</b>${hasPosition ? ` · 평단 <b>${usd(avgPrice)}</b> · (<b style="color:${lastClose >= avgPrice ? "var(--up)" : "var(--down)"};">${lastClose >= avgPrice ? "+" : ""}${((lastClose / avgPrice - 1) * 100).toFixed(2)}%</b>)` : ""} · 📍 ${canBuyMore ? `총 ${sp.maxRounds}회차 중 <b>${nextRound}</b>회차 진행 중` : `분할 소진 (총 ${sp.maxRounds}회차)`} · 1년 고점 대비 <b style="color:${DD.ok ? "var(--glow)" : "var(--text-dim)"};">${DD.now.toFixed(1)}%</b> (매수 -${DD.gate}% 이하 ${DD.ok ? "✓" : "대기"})</div>
     <div class="loc-grid">
       <div class="${buyBoxClass}">
         <div class="loc-tag">LOC 매수 예약가</div>
