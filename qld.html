@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.09-261019-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.10-261019-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261019">
-<title>QLD 평생매수AI분석 (V1.09 - 261019)</title>
+<title>QLD 평생매수AI분석 (V1.10 - 261019)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -585,13 +585,6 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
       <div class="empty"><span class="ico">⚡</span>상단 '시세 불러오기'를 누르면 이번 주 걸어 둘 LOC 매수가와 수량이 여기에 표시됩니다.</div>
     </div>
   </section>
-  <section class="card" id="card-seed" style="--c:var(--violet);">
-    <div class="card-head">
-      <div class="card-icon">🤖</div>
-      <div><div class="card-kicker">02 · AI ENGINE</div><h2>QLD 시드 배분 AI 엔진</h2></div>
-    </div>
-    <div id="seedContent"><div class="empty"><span class="ico">🤖</span>상단 '시세 불러오기'를 누르면 전체 시드를 1·2·3차에 나눈 최적 배분과 분할 매수 금액이 표시됩니다.</div></div>
-  </section>
   <section class="card" id="card-records" style="--c:var(--amber);">
     <div class="card-head">
       <div class="card-icon">📒</div>
@@ -631,78 +624,26 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
   <div class="page" id="pg-backup" role="tabpanel" aria-label="백업">
   <div hidden><section id="card-sync"></section><div id="syncState"></div><div id="syncSetup"></div><input id="syncToken"><button id="syncConnectBtn"></button><div id="syncOn"></div><button id="syncNowBtn"></button><button id="syncOffBtn"></button></div>
   <div hidden><section id="card-backup"></section><div id="backupPanel"></div><button id="bkCopyBtn"></button><button id="bkRestoreBtn"></button><textarea id="bkText"></textarea><div id="bkMsg"></div></div>
-  <section class="card" id="card-excel" style="--c:var(--up);">
-    <div class="card-head">
-      <div class="card-icon">📊</div>
-      <div><div class="card-kicker">EXPORT · EXCEL</div><h2>엑셀로 내보내기</h2></div>
-    </div>
-    <button class="bk-btn sync-main" id="xlsxBtn" type="button">📊 매수 · 매도 · 수익 기록 엑셀 다운로드</button>
-    <div class="bk-msg" id="xlsxMsg"></div>
-  </section>
+  <div hidden><section id="card-excel"></section><button id="xlsxBtn"></button><div id="xlsxMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_09_261019.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.09 (261019)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_10_261019.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.10 (261019)</code></div>
   </footer>
 
   </div>
 
-  <div class="page" id="pg-macro" role="tabpanel" aria-label="지표">
-  <section class="card" id="card-fg" style="--c:#F5A524;">
+  <div hidden><div id="pg-macro"></div><section id="card-fg"></section><div id="fgBanner"></div><div id="fgContent"></div><section id="card-fx"></section><div id="fxBanner"></div><div id="fxContent"></div><section id="card-cpi"></section><span id="cpiStamp"></span><button id="cpiFetchBtn"></button><div id="cpiBanner"></div><div id="cpiContent"></div><section id="card-ust"></section><span id="ustStamp"></span><button id="ustFetchBtn"></button><div id="ustBanner"></div><div id="ustContent"></div><section id="card-fed"></section><input id="fedMeetingDate"><input id="fedHikeInput"><input id="fedHoldInput"><input id="fedCutInput"><button id="fedSaveBtn"></button><button id="fedResetBtn"></button><div id="fedMsg"></div><div id="fedContent"></div></div>
+
+  <div class="page" id="pg-engine" role="tabpanel" aria-label="AI엔진">
+  <section class="card" id="card-seed" style="--c:var(--violet);">
     <div class="card-head">
-      <div class="card-icon">😱</div>
-      <div><div class="card-kicker">05 · SENTIMENT</div><h2>CNN Fear &amp; Greed 지수 추이</h2></div>
+      <div class="card-icon">🤖</div>
+      <div><div class="card-kicker">02 · AI ENGINE</div><h2>QLD 시드 배분 AI 엔진</h2></div>
     </div>
-    <div id="fgBanner" class="banner hidden"></div>
-    <div id="fgContent" style="margin-top:14px;"><div class="fg-empty">데이터를 불러오면 현재 점수와 최근 추이가 표시됩니다.</div></div>
-  </section>
-  <section class="card" id="card-fx" style="--c:var(--glow);">
-    <div class="card-head">
-      <div class="card-icon">💱</div>
-      <div><div class="card-kicker">06 · USD/KRW</div><h2>원달러 환율 추이</h2></div>
-    </div>
-    <div id="fxBanner" class="banner hidden"></div>
-    <div id="fxContent" style="margin-top:14px;"><div class="fg-empty">데이터를 불러오면 현재 환율과 최근 추이가 표시됩니다.</div></div>
-  </section>
-  <section class="card" id="card-cpi" style="--c:var(--amber);">
-    <div class="card-head">
-      <div class="card-icon">🔥</div>
-      <div><div class="card-kicker">MACRO · CPI</div><h2>미국 CPI · 인플레이션 지수 추이</h2></div>
-    </div>
-    <div class="mc-bar"><span class="mc-stamp" id="cpiStamp">아직 조회 전</span><button class="mc-refresh" id="cpiFetchBtn" type="button">↻ 불러오기</button></div>
-    <div id="cpiBanner" class="banner hidden"></div>
-    <div id="cpiContent" style="margin-top:12px;"><div class="fg-empty">지표 탭을 열면 자동으로 불러옵니다 (12시간 캐시).</div></div>
-  </section>
-  <section class="card" id="card-ust" style="--c:var(--glow);">
-    <div class="card-head">
-      <div class="card-icon">🏛️</div>
-      <div><div class="card-kicker">MACRO · 10Y UST</div><h2>10년물 미국 국채금리 추이</h2></div>
-    </div>
-    <div class="mc-bar"><span class="mc-stamp" id="ustStamp">아직 조회 전</span><button class="mc-refresh" id="ustFetchBtn" type="button">↻ 불러오기</button></div>
-    <div id="ustBanner" class="banner hidden"></div>
-    <div id="ustContent" style="margin-top:12px;"><div class="fg-empty">지표 탭을 열면 자동으로 불러옵니다 (6시간 캐시).</div></div>
-  </section>
-  <section class="card" id="card-fed" style="--c:var(--violet);">
-    <div class="card-head">
-      <div class="card-icon">🏦</div>
-      <div><div class="card-kicker">MACRO · FEDWATCH</div><h2>Fed 금리인상 확률 추이</h2></div>
-    </div>
-    <a class="mc-link-btn" href="https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html" target="_blank" rel="noopener">CME FedWatch 열기 ↗</a>
-    <div class="form-grid" style="margin-top:12px;">
-      <div class="field full"><label for="fedMeetingDate">FOMC 회의일</label><input type="date" id="fedMeetingDate"></div>
-      <div class="field"><label for="fedHikeInput">인상 확률 (%)</label><input type="number" id="fedHikeInput" step="0.1" inputmode="decimal" placeholder="예: 20"></div>
-      <div class="field"><label for="fedHoldInput">동결 확률 (%)</label><input type="number" id="fedHoldInput" step="0.1" inputmode="decimal" placeholder="예: 75"></div>
-      <div class="field full"><label for="fedCutInput">인하 확률 (%, 선택)</label><input type="number" id="fedCutInput" step="0.1" inputmode="decimal" placeholder="예: 5"></div>
-    </div>
-    <div class="buysim-actions">
-      <button class="buysim-btn save" id="fedSaveBtn" type="button">＋ 오늘 날짜로 기록</button>
-      <button class="buysim-btn reset" id="fedResetBtn" type="button">전체 삭제</button>
-    </div>
-    <div class="form-msg" id="fedMsg"></div>
-    <div id="fedContent" style="margin-top:10px;"><div class="fg-empty">기록을 저장하면 인상 확률 추이 차트가 표시됩니다.</div></div>
+    <div id="seedContent"><div class="empty"><span class="ico">🤖</span>상단 '시세 불러오기'를 누르면 전체 시드를 1·2·3차에 나눈 최적 배분과 분할 매수 금액이 표시됩니다.</div></div>
   </section>
   </div>
-
   <div class="page" id="pg-guide" role="tabpanel" aria-label="가이드">
   <section class="card" id="card-loc" style="--c:var(--glow);">
     <div class="card-head">
@@ -722,46 +663,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
   </section>
   </div>
 
-  <div class="page" id="pg-stats" role="tabpanel" aria-label="통계">
-  <section class="card" id="card-trend" style="--c:var(--violet);">
-    <div class="card-head">
-      <div class="card-icon">🔬</div>
-      <div><div class="card-kicker">03 · TREND LAB</div><h2>최근 추이 정밀 분석</h2></div>
-    </div>
-    <div id="trendContent">
-      <div class="empty"><span class="ico">🔬</span>시세를 불러오면 최근 추이를 정밀 분석합니다.</div>
-    </div>
-  </section>
-  <section class="card" id="card-down" style="--c:var(--down);">
-    <div class="card-head">
-      <div class="card-icon">📉</div>
-      <div><div class="card-kicker">07 · DOWN STREAK</div><h2>QLD 연속 하락 통계 (최근 200봉)</h2></div>
-    </div>
-    <div id="qldStreakContent"><div class="fg-empty">데이터를 불러오면 연속 하락 확률과 평균 수익률이 표시됩니다.</div></div>
-  </section>
-  <section class="card" id="card-up" style="--c:var(--up);">
-    <div class="card-head">
-      <div class="card-icon">📈</div>
-      <div><div class="card-kicker">08 · UP STREAK</div><h2>QLD 연속 상승 통계 (최근 200봉)</h2></div>
-    </div>
-    <div id="qldUpStreakStatsContent"><div class="fg-empty">데이터를 불러오면 연속 상승 확률과 평균 상승률이 표시됩니다.</div></div>
-  </section>
-  <section class="card" id="card-qqq" style="--c:var(--teal);">
-    <div class="card-head">
-      <div class="card-icon">🧭</div>
-      <div><div class="card-kicker">09 · QQQ TREND</div><h2>QQQ 추이</h2></div>
-    </div>
-    <div id="qqqTrendBanner" class="banner hidden"></div>
-    <div id="qqqTrendContent" style="margin-top:14px;"><div class="fg-empty">데이터를 불러오면 현재가와 최근 추이가 표시됩니다.</div></div>
-  </section>
-  <section class="card" id="card-qqqcci" style="--c:var(--teal);">
-    <div class="card-head">
-      <div class="card-icon">〰️</div>
-      <div><div class="card-kicker">10 · QQQ CCI</div><h2>QQQ CCI 추이</h2></div>
-    </div>
-    <div id="qqqCciContent"><div class="fg-empty">데이터를 불러오면 CCI 추이가 표시됩니다.</div></div>
-  </section>
-  </div>
+  <div hidden><div id="pg-stats"></div><section id="card-trend"></section><div id="trendContent"></div><section id="card-down"></section><div id="qldStreakContent"></div><section id="card-up"></section><div id="qldUpStreakStatsContent"></div><section id="card-qqq"></section><div id="qqqTrendBanner"></div><div id="qqqTrendContent"></div><section id="card-qqqcci"></section><div id="qqqCciContent"></div></div>
 
   <div class="page" id="pg-help" role="tabpanel" aria-label="설명">
   <section class="card" id="card-help" style="--c:var(--text-dim);">
@@ -907,14 +809,13 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 
 <nav class="tabbar" id="tabbar" role="tablist" aria-label="화면 전환">
   <button class="tb on" type="button" role="tab" data-p="pg-order" aria-selected="true"><span class="ic">⚡</span><span class="tx">주문</span></button>
-  <button class="tb" type="button" role="tab" data-p="pg-macro" aria-selected="false"><span class="ic">🌐</span><span class="tx">지표</span></button>
+  <button class="tb" type="button" role="tab" data-p="pg-engine" aria-selected="false"><span class="ic">🤖</span><span class="tx">AI엔진</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-guide" aria-selected="false"><span class="ic">🎯</span><span class="tx">가이드</span></button>
-  <button class="tb" type="button" role="tab" data-p="pg-stats" aria-selected="false"><span class="ic">📊</span><span class="tx">통계</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-help" aria-selected="false"><span class="ic">📖</span><span class="tx">설명</span></button>
 </nav>
 
 <script>
-const APP_VERSION = "V1.09";
+const APP_VERSION = "V1.10";
 const RELEASE_DATE = "261019";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -1293,7 +1194,6 @@ async function fetchAll() {
 
   await sleep(300);
   btn.textContent = "CNN Fear & Greed 지수 불러오는 중…";
-  try { await fetchFearGreedIndex(); } catch (e) { errors.push("Fear & Greed: " + e.message); }
 
   await sleep(900);
   btn.textContent = "원달러 환율 불러오는 중…";
@@ -3027,8 +2927,7 @@ document.getElementById("fedResetBtn").addEventListener("click", () => {
 });
 renderFedLog();
 /* 지표 탭을 처음 열 때 자동 조회 (캐시가 신선하면 API 호출 없음) */
-document.querySelector('#tabbar .tb[data-p="pg-macro"]').addEventListener("click", mcAutoLoad);
-if (document.getElementById("pg-macro").classList.contains("on")) mcAutoLoad();
+
 initQuickNav();
 
 /* ======================== 💰 매도 · 수익 기록 (평균단가법) ======================== */
