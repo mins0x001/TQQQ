@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.07-261019-MeritzAutoOrder-All">
+<meta name="version" content="V1.08-261019-MeritzAutoOrder-All">
 <meta name="release-date" content="261019">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>메리츠 자동주문(통합) (V1.07 - 261019)</title>
+<title>메리츠 자동주문(통합) (V1.08 - 261019)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -113,7 +113,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.07", RELEASE_DATE = "261016";
+const APP_VERSION = "V1.08", RELEASE_DATE = "261016";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -293,6 +293,7 @@ document.getElementById("seedSave").addEventListener("click", async () => {
 
 /* 💹 매도 %: ▲▼ 0.5%씩 → 매도가 즉시 다시 계산 · 분석 앱 설정 + ☁️ Gist(모든 기기·봇) 영구 저장 · ↺ 규칙 기반 */
 const ceilCent = x => Math.ceil(x * 100 - 1e-6) / 100, SAVE_T = {};
+let SAVE_Q = Promise.resolve();   // Gist 저장은 한 번에 하나씩 (동시 저장 시 덮어쓰기 방지)
 function adj(s, P) {
   const b = P.bot || {}; if (s.life || !(+b.sell_pct > 0)) return "";
   const cur = +b.sell_pct, r = +b.sell_pct_rule || cur, man = Math.abs(cur - r) > 1e-9;
@@ -302,7 +303,7 @@ function sellSave(s, v) {
   const key = s.app.replace(".html", "") + "_param_mode_v1";
   try { const pm = JSON.parse(localStorage.getItem(key) || "null") || { mode: "rule" }; if (v == null) delete pm.sellPct; else pm.sellPct = v; localStorage.setItem(key, JSON.stringify(pm)); } catch (e) {}
   clearTimeout(SAVE_T[s.id]);
-  SAVE_T[s.id] = setTimeout(async () => {
+  SAVE_T[s.id] = setTimeout(() => SAVE_Q = SAVE_Q.then(async () => {
     try {
       await loadGist(); const d = J(s.sync, {});
       d.params = Object.assign({ mode: "rule" }, d.params || {}); if (v == null) delete d.params.sellPct; else d.params.sellPct = String(v); d.paramsAt = Date.now();
@@ -310,7 +311,7 @@ function sellSave(s, v) {
       msg(`💾 ${s.name} 매도 ${v == null ? "규칙 기반" : "+" + v.toFixed(2) + "%"} 저장 · 모든 기기·봇 동기화 (영구)`, true);
     } catch (x) { msg("⚠ 매도 % 저장 실패: " + x.message, false); }
     delete SAVE_T[s.id];
-  }, 900);
+  }), 900);
 }
 document.getElementById("plans").addEventListener("click", e => {
   const bt = e.target.closest(".adj[data-sid] button"); if (!bt) return;
@@ -343,7 +344,7 @@ function gateSave(s, v) {
   const key = s.app.replace(".html", "") + "_param_mode_v1", id = s.id + "g";
   try { const pm = JSON.parse(localStorage.getItem(key) || "null") || { mode: "rule" }; if (v == null) delete pm.ddGate; else pm.ddGate = v; localStorage.setItem(key, JSON.stringify(pm)); } catch (e) {}
   clearTimeout(SAVE_T[id]);
-  SAVE_T[id] = setTimeout(async () => {
+  SAVE_T[id] = setTimeout(() => SAVE_Q = SAVE_Q.then(async () => {
     try {
       await loadGist(); const d = J(s.sync, {});
       d.params = Object.assign({ mode: "rule" }, d.params || {}); if (v == null) delete d.params.ddGate; else d.params.ddGate = String(v); d.paramsAt = Date.now();
@@ -351,7 +352,7 @@ function gateSave(s, v) {
       msg(`💾 ${s.name} 매수 조건 -${v == null ? GATE_DEF : v}% ${v == null ? "(기본)" : ""} 저장 · 모든 기기·봇 동기화 (영구)`, true);
     } catch (x) { msg("⚠ 매수 조건 저장 실패: " + x.message, false); }
     delete SAVE_T[id];
-  }, 900);
+  }), 900);
 }
 document.getElementById("plans").addEventListener("click", e => {
   const bt = e.target.closest(".adj[data-gid] button"); if (!bt) return;

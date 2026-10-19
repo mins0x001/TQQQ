@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.12-261019-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.13-261019-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261019">
-<title>QLD 평생매수AI분석 (V1.12 - 261019)</title>
+<title>QLD 평생매수AI분석 (V1.13 - 261019)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -627,8 +627,8 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
   <div hidden><section id="card-excel"></section><button id="xlsxBtn"></button><div id="xlsxMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_12_261019.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.12 (261019)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_13_261019.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.13 (261019)</code></div>
   </footer>
 
   </div>
@@ -807,7 +807,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.12";
+const APP_VERSION = "V1.13";
 const RELEASE_DATE = "261019";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -1096,6 +1096,10 @@ function renderFgChartSvg(hist) {
 async function fetchUsdKrw() {
   const bannerEl = document.getElementById("fxBanner");
   bannerEl.classList.add("hidden");
+  try {   // 매일 10:10 저장된 환율(data/macro.json) 먼저 — Alpha Vantage 하루 25회 한도 아끼기
+    const m = await fetch("data/macro.json?h=" + new Date().toISOString().slice(0, 13), { cache: "no-cache" }).then(r => r.ok ? r.json() : null).catch(() => null);
+    if (m && m.fx && m.fx.last > 0 && Date.now() - Date.parse(m.fx.date) < 5 * 864e5) { liveFx = { rate: m.fx.last, date: m.fx.date }; return; }
+  } catch (e) {}
   try {
     const data = await avFetch({ function: "FX_DAILY", from_symbol: "USD", to_symbol: "KRW" });
     const series = data["Time Series FX (Daily)"];
