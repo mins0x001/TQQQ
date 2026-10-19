@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.09-261019-MeritzAutoOrder-All">
+<meta name="version" content="V1.10-261019-MeritzAutoOrder-All">
 <meta name="release-date" content="261019">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>메리츠 자동주문(통합) (V1.09 - 261019)</title>
+<title>메리츠 자동주문(통합) (V1.10 - 261019)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -119,7 +119,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.09", RELEASE_DATE = "261016";
+const APP_VERSION = "V1.10", RELEASE_DATE = "261016";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -144,6 +144,7 @@ async function gh(path, opt) {
   if (opt.body) h["Content-Type"] = "application/json";
   let r; try { r = await fetch("https://api.github.com" + path, { method: opt.method || "GET", headers: h, body: opt.body ? JSON.stringify(opt.body) : undefined, cache: "no-store" }); }
   catch (e) { throw new Error("인터넷 연결 없음"); }
+  try { const ex = r.headers.get("github-authentication-token-expiration"); if (ex) localStorage.setItem("muhansync_tok_exp", ex); } catch (e) {}   // 토큰 만료일 (GitHub가 알려 줄 때)
   if (r.status === 204) return {};
   if (!r.ok) throw new Error(`GitHub ${r.status} — 토큰 권한(gist·repo·workflow) 확인`);
   const t = await r.text(); return t ? JSON.parse(t) : {};   // 201 빈 응답(금고 저장) 대비
@@ -516,7 +517,10 @@ document.getElementById("chkAll").addEventListener("click", async () => {
 const SYNC_DESC = "muhan-sync (무한매수 기록 동기화 · 지우지 마세요)";
 function renderSync() {
   const t = tok(), g = gid();
-  document.getElementById("syncState").innerHTML = t && g ? `✅ 연결됨 · 토큰 …${esc(t.slice(-4))} · Gist …${esc(g.slice(-6))} — 바꾸려면 새 토큰을 넣고 연결` : "⚠ 아직 연결되지 않았습니다 — GitHub 토큰을 넣고 연결하세요";
+  let ex = ""; try { ex = localStorage.getItem("muhansync_tok_exp") || ""; } catch (e) {}
+  const dd = ex ? Math.floor((Date.parse(ex.replace(" UTC", "Z").replace(" ", "T")) - Date.now()) / 864e5) : null;
+  const exTxt = dd == null || isNaN(dd) ? "" : ` · 토큰 만료 ${esc(ex.slice(0, 10))} <b style="color:${dd <= 14 ? "#F0475A" : "inherit"}">(D-${Math.max(0, dd)})</b>${dd <= 14 ? " — 만료되면 봇이 기록을 못 읽어 주문이 멈춥니다. 새 토큰으로 다시 연결하세요" : ""}`;
+  document.getElementById("syncState").innerHTML = t && g ? `✅ 연결됨 · 토큰 …${esc(t.slice(-4))} · Gist …${esc(g.slice(-6))}${exTxt}<br>새 토큰으로 연결하면 설치된 봇 3개의 토큰(MUHAN_TOKEN)도 함께 바뀝니다` : "⚠ 아직 연결되지 않았습니다 — GitHub 토큰을 넣고 연결하세요";
 }
 document.getElementById("syncConn").addEventListener("click", async () => {
   const t = document.getElementById("syncTok").value.trim();
@@ -531,7 +535,9 @@ document.getElementById("syncConn").addEventListener("click", async () => {
       id = (await gh("/gists", { method: "POST", body: { description: SYNC_DESC, public: false, files: { "soxl.json": { content: init }, "tqqq.json": { content: init }, "qldm.json": { content: init }, "qld.json": { content: init } } } })).id;
     }
     localStorage.setItem("muhansync_gist", id); document.getElementById("syncTok").value = "";
-    msg("☁️ 동기화 연결 완료 — 모든 앱이 이 토큰·Gist를 함께 씁니다", true); renderSync(); await refresh(); computeAll();
+    await loadGist(); let nb = 0;                     // 봇도 새 토큰으로 (옛 토큰이 만료되면 봇이 Gist를 못 읽음)
+    for (const f of CFGS) { const c = G.cfg[f] || {}; if (!c.installed_at) continue; try { await putSecret(c, "MUHAN_TOKEN", t); await putSecret(c, "GIST_ID", id); nb++; } catch (e) {} }
+    msg(`☁️ 동기화 연결 완료 — 모든 앱이 이 토큰·Gist를 함께 씁니다${nb ? ` · 봇 ${nb}개 토큰도 갱신` : ""}`, true); renderSync(); await refresh(); computeAll();
   } catch (x) { try { old ? localStorage.setItem("muhansync_token", old) : localStorage.removeItem("muhansync_token"); } catch (e) {} msg("⚠ " + x.message, false); }
 });
 /* 🔑 금고(Secrets) 권한 확인 — 봇 저장소의 금고 공개키를 읽을 수 있으면 앱키·텔레그램·cron 키 저장 가능 */
