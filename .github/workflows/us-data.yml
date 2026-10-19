@@ -1,4 +1,4 @@
-# 미국 ETF 일봉 + 시장 지표 자동 저장 V1.01 (261019) — 매일 한국 10:10 (+10:40 예비)
+# 미국 ETF 일봉 + 시장 지표 자동 저장 V1.02 (261019) — 매일 한국 10:10 (+10:40 예비)
 # 앱(SOXL·TQQQ·QLD 무한매수 / QLD 평생매수)은 이 파일(data/<심볼>.json)을 먼저 읽고, 최신이 아니면 시세 API로 받습니다.
 # 데이터: Twelve Data 일봉(앱과 같은 출처) → 실패 시 Yahoo. 바뀐 게 없으면 커밋하지 않음(주말·휴장일).
 name: 미국 시세 저장
@@ -152,12 +152,12 @@ jobs:
               try:
                   ser = bls("CUUR0000SA0")[-73:]
               except Exception as e:
-                  print("CPI BLS 실패:", e); ser = fred("CPIAUCNS", 73)
+                  print("CPI BLS 실패:", e); out.setdefault("errors", {})["cpi_bls"] = str(e)[:200]; ser = fred("CPIAUCNS", 73)
               yoy = round((ser[-1][1] / ser[-13][1] - 1) * 100, 2)
               out["cpi"] = {"last": ser[-1][1], "date": ser[-1][0], "yoy": yoy, "series": ser}
               print("CPI", ser[-1], "YoY", yoy)
           except Exception as e:
-              print("CPI 실패:", e)
+              print("CPI 실패:", e); out.setdefault("errors", {})["cpi"] = str(e)[:200]
           try:
               try:
                   ser = yahoo("^TNX")
