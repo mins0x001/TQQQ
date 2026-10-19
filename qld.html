@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.08-261019-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.09-261019-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261019">
-<title>QLD 평생매수AI분석 (V1.08 - 261019)</title>
+<title>QLD 평생매수AI분석 (V1.09 - 261019)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -531,6 +531,7 @@
   .solo-note small{display:block;color:var(--text-dim);font-weight:500;margin-top:2px;}
 .hub-pill{display:inline-flex;align-items:center;gap:3px;vertical-align:middle;margin-left:8px;padding:4px 10px;border-radius:99px;border:1px solid #2F4A7A;background:none;color:#8C98AD;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:0;white-space:nowrap;text-decoration:none;-webkit-text-fill-color:#8C98AD;}.hub-pill:hover{border-color:#4A6FB0;color:#C9D4E5;-webkit-text-fill-color:#C9D4E5;}
 .sell-adj{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap;}.sell-adj button{min-width:34px;height:30px;padding:0 10px;border-radius:8px;border:1px solid var(--border-soft,#2A3550);background:rgba(255,255,255,0.04);color:inherit;font-weight:800;font-size:13px;cursor:pointer;}.sell-adj button.rs{font-size:11.5px;font-weight:700;color:var(--text-dim,#8C98AD);}.sell-adj button:disabled{opacity:.4;cursor:default;}.sell-adj .pv{font-weight:900;font-size:15px;min-width:64px;text-align:center;}.sell-adj .pv small{display:block;font-size:10px;font-weight:700;color:var(--text-dim,#8C98AD);}.loc-pos{margin:10px 0 2px;padding:8px 12px;border-radius:10px;border:1px solid var(--border-soft,#2A3550);background:rgba(255,255,255,0.03);font-size:12.5px;color:var(--text-dim,#8C98AD);line-height:1.6;}.loc-pos b{color:var(--text,#E6EDF7);}
+body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.panel #todayContent .cycle-alert,body.panel #todayContent .cycle-wait{display:none !important;}
 </style>
 </head>
 <body>
@@ -539,7 +540,7 @@
   <header class="topbar compact" id="topbar">
     <div class="topbar-header">
       <p class="topbar-eyebrow"><span class="live-dot"></span>Finnhub 실시간 · Twelve Data 종가</p>
-      <button class="sync-chip" id="syncChip" type="button" data-goto="pg-backup" hidden>☁ 동기화</button>
+      <button class="sync-chip" id="syncChip" type="button" onclick="location.href='api-qld.html#pg-setup'" hidden>☁ 동기화</button>
       <button class="hdr-toggle" id="hdrToggle" type="button" aria-expanded="false">상세 ▾</button>
       <span class="version-badge" id="appVersionBadge">V0.15</span>
     </div>
@@ -628,38 +629,8 @@
   </div>
 
   <div class="page" id="pg-backup" role="tabpanel" aria-label="백업">
-  <section class="card" id="card-sync" style="--c:var(--glow);">
-    <div class="card-head">
-      <div class="card-icon">☁️</div>
-      <div><div class="card-kicker">SYNC · PC ↔ MOBILE</div><h2>PC · 모바일 기록 동기화</h2></div>
-    </div>
-    <div class="sync-state" id="syncState">동기화 꺼짐 · 이 기기에만 저장 중</div>
-    <div id="syncSetup">
-      <label class="sync-label" for="syncToken">GitHub 토큰 (gist 권한만)</label>
-      <input class="sync-input" type="password" id="syncToken" placeholder="ghp_로 시작하는 토큰 붙여넣기" autocomplete="off" spellcheck="false">
-      <button class="bk-btn sync-main" id="syncConnectBtn" type="button">☁️ 연결하고 동기화 시작</button>
-    </div>
-    <div id="syncOn" hidden>
-      <div class="bk-row">
-        <button class="bk-btn" id="syncNowBtn" type="button">↻ 지금 동기화</button>
-        <button class="bk-btn" id="syncOffBtn" type="button">연결 해제</button>
-      </div>
-    </div>
-  </section>
-  <section class="card" id="card-backup" style="--c:var(--glow);">
-    <div class="card-head">
-      <div class="card-icon">💾</div>
-      <div><div class="card-kicker">BACKUP</div><h2>기록 백업 · 복원</h2></div>
-    </div>
-  <div class="bk-panel" id="backupPanel" style="margin:0;border:0;padding:0;background:none;">
-    <div class="bk-row">
-      <button class="bk-btn" id="bkCopyBtn" type="button">📋 백업 복사</button>
-      <button class="bk-btn" id="bkRestoreBtn" type="button">📥 복원</button>
-    </div>
-    <textarea class="bk-text" id="bkText" placeholder="여기에 백업 텍스트를 붙여넣은 뒤 [복원]을 누르세요" spellcheck="false"></textarea>
-    <div class="bk-msg" id="bkMsg"></div>
-  </div>
-  </section>
+  <div hidden><section id="card-sync"></section><div id="syncState"></div><div id="syncSetup"></div><input id="syncToken"><button id="syncConnectBtn"></button><div id="syncOn"></div><button id="syncNowBtn"></button><button id="syncOffBtn"></button></div>
+  <div hidden><section id="card-backup"></section><div id="backupPanel"></div><button id="bkCopyBtn"></button><button id="bkRestoreBtn"></button><textarea id="bkText"></textarea><div id="bkMsg"></div></div>
   <section class="card" id="card-excel" style="--c:var(--up);">
     <div class="card-head">
       <div class="card-icon">📊</div>
@@ -670,8 +641,8 @@
   </section>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_08_261019.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.08 (261019)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_09_261019.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.09 (261019)</code></div>
   </footer>
 
   </div>
@@ -936,7 +907,6 @@
 
 <nav class="tabbar" id="tabbar" role="tablist" aria-label="화면 전환">
   <button class="tb on" type="button" role="tab" data-p="pg-order" aria-selected="true"><span class="ic">⚡</span><span class="tx">주문</span></button>
-  <button class="tb" type="button" role="tab" data-p="pg-backup" aria-selected="false"><span class="ic">💾</span><span class="tx">백업</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-macro" aria-selected="false"><span class="ic">🌐</span><span class="tx">지표</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-guide" aria-selected="false"><span class="ic">🎯</span><span class="tx">가이드</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-stats" aria-selected="false"><span class="ic">📊</span><span class="tx">통계</span></button>
@@ -944,7 +914,7 @@
 </nav>
 
 <script>
-const APP_VERSION = "V1.08";
+const APP_VERSION = "V1.09";
 const RELEASE_DATE = "261019";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -2196,8 +2166,7 @@ function renderTodayCard() {
       </div>
       <div class="ho-sub">최대 매수금액 ${usd(amount)}${krwTxt} · 기준가 ${usd(plan.refPeak)} × (1 − ${plan.pct.toFixed(1)}%) · ${plan.refPeakLabel}</div>
     </div>
-    <p class="copy-hint">👆 매수가·수량 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만) · 수량은 아래 LOC 카드의 원화 예산으로 조정</p>
-    <button class="buysim-btn save export-loc-btn" type="button" data-export-loc="1">📤 자동주문 파일 저장 (매수 ${qty}주)</button>`;
+    <p class="copy-hint">👆 매수가·수량 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만) · 수량은 아래 LOC 카드의 원화 예산으로 조정</p>`;
 }
 function exportLocOrder() {
   if (!lastLocOrder || !lastLocOrder.orders.length) { showCopyToast("내보낼 주문이 없습니다", false); return; }
@@ -2855,7 +2824,8 @@ async function fetchRetry(u, opt) {        // 무료 시세 API 는 여러 앱�
 const EMBED = (new URLSearchParams(location.search).get("embed") || "").toLowerCase();
 function applyViewMode() {
   if (EMBED === "panel") {
-    document.body.classList.add("panel"); goTab("pg-order", { top: true });
+    document.body.classList.add("panel");
+    { const h = document.querySelector("#card-today h2"), k = document.querySelector("#card-today .card-kicker"); if (h) h.textContent = "현재 상태"; if (k) k.textContent = "NOW · STATUS"; } goTab("pg-order", { top: true });
     let tries = 0;
     const kick = () => { if (lastLocOrder || ++tries > 40) return; if (!__syncBusy) document.getElementById("fetchBtn").click(); else setTimeout(kick, 500); };
     setTimeout(kick, 1200);
@@ -2866,7 +2836,7 @@ function applyViewMode() {
     if (bb && tb) { bb.remove(); tb.style.gridTemplateColumns = `repeat(${tb.querySelectorAll(".tb").length},minmax(0,1fr))`; if (document.getElementById("pg-backup").classList.contains("on")) goTab("pg-order"); } }
   setTimeout(() => { const b = document.getElementById("fetchBtn"); if (b && !b.disabled && typeof lastLocOrder !== "undefined" && !lastLocOrder) b.click(); }, 700);   // 열면 시세 자동 1회
   const o = document.getElementById("pg-order");
-  if (o) o.insertAdjacentHTML("afterbegin", `<a class="solo-note" href="api.html">🔌 메리츠 자동주문(QLD) ›<small>주 1회 LOC 매수(체결될 때까지 매일)를 메리츠 Open API로 자동 접수 · 계좌 현황 · 결과</small></a>`);
+  if (o) o.insertAdjacentHTML("afterbegin", `<a class="solo-note" href="api-qld.html#pg-qld">🔌 메리츠 자동주문(QLD) ›<small>주 1회 LOC 매수(체결될 때까지 매일)를 메리츠 Open API로 자동 접수 · 계좌 현황 · 결과</small></a>`);
 }
 function initTabs() {
   document.querySelectorAll("#tabbar .tb").forEach(b => b.addEventListener("click", () => {

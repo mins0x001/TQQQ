@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.05-261019-QLD-Panel-Unified">
+<meta name="version" content="V1.06-261019-QLD-Panel-Unified">
 <meta name="release-date" content="261019">
-<title>QLD 무한매수AI분석 (V1.05 - 261019)</title>
+<title>QLD 무한매수AI분석 (V1.06 - 261019)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -648,6 +648,7 @@
   .solo-note small{display:block;color:var(--text-dim);font-weight:500;margin-top:2px;}
 .hub-pill{display:inline-flex;align-items:center;gap:3px;vertical-align:middle;margin-left:8px;padding:4px 10px;border-radius:99px;border:1px solid #2F4A7A;background:none;color:#8C98AD;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:0;white-space:nowrap;text-decoration:none;-webkit-text-fill-color:#8C98AD;}.hub-pill:hover{border-color:#4A6FB0;color:#C9D4E5;-webkit-text-fill-color:#C9D4E5;}
 .sell-adj{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap;}.sell-adj button{min-width:34px;height:30px;padding:0 10px;border-radius:8px;border:1px solid var(--border-soft,#2A3550);background:rgba(255,255,255,0.04);color:inherit;font-weight:800;font-size:13px;cursor:pointer;}.sell-adj button.rs{font-size:11.5px;font-weight:700;color:var(--text-dim,#8C98AD);}.sell-adj button:disabled{opacity:.4;cursor:default;}.sell-adj .pv{font-weight:900;font-size:15px;min-width:64px;text-align:center;}.sell-adj .pv small{display:block;font-size:10px;font-weight:700;color:var(--text-dim,#8C98AD);}.loc-pos{margin:10px 0 2px;padding:8px 12px;border-radius:10px;border:1px solid var(--border-soft,#2A3550);background:rgba(255,255,255,0.03);font-size:12.5px;color:var(--text-dim,#8C98AD);line-height:1.6;}.loc-pos b{color:var(--text,#E6EDF7);}
+.sell-row{margin-top:10px;padding:8px 12px;border-radius:10px;border:1px solid var(--border-soft,#2A3550);}.sell-row .loc-sub{margin-top:4px;}body.panel #locHeroContent .loc-grid,body.panel #locHeroContent .copy-hint,body.panel #locHeroContent .loc-status-badge{display:none !important;}
 </style>
 </head>
 <body>
@@ -656,7 +657,7 @@
   <header class="topbar compact" id="topbar">
     <div class="topbar-header">
       <p class="topbar-eyebrow"><span class="live-dot"></span>Finnhub 실시간 · Twelve Data 확정 종가</p>
-      <button class="sync-chip" id="syncChip" type="button" onclick="location.href='api.html#pg-backup'" hidden>☁ 동기화</button>
+      <button class="sync-chip" id="syncChip" type="button" onclick="location.href='api-qm.html#pg-setup'" hidden>☁ 동기화</button>
       <button class="hdr-toggle" id="hdrToggle" type="button" aria-expanded="false">상세 ▾</button>
       <span class="version-badge" id="appVersionBadge">V0.31</span>
     </div>
@@ -757,42 +758,12 @@
 
 
   <div class="page" id="pg-backup" role="tabpanel" aria-label="백업">
-  <section class="card" id="card-sync" style="--c:var(--glow);">
-    <div class="card-head">
-      <div class="card-icon">☁️</div>
-      <div><div class="card-kicker">SYNC · PC ↔ MOBILE</div><h2>PC · 모바일 기록 동기화</h2></div>
-    </div>
-    <div class="sync-state" id="syncState">동기화 꺼짐 · 이 기기에만 저장 중</div>
-    <div id="syncSetup">
-      <label class="sync-label" for="syncToken">GitHub 토큰 (gist · 자동주문까지 쓰려면 repo · workflow 추가)</label>
-      <input class="sync-input" type="password" id="syncToken" placeholder="ghp_로 시작하는 토큰 붙여넣기" autocomplete="off" spellcheck="false">
-      <button class="bk-btn sync-main" id="syncConnectBtn" type="button">☁️ 연결하고 동기화 시작</button>
-    </div>
-    <div id="syncOn" hidden>
-      <div class="bk-row">
-        <button class="bk-btn" id="syncNowBtn" type="button">↻ 지금 동기화</button>
-        <button class="bk-btn" id="syncOffBtn" type="button">연결 해제</button>
-      </div>
-    </div>
-  </section>
-  <section class="card" id="card-backup" style="--c:var(--glow);">
-    <div class="card-head">
-      <div class="card-icon">💾</div>
-      <div><div class="card-kicker">BACKUP</div><h2>기록 백업 · 복원</h2></div>
-    </div>
-  <div class="bk-panel" id="backupPanel" style="margin:0;border:0;padding:0;background:none;">
-    <div class="bk-row">
-      <button class="bk-btn" id="bkCopyBtn" type="button">📋 백업 복사</button>
-      <button class="bk-btn" id="bkRestoreBtn" type="button">📥 복원</button>
-    </div>
-    <textarea class="bk-text" id="bkText" placeholder="여기에 백업 텍스트를 붙여넣은 뒤 [복원]을 누르세요" spellcheck="false"></textarea>
-    <div class="bk-msg" id="bkMsg"></div>
-  </div>
-  </section>
+  <div hidden><section id="card-sync"></section><div id="syncState"></div><div id="syncSetup"></div><input id="syncToken"><button id="syncConnectBtn"></button><div id="syncOn"></div><button id="syncNowBtn"></button><button id="syncOffBtn"></button></div>
+  <div hidden><section id="card-backup"></section><div id="backupPanel"></div><button id="bkCopyBtn"></button><button id="bkRestoreBtn"></button><textarea id="bkText"></textarea><div id="bkMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD무한매수_V1_05_261019.HTML</span>)</button>
-  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.05 (261019)</code> · SOXL판(V0.48)과 동일 기능 · QLD 변동성 최적화판</div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD무한매수_V1_06_261019.HTML</span>)</button>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.06 (261019)</code> · SOXL판(V0.48)과 동일 기능 · QLD 변동성 최적화판</div>
   </footer>
 
   </div>
@@ -819,16 +790,6 @@
   </div>
 
   <div class="page" id="pg-guide" role="tabpanel" aria-label="가이드">
-  <section class="card" id="card-loc" style="--c:var(--glow);">
-    <div class="card-head">
-      <div class="card-icon">🎯</div>
-      <div><div class="card-kicker">03 · LOC ORDER</div><h2>LOC 매수/매도 예약 가이드</h2></div>
-    </div>
-    <div class="rule-chip" data-rule-chip></div>
-    <div id="locGuideContent">
-      <div class="fg-empty">데이터를 불러오면 LOC 예약 가이드가 표시됩니다.</div>
-    </div>
-  </section>
   <section class="card" id="card-sim" style="--c:var(--amber);">
     <div class="card-head">
       <div class="card-icon">🧪</div>
@@ -991,7 +952,6 @@
 
 <nav class="tabbar" id="tabbar" role="tablist" aria-label="화면 전환">
   <button class="tb on" type="button" role="tab" data-p="pg-order" aria-selected="true"><span class="ic">📒</span><span class="tx">주문·사이클</span></button>
-  <button class="tb" type="button" role="tab" data-p="pg-backup" aria-selected="false"><span class="ic">💾</span><span class="tx">백업</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-engine" aria-selected="false"><span class="ic">🤖</span><span class="tx">AI엔진</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-guide" aria-selected="false"><span class="ic">🎯</span><span class="tx">가이드</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-stats" aria-selected="false"><span class="ic">📊</span><span class="tx">통계</span></button>
@@ -1001,7 +961,7 @@
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V1.05";
+const APP_VERSION = "V1.06";
 const RELEASE_DATE = "261019";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
@@ -2663,8 +2623,7 @@ function fmtResume(d) {
 }
 
 function renderLocGuideCard() {
-  const el = document.getElementById("locGuideContent");
-  if (!el) return;
+  const el = document.getElementById("locGuideContent") || document.createElement("div");   // 카드는 삭제 — 계산(lastLocOrder·주문 카드)은 그대로
   if (!lastTqqqHist) {
     el.innerHTML = '<div class="fg-empty">데이터를 불러오면 LOC 예약 가이드가 표시됩니다.</div>';
     return;
@@ -2770,8 +2729,6 @@ function renderLocGuideCard() {
            rounds, recommended_n: recommendedN, in_stop_mode: !!inStopMode, buy_off: !!buyBoxOff,
            records_src: (typeof apiActive === "function" && apiActive()) ? "meritz" : "app", param_mode: (typeof loadParamMode === "function" ? loadParamMode().mode : "rule") }
   };
-  const exportBtnHtml = `<button class="buysim-btn save export-loc-btn" type="button" data-export-loc="1" ${exportOrders.length ? "" : "disabled"}>📤 자동주문 파일 저장 (${exportOrders.length ? exportOrders.map(o => (o.side === "buy" ? "매수" : "매도") + " " + o.qty + "주").join(" · ") : "주문 없음"})</button>
-    <p class="copy-hint" style="margin-top:6px;">Termux 자동주문 봇이 다운로드 폴더의 이 파일을 읽어 알림으로 확인을 받은 뒤 MTS에 예약합니다</p>`;
 
   const heroEl = document.getElementById("locHeroContent");
   let cycleBanner = "";
@@ -2809,15 +2766,13 @@ function renderLocGuideCard() {
         <div class="loc-price ${canSell ? "copyable" : ""}" ${canSell ? `role="button" tabindex="0" data-copy="${sellPrice.toFixed(2)}" data-label="매도가"` : ""}>${canSell ? usd(sellPrice) : "--"}</div>
         <div class="loc-qty">${canSell ? sellQty.toLocaleString("en-US") + "주 (전량)" : "보유 수량 없음"}</div>
         <div class="loc-sub">${canSell ? `평단가 ${usd(avgPrice)} 대비 +${sellPct.toFixed(2)}%` : "매수 기록을 추가하면 매도 목표가가 계산됩니다."}</div>
-        <div class="sell-adj" data-cur="${sellPct}"><button type="button" data-sellpct="-1" aria-label="매도 % 내리기">▼</button><span class="pv">+${sellPct.toFixed(2)}%<small>${sellPct !== sellPctRule ? "수동" : "규칙 기반"}</small></span><button type="button" data-sellpct="1" aria-label="매도 % 올리기">▲</button><button type="button" class="rs" data-sellpct="0" ${sellPct !== sellPctRule ? "" : "disabled"}>↺ 초기화</button></div>
-        <div class="loc-sub">규칙 기반 +${sellPctRule.toFixed(2)}% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div>
       </div>
     </div>
+    <div class="sell-row"><div class="sell-adj" data-cur="${sellPct}"><button type="button" data-sellpct="-1" aria-label="매도 % 내리기">▼</button><span class="pv">+${sellPct.toFixed(2)}%<small>${sellPct !== sellPctRule ? "수동" : "규칙 기반"}</small></span><button type="button" data-sellpct="1" aria-label="매도 % 올리기">▲</button><button type="button" class="rs" data-sellpct="0" ${sellPct !== sellPctRule ? "" : "disabled"}>↺ 초기화</button></div><div class="loc-sub">규칙 기반 +${sellPctRule.toFixed(2)}% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div>
     <p class="copy-hint">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p>
   `;
   el.innerHTML = `
     <div class="loc-moved-note">LOC 매수·매도 예약가와 수량은 <b data-goto="pg-order" style="cursor:pointer;text-decoration:underline;">⚡ 주문 탭 · 오늘의 LOC 주문</b> 카드에 있습니다</div>
-    ${exportBtnHtml}
     <div class="kv-row"><span class="k">매수 조건 ① 평단가 이하</span><span class="v">${hasPosition ? usd(avgPrice) + (avgPrice <= lastClose ? " ← 적용" : "") : "보유 없음 (해당 없음)"}</span></div>
     <div class="kv-row"><span class="k">매수 조건 ② 전일 확정 종가 이하 (${lastCloseDate})</span><span class="v">${usd(lastClose)}${!hasPosition || lastClose < avgPrice ? " ← 적용" : ""}</span></div>
     <div class="kv-row"><span class="k">입력된 시드 / 분할 수</span><span class="v">${fmtUsd0(seed)} / ${splits}분할 (1분할 ${fmtUsd0(sp.per1)})</span></div>
@@ -3302,6 +3257,7 @@ const EMBED = (new URLSearchParams(location.search).get("embed") || "").toLowerC
 function applyViewMode() {
   if (EMBED === "panel") {
     document.body.classList.add("panel");
+    { const h = document.querySelector("#card-today h2"), k = document.querySelector("#card-today .card-kicker"); if (h) h.textContent = "현재 상태 · 매도 %"; if (k) k.textContent = "NOW · STATUS"; }
     goTab("pg-order", { top: true });
     let tries = 0;
     const kick = () => { if (lastLocOrder || ++tries > 40) return; if (!__syncBusy) document.getElementById("fetchBtn").click(); else setTimeout(kick, 500); };
@@ -3313,7 +3269,7 @@ function applyViewMode() {
   ["pg-order", "pg-backup"].forEach(id => { const b = document.querySelector(`#tabbar .tb[data-p="${id}"]`); if (b) b.remove(); });
   const tb = document.getElementById("tabbar"); if (tb) tb.style.gridTemplateColumns = `repeat(${tb.querySelectorAll(".tb").length},minmax(0,1fr))`;
   const eng = document.getElementById("pg-engine");
-  if (eng) eng.insertAdjacentHTML("afterbegin", `<a class="solo-note" href="api.html#pg-${LEV_TICKER.toLowerCase()}">📒 ${LEV_TICKER} 주문·사이클·백업 → 메리츠 자동주문(해외) ›<small>이 앱은 AI 분석(엔진·가이드·통계·설명) 전용입니다. 기록·오늘의 LOC·자동주문은 메리츠 자동주문(해외) 한 곳에서.</small></a>`);
+  if (eng) eng.insertAdjacentHTML("afterbegin", `<a class="solo-note" href="api-qm.html#pg-${LEV_TICKER.toLowerCase()}">📒 ${LEV_TICKER} 주문·사이클·백업 → 메리츠 자동주문 ›<small>이 앱은 AI 분석(엔진·가이드·통계·설명) 전용입니다. 기록·오늘의 LOC·자동주문은 메리츠 자동주문(해외) 한 곳에서.</small></a>`);
   const cur = document.querySelector(".page.on");
   if (!cur || cur.id === "pg-order" || cur.id === "pg-backup") goTab("pg-engine", { top: true });
 }
@@ -3693,7 +3649,7 @@ function botRender() {
   line.className = "bot-line m-" + (c.mode || "off") + (fresh && st && ["blocked", "error"].includes(st.overall) ? " bad" : "");
   line.innerHTML = `<b>🔌 자동주문 ${c.mode === "live" ? "실전" : c.mode === "dry" ? "리허설" : "수동"}</b> · ` +
     (fresh ? `${when} ${esc(r && r.summary ? r.summary : st.note || st.overall)}` : "최근 실행 없음") +
-    ` <a class="bot-go" href="api.html">메리츠 자동주문(해외) ›</a>`;
+    ` <a class="bot-go" href="api.html">메리츠 자동주문 ›</a>`;
 }
 
 /* ======================== 📊 엑셀(.xlsx) 내보내기 ======================== */
