@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.05-261019-ParadiseCalc">
+<meta name="version" content="V1.06-261019-ParadiseCalc">
 <meta name="release-date" content="261019">
-<title>QLD 낙원계산기 (V1.05 - 261019)</title>
+<title>QLD 낙원계산기 (V1.06 - 261019)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -58,12 +58,12 @@
 <body>
 <div class="wrap">
   <div><h1>🏝 QLD 낙원계산기 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.05 (261019) · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.06 (261019) · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
 
   <section class="card"><div class="kick">STEP 1 · 자산 목표</div><h2>은퇴 시점 내 자산은?</h2>
-    <div class="hint">값은 이 기기에 저장되고, ☁️ 동기화가 켜져 있으면 모든 기기에 영구 저장됩니다. 시드·환율은 앱에서 자동으로 가져옵니다(수정 가능).</div>
+    <div class="hint">값은 이 기기에 저장되고, ☁️ 동기화가 켜져 있으면 모든 기기에 영구 저장됩니다. 시드·환율은 앱에서 자동으로 가져옵니다(수정 가능). <b id="syncSt"></b></div>
     <div id="fields"></div>
     <div class="res">
       <div class="box"><div class="l">은퇴 후 자산 (그때 돈)</div><div class="n" id="oFv">-</div><div class="s" id="oFvPv"></div></div>
@@ -103,13 +103,13 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.05", RELEASE_DATE = "261019";
+const APP_VERSION = "V1.06", RELEASE_DATE = "261019";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
-  ["life", "QLD평생매수 시드", "$", 0, 2000000, 1000, 370000, "통합 앱 시드에서 자동"],
+  ["life", "QLD평생매수 시드", "$", 0, 2000000, 1000, 100000, "통합 앱 시드에서 자동"],
   ["lifeR", "QLD평생 기대 수익률", "%", 0, 40, 0.1, 15, ""],
-  ["inf", "QLD무한매수 시드", "$", 0, 1000000, 1000, 70000, "통합 앱 시드에서 자동"],
+  ["inf", "QLD무한매수 시드", "$", 0, 1000000, 1000, 20000, "통합 앱 시드에서 자동"],
   ["infR", "QLD무한 기대 수익률", "%", 0, 40, 0.1, 12, ""],
   ["fx", "원/달러 환율", "원", 900, 2000, 1, 1330, "매일 10:10 저장 값에서 자동"],
   ["n", "은퇴 시기", "년 후", 1, 40, 1, 10, "은퇴까지 남은 기간"],
@@ -142,7 +142,7 @@ function calc(n) {
 /* 💡 지금 총 시드로 은퇴하면: 명목 이자 → 물가만큼 원금 재투자 → 남는 실질분 = 평생 쓸 돈 (항상 자동 계산) */
 function live() { const T = (V.life + V.inf) * V.fx / 1e4, nom = T * V.postR / 100, real = (1 + V.postR / 100) / (1 + V.infl / 100) - 1, use = T * real, keep = nom - use;
   const e = $("live"); if (!e) return;
-  e.innerHTML = `<div class="hd">💡 <b>지금 총 시드 ${won(T)}</b>로 은퇴한다면 · 명목 ${V.postR}% · 물가 ${V.infl}%</div>`
+  e.innerHTML = `<div class="hd">💡 <b>지금 총 시드 ${won(T)}</b>으로 은퇴한다면 · 명목 ${V.postR}% · 물가 ${V.infl}%</div>`
     + (real > 0 ? `<div class="fl"><div class="st in"><span>① 1년 이자</span><b>${man(nom)}</b><small>명목 ${V.postR}%</small></div><i>→</i>
       <div class="st ke"><span>② 재투자</span><b>${man(keep)}</b><small>물가 ${V.infl}% 보전</small></div><i>→</i>
       <div class="st go"><span>③ 평생 쓸 돈</span><b>월 ${man(use / 12)}</b><small>실질 ${(real * 100).toFixed(1)}%</small></div></div>
@@ -214,7 +214,7 @@ function ptable() {
 }
 
 /* 📊 롤링 백테스트: QLD 전체 일봉(data/QLD_max.json)으로 두 전략을 '은퇴 시기'만큼 매달 시작점을 바꿔 굴려 연환산 수익률 분포를 구함 */
-let QM = null, BT = null;
+let QM = null, BT = null, GATE = 0.10;
 function simLife(ys, ds, a, b) {          // 평생매수: 기준가 −15% 도달 시 주 1회 LOC · 1·2·3차 배분 10/80/10 · 분할 10/1/1 (현재 엔진과 같은 규칙)
   const q = 0.15, cum = [1, 2, 3].map(k => 1 - (1 - q) ** k), per = [0.1 / 10, 0.8, 0.1];
   let cash = 1, sh = 0, H = ys[a], ref = ys[a], wk = -1;
@@ -226,7 +226,7 @@ function simLife(ys, ds, a, b) {          // 평생매수: 기준가 −15% 도�
 function simInf(ys, pk, a, b) {           // 무한매수(축적): 1년 고점 −10% 이하 & 종가 ≤ min(평단, 전일종가) 일 때 1/18 씩 · 매도 없음
   const per = 1 / 18; let cash = 1, sh = 0, cost = 0;
   for (let i = a + 1; i <= b; i++) { const y = ys[i], lim = sh ? Math.min(cost / sh, ys[i - 1]) : ys[i - 1];
-    if (cash >= per * 0.5 && y <= lim && y <= pk[i] * 0.9) { const amt = Math.min(per, cash); sh += amt / y; cost += amt; cash -= amt; } }
+    if (cash >= per * 0.5 && y <= lim && y <= pk[i] * (1 - GATE)) { const amt = Math.min(per, cash); sh += amt / y; cost += amt; cash -= amt; } }
   return sh * ys[b] + cash;
 }
 function backtest(n) {
@@ -240,7 +240,7 @@ function backtest(n) {
   return { n: L.length, yrs: Hn / 252, capped, from: QM.bars[0][0].slice(0, 4), life: [pct(L, .25), pct(L, .5), pct(L, .75)], inf: [pct(I, .25), pct(I, .5), pct(I, .75)] };
 }
 function btApply() {
-  const n = Math.round(V.n), k = n + ":" + (QM ? QM.bars.length : 0); if (!QM || (BT && BT.k === k)) return; BT = backtest(n); if (!BT) return; BT.k = k;
+  const n = Math.round(V.n), k = n + ":" + GATE + ":" + (QM ? QM.bars.length : 0); if (!QM || (BT && BT.k === k)) return; BT = backtest(n); if (!BT) return; BT.k = k;
   [["lifeR", BT.life], ["infR", BT.inf]].forEach(([key, p]) => {
     if (!TOUCH[key]) { V[key] = +p[1].toFixed(1); $("i_" + key).value = V[key]; $("r_" + key).value = V[key]; }
     $("s_" + key).innerHTML = ` · 백테스트`;
@@ -254,10 +254,11 @@ document.addEventListener("click", e => { const b = e.target.closest("[data-set]
 fetch("data/QLD_max.json?h=" + new Date().toISOString().slice(0, 10), { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(j => { if (j && j.bars && j.bars.length > 1000) { QM = j; render(); } }).catch(() => {});
 /* 저장: 이 기기 + ☁️ Gist(paradise.json, 동기화 켜져 있으면) */
 let saveT = 0, TOUCH = {}; try { TOUCH = JSON.parse(localStorage.getItem(KEY + "_t") || "{}"); } catch (e) {}
+function syncSt(t, ok) { const e = $("syncSt"); if (e) { e.textContent = t; e.style.color = ok ? "var(--up)" : "var(--amber)"; } }
 function save() {
   V.at = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(V)); } catch (e) {}
   clearTimeout(saveT); saveT = setTimeout(async () => { const t = tok(), g = gid(); if (!t || !g) return;
-    try { await fetch("https://api.github.com/gists/" + g, { method: "PATCH", headers: { Authorization: "Bearer " + t, "Content-Type": "application/json" }, body: JSON.stringify({ files: { [GFILE]: { content: JSON.stringify(Object.assign({}, V, { touched: TOUCH })) } } }) }); } catch (e) {} }, 1200);
+    try { const rs = await fetch("https://api.github.com/gists/" + g, { method: "PATCH", headers: { Authorization: "Bearer " + t, "Content-Type": "application/json" }, body: JSON.stringify({ files: { [GFILE]: { content: JSON.stringify(Object.assign({}, V, { touched: TOUCH })) } } }) }); syncSt(rs.ok ? "☁️ 모든 기기에 저장됨" : `⚠️ 동기화 저장 실패 (${rs.status}) — 통합 앱 🛠설정에서 토큰 확인`, rs.ok); } catch (e) { syncSt("⚠️ 동기화 저장 실패 — 네트워크 확인", false); } }, 1200);
 }
 document.addEventListener("input", e => { const k = e.target.dataset && e.target.dataset.k; if (!k) return; const v = parseFloat(e.target.value), f = ALL.find(x => x[0] === k); if (!isFinite(v) || (f && (v < f[3] || v > f[4]))) return;
   V[k] = v; TOUCH[k] = 1; try { localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (x) {} const o = e.target.type === "range" ? $("i_" + k) : $("r_" + k); if (o) o.value = v; render(); save(); });
@@ -269,7 +270,7 @@ function setAuto(k, v, src) { if (!(v > 0)) return;          // 직접 바꾼 �
 (async () => {
   render();
   fetch("data/macro.json?h=" + new Date().toISOString().slice(0, 13), { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(m => { if (m && m.fx) { setAuto("fx", m.fx.last, "오늘"); render(); } }).catch(() => {});
-  const t = tok(), g = gid(); if (!t || !g) return;
+  const t = tok(), g = gid(); if (!t || !g) { syncSt("📱 이 기기에만 저장 중 — ☁️ 동기화는 통합 앱 🛠설정에서 연결", false); return; }
   try {
     const r = await fetch("https://api.github.com/gists/" + g, { headers: { Authorization: "Bearer " + t }, cache: "no-store" }); if (!r.ok) return;
     const fs = (await r.json()).files || {}, J = n => { try { return fs[n] ? JSON.parse(fs[n].content) : null; } catch (e) { return null; } };
@@ -277,6 +278,7 @@ function setAuto(k, v, src) { if (!(v > 0)) return;          // 직접 바꾼 �
       if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; $("r_" + f[0]).value = V[f[0]]; } }); V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
     const q = J("qld.json"), qm = J("qldm.json");
     setAuto("life", q && q.seed && q.seed.v, "통합 앱"); setAuto("inf", qm && qm.params && +qm.params.seed, "통합 앱");
+    { const gt = parseFloat(qm && qm.params ? qm.params.ddGate : NaN); if (isFinite(gt) && gt >= 0 && gt < 50) GATE = gt / 100; }
     render();
   } catch (e) {}
 })();
