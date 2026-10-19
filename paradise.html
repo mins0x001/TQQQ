@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.00-261019-ParadiseCalc">
+<meta name="version" content="V1.01-261019-ParadiseCalc">
 <meta name="release-date" content="261019">
-<title>QLD 낙원계산기 (V1.00 - 261019)</title>
+<title>QLD 낙원계산기 (V1.01 - 261019)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -40,13 +40,18 @@
   .src{font-size:11px;color:var(--text-faint);margin-left:4px;}
   .sum{position:sticky;top:0;z-index:5;padding:10px 12px;border-radius:12px;background:rgba(15,24,42,.96);border:1px solid rgba(94,234,212,.35);font-size:13px;line-height:1.5;backdrop-filter:blur(6px);}
   .sum b{font-family:var(--f-mono);}
+  .ai{display:grid;gap:8px;margin-top:6px;} .ai div{padding:10px 12px;border-radius:12px;background:var(--panel-2);border:1px solid var(--border);font-size:13px;line-height:1.6;}
+  .ai b{font-family:var(--f-mono);color:var(--glow);} .ai .best{border-color:rgba(94,234,212,.5);}
+  .pt{width:100%;border-collapse:separate;border-spacing:3px;margin-top:8px;font:700 11.5px var(--f-mono);text-align:center;}
+  .pt th{color:var(--text-faint);font-weight:700;padding:4px 0;} .pt td{padding:7px 0;border-radius:7px;background:var(--panel-2);color:var(--text-dim);}
+  .pt td.ok{background:rgba(56,217,140,.16);color:#7EE8B5;} .pt td.me{outline:2px solid var(--glow);color:var(--text);}
   .btn{border:1px solid var(--border);background:none;color:var(--text-dim);border-radius:9px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div><h1>🏝 QLD 낙원계산기 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.00 (261019) · 저축 대신 QLD평생매수·QLD무한매수 시드로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.01 (261019) · 저축 대신 QLD평생매수·QLD무한매수 시드로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
 
@@ -70,6 +75,11 @@
     <div class="hint" style="margin-top:6px;">— 내 자산 · <span style="color:var(--amber)">- - 낙원 금액</span> (해마다 물가만큼 커짐) · 두 선이 만나는 해가 낙원 도착</div>
   </section>
 
+  <section class="card"><div class="kick">🤖 AI 진단</div><h2>낙원까지 가장 빠른 길</h2><div id="ai"></div></section>
+
+  <section class="card"><div class="kick">PARADISE TABLE · 지금 가치</div><h2>월 소비액 × 실질 수익률 → 필요한 자산</h2>
+    <div class="hint">🟩 지금 자산으로 이미 가능 · <span style="color:var(--glow)">▣</span> 내 조건</div><div id="ptab"></div></section>
+
   <section class="card"><div class="kick">HOW · 계산식</div>
     <div class="hint">
       ① 은퇴 후 자산 = 기타자산×(1+r)<sup>n</sup> + 평생매수 시드×(1+r<sub>평생</sub>)<sup>n</sup> + 무한매수 시드×(1+r<sub>무한</sub>)<sup>n</sup> + 연 추가투자×((1+r)<sup>n</sup>−(1+g)<sup>n</sup>)÷(r−g)<br>
@@ -80,25 +90,25 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.00", RELEASE_DATE = "261019";
+const APP_VERSION = "V1.01", RELEASE_DATE = "261019";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
-  ["etc", "기타 보유 자산", "만원", 0, 200000, 100, 5000, "QLD 외 예금·주식 등"],
+  ["etc", "기타 보유 자산", "만원", 0, 200000, 100, 5000, "은퇴 뒤에도 소득을 만들어 줄 QLD 외 자산 (예금·주식 등)"],
   ["etcR", "기타 자산 명목 수익률", "%", 0, 15, 0.5, 5, ""],
   ["life", "QLD평생매수 시드", "$", 0, 2000000, 1000, 370000, "통합 앱 시드에서 자동"],
   ["lifeR", "QLD평생 기대 수익률", "%", 0, 40, 0.5, 15, "보수 10 · 기본 15 · 낙관 20"],
   ["inf", "QLD무한매수 시드", "$", 0, 1000000, 1000, 70000, "통합 앱 시드에서 자동"],
   ["infR", "QLD무한 기대 수익률", "%", 0, 40, 0.5, 12, "-10% 조건으로 쉬는 기간 반영해 평생보다 낮게"],
   ["fx", "원/달러 환율", "원", 900, 2000, 1, 1330, "매일 10:10 저장 값에서 자동"],
-  ["sav", "연 추가 투자(저축)", "만원", 0, 50000, 100, 1200, "매년 QLD에 더 넣는 돈"],
-  ["savG", "저축 증가율", "%", 0, 10, 0.5, 3, ""],
-  ["n", "은퇴 시기", "년 후", 1, 40, 1, 10, ""],
+  ["sav", "연 추가 투자(저축)", "만원", 0, 50000, 100, 1200, "한 해 동안 저축해 QLD에 더 넣을 수 있는 금액"],
+  ["savG", "저축 증가율", "%", 0, 10, 0.5, 3, "해마다 저축을 몇 % 늘리나 (보통 물가만큼)"],
+  ["n", "은퇴 시기", "년 후", 1, 40, 1, 10, "은퇴까지 남은 기간"],
 ];
 const F2 = [
   ["postR", "은퇴 후 명목 수익률", "%", 0, 15, 0.5, 7, "은퇴 뒤엔 안전하게 (예: 배당·채권 섞기)"],
-  ["infl", "물가 상승률", "%", 0, 8, 0.5, 3, ""],
-  ["spend", "월 소비액 (지금 가치)", "만원", 50, 3000, 10, 300, ""],
+  ["infl", "물가 상승률", "%", 0, 8, 0.5, 3, "낙원 금액을 그때 돈으로 키우는 비율"],
+  ["spend", "월 소비액 (지금 가치)", "만원", 50, 3000, 10, 300, "은퇴 뒤 매달 쓰고 싶은 돈 = 낙원 금액"],
 ];
 const ALL = F1.concat(F2), $ = id => document.getElementById(id);
 let V = Object.fromEntries(ALL.map(f => [f[0], f[6]]));
@@ -132,7 +142,7 @@ function render() {
     : at === 0 ? `🏝 <b>이미 낙원입니다!</b> 지금 자산으로 월 ${V.spend}만원(지금 가치) 생활이 가능합니다.`
     : `🏝 <b>${yr + at}년 (${at}년 후)</b> 낙원 도착 — 그때 자산 ${man(calc(at).fv)}원 ≥ 낙원 금액 ${man(calc(at).par)}원<br>${at <= n ? `은퇴 시기(${n}년 후)보다 <b>${n - at}년 빨리</b> 도착` : `은퇴 시기(${n}년 후)보다 <b style="color:var(--amber)">${at - n}년 늦게</b> 도착 — 은퇴를 ${at}년 후로 미루거나 조건을 바꿔 보세요`}`;
   $("sum").innerHTML = `🏝 ${at === null ? "50년 안에 도착 어려움" : at === 0 ? "<b style='color:var(--up)'>이미 낙원</b>" : `<b style="color:var(--glow)">${yr + at}년</b> 낙원 도착 (${at}년 후)`}<br>${n}년 후 자산 <b>${man(c.fv)}</b> · 낙원 금액 <b>${isFinite(c.par) ? man(c.par) : "∞"}</b> · ${gap <= 0 ? "<b style='color:var(--up)'>달성</b>" : `남은 <b style="color:var(--amber)">${man(gap)}</b>`}`;
-  drawChart(Math.max(n, at === null ? n : at) + 3, at);
+  drawChart(Math.max(n, at === null ? n : at) + 3, at); aiPlan(); ptable();
 }
 function drawChart(N, at) {
   const W = 320, H = 150, pl = 6, pr = 44, pt = 10, pb = 18, pts = [];
@@ -142,6 +152,32 @@ function drawChart(N, at) {
   $("chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="자산과 낙원 금액 추이"><polyline points="${line(2)}" fill="none" stroke="#F5A524" stroke-width="2" stroke-dasharray="4 3"/><polyline points="${line(1)}" fill="none" stroke="#5EEAD4" stroke-width="2.4"/>
     ${at !== null && at <= N ? `<circle cx="${X(at)}" cy="${Y(pts[at][1])}" r="5" fill="#38D98C"/><text x="${X(at)}" y="${Y(pts[at][1]) - 8}" font-size="10" fill="#38D98C" text-anchor="middle">🏝 ${at}년</text>` : ""}
     <text x="${W - pr + 4}" y="${pt + 8}" font-size="10" fill="#8E9AB0">${man(mx)}</text><text x="${pl}" y="${H - 4}" font-size="10" fill="#5F6B82">지금</text><text x="${W - pr}" y="${H - 4}" font-size="10" fill="#5F6B82" text-anchor="end">${N}년 후</text></svg>`;
+}
+
+/* 🤖 AI 진단: 은퇴 시기까지 낙원에 닿으려면 — ① 수익률을 얼마나 ② 저축을 얼마나 ③ 소비를 얼마로 */
+function solve(f, lo, hi) { for (let i = 0; i < 60; i++) { const m = (lo + hi) / 2; f(m) ? hi = m : lo = m; } return hi; }
+function aiPlan() {
+  const n = Math.round(V.n), c = calc(n), base = { ...V };
+  if (c.fv >= c.par) { $("ai").innerHTML = `<div class="ai"><div class="best">🎉 <b>${n}년 후</b> 이미 낙원 조건 달성 — 월 <b>${Math.round(c.inc).toLocaleString("ko-KR")}만원</b>(지금 가치)까지 쓸 수 있어요. 은퇴를 앞당기거나 위험을 줄여(수익률 ↓) 안정적으로 가도 됩니다.</div></div>`; return; }
+  const ok = () => { const k = calc(n); return k.fv >= k.par; };
+  const dR = solve(d => { V.etcR = base.etcR + d; V.lifeR = base.lifeR + d; V.infR = base.infR + d; const r = ok(); Object.assign(V, base); return r; }, 0, 60);
+  const dS = solve(x => { V.sav = base.sav + x; const r = ok(); Object.assign(V, base); return r; }, 0, 1e6);
+  const sp = Math.floor(c.inc / 10) * 10, ny = (() => { for (let y = n; y <= 60; y++) { const k = calc(y); if (k.fv >= k.par) return y; } return null; })();
+  const opts = [
+    { t: `📈 수익률을 모두 <b>+${dR.toFixed(1)}%p</b> 올리면 (QLD평생 ${(base.lifeR + dR).toFixed(1)}% · 무한 ${(base.infR + dR).toFixed(1)}%)`, hard: dR / 3 },
+    { t: `💰 연 저축을 <b>+${man(dS)}원</b> 더 (월 ${man(dS / 12)}원)`, hard: dS / Math.max(base.sav, 600) },
+    { t: `🍃 월 소비를 <b>${sp.toLocaleString("ko-KR")}만원</b>으로 (−${(base.spend - sp).toLocaleString("ko-KR")}만)`, hard: (base.spend - sp) / base.spend * 4 },
+    ny ? { t: `⏳ 그대로 두고 은퇴를 <b>${ny}년 후</b>로 (+${ny - n}년)`, hard: (ny - n) / 4 } : null,
+  ].filter(Boolean).sort((a, b) => a.hard - b.hard);
+  $("ai").innerHTML = `<div class="hint">${n}년 후 낙원에 닿으려면 아래 중 하나면 됩니다 · 가장 쉬운 순서</div><div class="ai">${opts.map((o, i) => `<div class="${i ? "" : "best"}">${i ? "" : "⭐ 추천 · "}${o.t}</div>`).join("")}</div>`;
+}
+/* 낙원 테이블: 내 월 소비액 주변 7줄 × 실질 수익률 4~10% (지금 가치 · 필요한 자산) */
+function ptable() {
+  const real = Math.round(calc(0).real * 100), cols = [4, 5, 6, 7, 8, 9, 10], have = calc(0).fv;
+  const sp0 = Math.round(V.spend / 50) * 50, rows = [-150, -100, -50, 0, 50, 100, 150].map(d => sp0 + d).filter(x => x >= 50);
+  $("ptab").innerHTML = `<table class="pt"><tr><th>월</th>${cols.map(c => `<th>${c}%</th>`).join("")}</tr>${rows.map(r => `<tr><th>${r}</th>${cols.map(c => { const need = r * 12 / (c / 100);
+    return `<td class="${have >= need ? "ok" : ""} ${r === sp0 && c === real ? "me" : ""}">${(need / 10000).toFixed(1)}</td>`; }).join("")}</tr>`).join("")}</table>
+    <div class="hint" style="margin-top:4px;">단위: 억원 · 월 소비액(만원) × 12 ÷ 실질 수익률 · 지금 내 자산 ${man(have)}원</div>`;
 }
 /* 저장: 이 기기 + ☁️ Gist(paradise.json, 동기화 켜져 있으면) */
 let saveT = 0, TOUCH = {}; try { TOUCH = JSON.parse(localStorage.getItem(KEY + "_t") || "{}"); } catch (e) {}
