@@ -1,4 +1,4 @@
-# 미국 ETF 일봉 + 시장 지표 자동 저장 V1.02 (261019) — 매일 한국 10:10 (+10:40 예비)
+# 미국 ETF 일봉 + 시장 지표 자동 저장 V1.03 (261019) — 매일 한국 10:10 (+10:40 예비)
 # 앱(SOXL·TQQQ·QLD 무한매수 / QLD 평생매수)은 이 파일(data/<심볼>.json)을 먼저 읽고, 최신이 아니면 시세 API로 받습니다.
 # 데이터: Twelve Data 일봉(앱과 같은 출처) → 실패 시 Yahoo. 바뀐 게 없으면 커밋하지 않음(주말·휴장일).
 name: 미국 시세 저장
@@ -148,8 +148,16 @@ jobs:
               j = json.loads(urllib.request.urlopen(urllib.request.Request("https://api.bls.gov/publicAPI/v1/timeseries/data/", data=json.dumps({"seriesid": [sid], "startyear": str(y - 6), "endyear": str(y)}).encode(), headers={"Content-Type": "application/json", "User-Agent": UA["User-Agent"]}), timeout=30).read().decode())
               rows = j["Results"]["series"][0]["data"]
               return sorted([[f"{r['year']}-{r['period'][1:]}-01", float(r["value"])] for r in rows if r["period"].startswith("M") and r["period"] != "M13"])
+          AV = "https://www.alphavantage.co/query?apikey=4YO9UTZ2A3ZL987N&"     # 예전 QLD 앱과 같은 출처 (Alpha Vantage)
+          def av(q):
+              j = get(AV + q)
+              if "data" not in j: raise RuntimeError(str(j)[:150])
+              return sorted([[r["date"], float(r["value"])] for r in j["data"] if r.get("value") not in (".", "", None)])
           try:
               try:
+                  ser = av("function=CPI&interval=monthly")[-73:]
+              except Exception as e0:
+                  print("CPI AlphaVantage 실패:", e0); out.setdefault("errors", {})["cpi_av"] = str(e0)[:200]
                   ser = bls("CUUR0000SA0")[-73:]
               except Exception as e:
                   print("CPI BLS 실패:", e); out.setdefault("errors", {})["cpi_bls"] = str(e)[:200]; ser = fred("CPIAUCNS", 73)
@@ -160,9 +168,11 @@ jobs:
               print("CPI 실패:", e); out.setdefault("errors", {})["cpi"] = str(e)[:200]
           try:
               try:
+                  ser = av("function=TREASURY_YIELD&interval=daily&maturity=10year")[-260:]
+              except Exception as e0:
+                  print("10Y AlphaVantage 실패:", e0); ser = None
+              if not ser:
                   ser = yahoo("^TNX")
-              except Exception as e:
-                  print("10Y Yahoo 실패:", e); ser = fred("DGS10", 260)
               out["ust"] = {"last": ser[-1][1], "date": ser[-1][0], "series": ser}
               print("10Y", ser[-1])
           except Exception as e:
