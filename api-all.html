@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.03-261019-MeritzAutoOrder-All">
+<meta name="version" content="V1.04-261019-MeritzAutoOrder-All">
 <meta name="release-date" content="261019">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>메리츠 자동주문(통합) (V1.03 - 261019)</title>
+<title>메리츠 자동주문(통합) (V1.04 - 261019)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -87,7 +87,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.03", RELEASE_DATE = "261016";
+const APP_VERSION = "V1.04", RELEASE_DATE = "261016";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -190,7 +190,7 @@ function render() {
     if (!P) return `<div class="sym">${head}<div class="busy">${G.err[s.id] ? "⚠ " + esc(G.err[s.id]) : "계산 중…"}</div></div>`;
     const o = Object.fromEntries((P.orders || []).map(x => [x.side, x]));
     const line = (side, lab) => o[side] ? `<div class="row"><span>${lab} ${CODES.find(c => c[0] === code)[1]}</span><b>${mk ? "시장가" : usd(o[side].price)} × ${o[side].qty}주</b></div>` : "";
-    return `<div class="sym">${head}${pos(P)}${rule(P)}${adj(s, P)}${line("buy", "매수")}${line("sell", "매도")}${!o.buy && !o.sell ? `<div class="busy">오늘 규칙상 주문 없음${sd.buy ? " (☑매수면 봇이 같은 공식으로 주문)" : ""}</div>` : ""}${inst ? "" : `<div class="busy">⚠ 봇 미설치 — 🛠 설정에서 해당 앱으로</div>`}</div>`;
+    return `<div class="sym">${head}${pos(P)}${rule(P)}${gadj(s, P)}${adj(s, P)}${line("buy", "매수")}${line("sell", "매도")}${!o.buy && !o.sell ? `<div class="busy">오늘 규칙상 주문 없음${sd.buy ? " (☑매수면 봇이 같은 공식으로 주문)" : ""}</div>` : ""}${inst ? "" : `<div class="busy">⚠ 봇 미설치 — 🛠 설정에서 해당 앱으로</div>`}</div>`;
   }).join("");
 }
 function renderSeeds() {
@@ -288,7 +288,7 @@ function sellSave(s, v) {
   }, 900);
 }
 document.getElementById("plans").addEventListener("click", e => {
-  const bt = e.target.closest(".adj button"); if (!bt) return;
+  const bt = e.target.closest(".adj[data-sid] button"); if (!bt) return;
   const s = S.find(x => x.id === bt.closest(".adj").dataset.sid), P = G.plan[s.id]; if (!P || !P.bot) return;
   const b = P.bot, d = +bt.dataset.d, r = +b.sell_pct_rule || +b.sell_pct;
   if (d === 0 && !confirm(`${s.name} 매도 %를 ‘규칙 기반’ +${r.toFixed(2)}%로 되돌릴까요?`)) return;
@@ -297,6 +297,44 @@ document.getElementById("plans").addEventListener("click", e => {
   const so = (P.orders || []).find(o => o.side === "sell");
   if (so && +b.avg_exact > 0) so.price = ceilCent(+b.avg_exact * (1 + v / 100));
   render(); sellSave(s, Math.abs(v - r) < 1e-9 ? null : v);
+});
+
+/* ⛳ QLD 무한매수 매수 조건: 1년 고점 대비 -기준% 이하일 때만 매수 (기본 10%) · ▲▼ 1%씩 · 영구 저장 */
+const GATE_DEF = 10, floorCent = x => Math.floor(x * 100 + 1e-6) / 100;
+function gadj(s, P) {
+  const b = P.bot || {}; if (b.dd_gate == null) return "";
+  const g = +b.dd_gate, ok = +b.dd_now <= -g + 1e-9, man = Math.abs(g - GATE_DEF) > 1e-9;
+  return `<div class="adj" data-gid="${s.id}"><span class="lb">매수 조건</span><button type="button" data-g="-1" aria-label="조건 완화">▼</button><b class="pv">-${g.toFixed(0)}%<small>${man ? "수동" : "기본"}</small></b><button type="button" data-g="1" aria-label="조건 강화">▲</button><button type="button" class="rs" data-g="0" ${man ? "" : "disabled"}>↺ 초기화</button><span class="nt">1년 고점 대비 ${(+b.dd_now).toFixed(1)}% · ${ok ? "✓ 매수" : "⏸ 대기"}</span></div>`;
+}
+function gateApply(P) {                   // 기준이 바뀌면 매수 주문을 같은 공식으로 다시 (앱·봇과 같은 식)
+  const b = P.bot, ok = +b.dd_now <= -(+b.dd_gate) + 1e-9; b.dd_ok = ok;
+  P.orders = (P.orders || []).filter(o => o.side !== "buy");
+  if (!ok || b.buy_off_base) return;
+  const hold = +P.holding_qty || 0, avg = +b.avg_exact || 0, last = +b.last_close;
+  const price = floorCent(avg && hold > 0 ? Math.min(avg, last) : last), unit = +b.qty_unit || 1, qty = Math.floor(Math.floor(+b.per_split / price) / unit) * unit;
+  if (qty >= 1) P.orders.unshift({ side: "buy", type: "LOC", price, qty });
+}
+function gateSave(s, v) {
+  const key = s.app.replace(".html", "") + "_param_mode_v1", id = s.id + "g";
+  try { const pm = JSON.parse(localStorage.getItem(key) || "null") || { mode: "rule" }; if (v == null) delete pm.ddGate; else pm.ddGate = v; localStorage.setItem(key, JSON.stringify(pm)); } catch (e) {}
+  clearTimeout(SAVE_T[id]);
+  SAVE_T[id] = setTimeout(async () => {
+    try {
+      await loadGist(); const d = J(s.sync, {});
+      d.params = Object.assign({ mode: "rule" }, d.params || {}); if (v == null) delete d.params.ddGate; else d.params.ddGate = String(v); d.paramsAt = Date.now();
+      await writeFiles({ [s.sync]: d });
+      msg(`💾 ${s.name} 매수 조건 -${v == null ? GATE_DEF : v}% ${v == null ? "(기본)" : ""} 저장 · 모든 기기·봇 동기화 (영구)`, true);
+    } catch (x) { msg("⚠ 매수 조건 저장 실패: " + x.message, false); }
+    delete SAVE_T[id];
+  }, 900);
+}
+document.getElementById("plans").addEventListener("click", e => {
+  const bt = e.target.closest(".adj[data-gid] button"); if (!bt) return;
+  const s = S.find(x => x.id === bt.closest(".adj").dataset.gid), P = G.plan[s.id]; if (!P || !P.bot) return;
+  const d = +bt.dataset.g;
+  if (d === 0 && !confirm(`${s.name} 매수 조건을 기본(-${GATE_DEF}%)으로 되돌릴까요?`)) return;
+  const v = d === 0 ? GATE_DEF : Math.min(50, Math.max(0, Math.round(+P.bot.dd_gate + d)));
+  P.bot.dd_gate = v; gateApply(P); render(); gateSave(s, v === GATE_DEF ? null : v);
 });
 document.getElementById("recalc").addEventListener("click", () => computeAll());
 document.getElementById("reload").addEventListener("click", () => refresh());
