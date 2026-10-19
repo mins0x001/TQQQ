@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.04-261019-ParadiseCalc">
+<meta name="version" content="V1.05-261019-ParadiseCalc">
 <meta name="release-date" content="261019">
-<title>QLD 낙원계산기 (V1.04 - 261019)</title>
+<title>QLD 낙원계산기 (V1.05 - 261019)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -50,13 +50,15 @@
   .pt td.ok{background:rgba(56,217,140,.16);color:#7EE8B5;} .pt td.me{outline:2px solid var(--glow);color:var(--text);}
   .chips{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:5px;margin-top:2px;} .chip{border:1px solid var(--border);background:var(--panel-2);color:var(--text-dim);border-radius:99px;padding:4px 9px;font:700 11.5px var(--f-body);cursor:pointer;} .chip.on{border-color:var(--glow);color:var(--glow);} .chips small{flex-basis:100%;font-size:10.5px;color:var(--text-faint);}
   .tip{margin:6px 0 2px;padding:10px 12px;border-radius:12px;border:1px solid rgba(245,165,36,.35);background:rgba(245,165,36,.06);font-size:13px;line-height:1.7;}.tip summary{cursor:pointer;font-weight:800;color:var(--amber);}.tip p{margin:8px 0 0;}.tip b{color:var(--text);}.tip .ex{padding:8px 10px;border-radius:10px;background:var(--panel-2);font-size:12.5px;color:var(--text-dim);}
+.live{margin-top:12px;padding:12px;border-radius:14px;border:1px solid rgba(94,234,212,.35);background:linear-gradient(160deg,rgba(94,234,212,.08),rgba(245,165,36,.05));}.live .hd{font-size:12.5px;color:var(--text-dim);margin-bottom:8px;}.live .hd b{color:var(--text);font-family:var(--f-mono);}.live .fl{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:3px;align-items:stretch;}.live .fl>i{align-self:center;font-style:normal;color:var(--text-faint);font-size:13px;}.live .st{padding:9px 6px;border-radius:11px;background:var(--panel-2);border:1px solid var(--border);text-align:center;}.live .st span{display:block;font-size:10.5px;color:var(--text-faint);}.live .st b{display:block;font:800 15px var(--f-mono);margin:3px 0 1px;white-space:nowrap;}.live .st small{display:block;font-size:10px;color:var(--text-faint);}.live .st.in b{color:var(--glow);}.live .st.ke b{color:var(--amber);}.live .st.go{border-color:rgba(56,217,140,.5);background:rgba(56,217,140,.08);}.live .st.go b{color:var(--up);}.live .ft{margin-top:8px;font-size:12px;color:var(--text-dim);line-height:1.6;}.live .ft b{color:var(--up);}
   .btn{border:1px solid var(--border);background:none;color:var(--text-dim);border-radius:9px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;}
+.live .st span{white-space:nowrap;font-size:11px;}.live .st small{white-space:nowrap;font-size:10px;}.live .st{padding-left:4px;padding-right:4px;min-width:0;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div><h1>🏝 QLD 낙원계산기 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.04 (261019) · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.05 (261019) · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
 
@@ -73,9 +75,10 @@
     <details class="tip"><summary>💡 ‘은퇴 후 명목 수익률’이 뭔가요? (쉽게)</summary>
       <p>은퇴하면 QLD처럼 크게 오르내리는 자산 대신 <b>예금·채권·배당주</b> 같은 안전한 곳에 옮겨 두고, 거기서 나오는 이자·배당으로 생활합니다. 그 안전 자산이 <b>1년에 버는 %</b>가 ‘명목 수익률’이에요.</p>
       <p>그런데 물가가 오르면 같은 돈으로 살 수 있는 게 줄어들죠. 그래서 <b>실질 수익률 = 명목 − 물가</b>(정확히는 (1+명목)÷(1+물가)−1)만 써야 원금 가치가 줄지 않습니다.</p>
-      <p class="ex">예) 자산 <b>10억</b> · 명목 <b>7%</b> · 물가 <b>3%</b><br>→ 1년 이자 7,000만원 중 물가만큼(약 3,000만원)은 원금에 다시 넣고<br>→ 실질 <b>3.9%</b> ≈ 연 3,880만원 = <b>월 약 320만원</b>을 평생 쓸 수 있음<br>참고: 예금 3~4% · 국채 4% 안팎 · 배당·채권 섞으면 5~7%</p>
+      <p class="ex">👇 아래 <b>‘지금 총 시드로 계산하면’</b> 카드에 내 숫자로 항상 계산돼 있어요.</p>
     </details>
     <div id="fields2"></div>
+    <div class="live" id="live"></div>
     <div class="res">
       <div class="box"><div class="l">낙원 금액 (그때 돈)</div><div class="n" id="oPar">-</div><div class="s" id="oParS"></div></div>
       <div class="box"><div class="l">낙원까지 남은 금액</div><div class="n" id="oGap">-</div><div class="s" id="oGapS"></div></div>
@@ -100,7 +103,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.04", RELEASE_DATE = "261019";
+const APP_VERSION = "V1.05", RELEASE_DATE = "261019";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -136,12 +139,21 @@ function calc(n) {
   const par = real > 0 ? V.spend * 12 / real * defl : Infinity;
   return { fv, real, defl, par, inc: fv * real / 12 / defl };
 }
+/* 💡 지금 총 시드로 은퇴하면: 명목 이자 → 물가만큼 원금 재투자 → 남는 실질분 = 평생 쓸 돈 (항상 자동 계산) */
+function live() { const T = (V.life + V.inf) * V.fx / 1e4, nom = T * V.postR / 100, real = (1 + V.postR / 100) / (1 + V.infl / 100) - 1, use = T * real, keep = nom - use;
+  const e = $("live"); if (!e) return;
+  e.innerHTML = `<div class="hd">💡 <b>지금 총 시드 ${won(T)}</b>로 은퇴한다면 · 명목 ${V.postR}% · 물가 ${V.infl}%</div>`
+    + (real > 0 ? `<div class="fl"><div class="st in"><span>① 1년 이자</span><b>${man(nom)}</b><small>명목 ${V.postR}%</small></div><i>→</i>
+      <div class="st ke"><span>② 재투자</span><b>${man(keep)}</b><small>물가 ${V.infl}% 보전</small></div><i>→</i>
+      <div class="st go"><span>③ 평생 쓸 돈</span><b>월 ${man(use / 12)}</b><small>실질 ${(real * 100).toFixed(1)}%</small></div></div>
+      <div class="ft">원금 가치는 그대로 두고 <b>매달 ${won(use / 12)}</b>을 평생 쓸 수 있어요 (지금 가치) · 목표 월 ${V.spend.toLocaleString("ko-KR")}만원의 <b>${Math.round(use / 12 / V.spend * 100)}%</b></div>`
+    : `<div class="ft">⚠️ 명목 수익률이 물가보다 낮아 원금 가치가 줄어듭니다 — 평생 쓸 수 있는 돈이 없어요.</div>`); }
 /* 💱 달러 시드 → 원화 (억·만 단위, 환율 연동) */
 const won = m => { m = Math.round(m); const e = Math.floor(m / 10000), r = m % 10000; return (e ? e + "억" + (r ? " " : "") : "") + (r || !e ? r.toLocaleString("ko-KR") + "만" : "") + "원"; };
 function krw() { const t = (V.life + V.inf) * V.fx / 1e4;
   [["life", ""], ["inf", ` · 두 시드 합계 ${won(t)}`]].forEach(([k, x]) => { const el = $("w_" + k); if (el) el.innerHTML = `₩ ${won(V[k] * V.fx / 1e4)}<small>$1 = ${Math.round(V.fx).toLocaleString("ko-KR")}원${x}</small>`; }); }
 function render() {
-  btApply(); krw();
+  btApply(); krw(); live();
   const n = Math.round(V.n), c = calc(n);
   $("oFv").textContent = man(c.fv) + "원"; $("oFvPv").textContent = `지금 가치로 ${man(c.fv / c.defl)}원 · ${n}년 후`;
   $("oInc").textContent = Math.round(c.inc).toLocaleString("ko-KR") + "만원"; $("oIncS").textContent = `실질 ${(c.real * 100).toFixed(1)}% (명목 ${V.postR}%)`;
