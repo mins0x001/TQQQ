@@ -84,7 +84,7 @@
 <div class="wrap">
   <header>
     <h1>무한매수 허브<span class="app-pill" id="appPill" hidden>앱</span></h1>
-    <p>메리츠 자동주문(통합) · SOXL · TQQQ (A계좌) · QLD무한매수 · QLD평생매수 (B계좌) <span class="ver">· 허브 V1.31 (261019)</span></p>
+    <p>메리츠 자동주문(통합) · SOXL · TQQQ (A계좌) · QLD무한매수 · QLD평생매수 (B계좌) <span class="ver">· 허브 V1.32 (261019)</span></p>
   </header>
 
   <a class="mk-row" href="macro.html" aria-label="시장 지표 앱 열기">
@@ -96,7 +96,7 @@
 
   <a class="dash" href="api-all.html" style="--c:#F0475A;">
     <span class="tk" style="font-size:20px;">⚡</span>
-    <span class="info"><span class="nm">메리츠 자동주문(통합) <small>V1.08</small></span><span class="st" id="st-all">📅 매일 여기서 확인 · ⚡ 4종목 실제 주문 · 🧾 결과 · ⏰ 정시 · 🛠 앱키·텔레그램·시드</span></span>
+    <span class="info"><span class="nm">메리츠 자동주문(통합) <small>V1.09</small></span><span class="st" id="st-all">📅 매일 여기서 확인 · ⚡ 4종목 실제 주문 · 🧾 결과 · ⏰ 정시 · 🛠 앱키·텔레그램·시드</span></span>
     <span class="go">›</span>
   </a>
   <div style="font-size:12px;color:#93A3BD;margin:14px 2px 4px;font-weight:800;">무한매수 · 메리츠 A계좌</div>
@@ -128,7 +128,7 @@
   </a>
   <a class="dash" href="qldm.html" style="--c:#00C2FF;">
     <span class="tk" >QLD∞</span>
-    <span class="info"><span class="nm">QLD 무한매수AI분석 <small>V1.11</small></span><span class="st" id="st-qldm">기록 확인 중…</span></span>
+    <span class="info"><span class="nm">QLD 무한매수AI분석 <small>V1.12</small></span><span class="st" id="st-qldm">기록 확인 중…</span></span>
     <span class="go">›</span>
   </a>
   <a class="dash" href="api-qld.html" style="--c:#2ECC71;">
@@ -168,7 +168,7 @@
   <p class="note">매수 기록은 자동주문 앱 🛠 설정 탭의 <b>☁️ 동기화</b>를 켜면 PC와 폰이 같은 기록을 씁니다. 이 목록은 이 기기에 마지막으로 맞춰진 기록입니다.</p>
 </div>
 <script>
-const HUB_VERSION = "V1.31", HUB_RELEASE = "261019";
+const HUB_VERSION = "V1.32", HUB_RELEASE = "261019";
 function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
 function realized(tk, won){
   const t = readJSON(tk + "_trades_v1");
@@ -274,6 +274,22 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden) rend
     if (m.cpi) { const c = m.cpi.yoy > 3 ? "#F0475A" : m.cpi.yoy > 2.5 ? "#F5A524" : "#38D98C"; $("mkCpi").textContent = n2(m.cpi.yoy, 1) + "%"; $("mkCpi").style.color = c; $("mkCpiS").textContent = "전년비 · " + m.cpi.date.slice(5, 7) + "월"; }
     if (m.ust) { const d = d1(m.ust.series); $("mkUst").textContent = n2(m.ust.last, 2) + "%"; if (d != null) $("mkUstS").textContent = sg(d * 100, 0) + "bp"; }
   }).catch(() => {});
+})();
+
+/* 🤖 봇 자동 최신화: 허브를 열면 (3시간마다) 종목별 자동주문 앱을 보이지 않게 잠깐 열어 각 봇이 최신 버전인지 확인 → 다르면 자동 재설치
+   A계좌 봇 = api-soxl · QLD무한 봇 = api-qm · QLD평생 봇 = api-qld (같은 주소라 동기화 토큰 공유) */
+(function () {
+  try {
+    if (!localStorage.getItem("muhansync_token") || !localStorage.getItem("muhansync_gist")) return;
+    const k = "hub_botcheck_at", last = +localStorage.getItem(k) || 0;
+    if (Date.now() - last < 3 * 3600e3) return;
+    localStorage.setItem(k, String(Date.now()));
+  } catch (e) { return; }
+  ["api-soxl.html", "api-qm.html", "api-qld.html"].forEach((u, i) => setTimeout(() => {
+    const f = document.createElement("iframe"); f.src = u + "?bg=1"; f.setAttribute("aria-hidden", "true"); f.tabIndex = -1;
+    f.style.cssText = "position:fixed;left:-9999px;top:0;width:360px;height:640px;border:0;opacity:0;pointer-events:none;";
+    document.body.appendChild(f); setTimeout(() => f.remove(), 180000);      // 설치·업데이트에 충분한 3분 뒤 닫음
+  }, 2000 + i * 5000));
 })();
 </script>
 </body>
