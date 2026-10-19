@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.13-261019-MeritzAutoOrder-All">
+<meta name="version" content="V1.14-261019-MeritzAutoOrder-All">
 <meta name="release-date" content="261019">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>메리츠 자동주문(통합) (V1.13 - 261019)</title>
+<title>메리츠 자동주문(통합) (V1.14 - 261019)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -33,7 +33,7 @@
   .msg{font-size:13px;margin:8px 0;padding:9px 11px;border-radius:10px;background:var(--panel-2);border:1px solid var(--border);} .msg.ok{border-color:var(--up);} .msg.err{border-color:var(--down);}
   .hint{font-size:12px;color:var(--text-dim);line-height:1.6;} .busy{color:var(--text-faint);font-size:13px;}
   .page{display:none;} .page.on{display:block;}
-  .tabbar{position:fixed;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,1fr);background:rgba(11,18,32,.96);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom);}
+  .tabbar{position:fixed;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(11,18,32,.96);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom);}
   .tb{background:none;border:0;color:var(--text-faint);padding:9px 0 8px;font-size:12px;font-weight:700;} .tb.on{color:var(--glow);} .tb .ic{display:block;font-size:19px;}
   .seed{display:grid;grid-template-columns:110px 1fr;gap:8px;align-items:center;margin:8px 0;} .seed label{font-weight:800;font-size:14px;}
   .plan-frame{position:fixed;left:-2000px;top:0;width:412px;height:900px;border:0;opacity:0;pointer-events:none;}
@@ -71,7 +71,22 @@
       <button class="btn" id="reload" type="button" style="width:100%;margin-top:8px;">↻ 새로고침</button></section>
   </div>
 
+  <div class="page" id="pg-acct">
+    <section class="card"><div class="kick">ACCOUNT · 메리츠 실제 계좌</div><h2>💼 계좌 현황</h2>
+      <div id="accts" class="busy">불러오는 중…</div>
+      <button class="btn" id="acctSync" type="button" style="width:100%;margin-top:8px;">↻ 지금 계좌 동기화 (1~2분)</button>
+      <div class="hint" style="margin-top:6px;">봇이 평일 06:40·주문 실행 때마다 메리츠 계좌(보유·평단·평가손익·주문가능 달러)를 Gist에 저장합니다. QLD무한·QLD평생은 같은 B계좌라 합쳐서 보여 줍니다.</div>
+    </section>
+  </div>
   <div class="page" id="pg-cron">
+    <section class="card"><div class="kick">AUTO RUN · 3개 봇 공용</div><h2>⏰ 자동 실행</h2>
+      <div class="chkrow" style="margin-bottom:8px;"><button class="btn" type="button" data-amode="off" style="flex:1">⏸ 끄기</button><button class="btn" type="button" data-amode="live" style="flex:1">🟢 자동 실전</button></div>
+      <div id="autoState" class="hint" style="margin:0 0 8px;"></div>
+      <label class="opt" style="display:block;margin:6px 0;">매일(미국 개장일) 한국 <input class="inp" type="time" id="aTime" style="width:130px;min-height:34px;"></label>
+      <label class="opt" style="display:block;margin:6px 0;">안 되면 <input class="inp" type="number" id="aRm" min="5" max="120" step="5" inputmode="numeric" style="width:70px;min-height:34px;"> 분 간격 <input class="inp" type="number" id="aRn" min="0" max="5" inputmode="numeric" style="width:60px;min-height:34px;"> 회 재시도</label>
+      <button class="btn" id="aSave" type="button" style="width:100%;margin-top:6px;">💾 설정 저장 (3개 봇 일괄 적용)</button>
+      <div class="hint" style="margin-top:6px;">주문코드는 ⚡ 주문 탭 공통 코드 · 해외주식 주문 가능 시간: 한국 18:00~익일 08:50. 저장하면 각 봇의 GitHub 예약 시각과 cron-job.org 시각을 자동으로 다시 맞춥니다 (1~3분).</div>
+    </section>
     <section class="card"><div class="kick">CRON-JOB.ORG · 정시 실행 보장</div><h2>⏰ 정시 실행</h2>
       <p class="sub" style="margin:0 0 10px;">GitHub 정기 실행은 가끔 늦거나 빠집니다. 무료 cron-job.org 가 정한 시각에 봇을 정확히 깨웁니다 (GitHub 예약은 예비로 유지 · 같은 날 두 번 돌아도 메리츠 주문내역 중복 확인으로 주문은 1번).</p>
       <div id="crons" class="busy">불러오는 중…</div>
@@ -115,11 +130,12 @@
 <nav class="tabbar" id="tabbar">
   <button class="tb on" data-p="pg-main"><span class="ic">⚡</span>주문</button>
   <button class="tb" data-p="pg-result"><span class="ic">🧾</span>결과</button>
-  <button class="tb" data-p="pg-cron"><span class="ic">⏰</span>정시</button>
+  <button class="tb" data-p="pg-cron"><span class="ic">⏰</span>자동</button>
+  <button class="tb" data-p="pg-acct"><span class="ic">💼</span>계좌</button>
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.13", RELEASE_DATE = "261016";
+const APP_VERSION = "V1.14", RELEASE_DATE = "261016";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -559,11 +575,72 @@ async function secCheck() {
     try { await gh(`/repos/${c.owner}/${c.repo}/actions/secrets/public-key`); SEC_OK[f] = true; } catch (e) { SEC_OK[f] = false; } }
   renderBots();
 }
+
+/* ⏰ 자동 실행 (3개 봇 공용) · 💼 계좌 현황 */
+const BOTAPP = { "muhan-bot.json": "api-soxl.html", "muhan-bot-qldm.json": "api-qm.html", "muhan-bot-qld.json": "api-qld.html" };
+function bgRefresh(fs) {                  // 각 봇의 앱을 보이지 않게 열어 예약 시각(yml)을 새 설정으로 재설치 (앱의 자동 업데이트가 처리)
+  fs.forEach((f, i) => setTimeout(() => { const fr = document.createElement("iframe"); fr.src = BOTAPP[f] + "?bg=1"; fr.setAttribute("aria-hidden", "true"); fr.tabIndex = -1;
+    fr.style.cssText = "position:fixed;left:-9999px;top:0;width:360px;height:640px;border:0;opacity:0;pointer-events:none;"; document.body.appendChild(fr); setTimeout(() => fr.remove(), 180000); }, i * 4000));
+}
+function renderAuto() {
+  const fs = CFGS.filter(f => (G.cfg[f] || {}).installed_at), c0 = fs.length ? G.cfg[fs[0]] : {};
+  const el = id => document.getElementById(id);
+  if (document.activeElement !== el("aTime")) el("aTime").value = c0.run_kst || "18:10";
+  if (document.activeElement !== el("aRm")) el("aRm").value = c0.retry_min || 30;
+  if (document.activeElement !== el("aRn")) el("aRn").value = c0.retry_n ?? 2;
+  const live = fs.length && fs.every(f => G.cfg[f].mode === "live");
+  document.querySelectorAll("[data-amode]").forEach(b => b.classList.toggle("live", b.dataset.amode === (live ? "live" : "off")));
+  el("autoState").innerHTML = fs.length ? fs.map(f => { const c = G.cfg[f]; return `${c.mode === "live" ? "🟢" : "⏸"} ${BOTNAME[f]} · 한국 ${esc(c.run_kst || "18:10")} · ${c.retry_n ?? 2}회×${c.retry_min || 30}분`; }).join("<br>") : "⚠ 설치된 봇이 없습니다";
+}
+document.getElementById("aSave").addEventListener("click", async () => {
+  const v = document.getElementById("aTime").value, rm = Math.min(120, Math.max(5, Math.round(+document.getElementById("aRm").value || 30))), rn = Math.min(5, Math.max(0, Math.round(+document.getElementById("aRn").value || 0)));
+  if (!/^\d{2}:\d{2}$/.test(v)) { msg("⚠ 시각을 HH:MM으로", false); return; }
+  const m0 = +v.slice(0, 2) * 60 + +v.slice(3), last = (m0 + rm * rn) % 1440;
+  if (!ovOk(m0) ? !ovWarn(m0, "주문 시각") : !ovOk(last) && !ovWarn(last, "마지막 재시도 시각")) return;
+  try {
+    await loadGist(); const fs = CFGS.filter(f => (G.cfg[f] || {}).installed_at); if (!fs.length) throw new Error("설치된 봇이 없습니다");
+    const m = {}; fs.forEach(f => m[f] = Object.assign({}, G.cfg[f], { run_kst: v, retry_min: rm, retry_n: rn, updated: new Date().toISOString() }));
+    await writeFiles(m); fs.forEach(f => G.cfg[f] = m[f]);
+    for (const f of fs) if (G.cfg[f].cronapi) { try { await cronKick(G.cfg[f]); } catch (e) {} }
+    bgRefresh(fs); renderAuto();
+    msg(`💾 자동 실행 설정 저장 — 봇 ${fs.length}개 일괄: 한국 ${v} · ${rn ? rm + "분 간격 " + rn + "회 재시도" : "재시도 없음"} (GitHub 예약·cron-job.org 시각은 1~3분 안에 자동으로 맞춰짐)`, true);
+  } catch (x) { msg("⚠ " + x.message, false); }
+});
+let modeArm = 0;
+document.querySelectorAll("[data-amode]").forEach(b => b.addEventListener("click", async () => {
+  const mode = b.dataset.amode;
+  try {
+    await loadGist(); const fs = CFGS.filter(f => (G.cfg[f] || {}).installed_at); if (!fs.length) throw new Error("설치된 봇이 없습니다");
+    const ok = mode === "live" ? fs.filter(f => G.cfg[f].keys) : fs, skip = fs.filter(f => !ok.includes(f));
+    if (mode === "live") {
+      if (!ok.length) throw new Error("앱키가 등록된 봇이 없습니다 — 🛠 설정에서 앱키 먼저");
+      if (Date.now() - modeArm > 5000) { modeArm = Date.now(); msg(`🟢 자동 실전: 미국 개장일마다 한국 ${G.cfg[ok[0]].run_kst || "18:10"}에 실제 주문이 나갑니다 (봇 ${ok.length}개). 5초 안에 한 번 더 누르세요`, false); return; }
+      modeArm = 0;
+    }
+    const m = {}; ok.forEach(f => m[f] = Object.assign({}, G.cfg[f], { mode, updated: new Date().toISOString() }));
+    await writeFiles(m); ok.forEach(f => G.cfg[f] = m[f]); renderAuto();
+    msg((mode === "live" ? `🟢 자동 실전 켜짐 · 봇 ${ok.length}개` : `⏸ 자동 실행 꺼짐 · 봇 ${ok.length}개 (⚡ 바로 실행은 그대로 가능)`) + (skip.length ? ` · 앱키 없음 제외: ${skip.map(f => BOTNAME[f]).join(", ")}` : ""), true);
+  } catch (x) { msg("⚠ " + x.message, false); }
+}));
+const ACCTS = [["A계좌 · SOXL·TQQQ", ["muhan-account.json"], "muhan-bot.json"], ["B계좌 · QLD무한·QLD평생", ["muhan-account-qld.json", "muhan-account-qldm.json"], "muhan-bot-qld.json"]];
+function renderAcct() {
+  document.getElementById("accts").innerHTML = ACCTS.map(([nm, files]) => {
+    const a = files.map(f => J(f, null)).filter(x => x && x.holdings).sort((x, y) => (y.as_of || "").localeCompare(x.as_of || ""))[0];
+    if (!a) return `<div class="res"><b>${nm}</b><br>아직 동기화 기록이 없습니다 — ↻ 지금 계좌 동기화</div>`;
+    const t = a.total || {}, pl = +t.pl || 0, rows = (a.holdings || []).filter(h => +h.qty > 0).map(h => `<div class="row"><span>${esc(h.symbol)} · ${(+h.qty).toLocaleString("en-US")}주 · 평단 ${usd(h.avg)}</span><b class="${+h.pl >= 0 ? "up" : "dn"}" style="color:${+h.pl >= 0 ? "#38D98C" : "#F0475A"}">${usd(h.value)} (${(+h.pl_pct >= 0 ? "+" : "") + (+h.pl_pct).toFixed(2)}%)</b></div>`).join("");
+    return `<div class="res"><b>${nm}</b> · ${whenK(a.as_of)} 기준<br>평가 <b>${usd(t.value)}</b> · 손익 <b style="color:${pl >= 0 ? "#38D98C" : "#F0475A"}">${pl >= 0 ? "+" : "-"}${usd(Math.abs(pl))}</b>${a.cash_usd != null ? ` · 주문가능 <b>${usd(a.cash_usd)}</b>` : ""}${rows || "<br>보유 종목 없음"}</div>`;
+  }).join("");
+}
+document.getElementById("acctSync").addEventListener("click", async () => {
+  try { await loadGist(); const fs = ACCTS.map(x => x[2]).filter(f => (G.cfg[f] || {}).installed_at); if (!fs.length) throw new Error("설치된 봇이 없습니다");
+    for (const f of fs) { const c = G.cfg[f]; await gh(`/repos/${c.owner}/${c.repo}/actions/workflows/${CRON_WF}/dispatches`, { method: "POST", body: { ref: "main", inputs: { mode: "account" } } }); }
+    msg(`↻ 계좌 동기화 요청 (${fs.length}개 계좌) · 1~2분 뒤 ↻ 새로고침`, true); } catch (x) { msg("⚠ " + x.message, false); }
+});
 document.getElementById("recalc").addEventListener("click", () => computeAll());
 document.getElementById("reload").addEventListener("click", () => refresh());
 document.getElementById("tabbar").addEventListener("click", e => { const b = e.target.closest(".tb"); if (!b) return;
   document.querySelectorAll(".tb").forEach(x => x.classList.toggle("on", x === b)); document.querySelectorAll(".page").forEach(p => p.classList.toggle("on", p.id === b.dataset.p)); window.scrollTo(0, 0); });
-async function refresh() { try { await loadGist(); render(); renderSeeds(); renderResults(); renderCron(); renderBots(); renderSync(); secCheck(); } catch (x) { msg("⚠ " + x.message, false); } }
+async function refresh() { try { await loadGist(); render(); renderSeeds(); renderResults(); renderCron(); renderBots(); renderSync(); secCheck(); renderAuto(); renderAcct(); } catch (x) { msg("⚠ " + x.message, false); } }
 (async () => {
   render();
   if (!tok() || !gid()) { renderSync(); msg("☁️ 동기화가 아직 연결되지 않았습니다 — 🛠 설정 탭 맨 위에서 GitHub 토큰을 넣고 연결하세요", false); const b = document.querySelector('.tb[data-p="pg-setup"]'); if (b) b.click(); return; }
