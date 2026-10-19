@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.00-261016-MeritzAutoOrder-All">
-<meta name="release-date" content="261016">
+<meta name="version" content="V1.01-261019-MeritzAutoOrder-All">
+<meta name="release-date" content="261019">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>메리츠 자동주문(통합) (V1.00 - 261016)</title>
+<title>메리츠 자동주문(통합) (V1.01 - 261019)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -37,12 +37,13 @@
   .seed{display:grid;grid-template-columns:110px 1fr;gap:8px;align-items:center;margin:8px 0;} .seed label{font-weight:800;font-size:14px;}
   .plan-frame{position:fixed;left:-2000px;top:0;width:412px;height:900px;border:0;opacity:0;pointer-events:none;}
   .res{border-left:3px solid var(--border);padding:6px 10px;margin:8px 0;font-size:13px;} .res.done{border-color:var(--up);} .res.blocked,.res.error{border-color:var(--down);}
+.hub-pill{display:inline-flex;align-items:center;gap:3px;vertical-align:middle;margin-left:8px;padding:4px 10px;border-radius:99px;border:1px solid #2F4A7A;background:none;color:#8C98AD;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:0;white-space:nowrap;text-decoration:none;-webkit-text-fill-color:#8C98AD;}.hub-pill:hover{border-color:#4A6FB0;color:#C9D4E5;-webkit-text-fill-color:#C9D4E5;}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="top"><a href="./">‹ 허브</a><span class="mono" id="ver" style="color:var(--text-faint)">V1.00 (261016)</span></div>
-  <h1>🔌 메리츠 자동주문(통합)</h1>
+  <div class="top"><span class="mono" id="ver" style="color:var(--text-faint)">V1.00 (261016)</span></div>
+  <h1>🔌 메리츠 자동주문(통합) <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1><script>if(/[?&]embed=/.test(location.search)){var _hp=document.querySelector(".hub-pill");if(_hp)_hp.remove();}</script>
   <p class="sub">SOXL · TQQQ · QLD무한매수 · QLD평생매수 — 열면 4종목 계산, ⚡ 한 번에 실제 주문</p>
   <div id="msg"></div>
 
@@ -84,7 +85,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.00", RELEASE_DATE = "261016";
+const APP_VERSION = "V1.01", RELEASE_DATE = "261016";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -216,10 +217,19 @@ document.addEventListener("change", async e => {
   try { await writeFiles({ [s.cfg]: c }); G.cfg[s.cfg] = c; msg(`${s.name} ${side === "buy" ? "매수" : "매도"} ${t.checked ? "☑ 주문함" : "☐ 주문 안 함"} · 저장`, true); }
   catch (x) { t.checked = !t.checked; msg("⚠ " + x.message, false); }
 });
+
+/* ⏰ 해외주식 주문 가능 시간: 한국 18:00 ~ 익일 08:50 (프리마켓부터 · 서머타임 무관) */
+function kstMin(t) { const k = new Date((t || Date.now()) + 9 * 3600e3); return k.getUTCHours() * 60 + k.getUTCMinutes(); }
+function ovOk(m) { return m >= 18 * 60 || m < 8 * 60 + 50; }
+function ovWarn(m, what) {
+  if (ovOk(m)) return true;
+  const t = String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+  return confirm(`⏰ ${what} 한국 ${t} — 해외주식 주문 시간이 아닙니다.\n\n주문 가능: 한국 18:00 ~ 익일 08:50 (프리마켓부터 · 서머타임 무관)\n이 시간에는 메리츠가 주문을 받지 않아 실패합니다.\n\n그래도 계속할까요?`);
+}
 let armed = 0;
 document.getElementById("live").addEventListener("click", async () => {
   const b = document.getElementById("live");
-  if (Date.now() - armed > 6000) { armed = Date.now(); b.classList.add("armed"); b.textContent = "⚡ 한 번 더 누르면 실제 주문"; setTimeout(() => { b.classList.remove("armed"); b.textContent = "⚡ 바로 실행 (4종목 실제 주문)"; }, 6000); return; }
+  if (Date.now() - armed > 6000) { if (!ovWarn(kstMin(), "지금")) return; armed = Date.now(); b.classList.add("armed"); b.textContent = "⚡ 한 번 더 누르면 실제 주문"; setTimeout(() => { b.classList.remove("armed"); b.textContent = "⚡ 바로 실행 (4종목 실제 주문)"; }, 6000); return; }
   armed = 0; b.disabled = true; b.textContent = "요청 중…";
   const out = [];
   for (const f of CFGS) {

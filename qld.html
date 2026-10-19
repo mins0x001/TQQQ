@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.05-261017-QLD-Lifetime-WeeklyOnce">
-<meta name="release-date" content="261017">
-<title>QLD 평생매수AI분석 (V1.05 - 261017)</title>
+<meta name="version" content="V1.06-261019-QLD-Lifetime-WeeklyOnce">
+<meta name="release-date" content="261019">
+<title>QLD 평생매수AI분석 (V1.06 - 261019)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -529,6 +529,8 @@
   body.panel .tabbar{display:none !important;} body.panel{padding-bottom:calc(24px + env(safe-area-inset-bottom));}
   .solo-note{display:block;margin:0 0 12px;padding:12px 14px;border-radius:14px;border:1px solid rgba(94,234,212,0.4);background:rgba(94,234,212,0.07);color:var(--text);font-size:13px;font-weight:700;text-decoration:none;}
   .solo-note small{display:block;color:var(--text-dim);font-weight:500;margin-top:2px;}
+.hub-pill{display:inline-flex;align-items:center;gap:3px;vertical-align:middle;margin-left:8px;padding:4px 10px;border-radius:99px;border:1px solid #2F4A7A;background:none;color:#8C98AD;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:0;white-space:nowrap;text-decoration:none;-webkit-text-fill-color:#8C98AD;}.hub-pill:hover{border-color:#4A6FB0;color:#C9D4E5;-webkit-text-fill-color:#C9D4E5;}
+.sell-adj{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap;}.sell-adj button{min-width:34px;height:30px;padding:0 10px;border-radius:8px;border:1px solid var(--border-soft,#2A3550);background:rgba(255,255,255,0.04);color:inherit;font-weight:800;font-size:13px;cursor:pointer;}.sell-adj button.rs{font-size:11.5px;font-weight:700;color:var(--text-dim,#8C98AD);}.sell-adj button:disabled{opacity:.4;cursor:default;}.sell-adj .pv{font-weight:900;font-size:15px;min-width:64px;text-align:center;}.sell-adj .pv small{display:block;font-size:10px;font-weight:700;color:var(--text-dim,#8C98AD);}.loc-pos{margin:10px 0 2px;padding:8px 12px;border-radius:10px;border:1px solid var(--border-soft,#2A3550);background:rgba(255,255,255,0.03);font-size:12.5px;color:var(--text-dim,#8C98AD);line-height:1.6;}.loc-pos b{color:var(--text,#E6EDF7);}
 </style>
 </head>
 <body>
@@ -541,7 +543,7 @@
       <button class="hdr-toggle" id="hdrToggle" type="button" aria-expanded="false">상세 ▾</button>
       <span class="version-badge" id="appVersionBadge">V0.15</span>
     </div>
-    <h1 class="topbar-title">QLD <span class="accent">평생매수</span></h1>
+    <h1 class="topbar-title">QLD <span class="accent">평생매수</span> <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1><script>if(/[?&]embed=/.test(location.search)){var _hp=document.querySelector(".hub-pill");if(_hp)_hp.remove();}</script>
 
     <div class="quote-grid">
       <div class="quote">
@@ -668,8 +670,8 @@
   </section>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_05_261017.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.05 (261017)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_06_261019.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.06 (261019)</code></div>
   </footer>
 
   </div>
@@ -942,8 +944,8 @@
 </nav>
 
 <script>
-const APP_VERSION = "V1.05";
-const RELEASE_DATE = "261017";
+const APP_VERSION = "V1.06";
+const RELEASE_DATE = "261019";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
@@ -2160,6 +2162,7 @@ function renderTodayCard() {
   try { renderSeedCard(); } catch (e) {}
   el.innerHTML = `
     ${alert}
+    ${(hs => `<div class="loc-pos">📦 현재 상태 · 보유 <b>${hs ? hs.qty.toLocaleString("en-US") + "주" : "없음"}</b>${hs ? ` · 평단가 <b>${usd(hs.avg)}</b> · 현재가 ${usd(refPrice)} (<b style="color:${refPrice >= hs.avg ? "var(--up)" : "var(--down)"};">${refPrice >= hs.avg ? "+" : ""}${((refPrice / hs.avg - 1) * 100).toFixed(2)}%</b>) · 평가 ${usd(hs.qty * refPrice)}` : ""}</div>`)(holdingSummary(valid))}
     <div class="hero-order">
       <div class="ho-tag">LOC 매수 예약 <span class="tb-chip ${reached ? "go" : "wait"}">${reached ? "✓ 현재가가 매수가 이하" : `대기 · ${fmtPctSigned(dist)} 필요`}</span></div>
       <div class="ho-line">
@@ -2837,7 +2840,6 @@ function applyViewMode() {
   if (EMBED) return;
   { const bb = document.querySelector('#tabbar .tb[data-p="pg-backup"]'), tb = document.getElementById("tabbar");   // 💾 백업 탭 숨김 — ☁️ Gist 자동 동기화로 충분
     if (bb && tb) { bb.remove(); tb.style.gridTemplateColumns = `repeat(${tb.querySelectorAll(".tb").length},minmax(0,1fr))`; if (document.getElementById("pg-backup").classList.contains("on")) goTab("pg-order"); } }
-  document.body.insertAdjacentHTML("afterbegin", '<a href="./" class="hub-top" style="position:fixed;top:10px;left:10px;z-index:99;padding:6px 12px;border-radius:999px;background:rgba(10,16,28,0.85);border:1px solid rgba(255,255,255,0.15);color:#cfe;font-size:13px;font-weight:700;text-decoration:none;">‹ 허브</a>');
   setTimeout(() => { const b = document.getElementById("fetchBtn"); if (b && !b.disabled && typeof lastLocOrder !== "undefined" && !lastLocOrder) b.click(); }, 700);   // 열면 시세 자동 1회
   const o = document.getElementById("pg-order");
   if (o) o.insertAdjacentHTML("afterbegin", `<a class="solo-note" href="api.html">🔌 메리츠 자동주문(QLD) ›<small>주 1회 LOC 매수(체결될 때까지 매일)를 메리츠 Open API로 자동 접수 · 계좌 현황 · 결과</small></a>`);
