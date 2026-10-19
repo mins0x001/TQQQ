@@ -147,7 +147,7 @@ jobs:
               y = datetime.utcnow().year
               j = json.loads(urllib.request.urlopen(urllib.request.Request("https://api.bls.gov/publicAPI/v1/timeseries/data/", data=json.dumps({"seriesid": [sid], "startyear": str(y - 6), "endyear": str(y)}).encode(), headers={"Content-Type": "application/json", "User-Agent": UA["User-Agent"]}), timeout=30).read().decode())
               rows = j["Results"]["series"][0]["data"]
-              return sorted([[f"{r['year']}-{r['period'][1:]}-01", float(r["value"])] for r in rows if r["period"].startswith("M") and r["period"] != "M13"])
+              return sorted([[f"{r['year']}-{r['period'][1:]}-01", float(r["value"])] for r in rows if r["period"].startswith("M") and r["period"] != "M13" and r["value"].replace(".", "", 1).isdigit()])   # 미발표 달('-') 건너뜀
           AV = "https://www.alphavantage.co/query?apikey=4YO9UTZ2A3ZL987N&"     # 예전 QLD 앱과 같은 출처 (Alpha Vantage)
           def av(q):
               j = get(AV + q)
