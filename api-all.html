@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.17-261020-MeritzAutoOrder-All">
+<meta name="version" content="V1.18-261020-MeritzAutoOrder-All">
 <meta name="release-date" content="261020">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>메리츠 자동주문(통합) (V1.17 - 261020)</title>
+<title>메리츠 자동주문(통합) (V1.18 - 261020)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -42,6 +42,10 @@
 .adj{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:6px 0 2px;}.adj .lb{font-size:12px;font-weight:800;color:var(--text-dim);}.adj button{min-width:34px;height:30px;padding:0 10px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:inherit;font-weight:800;cursor:pointer;}.adj button.rs{font-size:11.5px;color:var(--text-dim);}.adj button:disabled{opacity:.4;cursor:default;}.adj .pv{min-width:70px;text-align:center;font-size:15px;}.adj .pv small{display:block;font-size:10px;color:var(--text-dim);}.adj .nt{font-size:11px;color:var(--text-dim);}
   .inp{min-height:42px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text);padding:0 12px;font-size:14px;}
   .h3{font-size:13.5px;margin:14px 0 6px;} .chkrow{display:flex;flex-wrap:wrap;gap:10px;}
+.need{border:2px solid #FF4D5E !important;box-shadow:0 0 0 3px rgba(255,77,94,.18);animation:needp 1.6s ease-in-out 3;}
+.res .rp{height:auto !important;min-height:0 !important;padding:3px 8px !important;margin:2px 0 !important;font-size:12px !important;border-radius:8px !important;width:auto;max-width:150px;vertical-align:middle;}
+.needt{color:#FF6B78;font-weight:800;} .needh{padding:6px 10px;border-radius:10px;background:rgba(255,77,94,.1);border:1px solid rgba(255,77,94,.45);}
+@keyframes needp{50%{box-shadow:0 0 0 7px rgba(255,77,94,.08);}}
 </style>
 </head>
 <body>
@@ -107,10 +111,10 @@
       <button class="btn" id="seedSave" type="button" style="width:100%;margin-top:6px;">💾 시드 저장 (모든 기기 · 클라우드 봇 동기화)</button>
       <div class="hint" style="margin-top:6px;">SOXL·TQQQ·QLD무한매수 = 무한매수 전체 시드 · QLD평생매수 = 🤖 시드 배분 엔진 전체 시드. 저장하면 각 분석 앱과 봇이 다음 계산부터 이 값을 씁니다.</div>
     </section>
-    <section class="card"><div class="kick">BOTS · 공통 설정</div><h2>🤖 봇 설정 (3개 봇 한 곳에서)</h2>
+    <section class="card"><div class="kick">BOTS · 공통 설정</div><h2>🤖 봇 설정 (4개 봇 한 곳에서)</h2>
       <div id="bots" class="busy">불러오는 중…</div>
       <div class="hint" style="margin:6px 0 10px;">봇 설치·업데이트는 각 종목 앱을 한 번 열면 자동 (<a style="color:var(--glow)" href="api-soxl.html">SOXL</a> · <a style="color:var(--glow)" href="api-tqqq.html">TQQQ</a> · <a style="color:var(--glow)" href="api-qm.html">QLD무한</a> · <a style="color:var(--glow)" href="api-qld.html">QLD평생</a>). 봇마다 앱키를 넣으면 같은 키끼리 같은 계좌로 묶입니다 · 언제든 변경 가능 · 모든 설정은 서버(Gist)에 평생 저장.</div>
-      <h3 class="h3">🔐 메리츠 앱키</h3>
+      <h3 class="h3" id="keyHead">🔐 메리츠 앱키</h3>
       <div class="hint" style="margin:0 0 6px;">openapi.imeritz.com 운영 앱키 · 같은 계좌 봇을 체크하면 한 번에 같은 키로 저장 — 같은 키 = 같은 계좌로 자동 묶임 (예: SOXL+QLD무한 = A계좌 · TQQQ+QLD평생 = B계좌). GitHub 금고에만 봉인 저장 — 이 기기·Gist에 남지 않음.</div>
       <div id="keyPick" class="chkrow"></div>
       <input class="inp" type="password" id="mzKey" placeholder="App Key" autocomplete="off" spellcheck="false" style="width:100%;margin-top:6px;">
@@ -135,7 +139,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.17", RELEASE_DATE = "261020";
+const APP_VERSION = "V1.18", RELEASE_DATE = "261020";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -497,14 +501,17 @@ function renderBots() {
   try { localStorage.setItem("hub_bot_apps", JSON.stringify(CFGS.filter(f => (G.cfg[f] || {}).installed_at).map(f => BOTAPP[f]))); } catch (e) {}   // 허브 자동 최신화 대상
   const st = f => J(f.replace(".json", "-status.json"), null);
   document.getElementById("bots").innerHTML = CFGS.map(f => { const c = G.cfg[f] || {}, s = st(f);
-    return `<div class="res"><b>${BOTNAME[f]}</b> · 🏦 <input class="inp rp" data-ac="${f}" value="${esc(c.acct || "")}" placeholder="${esc((acctGroups().find(g => g.fs.includes(f)) || {}).name || "계좌")}" maxlength="12" aria-label="계좌 이름" style="width:84px;padding:3px 7px;font-size:12px;display:inline-block;"> · 📦 <input class="inp rp" data-rp="${f}" value="${esc(c.repo || DEFREPO[f])}" aria-label="봇 저장소 이름" spellcheck="false" style="width:150px;padding:3px 7px;font-size:12px;display:inline-block;"> · ${c.installed_at ? `✅ ${esc(c.repo)} · ${esc((c.bot_version || "").split(" ")[1] || "")}` : "⚠ 미설치 (앱을 한 번 열면 자동)"}<br>
-      🔐 앱키 ${c.keys ? "…" + esc(c.keys.tail) : "<b style='color:#F5A524'>미등록</b>"} · 📨 ${c.tg ? "…" + esc(c.tg.chat_tail) : "없음"} · 🔧 ${s && s.mode === "check" ? (s.overall === "checked" ? "점검 ✓" : "점검 ⚠") : "점검 전"}${f in SEC_OK ? (SEC_OK[f] ? " · 🔑 금고 권한 ✓" : " · <b style='color:#F0475A'>🔑 금고 권한 ✗ — 토큰에 Secrets 쓰기 권한 필요</b>") : ""}
+    return `<div class="res${c.installed_at && !c.keys ? " need" : ""}"><b>${BOTNAME[f]}</b> · 🏦 <input class="inp rp" data-ac="${f}" value="${esc(c.acct || "")}" placeholder="${esc((acctGroups().find(g => g.fs.includes(f)) || {}).name || "계좌")}" maxlength="12" aria-label="계좌 이름" style="width:84px;padding:3px 7px;font-size:12px;display:inline-block;"> · 📦 <input class="inp rp" data-rp="${f}" value="${esc(c.repo || DEFREPO[f])}" aria-label="봇 저장소 이름" spellcheck="false" style="width:150px;padding:3px 7px;font-size:12px;display:inline-block;"> · ${c.installed_at ? `✅ ${esc(c.repo)} · ${esc((c.bot_version || "").split(" ")[1] || "")}` : "⚠ 미설치 (앱을 한 번 열면 자동)"}<br>
+      🔐 앱키 ${c.keys ? "…" + esc(c.keys.tail) : "<b class='needt'>🔴 미등록 — 아래에서 등록</b>"} · 📨 ${c.tg ? "…" + esc(c.tg.chat_tail) : "없음"} · 🔧 ${s && s.mode === "check" ? (s.overall === "checked" ? "점검 ✓" : "점검 ⚠") : "점검 전"}${f in SEC_OK ? (SEC_OK[f] ? " · 🔑 금고 권한 ✓" : " · <b style='color:#F0475A'>🔑 금고 권한 ✗ — 토큰에 Secrets 쓰기 권한 필요</b>") : ""}
       ${c.installed_at ? "" : ` · <a style="color:var(--glow)" href="${{ "muhan-bot.json": "api-soxl.html", "muhan-bot-tqqq.json": "api-tqqq.html", "muhan-bot-qldm.json": "api-qm.html", "muhan-bot-qld.json": "api-qld.html" }[f]}#pg-setup">설치 화면 ›</a>`}</div>`; }).join("");
   { const a = G.cfg["muhan-bot.json"] || {}, t = G.cfg["muhan-bot-tqqq.json"] || {}, sp = tqqqSplit();
     document.getElementById("bots").insertAdjacentHTML("beforeend", `<div class="res">🔀 <b>TQQQ 담당</b> · 지금 <b>${sp ? "TQQQ 봇" : "SOXL·TQQQ 봇"}</b>${!a.installed_at ? "" : sp ? ` <button class="btn" type="button" data-ho="off">↩ SOXL 봇으로 되돌리기</button>`
       : t.installed_at && t.keys ? ` <button class="btn" type="button" data-ho="on">🔀 TQQQ 봇으로 넘기기</button>` : `<br><span class="hint">TQQQ 를 다른 계좌로: TQQQ 앱을 열어 봇 설치 → 아래 앱키 등록 → 여기서 넘기기 (넘기기 전엔 TQQQ 봇은 주문 안 함 · 이중 주문 방지)</span>`}</div>`); }
+  { const miss = CFGS.filter(f => (G.cfg[f] || {}).installed_at && !(G.cfg[f] || {}).keys), kh = document.getElementById("keyHead");
+    kh.classList.toggle("needh", miss.length > 0); kh.innerHTML = miss.length ? `🔐 메리츠 앱키 <span class="needt">🔴 ${miss.map(f => BOTNAME[f]).join(" · ")} 등록 필요</span>` : "🔐 메리츠 앱키 ✅";
+    needJump("keys", kh); }
   const kp = document.getElementById("keyPick");
-  if (!kp.dataset.touched) { kp.innerHTML = CFGS.map(f => { const c = G.cfg[f] || {}; return `<label class="chk"><input type="checkbox" value="${f}" ${c.installed_at ? "" : "disabled"} ${c.installed_at && !c.keys ? "checked" : ""}> ${BOTNAME[f]}</label>`; }).join(""); kp.onchange = () => { kp.dataset.touched = 1; }; }
+  if (!kp.dataset.touched) { kp.innerHTML = CFGS.map(f => { const c = G.cfg[f] || {}; return `<label class="chk"><input type="checkbox" value="${f}" ${c.installed_at ? "" : "disabled"} ${c.installed_at && !c.keys ? "checked" : ""}> ${c.installed_at && !c.keys ? `<b class="needt">🔴 ${BOTNAME[f]}</b>` : BOTNAME[f]}</label>`; }).join(""); kp.onchange = () => { kp.dataset.touched = 1; }; }
 }
 async function cfgPatch(f, patch) { await loadGist(); const c = Object.assign({}, J(f, {}), patch, { updated: new Date().toISOString() }); await writeFiles({ [f]: c }); G.cfg[f] = c; }
 const DEFREPO = { "muhan-bot.json": "muhan-bot", "muhan-bot-tqqq.json": "muhan-bot-tqqq", "muhan-bot-qldm.json": "muhan-bot-qldm", "muhan-bot-qld.json": "muhan-bot-qld" };
@@ -577,8 +584,11 @@ document.getElementById("chkAll").addEventListener("click", async () => {
 
 /* ☁️ 동기화 연결 (통합 앱에서 바로) — 토큰 저장 → 동기화 Gist 찾기 (없으면 생성) · 모든 앱이 같은 localStorage 사용 */
 const SYNC_DESC = "muhan-sync (무한매수 기록 동기화 · 지우지 마세요)";
+/* 허브 🧭 점검에서 ?need=… 로 오면 그 항목으로 한 번 스크롤 (빨간 강조와 함께) */
+function needJump(k, el) { try { if (new URLSearchParams(location.search).get("need") !== k || needJump.done) return; needJump.done = 1; setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 300); } catch (e) {} }
 function renderSync() {
   const t = tok(), g = gid();
+  { const sc = document.getElementById("syncState").closest("section"); sc.classList.toggle("need", !t || !g); if (!t || !g) needJump("sync", sc); }
   let ex = ""; try { ex = localStorage.getItem("muhansync_tok_exp") || ""; } catch (e) {}
   const dd = ex ? Math.floor((Date.parse(ex.replace(" UTC", "Z").replace(" ", "T")) - Date.now()) / 864e5) : null;
   const exTxt = dd == null || isNaN(dd) ? "" : ` · 토큰 만료 ${esc(ex.slice(0, 10))} <b style="color:${dd <= 14 ? "#F0475A" : "inherit"}">(D-${Math.max(0, dd)})</b>${dd <= 14 ? " — 만료되면 봇이 기록을 못 읽어 주문이 멈춥니다. 새 토큰으로 다시 연결하세요" : ""}`;

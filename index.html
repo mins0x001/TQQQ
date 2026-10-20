@@ -220,7 +220,7 @@ async function authChangePw(a) {
 </script><script>if (typeof AUTHGATE === "function") AUTHGATE();</script>
   <header>
     <h1>무한매수 허브<span class="app-pill" id="appPill" hidden>앱</span></h1>
-    <p>메리츠 자동주문(통합) · SOXL · TQQQ · QLD무한매수 · QLD평생매수 · 계좌는 봇마다 앱키로 자유 구성 <span class="ver">· 허브 V1.53 (261020)</span></p>
+    <p>메리츠 자동주문(통합) · SOXL · TQQQ · QLD무한매수 · QLD평생매수 · 계좌는 봇마다 앱키로 자유 구성 <span class="ver">· 허브 V1.54 (261020)</span></p>
   </header>
 
   <section class="hc" id="health" aria-live="polite"></section>
@@ -234,7 +234,7 @@ async function authChangePw(a) {
 
   <a class="dash" href="api-all.html" style="--c:#F0475A;">
     <span class="tk" style="font-size:20px;">⚡</span>
-    <span class="info"><span class="nm">메리츠 자동주문(통합) <small>V1.17</small></span><span class="st" id="st-all">📅 매일 여기서 · ⚡ 주문 · 🧾 결과 · ⏰ 자동 실행 · 💼 계좌 · 🛠 설정</span></span>
+    <span class="info"><span class="nm">메리츠 자동주문(통합) <small>V1.18</small></span><span class="st" id="st-all">📅 매일 여기서 · ⚡ 주문 · 🧾 결과 · ⏰ 자동 실행 · 💼 계좌 · 🛠 설정</span></span>
     <span class="go">›</span>
   </a>
   <div style="font-size:12px;color:#93A3BD;margin:14px 2px 4px;font-weight:800;">무한매수 · 메리츠 A계좌</div>
@@ -311,7 +311,7 @@ async function authChangePw(a) {
   <p class="note">매수 기록은 자동주문 앱 🛠 설정 탭의 <b>☁️ 동기화</b>를 켜면 PC와 폰이 같은 기록을 씁니다. 이 목록은 이 기기에 마지막으로 맞춰진 기록입니다.</p>
 </div>
 <script>
-const HUB_VERSION = "V1.53", HUB_RELEASE = "261020";
+const HUB_VERSION = "V1.54", HUB_RELEASE = "261020";
 function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
 function realized(tk, won){
   const t = readJSON(tk + "_trades_v1");
@@ -344,10 +344,10 @@ function health(P) {
   const ok = [], wa = [], no = [], day = 864e5, ago = t => (Date.now() - Date.parse(t || 0)) / day;
   const it = (cls, t, href) => `<a class="it ${cls}" ${href ? `href="${href}"` : ""}>${t}</a>`;
   let tok = "", exp = ""; try { tok = localStorage.getItem("muhansync_token") || ""; exp = localStorage.getItem("muhansync_tok_exp") || ""; } catch (e) {}
-  if (!tok || !P) no.push(it("no", "🔴 <b>동기화 연결</b> — 통합 앱 🛠설정에서 GitHub 토큰 넣기 (한 번만)", "api-all.html#pg-setup"));
+  if (!tok || !P) no.push(it("no", "🔴 <b>동기화 연결</b> — 통합 앱 🛠설정에서 GitHub 토큰 넣기 (한 번만)", "api-all.html?need=sync#pg-setup"));
   else {
     ok.push("☁️ 기록·설정 서버 동기화");
-    if (exp) { const d = (Date.parse(exp) - Date.now()) / day; if (d < 14) no.push(it("no", `🔴 <b>GitHub 토큰 만료 ${Math.max(0, Math.floor(d))}일 전</b> — 새 토큰 발급 후 통합 앱 🛠설정에서 연결 (봇 토큰도 자동 교체)`, "api-all.html#pg-setup")); else if (d < 30) wa.push(it("wa", `🟠 토큰 만료 ${Math.floor(d)}일 전 — 미리 새 토큰 준비`, "api-all.html#pg-setup")); else if (isFinite(d)) ok.push(`🔑 토큰 유효 (${Math.floor(d)}일 남음)`); }
+    if (exp) { const d = (Date.parse(exp) - Date.now()) / day; if (d < 14) no.push(it("no", `🔴 <b>GitHub 토큰 만료 ${Math.max(0, Math.floor(d))}일 전</b> — 새 토큰 발급 후 통합 앱 🛠설정에서 연결 (봇 토큰도 자동 교체)`, "api-all.html?need=sync#pg-setup")); else if (d < 30) wa.push(it("wa", `🟠 토큰 만료 ${Math.floor(d)}일 전 — 미리 새 토큰 준비`, "api-all.html#pg-setup")); else if (isFinite(d)) ok.push(`🔑 토큰 유효 (${Math.floor(d)}일 남음)`); }
     const A = P("muhan-bot.json") || {}, split = (A.symbols || {}).TQQQ === false;
     const B = [["muhan-bot.json", split ? "SOXL" : "SOXL·TQQQ", "api-soxl.html"], ["muhan-bot-tqqq.json", "TQQQ", "api-tqqq.html"], ["muhan-bot-qldm.json", "QLD무한", "api-qm.html"], ["muhan-bot-qld.json", "QLD평생", "api-qld.html"]];
     const OVB = { blocked: "⛔ 확인 필요", error: "✖ 오류" };
@@ -356,7 +356,7 @@ function health(P) {
       if (f === "muhan-bot-tqqq.json" && !c.installed_at) continue;                 // TQQQ 전용 봇은 선택
       if (!c.installed_at) { wa.push(it("wa", `🟠 ${nm} 봇 미설치 — <b>앱을 한 번 열면 자동 설치</b>`, app)); continue; }
       ok.push(`🤖 ${nm} 봇 설치·자동 업데이트`);
-      if (!c.keys) { no.push(it("no", `🔴 <b>${nm} 봇 메리츠 앱키 등록</b> — 통합 앱 🛠설정 (한 번만 · 금고에 봉인)`, "api-all.html#pg-setup")); continue; }
+      if (!c.keys) { no.push(it("no", `🔴 <b>${nm} 봇 메리츠 앱키 등록</b> — 통합 앱 🛠설정 (한 번만 · 금고에 봉인)`, "api-all.html?need=keys#pg-setup")); continue; }
       if (f === "muhan-bot-tqqq.json" && !split) wa.push(it("wa", "🟠 TQQQ 봇 준비됨 — 통합 앱 🛠설정에서 🔀 넘기기를 누르면 동작", "api-all.html#pg-setup"));
       if (c.mode !== "live") wa.push(it("wa", `⏸ ${nm} 자동 실행 꺼짐 — 켜려면 통합 앱 ⏰자동`, "api-all.html"));
       else ok.push(`⏰ ${nm} 매일 ${c.run_kst || "-"} 자동 주문`);
