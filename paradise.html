@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.16-261020-FinancialRoadmap">
+<meta name="version" content="V1.17-261020-FinancialRoadmap">
 <meta name="release-date" content="261020">
-<title>QLD 파이낸셜 로드맵 (V1.16 - 261020)</title>
+<title>QLD 파이낸셜 로드맵 (V1.17 - 261020)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -90,14 +90,19 @@
   .wd-k .n{font-weight:900;font-size:12.5px;} .wd-k .w{font-weight:800;font-size:13px;line-height:1.3;} .wd-k .w small{display:block;font-weight:600;font-size:11px;color:var(--text-faint);} .wd-k b{font:900 15px var(--f-mono);}
   .wd-k.pk{border-color:rgba(56,189,248,.45);background:rgba(56,189,248,.08);} .wd-k.pk .n,.wd-k.pk b{color:#7DD3FC;}
   .wd-k.bd{border-color:rgba(167,139,250,.45);background:rgba(167,139,250,.08);} .wd-k.bd .n,.wd-k.bd b{color:#C4B5FD;}
+  .bsw{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;align-items:stretch;margin:8px 0 0;} .bsw .l{align-self:center;font-size:11.5px;font-weight:800;color:var(--text-faint);padding-right:2px;}
+  .bsw button{display:flex;flex-direction:column;align-items:center;gap:1px;padding:8px 6px;border-radius:12px;border:1px solid var(--border);background:var(--panel-2);color:var(--text-dim);font:800 13px var(--f-body);cursor:pointer;}
+  .bsw button small{font:600 10.5px var(--f-mono);color:var(--text-faint);} .bsw button.on{border-color:var(--glow);background:rgba(94,234,212,.12);color:var(--glow);} .bsw button.on small{color:var(--text-dim);}
+  .bsw .n{grid-column:1/-1;font-size:11.5px;color:#F2D29B;padding:6px 10px;border-radius:10px;background:rgba(245,165,36,.08);border:1px solid rgba(245,165,36,.3);} .bsw .n b{color:var(--amber);}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div><h1>🏛 QLD 파이낸셜 로드맵 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.16 (261020) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.17 (261020) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
+  <div class="bsw" id="bsw"></div>
   <nav class="tabs" id="tabs"><button data-t="goal">🏝 목표</button><button data-t="rev">🎯 역산</button><button data-t="prog">📈 진행</button><button data-t="wd">💸 인출</button><button data-t="ai">🤖 AI</button></nav>
 
   <section class="card" data-tab="goal"><div class="kick">STEP 1 · 자산 목표</div><h2>은퇴 시점 내 자산은?</h2>
@@ -150,7 +155,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.16", RELEASE_DATE = "261020";
+const APP_VERSION = "V1.17", RELEASE_DATE = "261020";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -176,19 +181,21 @@ function fieldHtml(f) {
   return `<div class="f" id="f_${k}"><label for="i_${k}">${nm}<span class="src" id="s_${k}"></span></label><span class="v"><input type="number" id="i_${k}" data-k="${k}" min="${mn}" max="${mx}" step="${st}" inputmode="decimal" value="${V[k]}">${u}</span>${u === "$" ? `<div class="krw" id="w_${k}"></div>` : ""}${d ? `<small>${d}</small>` : ""}</div>`;
 }
 $("fields").innerHTML = F1.map(fieldHtml).join(""); $("fields2").innerHTML = F2.map(fieldHtml).join("");
+/* 🔀 계산 기준: 💰 시드(최종 투입 계획) · 🏦 실제 계좌(평가금+현금) — 계좌 데이터가 없으면 시드로 계산 · 평생/무한 비율은 시드 비율 유지 */
+function SB() { const s = V.life + V.inf, a = V.base === "acct" && ACT && ACT.usd > 0 && s > 0, f = a ? ACT.usd / s : 1; return { life: V.life * f, inf: V.inf * f, tot: s * f, acct: a, want: V.base === "acct" }; }
 function calc(n) {
   const r0 = (V.sav > 0 ? (V.lifeR + V.infR) / 2 : V.etcR) / 100, r1 = V.lifeR / 100, r2 = V.infR / 100, g = V.savG / 100;
-  const usd2man = V.fx / 10000;
-  let fv = V.etc * (1 + r0) ** n + V.life * usd2man * (1 + r1) ** n + V.inf * usd2man * (1 + r2) ** n;
+  const usd2man = V.fx / 10000, B = SB();
+  let fv = V.etc * (1 + r0) ** n + B.life * usd2man * (1 + r1) ** n + B.inf * usd2man * (1 + r2) ** n;
   fv += Math.abs(r0 - g) < 1e-9 ? V.sav * n * (1 + r0) ** (n - 1) : V.sav * ((1 + r0) ** n - (1 + g) ** n) / (r0 - g);
   const real = (1 + V.postR / 100) / (1 + V.infl / 100) - 1, defl = (1 + V.infl / 100) ** n;
   const par = real > 0 ? V.spend * 12 / real * defl : Infinity;
   return { fv, real, defl, par, inc: fv * real / 12 / defl };
 }
 /* 💡 지금 총 시드로 은퇴하면: 명목 이자 → 물가만큼 원금 재투자 → 남는 실질분 = 평생 쓸 돈 (항상 자동 계산) */
-function live() { const T = (V.life + V.inf) * V.fx / 1e4, nom = T * V.postR / 100, real = (1 + V.postR / 100) / (1 + V.infl / 100) - 1, use = T * real, keep = nom - use;
+function live() { const T = SB().tot * V.fx / 1e4, nom = T * V.postR / 100, real = (1 + V.postR / 100) / (1 + V.infl / 100) - 1, use = T * real, keep = nom - use;
   const e = $("live"); if (!e) return;
-  e.innerHTML = `<div class="hd">💡 <b>지금 총 시드 ${won(T)}</b>으로 은퇴한다면 · 명목 ${V.postR}% · 물가 ${V.infl}%</div>`
+  e.innerHTML = `<div class="hd">💡 <b>지금 ${SB().acct ? "실제 계좌" : "총 시드"} ${won(T)}</b>으로 은퇴한다면 · 명목 ${V.postR}% · 물가 ${V.infl}%</div>`
     + (real > 0 ? `<div class="fl"><div class="st in"><span>① 1년 이자</span><b>${man(nom)}</b><small>명목 ${V.postR}%</small></div><i>→</i>
       <div class="st ke"><span>② 재투자</span><b>${man(keep)}</b><small>물가 ${V.infl}% 보전</small></div><i>→</i>
       <div class="st go"><span>③ 평생 쓸 돈</span><b>월 ${man(use / 12)}</b><small>실질 ${(real * 100).toFixed(1)}%</small></div></div>
@@ -198,7 +205,14 @@ function live() { const T = (V.life + V.inf) * V.fx / 1e4, nom = T * V.postR / 1
 const won = m => { m = Math.round(m); const e = Math.floor(m / 10000), r = m % 10000; return (e ? e + "억" + (r ? " " : "") : "") + (r || !e ? r.toLocaleString("ko-KR") + "만" : "") + "원"; };
 function krw() { const t = (V.life + V.inf) * V.fx / 1e4;
   [["life", ""], ["inf", ` · 두 시드 합계 ${won(t)}`]].forEach(([k, x]) => { const el = $("w_" + k); if (el) el.innerHTML = `₩ ${won(V[k] * V.fx / 1e4)}<small>$1 = ${Math.round(V.fx).toLocaleString("ko-KR")}원${x}</small>`; }); }
+function bsw() {
+  const b = SB(), a = ACT && ACT.usd > 0, sU = V.life + V.inf, f = u => "$" + Math.round(u).toLocaleString("en-US");
+  $("bsw").innerHTML = `<span class="l">계산 기준</span><button data-b="seed" class="${b.want ? "" : "on"}">💰 시드<small>투입 계획 ${f(sU)}</small></button><button data-b="acct" class="${b.want ? "on" : ""}">🏦 실제 계좌<small>${a ? "평가금+현금 " + f(ACT.usd) : "아직 데이터 없음"}</small></button>`
+    + (b.want && !a ? `<div class="n">🏦 아직 QLD 매수 전이라 계좌 데이터가 없어요 → <b>시드로 계산 중</b> · 매수가 시작되면 자동으로 실제 계좌 기준</div>` : "");
+}
+document.addEventListener("click", e => { const x = e.target.closest("[data-b]"); if (!x || V.base === x.dataset.b || (!V.base && x.dataset.b === "seed")) return; V.base = x.dataset.b; render(); save(); });
 function render() {
+  bsw();
   btApply(); krw(); live();
   const n = Math.round(V.n), c = calc(n);
   $("oFv").textContent = man(c.fv) + "원"; $("oFvPv").textContent = `지금 가치로 ${man(c.fv / c.defl)}원 · ${n}년 후`;
@@ -358,7 +372,7 @@ function rev() {
   const now = new Date(), mon = (g.y - now.getFullYear()) * 12 + (g.mo - 1 - now.getMonth()), n = mon / 12;
   if (mon < 1) { $("goalN").textContent = ""; el.innerHTML = `<div class="hint">⚠ 오늘 이후 년월을 넣어 주세요.</div>`; return; }
   $("goalN").innerHTML = `오늘부터 <b>${Math.floor(mon / 12)}년 ${mon % 12}개월</b>`;
-  const c = calc(n), seed = V.life + V.inf, k = c.par / c.fv, needU = seed * k, base = { ...V };
+  const c = calc(n), SBn = SB(), seed = SBn.tot, k = c.par / c.fv, needU = seed * k, base = { ...V };
   if (!isFinite(c.par)) { el.innerHTML = `<div class="hint">⚠ 은퇴 후 명목 수익률이 물가보다 높아야 계산할 수 있어요.</div>`; return; }
   const ok = () => { const x = calc(n); return x.fv >= x.par; };
   const dS = c.fv >= c.par ? 0 : solve(x => { V.sav = x; const r = ok(); Object.assign(V, base); return r; }, 0, 1e7);
@@ -367,14 +381,14 @@ function rev() {
   const act = ACT && ACT.usd > 0 ? ACT.usd : 0;
   const head = okNow
     ? `<div class="rv-hero ok"><span>🎉 ${g.y}.${String(g.mo).padStart(2, "0")} 은퇴 — 지금 시드로 이미 가능</span><b>${W(needU)}</b><small>만 있어도 충분 (지금 시드의 ${Math.round(k * 100)}%) · 여유 ${man(c.fv - c.par)}원</small></div>`
-    : `<div class="rv-hero"><span>🎯 ${g.y}.${String(g.mo).padStart(2, "0")} 은퇴하려면 오늘 필요한 시드</span><b>${W(needU)}</b><small>${U(needU)} · 지금 ${U(seed)} → <em>${U(needU - seed)} (${W(needU - seed)}) 더 필요</em></small></div>`;
+    : `<div class="rv-hero"><span>🎯 ${g.y}.${String(g.mo).padStart(2, "0")} 은퇴하려면 오늘 필요한 시드</span><b>${W(needU)}</b><small>${U(needU)} · ${SBn.acct ? "지금 실제 계좌" : "지금 시드"} ${U(seed)} → <em>${U(needU - seed)} (${W(needU - seed)}) 더 필요</em></small></div>`;
   const tips = okNow ? "" : `<div class="rv-g">
     <div><span>💰 시드 그대로면</span><b>월 ${man(dS / 12)}원</b><small>매달 추가 투자 (연 ${man(dS)}원)</small></div>
     <div><span>📈 추가 투자 없이</span>${dR >= 79.9 ? `<b class="dn">불가</b><small>수익률만으로는 못 채움</small>` : `<b>+${dR.toFixed(1)}%p</b><small>수익률 필요 (평생 ${(base.lifeR + dR).toFixed(1)}% · 무한 ${(base.infR + dR).toFixed(1)}%)</small>`}</div>
     <div><span>🍃 그대로 은퇴하면</span><b>월 ${sp.toLocaleString("ko-KR")}만원</b><small>쓸 수 있는 돈 (목표 ${V.spend}만원)</small></div>
     ${act ? `<div><span>💼 지금 실제 자산</span><b class="${act >= needU ? "up" : "dn"}">${Math.round(act / needU * 100)}%</b><small>${W(act)} / 필요 ${W(needU)}</small></div>` : ""}</div>`;
   // 체크포인트: 필요한 시드 경로(지금 비율 유지)로 해마다 있어야 할 자산 vs 내 시드 그대로 경로
-  const pathAt = (t, sc) => sc * (V.life * (1 + V.lifeR / 100) ** t + V.inf * (1 + V.infR / 100) ** t);
+  const pathAt = (t, sc) => sc * (SBn.life * (1 + V.lifeR / 100) ** t + SBn.inf * (1 + V.infR / 100) ** t);
   const ts = [0, 1, 2, 3, 5, 7, 10, 15, 20, 25, 30].filter(t => t < n); ts.push(n);
   const rows = (ts.length > 7 ? [ts[0], ts[1], ts[2], ts[3], ts[Math.floor(ts.length / 2)], ts[ts.length - 2], n] : ts).filter((t, i, a) => a.indexOf(t) === i).map(t => {
     const d = new Date(now.getFullYear(), now.getMonth() + Math.round(t * 12), 1), lab = t === 0 ? "오늘" : t === n ? "🎯 은퇴" : `${Math.round(t)}년 후`;
@@ -392,7 +406,7 @@ fetch("data/QLD.json?h=" + new Date().toISOString().slice(0, 10), { cache: "no-c
   QDD = { dd: (px / hi - 1) * 100, px, hi, d: b[b.length - 1][0] }; render(); }).catch(() => {});
 function wd() {
   const el = $("wd"); if (!el) return;
-  const real = (1 + V.postR / 100) / (1 + V.infl / 100) - 1, live = ACT && ACT.usd > 0, aU = live ? ACT.usd : V.life + V.inf, aM = aU * V.fx / 1e4;
+  const real = (1 + V.postR / 100) / (1 + V.infl / 100) - 1, live = SB().acct, aU = SB().tot, aM = aU * V.fx / 1e4;
   if (!(real > 0)) { el.innerHTML = `<div class="hint">⚠ 은퇴 후 명목 수익률이 물가보다 높아야 계산됩니다.</div>`; return; }
   const yr = new Date().getFullYear(), dd = QDD ? QDD.dd : 0, lv = dd <= -30 ? 2 : dd <= -15 ? 1 : 0, base = aM * real;
   let W = V.wdY && V.wdY.y && V.wdY.amt > 0 ? V.wdY : null, amt, why;
@@ -505,7 +519,7 @@ async function pull() {
     const r = await fetch("https://api.github.com/gists/" + g, { headers: { Authorization: "Bearer " + t }, cache: "no-store" }); if (!r.ok) return;
     const fs = (await r.json()).files || {}, J = n => { try { return fs[n] ? JSON.parse(fs[n].content) : null; } catch (e) { return null; } };
     const p = J(GFILE); if (p) { const local = (() => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } })();
-      if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; } }); if (p.plan) V.plan = p.plan; if (p.goalYM != null) V.goalYM = p.goalYM; if (p.wdY !== undefined) V.wdY = p.wdY; if (p.wdStart !== undefined) V.wdStart = p.wdStart; V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
+      if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; } }); if (p.plan) V.plan = p.plan; if (p.goalYM != null) V.goalYM = p.goalYM; if (p.wdY !== undefined) V.wdY = p.wdY; if (p.wdStart !== undefined) V.wdStart = p.wdStart; if (p.base) V.base = p.base; V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
     if (p) { V.hist = mergeHist(V.hist, p.hist); if (!V.plan && p.plan) V.plan = p.plan; }
     const q = J("qld.json"), qm = J("qldm.json");
     setAuto("life", q && q.seed && q.seed.v, "통합 앱"); setAuto("inf", qm && qm.params && +qm.params.seed, "통합 앱");
