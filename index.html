@@ -212,7 +212,7 @@ async function authChangePw(a) {
 </script><script>if (typeof AUTHGATE === "function") AUTHGATE();</script>
   <header>
     <h1>무한매수 허브<span class="app-pill" id="appPill" hidden>앱</span></h1>
-    <p>메리츠 자동주문(통합) · SOXL · TQQQ · QLD무한매수 · QLD평생매수 · 계좌는 봇마다 앱키로 자유 구성 <span class="ver">· 허브 V1.51 (261020)</span></p>
+    <p>메리츠 자동주문(통합) · SOXL · TQQQ · QLD무한매수 · QLD평생매수 · 계좌는 봇마다 앱키로 자유 구성 <span class="ver">· 허브 V1.52 (261020)</span></p>
   </header>
 
   <a class="mk-row" href="macro.html" aria-label="시장 지표 앱 열기">
@@ -224,7 +224,7 @@ async function authChangePw(a) {
 
   <a class="dash" href="api-all.html" style="--c:#F0475A;">
     <span class="tk" style="font-size:20px;">⚡</span>
-    <span class="info"><span class="nm">메리츠 자동주문(통합) <small>V1.16</small></span><span class="st" id="st-all">📅 매일 여기서 · ⚡ 주문 · 🧾 결과 · ⏰ 자동 실행 · 💼 계좌 · 🛠 설정</span></span>
+    <span class="info"><span class="nm">메리츠 자동주문(통합) <small>V1.17</small></span><span class="st" id="st-all">📅 매일 여기서 · ⚡ 주문 · 🧾 결과 · ⏰ 자동 실행 · 💼 계좌 · 🛠 설정</span></span>
     <span class="go">›</span>
   </a>
   <div style="font-size:12px;color:#93A3BD;margin:14px 2px 4px;font-weight:800;">무한매수 · 메리츠 A계좌</div>
@@ -301,7 +301,7 @@ async function authChangePw(a) {
   <p class="note">매수 기록은 자동주문 앱 🛠 설정 탭의 <b>☁️ 동기화</b>를 켜면 PC와 폰이 같은 기록을 씁니다. 이 목록은 이 기기에 마지막으로 맞춰진 기록입니다.</p>
 </div>
 <script>
-const HUB_VERSION = "V1.51", HUB_RELEASE = "261020";
+const HUB_VERSION = "V1.52", HUB_RELEASE = "261020";
 function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
 function realized(tk, won){
   const t = readJSON(tk + "_trades_v1");
@@ -410,7 +410,7 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden) rend
 })();
 
 /* 🤖 봇 자동 최신화: 허브를 열면 (3시간마다) 종목별 자동주문 앱을 보이지 않게 잠깐 열어 각 봇이 최신 버전인지 확인 → 다르면 자동 재설치
-   A계좌 봇 = api-soxl · QLD무한 봇 = api-qm · QLD평생 봇 = api-qld (같은 주소라 동기화 토큰 공유) */
+   SOXL 봇 = api-soxl · TQQQ 봇 = api-tqqq · QLD무한 봇 = api-qm · QLD평생 봇 = api-qld (같은 주소라 동기화 토큰 공유) */
 (function () {
   try {
     if (!localStorage.getItem("muhansync_token") || !localStorage.getItem("muhansync_gist")) return;
@@ -418,7 +418,9 @@ document.addEventListener("visibilitychange", () => { if (!document.hidden) rend
     if (Date.now() - last < 3 * 3600e3) return;
     localStorage.setItem(k, String(Date.now()));
   } catch (e) { return; }
-  ["api-soxl.html", "api-qm.html", "api-qld.html"].forEach((u, i) => setTimeout(() => {
+  let L = ["api-soxl.html", "api-qm.html", "api-qld.html"];   // 설치된 봇만 (통합 앱이 기록) — 미설치 봇 저장소를 몰래 만들지 않음
+  try { const x = JSON.parse(localStorage.getItem("hub_bot_apps") || "null"); if (Array.isArray(x) && x.length) L = x.filter(u => /^api-[a-z]+\.html$/.test(u)); } catch (e) {}
+  L.forEach((u, i) => setTimeout(() => {
     const f = document.createElement("iframe"); f.src = u + "?bg=1"; f.setAttribute("aria-hidden", "true"); f.tabIndex = -1;
     f.style.cssText = "position:fixed;left:-9999px;top:0;width:360px;height:640px;border:0;opacity:0;pointer-events:none;";
     document.body.appendChild(f); setTimeout(() => f.remove(), 180000);      // 설치·업데이트에 충분한 3분 뒤 닫음

@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.16-261020-MeritzAutoOrder-All">
+<meta name="version" content="V1.17-261020-MeritzAutoOrder-All">
 <meta name="release-date" content="261020">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>메리츠 자동주문(통합) (V1.16 - 261020)</title>
+<title>메리츠 자동주문(통합) (V1.17 - 261020)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -135,7 +135,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.16", RELEASE_DATE = "261020";
+const APP_VERSION = "V1.17", RELEASE_DATE = "261020";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -494,6 +494,7 @@ async function tgApi(tok, method, q) {
   try { return await r.json(); } catch (e) { return { ok: false, description: "응답 오류 " + r.status }; }
 }
 function renderBots() {
+  try { localStorage.setItem("hub_bot_apps", JSON.stringify(CFGS.filter(f => (G.cfg[f] || {}).installed_at).map(f => BOTAPP[f]))); } catch (e) {}   // 허브 자동 최신화 대상
   const st = f => J(f.replace(".json", "-status.json"), null);
   document.getElementById("bots").innerHTML = CFGS.map(f => { const c = G.cfg[f] || {}, s = st(f);
     return `<div class="res"><b>${BOTNAME[f]}</b> · 🏦 <input class="inp rp" data-ac="${f}" value="${esc(c.acct || "")}" placeholder="${esc((acctGroups().find(g => g.fs.includes(f)) || {}).name || "계좌")}" maxlength="12" aria-label="계좌 이름" style="width:84px;padding:3px 7px;font-size:12px;display:inline-block;"> · 📦 <input class="inp rp" data-rp="${f}" value="${esc(c.repo || DEFREPO[f])}" aria-label="봇 저장소 이름" spellcheck="false" style="width:150px;padding:3px 7px;font-size:12px;display:inline-block;"> · ${c.installed_at ? `✅ ${esc(c.repo)} · ${esc((c.bot_version || "").split(" ")[1] || "")}` : "⚠ 미설치 (앱을 한 번 열면 자동)"}<br>
