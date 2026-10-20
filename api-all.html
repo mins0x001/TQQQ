@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.18-261020-MeritzAutoOrder-All">
+<meta name="version" content="V1.19-261020-MeritzAutoOrder-All">
 <meta name="release-date" content="261020">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>메리츠 자동주문(통합) (V1.18 - 261020)</title>
+<title>메리츠 자동주문(통합) (V1.19 - 261020)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -46,6 +46,21 @@
 .res .rp{height:auto !important;min-height:0 !important;padding:3px 8px !important;margin:2px 0 !important;font-size:12px !important;border-radius:8px !important;width:auto;max-width:150px;vertical-align:middle;}
 .needt{color:#FF6B78;font-weight:800;} .needh{padding:6px 10px;border-radius:10px;background:rgba(255,77,94,.1);border:1px solid rgba(255,77,94,.45);}
 @keyframes needp{50%{box-shadow:0 0 0 7px rgba(255,77,94,.08);}}
+
+  .sym{border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin:10px 0;background:var(--panel-2);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;}
+  .sym-h{padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06);} .sym-h b{font-size:16px;letter-spacing:-.2px;} .sym-h .chk{font-size:12.5px;margin-left:10px;}
+  .pos{padding:8px 11px;margin:0 0 8px;font-size:13px;line-height:1.5;}
+  .pos .pl{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;} .pos .pc{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:13px;}
+  .pr{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;margin-top:6px;font-size:12px;color:var(--text-dim);} .pr b{color:var(--glow);}
+  .pr i{display:block;height:6px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;} .pr u{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--glow),#38BDF8);}
+  .rl{gap:5px 10px;margin:0 0 6px;} .rp{font-size:11.5px;padding:3px 10px;} .rv{font-size:12px;color:var(--text-dim);font-family:inherit;font-weight:700;}
+  .adj{display:grid;grid-template-columns:60px 34px minmax(74px,1fr) 34px auto;gap:6px;align-items:center;margin:0 0 6px;}
+  .adj .lb{font-size:12px;} .adj button{height:30px;min-width:34px;padding:0;} .adj button.rs{padding:0 10px;white-space:nowrap;font-size:11.5px;} .adj .pv{min-width:0;font-size:14.5px;line-height:1.15;font-family:'JetBrains Mono',monospace;}
+  .adj .nt{grid-column:2/-1;margin-top:-2px;font-size:11.5px;line-height:1.35;}
+  .ord{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;margin-top:6px;padding:9px 11px;border-radius:11px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);}
+  .ord .sd{font-size:12px;font-weight:900;padding:3px 9px;border-radius:7px;} .ord.buy .sd{background:rgba(56,217,140,.16);color:#38D98C;} .ord.sell .sd{background:rgba(240,71,90,.16);color:#FF6B78;}
+  .ord .cn{font-size:13px;font-weight:800;line-height:1.2;} .ord .cn small{display:block;font-size:10.5px;font-weight:600;color:var(--text-faint);}
+  .ord b{font-family:'JetBrains Mono',monospace;font-size:15.5px;text-align:right;line-height:1.2;} .ord b em{display:block;font-style:normal;font-size:12px;color:var(--text-dim);font-weight:700;}
 </style>
 </head>
 <body>
@@ -139,7 +154,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.18", RELEASE_DATE = "261020";
+const APP_VERSION = "V1.19", RELEASE_DATE = "261020";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -237,19 +252,20 @@ function rule(P) {
 }
 function pos(P) {                         // 📦 현재 상태: 앱 계획(lastLocOrder)의 보유수량·평단 · 종가 대비
   const q = +P.holding_qty || 0, a = +P.avg_price || 0, c = +(P.bot || {}).last_close || 0;
-  return `<div class="pos">📦 보유 <b>${q ? q.toLocaleString("en-US") + "주" : "없음"}</b>${q && a ? ` · 평단 <b>${usd(a)}</b>${c ? ` · (<b class="${c >= a ? "up" : "dn"}">${c >= a ? "+" : ""}${((c / a - 1) * 100).toFixed(2)}%</b>)` : ""}` : ""}${rnd(P)}</div>`;
+  return `<div class="pos"><div class="pl"><span>📦 보유 <b>${q ? q.toLocaleString("en-US") + "주" : "없음"}</b></span>${q && a ? `<span>평단 <b>${usd(a)}</b></span>${c ? `<b class="pc ${c >= a ? "up" : "dn"}">${c >= a ? "+" : ""}${((c / a - 1) * 100).toFixed(2)}%</b>` : ""}` : ""}</div>${rnd(P)}</div>`;
 }
 function rnd(P) {                         // 📍 분할매수 회차: X회차 / 총 N회 (무한매수 = 앱 회차 · 평생매수 = 엔진 분할 합계)
   const b = P.bot || {};
   if (b.kind === "lifetime") {
     const N = (b.engine_n || []).reduce((a, x) => a + (+x || 0), 0), done = +b.buy_count || 0;
     if (!N) return "";
-    if (b.engine_remain != null && +b.engine_remain <= 0) return ` · 📍 시드 소진 (${done}회 매수)`;
-    return done + 1 <= N ? ` · 📍 총 ${N}회차 중 <b>${done + 1}</b>회차 진행 중` : ` · 📍 <b>${done + 1}</b>회차 진행 중 (기본 ${N}회 이후 · 잔여 시드)`;
+    const t = b.engine_remain != null && +b.engine_remain <= 0 ? `시드 소진 (${done}회 매수)` : done + 1 <= N ? `<b>${done + 1}</b> / ${N}회차 진행 중` : `<b>${done + 1}</b>회차 (기본 ${N}회 이후 · 잔여 시드)`, w = (done + 1) / N * 100;
+    return `<div class="pr"><span>📍 ${t}</span><i><u style="width:${Math.min(100, Math.max(3, w))}%"></u></i></div>`;
   }
   const N = +b.max_rounds, done = +b.rounds || 0;
   if (!N) return "";
-  return done >= N ? ` · 📍 분할 소진 (총 ${N}회차)` : ` · 📍 총 ${N}회차 중 <b>${done + 1}</b>회차 진행 중`;
+  const t = done >= N ? `분할 소진 (총 ${N}회차)` : `<b>${done + 1}</b> / ${N}회차 진행 중`, w = Math.min(done + 1, N) / N * 100;
+  return `<div class="pr"><span>📍 ${t}</span><i><u style="width:${Math.min(100, Math.max(3, w))}%"></u></i></div>`;
 }
 function render() {
   const code = codeNow(), mk = MKT.includes(code);
@@ -260,7 +276,8 @@ function render() {
     const head = `<div class="sym-h"><b>${s.name}</b><span><label class="chk"><input type="checkbox" data-side="${s.id}:buy" ${sd.buy ? "checked" : ""}>매수</label><label class="chk"><input type="checkbox" data-side="${s.id}:sell" ${sd.sell ? "checked" : ""} ${s.life ? "disabled" : ""}>매도</label></span></div>`;
     if (!P) return `<div class="sym">${head}<div class="busy">${G.err[s.id] ? "⚠ " + esc(G.err[s.id]) : "계산 중…"}</div></div>`;
     const o = Object.fromEntries((P.orders || []).map(x => [x.side, x]));
-    const line = (side, lab) => o[side] ? `<div class="row"><span>${lab} ${CODES.find(c => c[0] === code)[1]}</span><b>${mk ? "시장가" : usd(o[side].price)} × ${o[side].qty}주</b></div>` : "";
+    const cn = CODES.find(c => c[0] === code)[1], cm = cn.split(" (")[0], cs = cn.includes(" (") ? cn.slice(cn.indexOf(" (") + 2, -1) : "";
+    const line = (side, lab) => o[side] ? `<div class="ord ${side}"><span class="sd">${lab}</span><span class="cn">${cm}${cs ? `<small>${cs}</small>` : ""}</span><b>${mk ? "시장가" : usd(o[side].price)}<em>× ${(+o[side].qty).toLocaleString("en-US")}주</em></b></div>` : "";
     return `<div class="sym">${head}${pos(P)}${rule(P)}${gadj(s, P)}${adj(s, P)}${line("buy", "매수")}${line("sell", "매도")}${!o.buy && !o.sell ? `<div class="busy">오늘 규칙상 주문 없음${sd.buy ? " (☑매수면 봇이 같은 공식으로 주문)" : ""}</div>` : ""}${inst ? "" : `<div class="busy">⚠ 봇 미설치 — 🛠 설정에서 해당 앱으로</div>`}</div>`;
   }).join("");
 }
