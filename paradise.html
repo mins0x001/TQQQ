@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.08-261020-FinancialRoadmap">
+<meta name="version" content="V1.09-261020-FinancialRoadmap">
 <meta name="release-date" content="261020">
-<title>QLD 파이낸셜 로드맵 (V1.08 - 261020)</title>
+<title>QLD 파이낸셜 로드맵 (V1.09 - 261020)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -28,7 +28,6 @@
   .f label{font-size:13px;font-weight:700;}
   .f .v{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-dim);}
   .f input[type=number]{width:96px;min-height:34px;border-radius:9px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);padding:0 8px;font:700 14px var(--f-mono);text-align:right;}
-  .f input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--glow);}
   .krw{grid-column:1/-1;justify-self:start;display:inline-flex;align-items:baseline;gap:6px;margin:1px 0 2px;padding:4px 11px;border-radius:99px;background:linear-gradient(90deg,rgba(245,165,36,.16),rgba(245,165,36,.04));border:1px solid rgba(245,165,36,.35);font:800 13.5px var(--f-body);color:#F5C065;font-variant-numeric:tabular-nums;}
   .ms{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}.ms div{padding:10px 8px;border-radius:14px;border:1px solid var(--border,#2A3550);background:rgba(94,234,212,.05);text-align:center;}.ms div.ok{border-color:rgba(56,217,140,.45);background:rgba(56,217,140,.08);}.ms span{display:block;font-size:11px;color:var(--text-faint,#8E9AB0);}.ms b{display:block;font-size:16px;white-space:nowrap;letter-spacing:-.3px;font-weight:900;margin:3px 0 1px;color:var(--glow,#5EEAD4);}.ms div.ok b{color:var(--up,#38D98C);}.ms small{display:block;font-size:10px;line-height:1.35;color:var(--text-faint,#8E9AB0);}.ms em{display:inline-block;margin-top:5px;padding:2px 8px;border-radius:99px;font-style:normal;font-size:10.5px;font-weight:800;background:rgba(245,165,36,.15);color:var(--amber,#F5A524);}.ms div.ok em{background:rgba(56,217,140,.18);color:var(--up,#38D98C);}
   .krw small{all:unset;font:600 11px var(--f-body);color:var(--text-faint);}
@@ -54,6 +53,7 @@
   .pb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px;border-radius:14px;font-size:16px;text-align:center;border:1px solid var(--border);background:var(--panel-2);}.pb b{font-weight:900;}.pb small{font:600 11.5px var(--f-mono);color:var(--text-faint);}.pb.up{border-color:rgba(56,217,140,.5);background:rgba(56,217,140,.1);color:var(--up);}.pb.dn{border-color:rgba(255,122,122,.5);background:rgba(255,122,122,.08);color:#FF9A9A;}.pb.on{border-color:rgba(94,234,212,.45);background:rgba(94,234,212,.08);color:var(--glow);}
   .yt{width:100%;border-collapse:separate;border-spacing:0 3px;margin-top:8px;font:600 12px var(--f-mono);}.yt th{font:700 11px var(--f-body);color:var(--text-faint);text-align:right;padding:2px 6px;}.yt th:first-child,.yt td:first-child{text-align:left;}.yt td{padding:6px;text-align:right;background:var(--panel-2);color:var(--text-dim);}.yt td:first-child{border-radius:8px 0 0 8px;color:var(--text);}.yt td:last-child{border-radius:0 8px 8px 0;}.yt small{font-size:9.5px;color:var(--text-faint);}.yt td.up{color:var(--up);}.yt td.dn{color:#FF9A9A;}.yt tr.cur td{background:rgba(94,234,212,.1);color:var(--glow);}
   .pf{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;}.hint.lg{margin-top:4px;}
+  .rst{display:flex;justify-content:flex-end;margin-top:6px;}
   .btn{border:1px solid var(--border);background:none;color:var(--text-dim);border-radius:9px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;}
 .live .st span{white-space:nowrap;font-size:11px;}.live .st small{white-space:nowrap;font-size:10px;}.live .st{padding-left:4px;padding-right:4px;min-width:0;}
 </style>
@@ -61,12 +61,13 @@
 <body>
 <div class="wrap">
   <div><h1>🏛 QLD 파이낸셜 로드맵 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.08 (261020) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.09 (261020) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
 
   <section class="card"><div class="kick">STEP 1 · 자산 목표</div><h2>은퇴 시점 내 자산은?</h2>
     <div class="hint">값은 이 기기에 저장되고, ☁️ 동기화가 켜져 있으면 모든 기기에 영구 저장됩니다. 시드·환율은 앱에서 자동으로 가져옵니다(수정 가능). <b id="syncSt"></b></div>
+    <div class="rst"><button class="btn" type="button" id="resetAll">↺ 초기값으로</button></div>
     <div id="fields"></div>
     <div class="res">
       <div class="box"><div class="l">은퇴 후 자산 (그때 돈)</div><div class="n" id="oFv">-</div><div class="s" id="oFvPv"></div></div>
@@ -100,7 +101,7 @@
 
   <section class="card"><div class="kick">HOW · 계산식</div>
     <div class="hint">
-      ① 은퇴 후 자산 = 평생매수 시드×(1+r<sub>평생</sub>)<sup>n</sup> + 무한매수 시드×(1+r<sub>무한</sub>)<sup>n</sup> (원화 = 달러×환율)<br>      📊 기대 수익률 = QLD 전체 기간(2006~) 일봉으로 두 전략을 은퇴 시기만큼 굴린 <b>롤링 백테스트</b>의 연환산 수익률 — 기본 = 중앙값 · 보수 = 하위 25% · 낙관 = 상위 25% (매일 10:10 갱신)<br>
+      ① 은퇴 후 자산 = 평생매수 시드×(1+r<sub>평생</sub>)<sup>n</sup> + 무한매수 시드×(1+r<sub>무한</sub>)<sup>n</sup> (원화 = 달러×환율)<br>      📊 기대 수익률 = QLD 전체 기간(2006~) 일봉으로 두 전략을 은퇴 시기만큼 굴린 <b>롤링 백테스트</b>의 연환산 수익률 — 기본값 = 보수(하위 25%) · 중간 = 중앙값 · 낙관 = 상위 25% (매일 10:10 갱신)<br>
       ② 실질 수익률 = (1+은퇴 후 명목)÷(1+물가) − 1 · 월 수입(지금 가치) = 은퇴 후 자산×실질÷12÷(1+물가)<sup>n</sup><br>
       ③ 낙원 금액 = 월 소비액×12÷실질 × (1+물가)<sup>n</sup> · 남은 금액 = 낙원 금액 − 은퇴 후 자산<br>
       QLD 기대 수익률은 미래를 보장하지 않습니다 — 보수·기본·낙관으로 바꿔 보며 범위로 판단하세요. 투자 조언이 아닙니다.
@@ -108,7 +109,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.08", RELEASE_DATE = "261020";
+const APP_VERSION = "V1.09", RELEASE_DATE = "261020";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -131,8 +132,7 @@ Object.assign(V, { etc: 0, etcR: 5, sav: 0, savG: 3 });   // 기타 자산·저�
 const man = x => { const a = Math.abs(x), s = x < 0 ? "-" : ""; return a >= 10000 ? s + (a / 10000).toFixed(2) + "억" : s + Math.round(a).toLocaleString("ko-KR") + "만"; };
 function fieldHtml(f) {
   const [k, nm, u, mn, mx, st, , d] = f;
-  return `<div class="f"><label for="i_${k}">${nm}<span class="src" id="s_${k}"></span></label><span class="v"><input type="number" id="i_${k}" data-k="${k}" min="${mn}" max="${mx}" step="${st}" inputmode="decimal" value="${V[k]}">${u}</span>
-    <input type="range" id="r_${k}" data-k="${k}" min="${mn}" max="${mx}" step="${st}" value="${V[k]}" aria-label="${nm}">${u === "$" ? `<div class="krw" id="w_${k}"></div>` : ""}${d ? `<small>${d}</small>` : ""}</div>`;
+  return `<div class="f" id="f_${k}"><label for="i_${k}">${nm}<span class="src" id="s_${k}"></span></label><span class="v"><input type="number" id="i_${k}" data-k="${k}" min="${mn}" max="${mx}" step="${st}" inputmode="decimal" value="${V[k]}">${u}</span>${u === "$" ? `<div class="krw" id="w_${k}"></div>` : ""}${d ? `<small>${d}</small>` : ""}</div>`;
 }
 $("fields").innerHTML = F1.map(fieldHtml).join(""); $("fields2").innerHTML = F2.map(fieldHtml).join("");
 function calc(n) {
@@ -248,10 +248,10 @@ function backtest(n) {
 function btApply() {
   const n = Math.round(V.n), k = n + ":" + GATE + ":" + (QM ? QM.bars.length : 0); if (!QM || (BT && BT.k === k)) return; BT = backtest(n); if (!BT) return; BT.k = k;
   [["lifeR", BT.life], ["infR", BT.inf]].forEach(([key, p]) => {
-    if (!TOUCH[key]) { V[key] = +p[1].toFixed(1); $("i_" + key).value = V[key]; $("r_" + key).value = V[key]; }
+    if (!TOUCH[key]) { V[key] = +p[0].toFixed(1); $("i_" + key).value = V[key]; }
     $("s_" + key).innerHTML = ` · 백테스트`;
-    let el = document.getElementById("c_" + key); if (!el) { el = document.createElement("div"); el.id = "c_" + key; el.className = "chips"; $("r_" + key).after(el); }
-    el.innerHTML = [["😟 보수", p[0]], ["🙂 기본", p[1]], ["😀 낙관", p[2]]].map(([t, v], i) => `<button type="button" class="chip ${Math.abs(V[key] - v) < 0.05 ? "on" : ""}" data-set="${key}:${v.toFixed(1)}"${i === 1 ? ' data-auto="1" title="자동: 매일 백테스트 값 따라감"' : ""}>${t} ${v.toFixed(1)}%</button>`).join("")
+    let el = document.getElementById("c_" + key); if (!el) { el = document.createElement("div"); el.id = "c_" + key; el.className = "chips"; $("f_" + key).appendChild(el); }
+    el.innerHTML = [["😟 보수(기본)", p[0]], ["🙂 중간", p[1]], ["😀 낙관", p[2]]].map(([t, v], i) => `<button type="button" class="chip ${Math.abs(V[key] - v) < 0.05 ? "on" : ""}" data-set="${key}:${v.toFixed(1)}"${i === 0 ? ' data-auto="1" title="자동: 매일 백테스트 값 따라감"' : ""}>${t} ${v.toFixed(1)}%</button>`).join("")
       + `<small>QLD ${BT.from}년~ · ${BT.yrs.toFixed(BT.capped ? 1 : 0)}년씩 ${BT.n}개 구간${BT.capped ? " (데이터 길이로 기간 단축)" : ""}</small>`;
   });
 }
@@ -303,6 +303,10 @@ function prog() {
     <table class="yt"><tr><th>연차</th><th>계획</th><th>실제</th><th>차이</th></tr>${rows.join("")}</table>
     <div class="pf"><span class="hint">기록 ${H.length}일 · 매일 자동 · ☁️ 모든 기기 저장</span><button class="btn" type="button" data-plan="reset" style="white-space:nowrap;">↺ 새 계획</button></div>`;
 }
+document.addEventListener("click", e => { if (!e.target.closest("#resetAll")) return;
+  if (!confirm("모든 입력을 초기값으로 되돌릴까요?\n· 시드·환율 → 통합 앱·오늘 값\n· 기대 수익률 → 백테스트 보수값\n· 나머지 → 기본값\n(📈 계획·실제 기록은 그대로)")) return;
+  TOUCH = {}; ALL.forEach(f => { const k = f[0]; V[k] = AUTO[k] > 0 ? Math.round(AUTO[k]) : f[6]; $("i_" + k).value = V[k]; });
+  try { localStorage.setItem(KEY + "_t", "{}"); } catch (x) {} BT && (BT.k = ""); render(); save(); });
 /* 저장: 이 기기 + ☁️ Gist(paradise.json, 동기화 켜져 있으면) */
 let saveT = 0, TOUCH = {}; try { TOUCH = JSON.parse(localStorage.getItem(KEY + "_t") || "{}"); } catch (e) {}
 function syncSt(t, ok) { const e = $("syncSt"); if (e) { e.textContent = t; e.style.color = ok ? "var(--up)" : "var(--amber)"; } }
@@ -312,12 +316,13 @@ function save() {
     try { const rs = await fetch("https://api.github.com/gists/" + g, { method: "PATCH", headers: { Authorization: "Bearer " + t, "Content-Type": "application/json" }, body: JSON.stringify({ files: { [GFILE]: { content: JSON.stringify(Object.assign({}, V, { touched: TOUCH })) } } }) }); syncSt(rs.ok ? "☁️ 모든 기기에 저장됨" : `⚠️ 동기화 저장 실패 (${rs.status}) — 통합 앱 🛠설정에서 토큰 확인`, rs.ok); } catch (e) { syncSt("⚠️ 동기화 저장 실패 — 네트워크 확인", false); } }, 1200);
 }
 document.addEventListener("input", e => { const k = e.target.dataset && e.target.dataset.k; if (!k) return; const v = parseFloat(e.target.value), f = ALL.find(x => x[0] === k); if (!isFinite(v) || (f && (v < f[3] || v > f[4]))) return;
-  V[k] = v; TOUCH[k] = 1; try { localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (x) {} const o = e.target.type === "range" ? $("i_" + k) : $("r_" + k); if (o) o.value = v; render(); save(); });
+  V[k] = v; TOUCH[k] = 1; try { localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (x) {} render(); save(); });
 /* 자동 값: Gist 의 시드(qld.json · qldm.json) · 저장된 낙원 값 · 환율(data/macro.json) — 사용자가 바꾼 값이 있으면 그 값 유지 */
 const tok = () => { try { return localStorage.getItem("muhansync_token") || ""; } catch (e) { return ""; } };
 const gid = () => { try { return localStorage.getItem("muhansync_gist") || ""; } catch (e) { return ""; } };
-function setAuto(k, v, src) { if (!(v > 0)) return;          // 직접 바꾼 값은 유지, 아니면 앱 값 자동 반영
-  if (!TOUCH[k]) { V[k] = Math.round(v); $("i_" + k).value = V[k]; $("r_" + k).value = V[k]; } $("s_" + k).textContent = ` · ${src} ${Math.round(v).toLocaleString("en-US")}`; }
+const AUTO = {};
+function setAuto(k, v, src) { if (!(v > 0)) return; AUTO[k] = v;          // 직접 바꾼 값은 유지, 아니면 앱 값 자동 반영
+  if (!TOUCH[k]) { V[k] = Math.round(v); $("i_" + k).value = V[k]; } $("s_" + k).textContent = ` · ${src} ${Math.round(v).toLocaleString("en-US")}`; }
 (async () => {
   render();
   fetch("data/macro.json?h=" + new Date().toISOString().slice(0, 13), { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(m => { if (m && m.fx) { setAuto("fx", m.fx.last, "오늘"); render(); } }).catch(() => {});
@@ -326,7 +331,7 @@ function setAuto(k, v, src) { if (!(v > 0)) return;          // 직접 바꾼 �
     const r = await fetch("https://api.github.com/gists/" + g, { headers: { Authorization: "Bearer " + t }, cache: "no-store" }); if (!r.ok) return;
     const fs = (await r.json()).files || {}, J = n => { try { return fs[n] ? JSON.parse(fs[n].content) : null; } catch (e) { return null; } };
     const p = J(GFILE); if (p) { const local = (() => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } })();
-      if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; $("r_" + f[0]).value = V[f[0]]; } }); if (p.plan) V.plan = p.plan; V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
+      if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; } }); if (p.plan) V.plan = p.plan; V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
     if (p) { V.hist = mergeHist(V.hist, p.hist); if (!V.plan && p.plan) V.plan = p.plan; }
     const q = J("qld.json"), qm = J("qldm.json");
     setAuto("life", q && q.seed && q.seed.v, "통합 앱"); setAuto("inf", qm && qm.params && +qm.params.seed, "통합 앱");
