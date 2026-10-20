@@ -1,9 +1,9 @@
-/* 무한매수 로그인 V1.00 (261020)
+/* 무한매수 로그인 V1.01 (261020)
    · 아이디마다 GitHub 토큰·Gist(=서버 저장소)를 따로 → 기록·설정·봇은 모두 아이디별 Gist 가 메인, 기기는 임시 캐시
    · 비밀번호는 어디에도 저장하지 않음: PBKDF2-SHA256 60만 회 → AES-GCM-256 으로 각자 정보를 잠금 (관리자도 볼 수 없음 · 초기화만)
    · auth/users.json(공개 저장소)에는 아이디 해시 + 암호문만 · 관리자 금고(전체 목록)는 무작위 키 K 로 잠그고 K 는 관리자 비밀번호로만 열림
    · B 방식(내 GitHub 안에) → A 방식(각자 GitHub) 전환: 사용자 항목의 토큰·Gist 만 바꾸면 끝 (앱·봇 구조 동일) */
-const AUTH = { owner: "mins0x001", repo: "TQQQ", path: "auth/users.json", iter: 600000, ver: "V1.00" };
+const AUTH = { owner: "mins0x001", repo: "TQQQ", path: "auth/users.json", iter: 600000, ver: "V1.01" };
 const A$ = {
   enc: new TextEncoder(), dec: new TextDecoder(),
   b64: u => { const a = new Uint8Array(u); let s = ""; for (let i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s); },
@@ -24,7 +24,9 @@ const A$ = {
   async gh(path, opt, token) { opt = opt || {}; const r = await fetch("https://api.github.com" + path, { method: opt.method || "GET", cache: "no-store",
       headers: Object.assign({ Authorization: "Bearer " + (token || A$.ls("muhansync_token")), Accept: "application/vnd.github+json" }, opt.body ? { "Content-Type": "application/json" } : {}), body: opt.body ? JSON.stringify(opt.body) : undefined });
     if (r.status === 404 && opt.soft) return null; if (!r.ok) { const e = new Error("GitHub " + r.status); e.status = r.status; throw e; } return r.status === 204 ? {} : r.json(); },
-  async dbPublic() { const r = await fetch(AUTH.path + "?t=" + Date.now(), { cache: "no-store" }).catch(() => null); return r && r.ok ? r.json() : null; },
+  async dbPublic() {          // 같은 주소 → 안 되면(파일로 직접 연 경우 등) 공개 주소에서
+    for (const u of [AUTH.path, `https://${AUTH.owner}.github.io/${AUTH.repo}/${AUTH.path}`]) { const r = await fetch(u + "?t=" + Date.now(), { cache: "no-store" }).catch(() => null); if (r && r.ok) { try { return await r.json(); } catch (e) {} } }
+    return null; },
   async dbApi(token) { const f = await A$.gh(`/repos/${AUTH.owner}/${AUTH.repo}/contents/${AUTH.path}`, { soft: true }, token); return f ? { db: JSON.parse(A$.dec.decode(A$.ub64(f.content.replace(/\n/g, "")))), sha: f.sha } : { db: null, sha: null }; },
   async dbPut(db, sha, msg, token) { db.updated = new Date().toISOString(); const body = { message: msg, content: A$.b64(A$.enc.encode(JSON.stringify(db, null, 1))) }; if (sha) body.sha = sha;
     return A$.gh(`/repos/${AUTH.owner}/${AUTH.repo}/contents/${AUTH.path}`, { method: "PUT", body }, token); },
