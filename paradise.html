@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.10-261020-FinancialRoadmap">
+<meta name="version" content="V1.11-261020-FinancialRoadmap">
 <meta name="release-date" content="261020">
-<title>QLD 파이낸셜 로드맵 (V1.10 - 261020)</title>
+<title>QLD 파이낸셜 로드맵 (V1.11 - 261020)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -56,12 +56,25 @@
   .rst{display:flex;justify-content:flex-end;margin-top:6px;}
   .btn{border:1px solid var(--border);background:none;color:var(--text-dim);border-radius:9px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;}
 .live .st span{white-space:nowrap;font-size:11px;}.live .st small{white-space:nowrap;font-size:10px;}.live .st{padding-left:4px;padding-right:4px;min-width:0;}
+  .rv-in{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;margin-bottom:10px;} .rv-in label{font-weight:800;font-size:13.5px;}
+  .rv-in input{min-height:44px;border-radius:12px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);padding:0 14px;font:800 18px var(--f-mono);letter-spacing:.5px;}
+  .rv-in input:focus{outline:none;border-color:var(--glow);} .rv-in .hint{grid-column:1/-1;} .rv-in .hint b{color:var(--glow);}
+  .rv-hero{display:flex;flex-direction:column;gap:2px;padding:14px;border-radius:16px;text-align:center;border:1px solid rgba(245,165,36,.5);background:linear-gradient(160deg,rgba(245,165,36,.14),rgba(255,77,94,.06));}
+  .rv-hero span{font-size:12.5px;font-weight:700;color:var(--text-dim);} .rv-hero b{font:900 26px var(--f-mono);letter-spacing:-.5px;color:var(--amber);} .rv-hero small{font-size:12px;color:var(--text-faint);line-height:1.5;} .rv-hero em{font-style:normal;font-weight:800;color:#FF8A8A;}
+  .rv-hero.ok{border-color:rgba(56,217,140,.5);background:linear-gradient(160deg,rgba(56,217,140,.14),rgba(94,234,212,.05));} .rv-hero.ok b{color:var(--up);}
+  .rv-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;} .rv-g div{display:flex;flex-direction:column;gap:1px;padding:10px 11px;border-radius:13px;background:var(--panel-2);border:1px solid var(--border);}
+  .rv-g span{font-size:11.5px;font-weight:700;color:var(--text-faint);} .rv-g b{font:900 17px var(--f-mono);color:var(--glow);letter-spacing:-.3px;} .rv-g b.up{color:var(--up);} .rv-g b.dn{color:#FF8A8A;} .rv-g div:last-child:nth-child(odd){grid-column:1/-1;} .rv-g small{font-size:10.5px;color:var(--text-faint);line-height:1.4;}
+  .rv-t{width:100%;border-collapse:separate;border-spacing:0 3px;margin:10px 0 6px;font:700 12.5px var(--f-mono);font-variant-numeric:tabular-nums;}
+  .rv-t th{font:700 11px var(--f-body);color:var(--text-faint);text-align:right;padding:2px 8px;} .rv-t th:first-child,.rv-t td:first-child{text-align:left;}
+  .rv-t td{padding:7px 8px;text-align:right;background:var(--panel-2);color:var(--text);} .rv-t td:first-child{border-radius:9px 0 0 9px;font-family:var(--f-body);} .rv-t td:last-child{border-radius:0 9px 9px 0;}
+  .rv-t td small{display:block;font:600 10px var(--f-mono);color:var(--text-faint);} .rv-t td.up{color:var(--up);} .rv-t td.dn{color:#FF8A8A;} .rv-t tr.goal td{background:rgba(245,165,36,.12);color:var(--amber);font-weight:900;}
+  .up{color:var(--up);} .dn{color:#FF8A8A;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div><h1>🏛 QLD 파이낸셜 로드맵 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.10 (261020) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.11 (261020) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
 
@@ -92,6 +105,10 @@
     <div class="hint" style="margin-top:6px;">— 내 자산 · <span style="color:var(--amber)">- - 낙원 금액</span> (해마다 물가만큼 커짐) · 두 선이 만나는 해가 낙원 도착</div>
   </section>
 
+  <section class="card"><div class="kick">🎯 REVERSE · AI 역산</div><h2>은퇴 날짜로 거꾸로 계산</h2>
+    <div class="rv-in"><label for="goalYM">은퇴 년월</label><input id="goalYM" inputmode="decimal" placeholder="예: 2036.12" maxlength="7" autocomplete="off"><span class="hint" id="goalN"></span></div>
+    <div id="rev"></div></section>
+
   <section class="card"><div class="kick">📈 PROGRESS · 계획 vs 실제</div><h2>계획보다 빠른가, 느린가?</h2><div id="prog"></div></section>
 
   <section class="card"><div class="kick">🤖 AI 진단</div><h2>낙원까지 가장 빠른 길</h2><div id="ai"></div></section>
@@ -109,7 +126,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.10", RELEASE_DATE = "261020";
+const APP_VERSION = "V1.11", RELEASE_DATE = "261020";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -171,7 +188,7 @@ function render() {
     : at === 0 ? `🏝 <b>이미 낙원입니다!</b> 지금 자산으로 월 ${V.spend}만원(지금 가치) 생활이 가능합니다.`
     : `🏝 <b>${yr + at}년 (${at}년 후)</b> 낙원 도착 — 그때 자산 ${man(calc(at).fv)}원 ≥ 낙원 금액 ${man(calc(at).par)}원<br>${at <= n ? `은퇴 시기(${n}년 후)보다 <b>${n - at}년 빨리</b> 도착` : `은퇴 시기(${n}년 후)보다 <b style="color:var(--amber)">${at - n}년 늦게</b> 도착 — 은퇴를 ${at}년 후로 미루거나 조건을 바꿔 보세요`}`;
   $("sum").innerHTML = `🏝 ${at === null ? "50년 안에 도착 어려움" : at === 0 ? "<b style='color:var(--up)'>이미 낙원</b>" : `<b style="color:var(--glow)">${yr + at}년</b> 낙원 도착 (${at}년 후)`}<br>${n}년 후 자산 <b>${man(c.fv)}</b> · 낙원 금액 <b>${isFinite(c.par) ? man(c.par) : "∞"}</b> · ${gap <= 0 ? "<b style='color:var(--up)'>달성</b>" : `남은 <b style="color:var(--amber)">${man(gap)}</b>`}`;
-  drawChart(Math.max(20, n, at === null ? 0 : Math.min(at, 40)), at); aiPlan(); ptable(); prog();
+  drawChart(Math.max(20, n, at === null ? 0 : Math.min(at, 40)), at); aiPlan(); ptable(); prog(); rev();
 }
 function drawChart(N, at) {      // 0~N년 · 10·15·20년 목표 지점 표시 + 아래 카드
   const W = 340, H = 190, pl = 8, pr = 8, pt = 26, pb = 20, pts = [], MS = [10, 15, 20];
@@ -308,6 +325,41 @@ document.addEventListener("click", e => { if (!e.target.closest("#resetAll")) re
   if (!confirm("모든 입력을 초기값으로 되돌릴까요?\n· 시드·환율 → 통합 앱·오늘 값\n· 기대 수익률 → 백테스트 보수값\n· 나머지 → 기본값\n(📈 계획·실제 기록은 그대로)")) return;
   TOUCH = {}; ALL.forEach(f => { const k = f[0]; V[k] = AUTO[k] > 0 ? Math.round(AUTO[k]) : f[6]; $("i_" + k).value = V[k]; });
   try { localStorage.setItem(KEY + "_t", "{}"); } catch (x) {} BT && (BT.k = ""); render(); save(); });
+/* 🎯 AI 역산: 은퇴 년월 → 오늘 기준 남은 기간 n → 그때 낙원 금액을 채우려면 '지금' 무엇이 얼마여야 하는지
+   ① 필요한 오늘 시드(지금 비율 유지) ② 시드 그대로면 매달 추가 투자 ③ 필요한 수익률 ④ 쓸 수 있는 월 소비 ⑤ 해마다 있어야 할 자산 체크포인트 */
+function ymParse(t) { const m = String(t || "").trim().match(/^(\d{4})[.\-/ ]?(\d{1,2})$/); if (!m) return null; const y = +m[1], mo = +m[2]; return mo >= 1 && mo <= 12 && y >= 2000 && y <= 2100 ? { y, mo } : null; }
+function rev() {
+  const el = $("rev"), g = ymParse(V.goalYM), inp = $("goalYM"); if (document.activeElement !== inp) inp.value = V.goalYM || "";
+  if (!g) { $("goalN").textContent = ""; el.innerHTML = `<div class="hint">은퇴할 <b>년.월</b>을 넣으면 오늘 기준으로 지금 시드·추가 투자·수익률이 얼마여야 하는지 AI가 거꾸로 계산합니다.</div>`; return; }
+  const now = new Date(), mon = (g.y - now.getFullYear()) * 12 + (g.mo - 1 - now.getMonth()), n = mon / 12;
+  if (mon < 1) { $("goalN").textContent = ""; el.innerHTML = `<div class="hint">⚠ 오늘 이후 년월을 넣어 주세요.</div>`; return; }
+  $("goalN").innerHTML = `오늘부터 <b>${Math.floor(mon / 12)}년 ${mon % 12}개월</b>`;
+  const c = calc(n), seed = V.life + V.inf, k = c.par / c.fv, needU = seed * k, base = { ...V };
+  if (!isFinite(c.par)) { el.innerHTML = `<div class="hint">⚠ 은퇴 후 명목 수익률이 물가보다 높아야 계산할 수 있어요.</div>`; return; }
+  const ok = () => { const x = calc(n); return x.fv >= x.par; };
+  const dS = c.fv >= c.par ? 0 : solve(x => { V.sav = x; const r = ok(); Object.assign(V, base); return r; }, 0, 1e7);
+  const dR = c.fv >= c.par ? 0 : solve(d => { V.lifeR = base.lifeR + d; V.infR = base.infR + d; const r = ok(); Object.assign(V, base); return r; }, 0, 80);
+  const sp = Math.floor(c.inc / 10) * 10, okNow = c.fv >= c.par, U = u => "$" + Math.round(u).toLocaleString("en-US"), W = u => won(u * V.fx / 1e4);
+  const act = ACT && ACT.usd > 0 ? ACT.usd : 0;
+  const head = okNow
+    ? `<div class="rv-hero ok"><span>🎉 ${g.y}.${String(g.mo).padStart(2, "0")} 은퇴 — 지금 시드로 이미 가능</span><b>${W(needU)}</b><small>만 있어도 충분 (지금 시드의 ${Math.round(k * 100)}%) · 여유 ${man(c.fv - c.par)}원</small></div>`
+    : `<div class="rv-hero"><span>🎯 ${g.y}.${String(g.mo).padStart(2, "0")} 은퇴하려면 오늘 필요한 시드</span><b>${W(needU)}</b><small>${U(needU)} · 지금 ${U(seed)} → <em>${U(needU - seed)} (${W(needU - seed)}) 더 필요</em></small></div>`;
+  const tips = okNow ? "" : `<div class="rv-g">
+    <div><span>💰 시드 그대로면</span><b>월 ${man(dS / 12)}원</b><small>매달 추가 투자 (연 ${man(dS)}원)</small></div>
+    <div><span>📈 추가 투자 없이</span>${dR >= 79.9 ? `<b class="dn">불가</b><small>수익률만으로는 못 채움</small>` : `<b>+${dR.toFixed(1)}%p</b><small>수익률 필요 (평생 ${(base.lifeR + dR).toFixed(1)}% · 무한 ${(base.infR + dR).toFixed(1)}%)</small>`}</div>
+    <div><span>🍃 그대로 은퇴하면</span><b>월 ${sp.toLocaleString("ko-KR")}만원</b><small>쓸 수 있는 돈 (목표 ${V.spend}만원)</small></div>
+    ${act ? `<div><span>💼 지금 실제 자산</span><b class="${act >= needU ? "up" : "dn"}">${Math.round(act / needU * 100)}%</b><small>${W(act)} / 필요 ${W(needU)}</small></div>` : ""}</div>`;
+  // 체크포인트: 필요한 시드 경로(지금 비율 유지)로 해마다 있어야 할 자산 vs 내 시드 그대로 경로
+  const pathAt = (t, sc) => sc * (V.life * (1 + V.lifeR / 100) ** t + V.inf * (1 + V.infR / 100) ** t);
+  const ts = [0, 1, 2, 3, 5, 7, 10, 15, 20, 25, 30].filter(t => t < n); ts.push(n);
+  const rows = (ts.length > 7 ? [ts[0], ts[1], ts[2], ts[3], ts[Math.floor(ts.length / 2)], ts[ts.length - 2], n] : ts).filter((t, i, a) => a.indexOf(t) === i).map(t => {
+    const d = new Date(now.getFullYear(), now.getMonth() + Math.round(t * 12), 1), lab = t === 0 ? "오늘" : t === n ? "🎯 은퇴" : `${Math.round(t)}년 후`;
+    const need = pathAt(t, k), mine = pathAt(t, 1), up = mine >= need;
+    return `<tr class="${t === n ? "goal" : ""}"><td>${lab}<small>${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}</small></td><td>${man(need * V.fx / 1e4)}</td><td class="${up ? "up" : "dn"}">${man(mine * V.fx / 1e4)}</td></tr>`; }).join("");
+  el.innerHTML = head + tips + `<table class="rv-t"><tr><th>시점</th><th>있어야 할 자산</th><th>내 시드 그대로</th></tr>${rows}</table>
+    <div class="hint">원화 = 그때 돈 · 오늘 환율 · 기대 수익률(평생 ${V.lifeR}% · 무한 ${V.infR}%) · 낙원 = 월 ${V.spend}만원(지금 가치)을 은퇴 후 실질 수익률로 평생 · <span class="up">초록</span> = 경로 위 · <span class="dn">빨강</span> = 부족</div>`;
+}
+document.addEventListener("input", e => { if (e.target.id !== "goalYM") return; const v = e.target.value.trim(); if (v && !ymParse(v)) return; V.goalYM = v; rev(); save(); });
 /* 저장: 이 기기 + ☁️ Gist(paradise.json, 동기화 켜져 있으면) */
 let saveT = 0, TOUCH = {}; try { TOUCH = JSON.parse(localStorage.getItem(KEY + "_t") || "{}"); } catch (e) {}
 function syncSt(t, ok) { const e = $("syncSt"); if (e) { e.textContent = t; e.style.color = ok ? "var(--up)" : "var(--amber)"; } }
@@ -358,7 +410,7 @@ async function pull() {
     const r = await fetch("https://api.github.com/gists/" + g, { headers: { Authorization: "Bearer " + t }, cache: "no-store" }); if (!r.ok) return;
     const fs = (await r.json()).files || {}, J = n => { try { return fs[n] ? JSON.parse(fs[n].content) : null; } catch (e) { return null; } };
     const p = J(GFILE); if (p) { const local = (() => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } })();
-      if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; } }); if (p.plan) V.plan = p.plan; V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
+      if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; } }); if (p.plan) V.plan = p.plan; if (p.goalYM != null) V.goalYM = p.goalYM; V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
     if (p) { V.hist = mergeHist(V.hist, p.hist); if (!V.plan && p.plan) V.plan = p.plan; }
     const q = J("qld.json"), qm = J("qldm.json");
     setAuto("life", q && q.seed && q.seed.v, "통합 앱"); setAuto("inf", qm && qm.params && +qm.params.seed, "통합 앱");
