@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.14-261019-MeritzAutoOrder-All">
-<meta name="release-date" content="261019">
+<meta name="version" content="V1.15-261020-MeritzAutoOrder-All">
+<meta name="release-date" content="261020">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>메리츠 자동주문(통합) (V1.14 - 261019)</title>
+<title>메리츠 자동주문(통합) (V1.15 - 261020)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -135,7 +135,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.14", RELEASE_DATE = "261016";
+const APP_VERSION = "V1.15", RELEASE_DATE = "261020";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -490,14 +490,23 @@ async function tgApi(tok, method, q) {
 function renderBots() {
   const st = f => J(f.replace(".json", "-status.json"), null);
   document.getElementById("bots").innerHTML = CFGS.map(f => { const c = G.cfg[f] || {}, s = st(f);
-    return `<div class="res"><b>${BOTNAME[f]}</b> · ${c.installed_at ? `✅ ${esc(c.repo)} · ${esc((c.bot_version || "").split(" ")[1] || "")}` : "⚠ 미설치 (앱을 한 번 열면 자동)"}<br>
+    return `<div class="res"><b>${BOTNAME[f]}</b> · 📦 <input class="inp rp" data-rp="${f}" value="${esc(c.repo || DEFREPO[f])}" aria-label="봇 저장소 이름" spellcheck="false" style="width:150px;padding:3px 7px;font-size:12px;display:inline-block;"> · ${c.installed_at ? `✅ ${esc(c.repo)} · ${esc((c.bot_version || "").split(" ")[1] || "")}` : "⚠ 미설치 (앱을 한 번 열면 자동)"}<br>
       🔐 앱키 ${c.keys ? "…" + esc(c.keys.tail) : "<b style='color:#F5A524'>미등록</b>"} · 📨 ${c.tg ? "…" + esc(c.tg.chat_tail) : "없음"} · 🔧 ${s && s.mode === "check" ? (s.overall === "checked" ? "점검 ✓" : "점검 ⚠") : "점검 전"}${f in SEC_OK ? (SEC_OK[f] ? " · 🔑 금고 권한 ✓" : " · <b style='color:#F0475A'>🔑 금고 권한 ✗ — 토큰에 Secrets 쓰기 권한 필요</b>") : ""}
       ${c.installed_at ? "" : ` · <a style="color:var(--glow)" href="${{ "muhan-bot.json": "api-soxl.html", "muhan-bot-qldm.json": "api-qm.html", "muhan-bot-qld.json": "api-qld.html" }[f]}#pg-setup">설치 화면 ›</a>`}</div>`; }).join("");
   const kp = document.getElementById("keyPick");
   if (!kp.dataset.touched) { kp.innerHTML = CFGS.map(f => { const c = G.cfg[f] || {}; return `<label class="chk"><input type="checkbox" value="${f}" ${c.installed_at ? "" : "disabled"} ${c.installed_at && !c.keys ? "checked" : ""}> ${BOTNAME[f]}</label>`; }).join(""); kp.onchange = () => { kp.dataset.touched = 1; }; }
 }
 async function cfgPatch(f, patch) { await loadGist(); const c = Object.assign({}, J(f, {}), patch, { updated: new Date().toISOString() }); await writeFiles({ [f]: c }); G.cfg[f] = c; }
+const DEFREPO = { "muhan-bot.json": "muhan-bot", "muhan-bot-qldm.json": "muhan-bot-qldm", "muhan-bot-qld.json": "muhan-bot-qld" };
 document.getElementById("bots").addEventListener("change", async e => {
+  if (e.target.dataset.rp) {                    // 📦 봇 저장소 이름 (아이디·계좌마다 다른 저장소) → 이 사용자 Gist 에 저장 · 종목 앱이 그 이름으로 설치
+    const f = e.target.dataset.rp, v = e.target.value.trim(), c = G.cfg[f] || {};
+    if (!/^[A-Za-z0-9._-]{1,100}$/.test(v)) { msg("⚠ 저장소 이름은 영문·숫자·.-_ 만", false); e.target.value = c.repo || DEFREPO[f]; return; }
+    if (v === (c.repo || DEFREPO[f])) return;
+    if (c.installed_at && !confirm(`${BOTNAME[f]} 저장소를 ${c.repo} → ${v} 로 바꿀까요?\n새 저장소에 봇이 다시 설치되고, 앱키·텔레그램도 다시 등록해야 합니다. (예전 저장소는 GitHub 에서 직접 정리)`)) { e.target.value = c.repo; return; }
+    try { await cfgPatch(f, { repo: v, installed_at: null, keys: null, tg: null }); renderBots(); msg(`💾 ${BOTNAME[f]} 저장소 = ${esc(v)} · 종목 앱을 열면 그 저장소에 설치`, true); } catch (x) { msg("⚠ " + x.message, false); }
+    return;
+  }
   const f = e.target.dataset.max; if (!f) return; const v = Math.round(parseFloat(e.target.value));
   if (!(v >= 100)) { msg("⚠ 한도는 $100 이상", false); return; }
   try { await cfgPatch(f, { max_order_usd: v }); msg(`💾 ${BOTNAME[f]} 매수 1건 한도 $${v.toLocaleString("en-US")} 저장 · 모든 기기·봇`, true); } catch (x) { msg("⚠ " + x.message, false); }
