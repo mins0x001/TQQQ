@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.14-261020-FinancialRoadmap">
+<meta name="version" content="V1.15-261020-FinancialRoadmap">
 <meta name="release-date" content="261020">
-<title>QLD 파이낸셜 로드맵 (V1.14 - 261020)</title>
+<title>QLD 파이낸셜 로드맵 (V1.15 - 261020)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -86,12 +86,16 @@
 .wd-p{margin-top:10px;padding:11px 12px;border-radius:13px;border:1px solid;} .wd-p.ok{border-color:rgba(56,217,140,.45);background:rgba(56,217,140,.06);} .wd-p.wa{border-color:rgba(245,165,36,.5);background:rgba(245,165,36,.06);} .wd-p.no{border-color:rgba(255,77,94,.55);background:rgba(255,77,94,.07);}
   .wd-p .t{font-size:13.5px;font-weight:900;margin-bottom:4px;} .wd-p .r{display:grid;grid-template-columns:22px 96px 1fr;gap:6px;align-items:baseline;padding:6px 0;border-top:1px solid rgba(255,255,255,.06);font-size:12.5px;line-height:1.5;}
   .wd-p .a{font-weight:800;color:var(--text-faint);font-size:11.5px;} .wd-p .b b{font-family:var(--f-mono);color:var(--text);} .wd-p .b b.dn{color:#FF8A8A;} .wd-p .b small{display:block;color:var(--text-faint);font-size:11px;}
+.wd-k{display:grid;grid-template-columns:76px 1fr auto;gap:8px;align-items:center;margin-top:7px;padding:9px 10px;border-radius:11px;border:1px solid;}
+  .wd-k .n{font-weight:900;font-size:12.5px;} .wd-k .w{font-weight:800;font-size:13px;line-height:1.3;} .wd-k .w small{display:block;font-weight:600;font-size:11px;color:var(--text-faint);} .wd-k b{font:900 15px var(--f-mono);}
+  .wd-k.pk{border-color:rgba(56,189,248,.45);background:rgba(56,189,248,.08);} .wd-k.pk .n,.wd-k.pk b{color:#7DD3FC;}
+  .wd-k.bd{border-color:rgba(167,139,250,.45);background:rgba(167,139,250,.08);} .wd-k.bd .n,.wd-k.bd b{color:#C4B5FD;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div><h1>🏛 QLD 파이낸셜 로드맵 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.14 (261020) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.15 (261020) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
   <nav class="tabs" id="tabs"><button data-t="goal">🏝 목표</button><button data-t="rev">🎯 역산</button><button data-t="prog">📈 진행</button><button data-t="wd">💸 인출</button><button data-t="ai">🤖 AI</button></nav>
@@ -146,7 +150,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.14", RELEASE_DATE = "261020";
+const APP_VERSION = "V1.15", RELEASE_DATE = "261020";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -397,35 +401,35 @@ function wd() {
   else { const k = lv === 2 ? 0.9 : lv === 1 ? 1 : (1 + V.infl / 100) ** (yr - W.y); amt = W.amt * k; why = lv === 2 ? "하락장 → 10% 감액" : lv === 1 ? "주의 구간 → 물가 인상 보류" : `물가 ${V.infl}% 인상`; V.wdY = { y: yr, amt }; if (PULLED) save(); }
   const mo = amt / 12, ratio = amt / base, U = m => "$" + Math.round(m * 1e4 / V.fx).toLocaleString("en-US");
   const st = [["ok", "🟢 정상", "계획대로 인출 · 물가만큼 인상"], ["wa", "🟠 주의", "고점 −15%↓ · 내년 인상 보류 · QLD 팔지 않기"], ["no", "🔴 하락장", "고점 −30%↓ · 10% 감액 · QLD 절대 팔지 말고 완충에서만"]][lv];
-  // 완충 = 생활비 2년치 · 현재 = 연결 계좌 현금(주문가능 USD, QLD 비중만큼)
-  const tgM = amt * 2, cashU = live ? ACT.parts.reduce((x, p) => x + (+p.cash || 0), 0) : 0, cashM = cashU * V.fx / 1e4, sh = Math.max(0, tgM - cashM), pct = Math.min(100, cashM / tgM * 100);
-  const shU = sh * 1e4 / V.fx, n = QDD ? Math.ceil(shU / QDD.px) : 0;
-  // 🤖 구간별 플랜: 📅 연 1회(1월) · 🗓 매달 · 📉 QLD 매도 · 🛡 완충 — 숫자까지 구체적으로
-  const mo2 = lv === 2 ? mo * 0.9 : mo, K = mo2 > 0 ? cashM / mo2 : 0, sell = (m, why) => { const u = m * 1e4 / V.fx, k = QDD ? Math.ceil(u / QDD.px) : 0; return `<b>QLD ${U(m)}${k ? ` (약 ${k}주 · $${QDD.px.toFixed(2)})` : ""}</b> 팔아서 → <small>${why}</small>`; };
+  // 완충 = 생활비 2년치 (계좌 현금은 매수 대기 시드라 계산에서 뺌 → 전부 QLD 매도로 마련) · 6개월 파킹통장 + 18개월 단기채
+  const tgM = amt * 2, pkM = mo * 6, bdM = mo * 18, mo2 = lv === 2 ? mo * 0.9 : mo;
+  const sell = (m, why) => { const u = m * 1e4 / V.fx, k = QDD ? Math.ceil(u / QDD.px) : 0; return `<b>QLD ${U(m)}${k ? ` (약 ${k}주 · $${QDD.px.toFixed(2)})` : ""}</b> 팔아서 → <small>${why}</small>`; };
   const L = lv === 0 ? [
       ["📅", "연 1회 · 매년 1월", `올해 <b>${man(amt)}원</b> 확정 <small>(작년 × 물가)</small>`],
-      ["📉", "QLD 매도", sh > 0 ? sell(sh, "완충 부족분 채우기 (먼저 파킹통장·MMF 1년치, 남으면 단기채) · 지금이 좋은 시점") : sell(amt, "1월에 파킹통장 1년치 다시 채우기 (작년에 쓴 만큼)")],
+      ["📉", "QLD 매도", sell(tgM, "완충 2년치 만들기 (먼저 파킹통장·MMF 6개월치, 남으면 단기채) · 지금이 좋은 시점")],
       ["🗓", "매달 1일", `파킹통장 → 생활비 <b>${man(mo)}원</b> 자동이체`],
-      ["🛡", "완충", `<b>${Math.floor(K)}개월</b>치 / 목표 24개월`]]
+      ["🔁", "6개월마다", `단기채 → 파킹통장 <b>${man(pkM)}원</b> 옮기기 <small>(파킹통장 6개월치 유지)</small>`]]
     : lv === 1 ? [
       ["📅", "연 1회 · 매년 1월", `인상 보류 → <b>${man(amt)}원</b> 그대로`],
-      ["📉", "QLD 매도", `<b class="dn">0주 · 팔지 않기</b> <small>고점 −10% 이내 회복되면 그때 채우기</small>`],
-      ["🗓", "매달 1일", `완충에서 <b>${man(mo)}원</b> 인출`],
-      ["🛡", "완충", `<b>${Math.floor(K)}개월</b> 버팀${sh > 0 ? ` · 부족분은 매달 <b>${man(sh / 12)}원</b>씩 따로 모으기` : ""}`]]
+      ["📉", "QLD 매도", `<b class="dn">0주 · 팔지 않기</b> <small>고점 −10% 이내 회복되면 그때 팔기</small>`],
+      ["🗓", "매달 1일", `파킹통장에서 <b>${man(mo)}원</b> 인출`],
+      ["🛡", "완충", `2년치로 <b>24개월</b> 버팀 <small>(완충 없으면 매달 ${man(tgM / 12)}원씩 따로 모으기)</small>`]]
     : [
       ["📅", "연 1회 · 즉시", `<b class="dn">10% 감액</b> → 연 <b>${man(amt * 0.9)}원</b>`],
       ["📉", "QLD 매도", `<b class="dn">0주 · 절대 팔지 않기</b> <small>바닥에서 팔면 회복 못 함</small>`],
       ["🗓", "매달 1일", `완충에서만 <b>${man(mo2)}원</b> 인출`],
-      ["🛡", "완충", `<b class="${K < 12 ? "dn" : ""}">${Math.floor(K)}개월</b> 버팀${K < 12 ? " · ⚠ 12개월 미만 → 지출 줄이기·다른 소득 검토" : ""}`]];
-  const how = `<div class="wd-p ${st[0]}"><div class="t">🤖 지금 할 일 · ${st[1]} 구간 플랜</div>${L.map(([i, a, b]) => `<div class="r"><span class="i">${i}</span><span class="a">${a}</span><span class="b">${b}</span></div>`).join("")}</div>`
-    + (sh > 0 ? `<div class="wd-no"><div class="t">🔴 완충 부족 <b>${man(sh)}원</b> <small>(${U(sh)} · 2년치 ${man(tgM)}원 중 ${man(cashM)}원 있음)</small></div></div>` : `<div class="wd-ok">✅ 완충 충분 — 여유 ${man(cashM - tgM)}원 · 1년치는 파킹통장·MMF, 나머지는 단기채</div>`);
+      ["🛡", "완충", `2년치로 <b>${Math.floor(tgM / mo2)}개월</b> 버팀 <small>(감액 기준)</small>`]];
+  const how = `<div class="wd-p ${st[0]}"><div class="t">🤖 지금 할 일 · ${st[1]} 구간 플랜</div>${L.map(([i, a, b]) => `<div class="r"><span class="i">${i}</span><span class="a">${a}</span><span class="b">${b}</span></div>`).join("")}</div>`;
+  const box = `<div class="wd-b"><div class="t"><span>🛡 완충 = 생활비 2년치</span><b>${man(tgM)}원</b></div>
+      <div class="wd-k pk"><span class="n">6개월치</span><span class="w">💧 파킹통장·MMF<small>매달 꺼내 쓰는 돈 · 바로 찾을 수 있게</small></span><b>${man(pkM)}원</b></div>
+      <div class="wd-k bd"><span class="n">1년 6개월치</span><span class="w">📄 단기채·배당 커버드콜<small>당장 안 쓰니 이자를 조금 더 받기</small></span><b>${man(bdM)}원</b></div>
+      <small>계좌 현금은 매수 대기 시드라 없는 것으로 계산 · 은퇴할 때 만들면 됩니다</small></div>`;
   el.innerHTML = `<div class="wd-h"><div><span>올해 연 인출</span><b>${man(amt)}원</b><small>${why}</small></div><div><span>매달 인출</span><b>${man(mo)}원</b><small>${U(mo)} · 자동이체 추천</small></div></div>
     <div class="wd-st ${st[0]}"><b>${st[1]}</b> QLD 1년 고점 대비 <b>${QDD ? dd.toFixed(1) + "%" : "-"}</b>${QDD ? ` <small>(${QDD.d} 종가 $${QDD.px.toFixed(2)})</small>` : ""}<br><small>${st[2]}</small></div>
     ${ratio > 1.2 ? `<div class="wd-st no"><b>⚠ 지속 가능 수준의 ${Math.round(ratio * 100)}%</b> — 자산이 줄었거나 금액이 큼 · ↺로 다시 계산 추천</div>` : ""}
-    <div class="wd-b"><div class="t"><span>🛡 완충 잔고 (생활비 2년치)</span><b>${man(cashM)} / ${man(tgM)}원</b></div><i><u style="width:${Math.max(2, pct)}%" class="${sh > 0 ? "lo" : ""}"></u></i>
-      <small>${live ? "현재 = 연결 계좌 현금(주문가능 달러) · QLD 전략 비중만큼" : "계좌 미연결 → 현재 0원으로 계산"}</small></div>${how}
+    ${how}${box}
     <div class="wd-f"><span class="hint">자산 ${man(aM)}원 (${live ? "연결 계좌 실제" : "시드"}) × 실질 ${(real * 100).toFixed(1)}% = 지속 가능 연 ${man(base)}원 · 매일 자동 갱신</span><button class="btn" type="button" id="wdReset">↺ 올해 다시 계산</button></div>
-    <details class="wd-r"><summary>📘 인출 규칙 3줄</summary>① 매년 1월 연 금액 결정 (작년 × 물가) ② 매달 1/12 자동이체 ③ 하락장엔 QLD 팔지 않고 완충에서만 · 오르면 완충 다시 채우기</details>`;
+    <details class="wd-r"><summary>📘 인출 규칙 4줄</summary>① 매년 1월 연 금액 결정 (작년 × 물가) ② 매달 1/12 자동이체 ③ 완충 = 파킹통장 6개월 + 단기채 18개월 ④ 하락장엔 QLD 팔지 않고 완충에서만 · 오르면 다시 채우기</details>`;
 }
 document.addEventListener("click", e => { if (!e.target.closest("#wdReset")) return; if (!confirm("올해 인출 금액을 지금 자산 기준으로 다시 계산할까요?")) return; V.wdY = null; wd(); save(); });
 
