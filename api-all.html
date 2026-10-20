@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.15-261020-MeritzAutoOrder-All">
+<meta name="version" content="V1.16-261020-MeritzAutoOrder-All">
 <meta name="release-date" content="261020">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>메리츠 자동주문(통합) (V1.15 - 261020)</title>
+<title>메리츠 자동주문(통합) (V1.16 - 261020)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -61,7 +61,7 @@
       <div class="kick">TODAY'S LOC · API ORDER</div><h2>오늘의 LOC 주문</h2>
       <div id="plans"></div>
       <button class="btn live" id="live" type="button">⚡ 바로 실행 (4종목 실제 주문)</button>
-      <div class="hint" style="margin-top:6px;">한 번 누르면 확인, 6초 안에 한 번 더 누르면 실제 주문. 메리츠 실제 주문내역에 같은 주문이 있으면 🔁 중복으로 건너뜁니다. SOXL·TQQQ = A계좌 봇, QLD 두 개 = B계좌 봇.</div>
+      <div class="hint" style="margin-top:6px;">한 번 누르면 확인, 6초 안에 한 번 더 누르면 실제 주문. 메리츠 실제 주문내역에 같은 주문이 있으면 🔁 중복으로 건너뜁니다. 종목마다 봇 1개 · 계좌는 각 봇의 앱키로 정해집니다 (🛠 설정).</div>
       <button class="btn" id="recalc" type="button" style="width:100%;margin-top:8px;">↻ 다시 계산</button>
     </section>
   </div>
@@ -75,7 +75,7 @@
     <section class="card"><div class="kick">ACCOUNT · 메리츠 실제 계좌</div><h2>💼 계좌 현황</h2>
       <div id="accts" class="busy">불러오는 중…</div>
       <button class="btn" id="acctSync" type="button" style="width:100%;margin-top:8px;">↻ 지금 계좌 동기화 (1~2분)</button>
-      <div class="hint" style="margin-top:6px;">봇이 평일 06:40·주문 실행 때마다 메리츠 계좌(보유·평단·평가손익·주문가능 달러)를 Gist에 저장합니다. QLD무한·QLD평생은 같은 B계좌라 합쳐서 보여 줍니다.</div>
+      <div class="hint" style="margin-top:6px;">봇이 평일 06:40·주문 실행 때마다 메리츠 계좌(보유·평단·평가손익·주문가능 달러)를 Gist에 저장합니다. 같은 앱키(=같은 계좌)를 쓰는 봇은 하나로 합쳐 보여 줍니다.</div>
     </section>
   </div>
   <div class="page" id="pg-cron">
@@ -109,9 +109,9 @@
     </section>
     <section class="card"><div class="kick">BOTS · 공통 설정</div><h2>🤖 봇 설정 (3개 봇 한 곳에서)</h2>
       <div id="bots" class="busy">불러오는 중…</div>
-      <div class="hint" style="margin:6px 0 10px;">봇 설치·업데이트는 각 종목 앱을 한 번 열면 자동 (<a style="color:var(--glow)" href="api-soxl.html">SOXL</a> · <a style="color:var(--glow)" href="api-tqqq.html">TQQQ</a> = A계좌 봇 · <a style="color:var(--glow)" href="api-qm.html">QLD무한</a> · <a style="color:var(--glow)" href="api-qld.html">QLD평생</a>). 주문 시각·재시도는 각 앱 ⚡ 주문 탭.</div>
+      <div class="hint" style="margin:6px 0 10px;">봇 설치·업데이트는 각 종목 앱을 한 번 열면 자동 (<a style="color:var(--glow)" href="api-soxl.html">SOXL</a> · <a style="color:var(--glow)" href="api-tqqq.html">TQQQ</a> · <a style="color:var(--glow)" href="api-qm.html">QLD무한</a> · <a style="color:var(--glow)" href="api-qld.html">QLD평생</a>). 봇마다 앱키를 넣으면 같은 키끼리 같은 계좌로 묶입니다 · 언제든 변경 가능 · 모든 설정은 서버(Gist)에 평생 저장.</div>
       <h3 class="h3">🔐 메리츠 앱키</h3>
-      <div class="hint" style="margin:0 0 6px;">openapi.imeritz.com 운영 앱키 · 같은 계좌 봇을 체크하면 한 번에 같은 키로 저장 (예: QLD무한·QLD평생 = B계좌). GitHub 금고에만 봉인 저장 — 이 기기·Gist에 남지 않음.</div>
+      <div class="hint" style="margin:0 0 6px;">openapi.imeritz.com 운영 앱키 · 같은 계좌 봇을 체크하면 한 번에 같은 키로 저장 — 같은 키 = 같은 계좌로 자동 묶임 (예: SOXL+QLD무한 = A계좌 · TQQQ+QLD평생 = B계좌). GitHub 금고에만 봉인 저장 — 이 기기·Gist에 남지 않음.</div>
       <div id="keyPick" class="chkrow"></div>
       <input class="inp" type="password" id="mzKey" placeholder="App Key" autocomplete="off" spellcheck="false" style="width:100%;margin-top:6px;">
       <input class="inp" type="password" id="mzSec" placeholder="App Secret" autocomplete="off" spellcheck="false" style="width:100%;margin-top:6px;">
@@ -135,15 +135,21 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.15", RELEASE_DATE = "261020";
+const APP_VERSION = "V1.16", RELEASE_DATE = "261020";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
-  { id: "TQQQ", name: "TQQQ 무한매수", app: "tqqq.html", cfg: "muhan-bot.json", sync: "tqqq.json", key: "TQQQ", seedDef: 36000 },
+  { id: "TQQQ", name: "TQQQ 무한매수", app: "tqqq.html", get cfg() { return tqqqSplit() ? "muhan-bot-tqqq.json" : "muhan-bot.json"; }, sync: "tqqq.json", key: "TQQQ", seedDef: 36000 },
   { id: "QLDM", name: "QLD 무한매수", app: "qldm.html", cfg: "muhan-bot-qldm.json", sync: "qldm.json", key: "QLD", seedDef: 70000 },
   { id: "QLDL", name: "QLD 평생매수", app: "qld.html", cfg: "muhan-bot-qld.json", sync: "qld.json", key: "QLD", seedDef: 370000, life: true },
 ];
-const CFGS = ["muhan-bot.json", "muhan-bot-qldm.json", "muhan-bot-qld.json"];
+const CFGS = ["muhan-bot.json", "muhan-bot-tqqq.json", "muhan-bot-qldm.json", "muhan-bot-qld.json"];
+/* 🏦 계좌 = 봇마다 넣은 메리츠 앱키 (같은 키 = 같은 계좌) → SOXL·TQQQ·QLD무한·QLD평생을 아무 계좌 조합으로 · TQQQ 는 A 봇 symbols.TQQQ=false 일 때만 전용 봇이 주문 */
+const tqqqSplit = () => ((G.cfg["muhan-bot.json"] || {}).symbols || {}).TQQQ === false && !!(G.cfg["muhan-bot-tqqq.json"] || {}).installed_at;
+const acctFile = f => f.replace("muhan-bot", "muhan-account");
+const acctKey = f => { const c = G.cfg[f] || {}; return c.keys && c.keys.tail ? "k:" + c.keys.tail : "f:" + f; };
+function acctGroups() { const g = new Map(); CFGS.filter(f => (G.cfg[f] || {}).installed_at && (f !== "muhan-bot-tqqq.json" || tqqqSplit())).forEach(f => { const k = acctKey(f); if (!g.has(k)) g.set(k, []); g.get(k).push(f); });
+  return [...g.values()].map((fs, i) => ({ fs, name: fs.map(f => (G.cfg[f] || {}).acct).find(Boolean) || `계좌 ${i + 1}` })); }
 const CODES = [["01","지정가"],["05","시장가"],["31","LOO (장 개시 지정가)"],["32","LOC (장 마감 지정가)"],["33","MOO (장 개시 시장가)"],["34","MOC (장 마감 시장가)"],["35","Limit VWAP"],["36","Limit TWAP"],["37","VWAP"],["38","TWAP"]];
 const MKT = ["05","33","34","37","38"], ML = { rule: "① 규칙 기반", bt: "② 백테스트 최적", manual: "✎ 직접 입력" };
 const tok = () => { try { return localStorage.getItem("muhansync_token") || ""; } catch (e) { return ""; } };
@@ -448,7 +454,7 @@ function botSeal(pkB64, text) {           // libsodium crypto_box_seal: epk ‖ 
   const out = new Uint8Array(32 + c.length); out.set(e.publicKey); out.set(c, 32);
   return botB64(out);
 }
-const CRON_WF = "muhan-bot.yml", BOTNAME = { "muhan-bot.json": "A계좌 봇 · SOXL·TQQQ", "muhan-bot-qldm.json": "B계좌 봇 · QLD무한", "muhan-bot-qld.json": "B계좌 봇 · QLD평생" };
+const CRON_WF = "muhan-bot.yml", BOTNAME = { get "muhan-bot.json"() { return tqqqSplit() ? "SOXL 봇" : "SOXL·TQQQ 봇"; }, "muhan-bot-tqqq.json": "TQQQ 봇", "muhan-bot-qldm.json": "QLD무한 봇", "muhan-bot-qld.json": "QLD평생 봇" };
 const whenK = t => { try { return new Date(t).toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }); } catch (e) { return "-"; } };
 function renderCron() {
   document.getElementById("crons").innerHTML = CFGS.map(f => {
@@ -490,15 +496,33 @@ async function tgApi(tok, method, q) {
 function renderBots() {
   const st = f => J(f.replace(".json", "-status.json"), null);
   document.getElementById("bots").innerHTML = CFGS.map(f => { const c = G.cfg[f] || {}, s = st(f);
-    return `<div class="res"><b>${BOTNAME[f]}</b> · 📦 <input class="inp rp" data-rp="${f}" value="${esc(c.repo || DEFREPO[f])}" aria-label="봇 저장소 이름" spellcheck="false" style="width:150px;padding:3px 7px;font-size:12px;display:inline-block;"> · ${c.installed_at ? `✅ ${esc(c.repo)} · ${esc((c.bot_version || "").split(" ")[1] || "")}` : "⚠ 미설치 (앱을 한 번 열면 자동)"}<br>
+    return `<div class="res"><b>${BOTNAME[f]}</b> · 🏦 <input class="inp rp" data-ac="${f}" value="${esc(c.acct || "")}" placeholder="${esc((acctGroups().find(g => g.fs.includes(f)) || {}).name || "계좌")}" maxlength="12" aria-label="계좌 이름" style="width:84px;padding:3px 7px;font-size:12px;display:inline-block;"> · 📦 <input class="inp rp" data-rp="${f}" value="${esc(c.repo || DEFREPO[f])}" aria-label="봇 저장소 이름" spellcheck="false" style="width:150px;padding:3px 7px;font-size:12px;display:inline-block;"> · ${c.installed_at ? `✅ ${esc(c.repo)} · ${esc((c.bot_version || "").split(" ")[1] || "")}` : "⚠ 미설치 (앱을 한 번 열면 자동)"}<br>
       🔐 앱키 ${c.keys ? "…" + esc(c.keys.tail) : "<b style='color:#F5A524'>미등록</b>"} · 📨 ${c.tg ? "…" + esc(c.tg.chat_tail) : "없음"} · 🔧 ${s && s.mode === "check" ? (s.overall === "checked" ? "점검 ✓" : "점검 ⚠") : "점검 전"}${f in SEC_OK ? (SEC_OK[f] ? " · 🔑 금고 권한 ✓" : " · <b style='color:#F0475A'>🔑 금고 권한 ✗ — 토큰에 Secrets 쓰기 권한 필요</b>") : ""}
-      ${c.installed_at ? "" : ` · <a style="color:var(--glow)" href="${{ "muhan-bot.json": "api-soxl.html", "muhan-bot-qldm.json": "api-qm.html", "muhan-bot-qld.json": "api-qld.html" }[f]}#pg-setup">설치 화면 ›</a>`}</div>`; }).join("");
+      ${c.installed_at ? "" : ` · <a style="color:var(--glow)" href="${{ "muhan-bot.json": "api-soxl.html", "muhan-bot-tqqq.json": "api-tqqq.html", "muhan-bot-qldm.json": "api-qm.html", "muhan-bot-qld.json": "api-qld.html" }[f]}#pg-setup">설치 화면 ›</a>`}</div>`; }).join("");
+  { const a = G.cfg["muhan-bot.json"] || {}, t = G.cfg["muhan-bot-tqqq.json"] || {}, sp = tqqqSplit();
+    document.getElementById("bots").insertAdjacentHTML("beforeend", `<div class="res">🔀 <b>TQQQ 담당</b> · 지금 <b>${sp ? "TQQQ 봇" : "SOXL·TQQQ 봇"}</b>${!a.installed_at ? "" : sp ? ` <button class="btn" type="button" data-ho="off">↩ SOXL 봇으로 되돌리기</button>`
+      : t.installed_at && t.keys ? ` <button class="btn" type="button" data-ho="on">🔀 TQQQ 봇으로 넘기기</button>` : `<br><span class="hint">TQQQ 를 다른 계좌로: TQQQ 앱을 열어 봇 설치 → 아래 앱키 등록 → 여기서 넘기기 (넘기기 전엔 TQQQ 봇은 주문 안 함 · 이중 주문 방지)</span>`}</div>`); }
   const kp = document.getElementById("keyPick");
   if (!kp.dataset.touched) { kp.innerHTML = CFGS.map(f => { const c = G.cfg[f] || {}; return `<label class="chk"><input type="checkbox" value="${f}" ${c.installed_at ? "" : "disabled"} ${c.installed_at && !c.keys ? "checked" : ""}> ${BOTNAME[f]}</label>`; }).join(""); kp.onchange = () => { kp.dataset.touched = 1; }; }
 }
 async function cfgPatch(f, patch) { await loadGist(); const c = Object.assign({}, J(f, {}), patch, { updated: new Date().toISOString() }); await writeFiles({ [f]: c }); G.cfg[f] = c; }
-const DEFREPO = { "muhan-bot.json": "muhan-bot", "muhan-bot-qldm.json": "muhan-bot-qldm", "muhan-bot-qld.json": "muhan-bot-qld" };
+const DEFREPO = { "muhan-bot.json": "muhan-bot", "muhan-bot-tqqq.json": "muhan-bot-tqqq", "muhan-bot-qldm.json": "muhan-bot-qldm", "muhan-bot-qld.json": "muhan-bot-qld" };
+document.getElementById("bots").addEventListener("click", async e => {     // 🔀 TQQQ 담당 넘기기/되돌리기 — 한 번의 저장으로 A·TQQQ 봇을 동시에 바꿈 (이중 주문 없음)
+  const b = e.target.closest("[data-ho]"); if (!b) return; const on = b.dataset.ho === "on";
+  if (!confirm(on ? "TQQQ 주문을 TQQQ 봇(그 봇의 앱키 계좌)으로 넘길까요?\n다음 실행부터 SOXL 봇은 TQQQ 를 주문하지 않습니다." : "TQQQ 주문을 SOXL 봇으로 되돌릴까요?")) return;
+  try { await loadGist(); const A = G.cfg["muhan-bot.json"] || {}, T = G.cfg["muhan-bot-tqqq.json"] || {}, now = new Date().toISOString();
+    const m = { "muhan-bot.json": Object.assign({}, A, { symbols: Object.assign({}, A.symbols || { SOXL: true }, { TQQQ: !on }), updated: now }) };
+    if (on) m["muhan-bot-tqqq.json"] = Object.assign({}, T, { mode: A.mode || "off", run_kst: A.run_kst, retry_min: A.retry_min, retry_n: A.retry_n, oder_code: A.oder_code, symbols: { TQQQ: true }, updated: now });
+    await writeFiles(m); Object.assign(G.cfg, m); if (on && G.cfg["muhan-bot-tqqq.json"].cronapi) { try { await cronKick(G.cfg["muhan-bot-tqqq.json"]); } catch (x) {} }
+    if (on) bgRefresh(["muhan-bot-tqqq.json"]); renderBots(); renderAcct(); msg(on ? "🔀 TQQQ → TQQQ 봇 (다음 실행부터)" : "↩ TQQQ → SOXL 봇 (다음 실행부터)", true);
+  } catch (x) { msg("⚠ " + x.message, false); }
+});
 document.getElementById("bots").addEventListener("change", async e => {
+  if (e.target.dataset.ac != null && e.target.dataset.ac !== "") {      // 🏦 계좌 이름 (표시용 · 같은 앱키끼리 묶임)
+    const f = e.target.dataset.ac, v = e.target.value.trim().slice(0, 12);
+    try { await cfgPatch(f, { acct: v }); renderBots(); renderAcct(); msg(`💾 ${BOTNAME[f]} 계좌 이름 = ${esc(v || "자동")}`, true); } catch (x) { msg("⚠ " + x.message, false); }
+    return;
+  }
   if (e.target.dataset.rp) {                    // 📦 봇 저장소 이름 (아이디·계좌마다 다른 저장소) → 이 사용자 Gist 에 저장 · 종목 앱이 그 이름으로 설치
     const f = e.target.dataset.rp, v = e.target.value.trim(), c = G.cfg[f] || {};
     if (!/^[A-Za-z0-9._-]{1,100}$/.test(v)) { msg("⚠ 저장소 이름은 영문·숫자·.-_ 만", false); e.target.value = c.repo || DEFREPO[f]; return; }
@@ -586,7 +610,7 @@ async function secCheck() {
 }
 
 /* ⏰ 자동 실행 (3개 봇 공용) · 💼 계좌 현황 */
-const BOTAPP = { "muhan-bot.json": "api-soxl.html", "muhan-bot-qldm.json": "api-qm.html", "muhan-bot-qld.json": "api-qld.html" };
+const BOTAPP = { "muhan-bot.json": "api-soxl.html", "muhan-bot-tqqq.json": "api-tqqq.html", "muhan-bot-qldm.json": "api-qm.html", "muhan-bot-qld.json": "api-qld.html" };
 function bgRefresh(fs) {                  // 각 봇의 앱을 보이지 않게 열어 예약 시각(yml)을 새 설정으로 재설치 (앱의 자동 업데이트가 처리)
   fs.forEach((f, i) => setTimeout(() => { const fr = document.createElement("iframe"); fr.src = BOTAPP[f] + "?bg=1"; fr.setAttribute("aria-hidden", "true"); fr.tabIndex = -1;
     fr.style.cssText = "position:fixed;left:-9999px;top:0;width:360px;height:640px;border:0;opacity:0;pointer-events:none;"; document.body.appendChild(fr); setTimeout(() => fr.remove(), 180000); }, i * 4000));
@@ -631,9 +655,9 @@ document.querySelectorAll("[data-amode]").forEach(b => b.addEventListener("click
     msg((mode === "live" ? `🟢 자동 실전 켜짐 · 봇 ${ok.length}개` : `⏸ 자동 실행 꺼짐 · 봇 ${ok.length}개 (⚡ 바로 실행은 그대로 가능)`) + (skip.length ? ` · 앱키 없음 제외: ${skip.map(f => BOTNAME[f]).join(", ")}` : ""), true);
   } catch (x) { msg("⚠ " + x.message, false); }
 }));
-const ACCTS = [["A계좌 · SOXL·TQQQ", ["muhan-account.json"], "muhan-bot.json"], ["B계좌 · QLD무한·QLD평생", ["muhan-account-qld.json", "muhan-account-qldm.json"], "muhan-bot-qld.json"]];
 function renderAcct() {
-  document.getElementById("accts").innerHTML = ACCTS.map(([nm, files]) => {
+  const gs = acctGroups(); if (!gs.length) { document.getElementById("accts").innerHTML = `<div class="res">설치된 봇이 없습니다</div>`; return; }
+  document.getElementById("accts").innerHTML = gs.map(({ fs, name }) => { const nm = `${esc(name)} · ${fs.map(f => BOTNAME[f].replace(" 봇", "")).join("·")}`, files = fs.map(acctFile);
     const a = files.map(f => J(f, null)).filter(x => x && x.holdings).sort((x, y) => (y.as_of || "").localeCompare(x.as_of || ""))[0];
     if (!a) return `<div class="res"><b>${nm}</b><br>아직 동기화 기록이 없습니다 — ↻ 지금 계좌 동기화</div>`;
     const t = a.total || {}, pl = +t.pl || 0, rows = (a.holdings || []).filter(h => +h.qty > 0).map(h => `<div class="row"><span>${esc(h.symbol)} · ${(+h.qty).toLocaleString("en-US")}주 · 평단 ${usd(h.avg)}</span><b class="${+h.pl >= 0 ? "up" : "dn"}" style="color:${+h.pl >= 0 ? "#38D98C" : "#F0475A"}">${usd(h.value)} (${(+h.pl_pct >= 0 ? "+" : "") + (+h.pl_pct).toFixed(2)}%)</b></div>`).join("");
@@ -641,7 +665,7 @@ function renderAcct() {
   }).join("");
 }
 document.getElementById("acctSync").addEventListener("click", async () => {
-  try { await loadGist(); const fs = ACCTS.map(x => x[2]).filter(f => (G.cfg[f] || {}).installed_at); if (!fs.length) throw new Error("설치된 봇이 없습니다");
+  try { await loadGist(); const fs = acctGroups().map(g => g.fs.find(f => G.cfg[f].keys) || g.fs[0]); if (!fs.length) throw new Error("설치된 봇이 없습니다");
     for (const f of fs) { const c = G.cfg[f]; await gh(`/repos/${c.owner}/${c.repo}/actions/workflows/${CRON_WF}/dispatches`, { method: "POST", body: { ref: "main", inputs: { mode: "account" } } }); }
     msg(`↻ 계좌 동기화 요청 (${fs.length}개 계좌) · 1~2분 뒤 ↻ 새로고침`, true); } catch (x) { msg("⚠ " + x.message, false); }
 });

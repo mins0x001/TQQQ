@@ -85,7 +85,7 @@
 <script src="auth.js"></script><script>AUTHGATE();</script>
   <header>
     <h1>무한매수 허브<span class="app-pill" id="appPill" hidden>앱</span></h1>
-    <p>메리츠 자동주문(통합) · SOXL · TQQQ (A계좌) · QLD무한매수 · QLD평생매수 (B계좌) <span class="ver">· 허브 V1.48 (261020)</span></p>
+    <p>메리츠 자동주문(통합) · SOXL · TQQQ · QLD무한매수 · QLD평생매수 · 계좌는 봇마다 앱키로 자유 구성 <span class="ver">· 허브 V1.49 (261020)</span></p>
   </header>
 
   <a class="mk-row" href="macro.html" aria-label="시장 지표 앱 열기">
@@ -97,13 +97,13 @@
 
   <a class="dash" href="api-all.html" style="--c:#F0475A;">
     <span class="tk" style="font-size:20px;">⚡</span>
-    <span class="info"><span class="nm">메리츠 자동주문(통합) <small>V1.15</small></span><span class="st" id="st-all">📅 매일 여기서 · ⚡ 주문 · 🧾 결과 · ⏰ 자동 실행 · 💼 계좌 · 🛠 설정</span></span>
+    <span class="info"><span class="nm">메리츠 자동주문(통합) <small>V1.16</small></span><span class="st" id="st-all">📅 매일 여기서 · ⚡ 주문 · 🧾 결과 · ⏰ 자동 실행 · 💼 계좌 · 🛠 설정</span></span>
     <span class="go">›</span>
   </a>
   <div style="font-size:12px;color:#93A3BD;margin:14px 2px 4px;font-weight:800;">무한매수 · 메리츠 A계좌</div>
   <a class="dash" href="api-soxl.html" style="--c:#2ECC71;">
     <span class="tk" style="font-size:20px;">🔌</span>
-    <span class="info"><span class="nm">메리츠 자동주문(SOXL무한매수) <small>V1.14</small></span><span class="st" id="st-api">📒 기록·사이클 (A계좌 봇 공용)</span></span>
+    <span class="info"><span class="nm">메리츠 자동주문(SOXL무한매수) <small>V1.15</small></span><span class="st" id="st-api">📒 기록·사이클 · SOXL 봇</span></span>
     <span class="go">›</span>
   </a>
   <a class="dash" href="soxl.html" style="--c:var(--amber);">
@@ -113,12 +113,12 @@
   </a>
   <a class="dash" href="api-tqqq.html" style="--c:#2ECC71;">
     <span class="tk" style="font-size:20px;">🔌</span>
-    <span class="info"><span class="nm">메리츠 자동주문(TQQQ무한매수) <small>V1.14</small></span><span class="st" id="st-api2">📒 기록·사이클 (A계좌 봇 공용)</span></span>
+    <span class="info"><span class="nm">메리츠 자동주문(TQQQ무한매수) <small>V1.15</small></span><span class="st" id="st-api2">📒 기록·사이클 · TQQQ 봇 (계좌 자유 선택)</span></span>
     <span class="go">›</span>
   </a>
   <a class="dash" href="tqqq.html" style="--c:var(--glow);">
     <span class="tk" >TQQQ</span>
-    <span class="info"><span class="nm">TQQQ 무한매수AI분석 <small>V1.11</small></span><span class="st" id="st-tqqq">기록 확인 중…</span></span>
+    <span class="info"><span class="nm">TQQQ 무한매수AI분석 <small>V1.12</small></span><span class="st" id="st-tqqq">기록 확인 중…</span></span>
     <span class="go">›</span>
   </a>
   <div style="font-size:12px;color:#93A3BD;margin:14px 2px 4px;font-weight:800;">QLD · 메리츠 B계좌</div>
@@ -174,7 +174,7 @@
   <p class="note">매수 기록은 자동주문 앱 🛠 설정 탭의 <b>☁️ 동기화</b>를 켜면 PC와 폰이 같은 기록을 씁니다. 이 목록은 이 기기에 마지막으로 맞춰진 기록입니다.</p>
 </div>
 <script>
-const HUB_VERSION = "V1.48", HUB_RELEASE = "261020";
+const HUB_VERSION = "V1.49", HUB_RELEASE = "261020";
 function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
 function realized(tk, won){
   const t = readJSON(tk + "_trades_v1");
