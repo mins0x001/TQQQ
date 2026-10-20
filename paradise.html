@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.09-261020-FinancialRoadmap">
+<meta name="version" content="V1.10-261020-FinancialRoadmap">
 <meta name="release-date" content="261020">
-<title>QLD 파이낸셜 로드맵 (V1.09 - 261020)</title>
+<title>QLD 파이낸셜 로드맵 (V1.10 - 261020)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -61,7 +61,7 @@
 <body>
 <div class="wrap">
   <div><h1>🏛 QLD 파이낸셜 로드맵 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.09 (261020) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.10 (261020) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
 
@@ -109,7 +109,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.09", RELEASE_DATE = "261020";
+const APP_VERSION = "V1.10", RELEASE_DATE = "261020";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -263,7 +263,7 @@ fetch("data/QLD_max.json?h=" + new Date().toISOString().slice(0, 10), { cache: "
 let ACT = null; const YR = 365.25 * 864e5;
 const planAt = (P, y) => P.usd * (P.wl * (1 + P.r1 / 100) ** y + (1 - P.wl) * (1 + P.r2 / 100) ** y);
 const newPlan = a => { const t = V.life + V.inf; return { d: a.d, usd: a.usd, r1: V.lifeR, r2: V.infR, wl: t > 0 ? V.life / t : 0.5 }; };
-const wonU = u => won(u * V.fx / 1e4);
+const wonU = u => won(u * V.fx / 1e4), usd0 = u => "$" + Math.round(+u || 0).toLocaleString("en-US"), esc = x => String(x).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 function mergeHist(a, b) { const m = new Map(); (a || []).concat(b || []).forEach(h => { if (Array.isArray(h) && h[1] > 0) m.set(h[0], h[1]); }); return [...m].sort((x, y) => x[0] < y[0] ? -1 : 1).slice(-4000); }
 function track(a) {
   if (!(a && a.usd > 0 && /^\d{4}-\d\d-\d\d$/.test(a.d))) return; ACT = a;
@@ -275,7 +275,7 @@ document.addEventListener("click", e => { if (!e.target.closest("[data-plan]")) 
   V.plan = newPlan(a); save(); render(); });
 function prog() {
   const el = $("prog"), P = V.plan, H = (V.hist || []).filter(h => P && h[0] >= P.d);
-  if (!P || !H.length) { el.innerHTML = `<div class="hint">💼 B계좌 평가금액을 아직 못 받았어요. 매일 06:40 봇이 저장하면(또는 통합 앱 💼계좌 ↻) 그날을 출발점으로 계획 대비 진행을 매일 기록합니다. ☁️ 동기화가 연결돼 있어야 해요.</div>`; return; }
+  if (!P || !H.length) { el.innerHTML = `<div class="hint">💼 QLD평생·QLD무한 봇 계좌의 평가금액을 아직 못 받았어요 (통합 앱 계좌 설정 그대로 자동 연동). 매일 06:40 봇이 저장하면(또는 통합 앱 💼계좌 ↻) 그날을 출발점으로 계획 대비 진행을 매일 기록합니다. ☁️ 동기화가 연결돼 있어야 해요.</div>`; return; }
   const L = H[H.length - 1], tN = (Date.parse(L[0]) - Date.parse(P.d)) / YR, pN = planAt(P, tN), diff = L[1] / pN - 1;
   let lo = -30, hi = 60; for (let i = 0; i < 60; i++) { const m = (lo + hi) / 2; planAt(P, m) < L[1] ? lo = m : hi = m; }
   const mo = (lo - tN) * 12, fast = mo >= 0.5, slow = mo <= -0.5, mt = Math.abs(mo) >= 12 ? (Math.abs(mo) / 12).toFixed(1) + "년" : Math.abs(mo).toFixed(1) + "개월";
@@ -299,7 +299,8 @@ function prog() {
   for (let y = 1; y <= N; y++) { const ad = new Date(Date.parse(P.d) + y * YR).toISOString().slice(0, 10), pv = planAt(P, y);
     let av = null, cur = false; if (ad <= L[0]) { const h = H.filter(x => x[0] <= ad).pop(); av = h ? h[1] : null; } else if (y === Math.ceil(tN || 1e-9)) cur = true;
     rows.push(`<tr class="${cur ? "cur" : ""}"><td>${y}년 <small>${ad.slice(0, 7)}</small></td><td>${wonU(pv).replace("원", "")}</td><td>${av ? wonU(av).replace("원", "") : cur ? `<small>진행 중 · 지금 ${wonU(L[1]).replace("원", "")}</small>` : "—"}</td><td class="${av ? (av >= pv ? "up" : "dn") : ""}">${av ? (av >= pv ? "+" : "") + ((av / pv - 1) * 100).toFixed(1) + "%" : ""}</td></tr>`); }
-  el.innerHTML = badge + svg + `<div class="hint lg"><span style="color:#F5A524">- - 계획</span> · <span style="color:${c}">— 실제</span> · 출발 ${P.d} ${wonU(P.usd)} · 계획 수익률 평생 ${P.r1}% · 무한 ${P.r2}% (B계좌 평가금+현금, 달러 기준)</div>
+  el.innerHTML = badge + svg + `<div class="hint lg"><span style="color:#F5A524">- - 계획</span> · <span style="color:${c}">— 실제</span> · 출발 ${P.d} ${wonU(P.usd)} · 계획 수익률 평생 ${P.r1}% · 무한 ${P.r2}% (달러 기준)</div>
+    ${ACT && ACT.parts ? `<div class="hint">🏦 ${ACT.parts.map(x => `${esc(x.name || "계좌")}(${x.bots}) QLD ${usd0(x.qv)} + 현금 ${usd0(x.cash)}${x.share < 1 ? ` <small>(현금 ${Math.round(x.share * 100)}% · 같은 계좌 다른 종목과 시드 비율로 나눔)</small>` : ""}`).join(" · ")} · 통합 앱 계좌 설정 자동 연동</div>` : ""}
     <table class="yt"><tr><th>연차</th><th>계획</th><th>실제</th><th>차이</th></tr>${rows.join("")}</table>
     <div class="pf"><span class="hint">기록 ${H.length}일 · 매일 자동 · ☁️ 모든 기기 저장</span><button class="btn" type="button" data-plan="reset" style="white-space:nowrap;">↺ 새 계획</button></div>`;
 }
@@ -323,8 +324,34 @@ const gid = () => { try { return localStorage.getItem("muhansync_gist") || ""; }
 const AUTO = {};
 function setAuto(k, v, src) { if (!(v > 0)) return; AUTO[k] = v;          // 직접 바꾼 값은 유지, 아니면 앱 값 자동 반영
   if (!TOUCH[k]) { V[k] = Math.round(v); $("i_" + k).value = V[k]; } $("s_" + k).textContent = ` · ${src} ${Math.round(v).toLocaleString("en-US")}`; }
-(async () => {
-  render();
+/* 🏦 실제 자산 = 통합 앱 계좌 설정 그대로 (봇마다 넣은 앱키: 같은 키 = 같은 계좌) — 설정을 바꾸면 다음 동기화부터 자동 반영
+   QLD평생·QLD무한 봇이 쓰는 계좌마다: QLD 평가금 + 현금 × (그 계좌 시드 중 QLD 비중) · 다른 종목과 같은 계좌면 현금만 시드 비율로 나눔 */
+function qldActual(J) {
+  const cfg = f => J(f) || {}, sd = (n, k) => +(((J(n) || {})[k]) || {})[k === "seed" ? "v" : "seed"] || 0;
+  const split = ((cfg("muhan-bot.json").symbols || {}).TQQQ === false) && !!cfg("muhan-bot-tqqq.json").installed_at;
+  const seed = { "muhan-bot-qld.json": sd("qld.json", "seed"), "muhan-bot-qldm.json": sd("qldm.json", "params"),
+    "muhan-bot.json": sd("soxl.json", "params") + (split ? 0 : sd("tqqq.json", "params")), "muhan-bot-tqqq.json": split ? sd("tqqq.json", "params") : 0 };
+  const QB = ["muhan-bot-qld.json", "muhan-bot-qldm.json"], key = f => { const k = cfg(f).keys; return k && k.tail ? "k:" + k.tail : "f:" + f; }, G = {};
+  Object.keys(seed).filter(f => cfg(f).installed_at).forEach(f => (G[key(f)] = G[key(f)] || []).push(f));
+  let groups = Object.values(G).filter(fs => fs.some(f => QB.includes(f)));
+  if (!groups.length) groups = [QB];                                   // 봇 설정이 없을 때(예전 기록): QLD 계좌 파일 그대로
+  let usd = 0, d = "", parts = [];
+  for (const fs of groups) {
+    const q = fs.filter(f => QB.includes(f)), snap = fs.map(f => J(f.replace("muhan-bot", "muhan-account"))).filter(a => a && a.holdings).sort((a, b) => String(b.as_of).localeCompare(String(a.as_of)))[0];
+    if (!snap) continue;
+    const qv = snap.holdings.filter(h => String(h.symbol).toUpperCase() === "QLD").reduce((x, h) => x + (+h.value || 0), 0);
+    const all = fs.reduce((x, f) => x + seed[f], 0), qs = q.reduce((x, f) => x + seed[f], 0), share = q.length === fs.length || !(all > 0) ? 1 : qs / all, cash = (+snap.cash_usd || 0) * share;
+    usd += qv + cash; const dd = String(snap.et_date || snap.as_of || "").slice(0, 10); if (dd > d) d = dd;
+    parts.push({ name: fs.map(f => cfg(f).acct).find(Boolean) || "", bots: q.map(f => f === QB[0] ? "평생" : "무한").join("·"), qv, cash, share });
+  }
+  return parts.length ? { d, usd: Math.round(usd * 100) / 100, parts } : null;
+}
+/* ☁️ 자동 동기화: 처음 열 때 · 화면으로 돌아올 때(1분 간격) · 10분마다 — 계좌·시드·설정·기록 모두 서버(Gist) 최신으로 */
+let pullAt = 0;
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && Date.now() - pullAt > 60e3) pull(); });
+setInterval(() => { if (document.visibilityState === "visible") pull(); }, 600e3);
+async function pull() {
+  pullAt = Date.now();
   fetch("data/macro.json?h=" + new Date().toISOString().slice(0, 13), { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(m => { if (m && m.fx) { setAuto("fx", m.fx.last, "오늘"); render(); } }).catch(() => {});
   const t = tok(), g = gid(); if (!t || !g) { syncSt("📱 이 기기에만 저장 중 — ☁️ 동기화는 통합 앱 🛠설정에서 연결", false); return; }
   try {
@@ -335,12 +362,12 @@ function setAuto(k, v, src) { if (!(v > 0)) return; AUTO[k] = v;          // 직
     if (p) { V.hist = mergeHist(V.hist, p.hist); if (!V.plan && p.plan) V.plan = p.plan; }
     const q = J("qld.json"), qm = J("qldm.json");
     setAuto("life", q && q.seed && q.seed.v, "통합 앱"); setAuto("inf", qm && qm.params && +qm.params.seed, "통합 앱");
-    { const ac = [J("muhan-account-qld.json"), J("muhan-account-qldm.json")].filter(a => a && a.total).sort((a, b) => String(b.as_of).localeCompare(String(a.as_of)))[0];
-      if (ac) track({ d: String(ac.et_date || ac.as_of || "").slice(0, 10), usd: Math.round(((+ac.total.value || 0) + (+ac.cash_usd || 0)) * 100) / 100 }); }
+    { const a = qldActual(J); if (a) track(a); }
     { const gt = parseFloat(qm && qm.params ? qm.params.ddGate : NaN); if (isFinite(gt) && gt >= 0 && gt < 50) GATE = gt / 100; }
     render();
   } catch (e) {}
-})();
+}
+(async () => { render(); pull(); })();
 </script>
 </body>
 </html>
