@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.11-261020-FinancialRoadmap">
+<meta name="version" content="V1.12-261020-FinancialRoadmap">
 <meta name="release-date" content="261020">
-<title>QLD 파이낸셜 로드맵 (V1.11 - 261020)</title>
+<title>QLD 파이낸셜 로드맵 (V1.12 - 261020)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
   .goal b{color:var(--glow);}
   svg{width:100%;height:auto;display:block;margin-top:8px;}
   .src{font-size:11px;color:var(--text-faint);margin-left:4px;}
-  .sum{position:sticky;top:0;z-index:5;padding:10px 12px;border-radius:12px;background:rgba(15,24,42,.96);border:1px solid rgba(94,234,212,.35);font-size:13px;line-height:1.5;backdrop-filter:blur(6px);}
+  .sum{position:relative;padding:10px 12px;border-radius:12px;background:rgba(15,24,42,.96);border:1px solid rgba(94,234,212,.35);font-size:13px;line-height:1.5;backdrop-filter:blur(6px);}
   .sum b{font-family:var(--f-mono);}
   .ai{display:grid;gap:8px;margin-top:6px;} .ai div{padding:10px 12px;border-radius:12px;background:var(--panel-2);border:1px solid var(--border);font-size:13px;line-height:1.6;}
   .ai b{font-family:var(--f-mono);color:var(--glow);} .ai .best{border-color:rgba(94,234,212,.5);}
@@ -69,16 +69,31 @@
   .rv-t td{padding:7px 8px;text-align:right;background:var(--panel-2);color:var(--text);} .rv-t td:first-child{border-radius:9px 0 0 9px;font-family:var(--f-body);} .rv-t td:last-child{border-radius:0 9px 9px 0;}
   .rv-t td small{display:block;font:600 10px var(--f-mono);color:var(--text-faint);} .rv-t td.up{color:var(--up);} .rv-t td.dn{color:#FF8A8A;} .rv-t tr.goal td{background:rgba(245,165,36,.12);color:var(--amber);font-weight:900;}
   .up{color:var(--up);} .dn{color:#FF8A8A;}
+  .tabs{position:sticky;top:0;z-index:6;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:8px 0 10px;padding:4px;border-radius:14px;background:rgba(11,18,36,.94);border:1px solid var(--border);backdrop-filter:blur(6px);}
+  .tabs button{padding:9px 0;border:0;border-radius:10px;background:none;color:var(--text-faint);font:800 12.5px var(--f-body);cursor:pointer;white-space:nowrap;} .tabs button.on{background:rgba(94,234,212,.14);color:var(--glow);}
+  .wd-h{display:grid;grid-template-columns:1fr 1fr;gap:8px;} .wd-h div{display:flex;flex-direction:column;align-items:center;padding:12px 8px;border-radius:14px;background:linear-gradient(160deg,rgba(94,234,212,.12),rgba(56,189,248,.05));border:1px solid rgba(94,234,212,.35);text-align:center;}
+  .wd-h span{font-size:11.5px;font-weight:700;color:var(--text-dim);} .wd-h b{font:900 21px var(--f-mono);color:var(--glow);letter-spacing:-.4px;margin:2px 0;} .wd-h small{font-size:10.5px;color:var(--text-faint);}
+  .wd-st{margin-top:8px;padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.5;border:1px solid;} .wd-st small{color:var(--text-faint);font-size:11.5px;}
+  .wd-st.ok{border-color:rgba(56,217,140,.45);background:rgba(56,217,140,.08);} .wd-st.wa{border-color:rgba(245,165,36,.5);background:rgba(245,165,36,.08);} .wd-st.no{border-color:rgba(255,77,94,.55);background:rgba(255,77,94,.09);color:#FFB3BA;}
+  .wd-b{margin-top:10px;padding:11px 12px;border-radius:13px;background:var(--panel-2);border:1px solid var(--border);} .wd-b .t{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;font-weight:800;} .wd-b .t b{font-family:var(--f-mono);}
+  .wd-b i{display:block;height:9px;margin:8px 0 5px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;} .wd-b u{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--up),var(--glow));} .wd-b u.lo{background:linear-gradient(90deg,#FF4D5E,var(--amber));}
+  .wd-b small{font-size:11px;color:var(--text-faint);}
+  .wd-ok{margin-top:8px;padding:10px 12px;border-radius:12px;background:rgba(56,217,140,.08);border:1px solid rgba(56,217,140,.4);font-size:13px;color:#9BE8C3;line-height:1.6;} .wd-ok small{color:var(--text-faint);}
+  .wd-no{margin-top:8px;padding:11px 12px;border-radius:12px;background:rgba(255,77,94,.09);border:1.5px solid rgba(255,77,94,.55);} .wd-no .t{font-size:14px;font-weight:800;color:#FF8A8A;} .wd-no .t b{font:900 18px var(--f-mono);color:#FF6B78;} .wd-no .t small{color:var(--text-faint);font-weight:600;}
+  .wd-no ol{margin:6px 0 0;padding-left:20px;font-size:12.5px;line-height:1.65;color:var(--text-dim);} .wd-no ol b{color:var(--text);}
+  .wd-f{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;} .wd-f .btn{white-space:nowrap;}
+  .wd-r{margin-top:8px;font-size:12px;color:var(--text-dim);line-height:1.6;} .wd-r summary{cursor:pointer;font-weight:800;color:var(--glow);}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div><h1>🏛 QLD 파이낸셜 로드맵 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.11 (261020) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.12 (261020) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
+  <nav class="tabs" id="tabs"><button data-t="goal">🏝 목표</button><button data-t="rev">🎯 역산</button><button data-t="prog">📈 진행</button><button data-t="wd">💸 인출</button><button data-t="ai">🤖 AI</button></nav>
 
-  <section class="card"><div class="kick">STEP 1 · 자산 목표</div><h2>은퇴 시점 내 자산은?</h2>
+  <section class="card" data-tab="goal"><div class="kick">STEP 1 · 자산 목표</div><h2>은퇴 시점 내 자산은?</h2>
     <div class="hint">값은 이 기기에 저장되고, ☁️ 동기화가 켜져 있으면 모든 기기에 영구 저장됩니다. 시드·환율은 앱에서 자동으로 가져옵니다(수정 가능). <b id="syncSt"></b></div>
     <div class="rst"><button class="btn" type="button" id="resetAll">↺ 초기값으로</button></div>
     <div id="fields"></div>
@@ -88,7 +103,7 @@
     </div>
   </section>
 
-  <section class="card"><div class="kick">STEP 2 · 낙원 금액</div><h2>매달 얼마면 낙원인가?</h2>
+  <section class="card" data-tab="goal"><div class="kick">STEP 2 · 낙원 금액</div><h2>매달 얼마면 낙원인가?</h2>
     <details class="tip"><summary>💡 ‘은퇴 후 명목 수익률’이 뭔가요? (쉽게)</summary>
       <p>은퇴하면 QLD처럼 크게 오르내리는 자산 대신 <b>예금·채권·배당주</b> 같은 안전한 곳에 옮겨 두고, 거기서 나오는 이자·배당으로 생활합니다. 그 안전 자산이 <b>1년에 버는 %</b>가 ‘명목 수익률’이에요.</p>
       <p>그런데 물가가 오르면 같은 돈으로 살 수 있는 게 줄어들죠. 그래서 <b>실질 수익률 = 명목 − 물가</b>(정확히는 (1+명목)÷(1+물가)−1)만 써야 원금 가치가 줄지 않습니다.</p>
@@ -105,18 +120,20 @@
     <div class="hint" style="margin-top:6px;">— 내 자산 · <span style="color:var(--amber)">- - 낙원 금액</span> (해마다 물가만큼 커짐) · 두 선이 만나는 해가 낙원 도착</div>
   </section>
 
-  <section class="card"><div class="kick">🎯 REVERSE · AI 역산</div><h2>은퇴 날짜로 거꾸로 계산</h2>
+  <section class="card" data-tab="rev"><div class="kick">🎯 REVERSE · AI 역산</div><h2>은퇴 날짜로 거꾸로 계산</h2>
     <div class="rv-in"><label for="goalYM">은퇴 년월</label><input id="goalYM" inputmode="decimal" placeholder="예: 2036.12" maxlength="7" autocomplete="off"><span class="hint" id="goalN"></span></div>
     <div id="rev"></div></section>
 
-  <section class="card"><div class="kick">📈 PROGRESS · 계획 vs 실제</div><h2>계획보다 빠른가, 느린가?</h2><div id="prog"></div></section>
+  <section class="card" data-tab="prog"><div class="kick">📈 PROGRESS · 계획 vs 실제</div><h2>계획보다 빠른가, 느린가?</h2><div id="prog"></div></section>
 
-  <section class="card"><div class="kick">🤖 AI 진단</div><h2>낙원까지 가장 빠른 길</h2><div id="ai"></div></section>
+  <section class="card" data-tab="wd"><div class="kick">💸 WITHDRAW · 인출 규칙</div><h2>은퇴 후 얼마씩 꺼내 쓸까?</h2><div id="wd"></div></section>
 
-  <section class="card"><div class="kick">PARADISE TABLE · 지금 가치</div><h2>월 소비액 × 실질 수익률 → 필요한 자산</h2>
+  <section class="card" data-tab="ai"><div class="kick">🤖 AI 진단</div><h2>낙원까지 가장 빠른 길</h2><div id="ai"></div></section>
+
+  <section class="card" data-tab="ai"><div class="kick">PARADISE TABLE · 지금 가치</div><h2>월 소비액 × 실질 수익률 → 필요한 자산</h2>
     <div class="hint">🟩 지금 자산으로 이미 가능 · <span style="color:var(--glow)">▣</span> 내 조건</div><div id="ptab"></div></section>
 
-  <section class="card"><div class="kick">HOW · 계산식</div>
+  <section class="card" data-tab="ai"><div class="kick">HOW · 계산식</div>
     <div class="hint">
       ① 은퇴 후 자산 = 평생매수 시드×(1+r<sub>평생</sub>)<sup>n</sup> + 무한매수 시드×(1+r<sub>무한</sub>)<sup>n</sup> (원화 = 달러×환율)<br>      📊 기대 수익률 = QLD 전체 기간(2006~) 일봉으로 두 전략을 은퇴 시기만큼 굴린 <b>롤링 백테스트</b>의 연환산 수익률 — 기본값 = 보수(하위 25%) · 중간 = 중앙값 · 낙관 = 상위 25% (매일 10:10 갱신)<br>
       ② 실질 수익률 = (1+은퇴 후 명목)÷(1+물가) − 1 · 월 수입(지금 가치) = 은퇴 후 자산×실질÷12÷(1+물가)<sup>n</sup><br>
@@ -126,7 +143,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.11", RELEASE_DATE = "261020";
+const APP_VERSION = "V1.12", RELEASE_DATE = "261020";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -188,7 +205,7 @@ function render() {
     : at === 0 ? `🏝 <b>이미 낙원입니다!</b> 지금 자산으로 월 ${V.spend}만원(지금 가치) 생활이 가능합니다.`
     : `🏝 <b>${yr + at}년 (${at}년 후)</b> 낙원 도착 — 그때 자산 ${man(calc(at).fv)}원 ≥ 낙원 금액 ${man(calc(at).par)}원<br>${at <= n ? `은퇴 시기(${n}년 후)보다 <b>${n - at}년 빨리</b> 도착` : `은퇴 시기(${n}년 후)보다 <b style="color:var(--amber)">${at - n}년 늦게</b> 도착 — 은퇴를 ${at}년 후로 미루거나 조건을 바꿔 보세요`}`;
   $("sum").innerHTML = `🏝 ${at === null ? "50년 안에 도착 어려움" : at === 0 ? "<b style='color:var(--up)'>이미 낙원</b>" : `<b style="color:var(--glow)">${yr + at}년</b> 낙원 도착 (${at}년 후)`}<br>${n}년 후 자산 <b>${man(c.fv)}</b> · 낙원 금액 <b>${isFinite(c.par) ? man(c.par) : "∞"}</b> · ${gap <= 0 ? "<b style='color:var(--up)'>달성</b>" : `남은 <b style="color:var(--amber)">${man(gap)}</b>`}`;
-  drawChart(Math.max(20, n, at === null ? 0 : Math.min(at, 40)), at); aiPlan(); ptable(); prog(); rev();
+  drawChart(Math.max(20, n, at === null ? 0 : Math.min(at, 40)), at); aiPlan(); ptable(); prog(); rev(); wd();
 }
 function drawChart(N, at) {      // 0~N년 · 10·15·20년 목표 지점 표시 + 아래 카드
   const W = 340, H = 190, pl = 8, pr = 8, pt = 26, pb = 20, pts = [], MS = [10, 15, 20];
@@ -360,6 +377,44 @@ function rev() {
     <div class="hint">원화 = 그때 돈 · 오늘 환율 · 기대 수익률(평생 ${V.lifeR}% · 무한 ${V.infR}%) · 낙원 = 월 ${V.spend}만원(지금 가치)을 은퇴 후 실질 수익률로 평생 · <span class="up">초록</span> = 경로 위 · <span class="dn">빨강</span> = 부족</div>`;
 }
 document.addEventListener("input", e => { if (e.target.id !== "goalYM") return; const v = e.target.value.trim(); if (v && !ymParse(v)) return; V.goalYM = v; rev(); save(); });
+/* 💸 인출 규칙 (자동): 연 금액은 1년에 한 번 정하고(물가만큼 인상 · 하락장 가드), 매달 1/12씩 인출 · 생활비 2년치 완충
+   자산 = 연결 계좌 실제 자산(없으면 시드) · 시장 상태 = QLD 1년 고점 대비(매일 10:10 저장 데이터) · 오늘 날짜 기준 자동 갱신 */
+let QDD = null, PULLED = false;   // PULLED: 서버 값 받은 뒤에만 저장 (새 기기에서 서버 설정을 덮어쓰지 않게)
+fetch("data/QLD.json?h=" + new Date().toISOString().slice(0, 10), { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(j => {
+  const b = j && j.bars; if (!b || !b.length) return; const c = b.map(x => +x[4]), L = c.slice(-252), hi = Math.max(...L), px = c[c.length - 1];
+  QDD = { dd: (px / hi - 1) * 100, px, hi, d: b[b.length - 1][0] }; render(); }).catch(() => {});
+function wd() {
+  const el = $("wd"); if (!el) return;
+  const real = (1 + V.postR / 100) / (1 + V.infl / 100) - 1, live = ACT && ACT.usd > 0, aU = live ? ACT.usd : V.life + V.inf, aM = aU * V.fx / 1e4;
+  if (!(real > 0)) { el.innerHTML = `<div class="hint">⚠ 은퇴 후 명목 수익률이 물가보다 높아야 계산됩니다.</div>`; return; }
+  const yr = new Date().getFullYear(), dd = QDD ? QDD.dd : 0, lv = dd <= -30 ? 2 : dd <= -15 ? 1 : 0, base = aM * real;
+  let W = V.wdY && V.wdY.y && V.wdY.amt > 0 ? V.wdY : null, amt, why;
+  if (!W || !PULLED) { amt = W && W.y === yr ? W.amt : base; why = PULLED ? "올해 처음 계산" : "계좌 불러오는 중…"; if (PULLED) { V.wdY = { y: yr, amt }; save(); } }
+  else if (W.y === yr) { amt = W.amt; why = `${yr}년 금액 (1년 고정)`; }
+  else { const k = lv === 2 ? 0.9 : lv === 1 ? 1 : (1 + V.infl / 100) ** (yr - W.y); amt = W.amt * k; why = lv === 2 ? "하락장 → 10% 감액" : lv === 1 ? "주의 구간 → 물가 인상 보류" : `물가 ${V.infl}% 인상`; V.wdY = { y: yr, amt }; if (PULLED) save(); }
+  const mo = amt / 12, ratio = amt / base, U = m => "$" + Math.round(m * 1e4 / V.fx).toLocaleString("en-US");
+  const st = [["ok", "🟢 정상", "계획대로 인출 · 물가만큼 인상"], ["wa", "🟠 주의", "고점 −15%↓ · 내년 인상 보류 · QLD 팔지 않기"], ["no", "🔴 하락장", "고점 −30%↓ · 10% 감액 · QLD 절대 팔지 말고 완충에서만"]][lv];
+  // 완충 = 생활비 2년치 · 현재 = 연결 계좌 현금(주문가능 USD, QLD 비중만큼)
+  const tgM = amt * 2, cashU = live ? ACT.parts.reduce((x, p) => x + (+p.cash || 0), 0) : 0, cashM = cashU * V.fx / 1e4, sh = Math.max(0, tgM - cashM), pct = Math.min(100, cashM / tgM * 100);
+  const shU = sh * 1e4 / V.fx, n = QDD ? Math.ceil(shU / QDD.px) : 0;
+  const how = sh <= 0 ? `<div class="wd-ok">✅ 완충 충분 — 여유 ${man(cashM - tgM)}원<br><small>① 1년치 ${man(amt)}원 → 파킹통장·MMF ② 나머지 1년치 → 단기채·배당 커버드콜</small></div>`
+    : `<div class="wd-no"><div class="t">🔴 완충 부족 <b>${man(sh)}원</b> <small>(${U(sh)})</small></div><ol>${lv === 0
+        ? `<li>지금은 QLD 정상 구간 → <b>QLD ${U(sh)}${n ? ` (약 ${n}주 · $${QDD.px.toFixed(2)})` : ""}</b> 팔아서 채우기 ✓ 좋은 시점</li><li>1년치 <b>${man(amt)}원</b> → 파킹통장·MMF, 나머지 → 단기채</li>`
+        : `<li>지금은 ${st[1]} → <b>QLD 팔지 않기</b> (싸게 파는 손해 방지)</li><li>12개월 동안 매달 <b>${man(sh / 12)}원</b>씩 따로 모으기, 또는 QLD가 고점 −10% 이내로 회복하면 그때 팔아 채우기</li>`}<li>채워질 때까지 생활비는 계좌 현금 → 부족분 순서로</li></ol></div>`;
+  el.innerHTML = `<div class="wd-h"><div><span>올해 연 인출</span><b>${man(amt)}원</b><small>${why}</small></div><div><span>매달 인출</span><b>${man(mo)}원</b><small>${U(mo)} · 자동이체 추천</small></div></div>
+    <div class="wd-st ${st[0]}"><b>${st[1]}</b> QLD 1년 고점 대비 <b>${QDD ? dd.toFixed(1) + "%" : "-"}</b>${QDD ? ` <small>(${QDD.d} 종가 $${QDD.px.toFixed(2)})</small>` : ""}<br><small>${st[2]}</small></div>
+    ${ratio > 1.2 ? `<div class="wd-st no"><b>⚠ 지속 가능 수준의 ${Math.round(ratio * 100)}%</b> — 자산이 줄었거나 금액이 큼 · ↺로 다시 계산 추천</div>` : ""}
+    <div class="wd-b"><div class="t"><span>🛡 완충 잔고 (생활비 2년치)</span><b>${man(cashM)} / ${man(tgM)}원</b></div><i><u style="width:${Math.max(2, pct)}%" class="${sh > 0 ? "lo" : ""}"></u></i>
+      <small>${live ? "현재 = 연결 계좌 현금(주문가능 달러) · QLD 전략 비중만큼" : "계좌 미연결 → 현재 0원으로 계산"}</small></div>${how}
+    <div class="wd-f"><span class="hint">자산 ${man(aM)}원 (${live ? "연결 계좌 실제" : "시드"}) × 실질 ${(real * 100).toFixed(1)}% = 지속 가능 연 ${man(base)}원 · 매일 자동 갱신</span><button class="btn" type="button" id="wdReset">↺ 올해 다시 계산</button></div>
+    <details class="wd-r"><summary>📘 인출 규칙 3줄</summary>① 매년 1월 연 금액 결정 (작년 × 물가) ② 매달 1/12 자동이체 ③ 하락장엔 QLD 팔지 않고 완충에서만 · 오르면 완충 다시 채우기</details>`;
+}
+document.addEventListener("click", e => { if (!e.target.closest("#wdReset")) return; if (!confirm("올해 인출 금액을 지금 자산 기준으로 다시 계산할까요?")) return; V.wdY = null; wd(); save(); });
+
+/* 탭: 기억(이 기기) · 주소 #wd 등으로 바로 열기 */
+function tab(t) { if (!document.querySelector(`[data-tab="${t}"]`)) t = "goal"; document.querySelectorAll("[data-tab]").forEach(x => x.hidden = x.dataset.tab !== t); document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.t === t)); try { localStorage.setItem(KEY + "_tab", t); } catch (e) {} }
+document.getElementById("tabs").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { tab(b.dataset.t); scrollTo({ top: 0, behavior: "smooth" }); } });
+tab((location.hash || "").slice(1) || (() => { try { return localStorage.getItem(KEY + "_tab"); } catch (e) { return ""; } })() || "goal");
 /* 저장: 이 기기 + ☁️ Gist(paradise.json, 동기화 켜져 있으면) */
 let saveT = 0, TOUCH = {}; try { TOUCH = JSON.parse(localStorage.getItem(KEY + "_t") || "{}"); } catch (e) {}
 function syncSt(t, ok) { const e = $("syncSt"); if (e) { e.textContent = t; e.style.color = ok ? "var(--up)" : "var(--amber)"; } }
@@ -405,18 +460,18 @@ setInterval(() => { if (document.visibilityState === "visible") pull(); }, 600e3
 async function pull() {
   pullAt = Date.now();
   fetch("data/macro.json?h=" + new Date().toISOString().slice(0, 13), { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(m => { if (m && m.fx) { setAuto("fx", m.fx.last, "오늘"); render(); } }).catch(() => {});
-  const t = tok(), g = gid(); if (!t || !g) { syncSt("📱 이 기기에만 저장 중 — ☁️ 동기화는 통합 앱 🛠설정에서 연결", false); return; }
+  const t = tok(), g = gid(); if (!t || !g) { PULLED = true; syncSt("📱 이 기기에만 저장 중 — ☁️ 동기화는 통합 앱 🛠설정에서 연결", false); return; }
   try {
     const r = await fetch("https://api.github.com/gists/" + g, { headers: { Authorization: "Bearer " + t }, cache: "no-store" }); if (!r.ok) return;
     const fs = (await r.json()).files || {}, J = n => { try { return fs[n] ? JSON.parse(fs[n].content) : null; } catch (e) { return null; } };
     const p = J(GFILE); if (p) { const local = (() => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } })();
-      if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; } }); if (p.plan) V.plan = p.plan; if (p.goalYM != null) V.goalYM = p.goalYM; V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
+      if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; } }); if (p.plan) V.plan = p.plan; if (p.goalYM != null) V.goalYM = p.goalYM; if (p.wdY !== undefined) V.wdY = p.wdY; V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
     if (p) { V.hist = mergeHist(V.hist, p.hist); if (!V.plan && p.plan) V.plan = p.plan; }
     const q = J("qld.json"), qm = J("qldm.json");
     setAuto("life", q && q.seed && q.seed.v, "통합 앱"); setAuto("inf", qm && qm.params && +qm.params.seed, "통합 앱");
     { const a = qldActual(J); if (a) track(a); }
     { const gt = parseFloat(qm && qm.params ? qm.params.ddGate : NaN); if (isFinite(gt) && gt >= 0 && gt < 50) GATE = gt / 100; }
-    render();
+    PULLED = true; render();
   } catch (e) {}
 }
 (async () => { render(); pull(); })();
