@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.24-261021-FinancialRoadmap">
+<meta name="version" content="V1.25-261021-FinancialRoadmap">
 <meta name="release-date" content="261021">
-<title>QLD 파이낸셜 로드맵 (V1.24 - 261021)</title>
+<title>QLD 파이낸셜 로드맵 (V1.25 - 261021)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -117,20 +117,29 @@
 .pf-r b small.kw{display:block;font:700 11px var(--f-mono);color:var(--text-faint);text-align:right;margin-top:1px;}
   .pf-sp{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px;} .pf-sp .sp{display:flex;flex-direction:column;align-items:center;padding:7px 6px;border-radius:10px;background:rgba(94,234,212,.07);border:1px solid rgba(94,234,212,.25);}
   .pf-sp i{font-style:normal;font-size:11px;font-weight:800;color:var(--text-dim);} .pf-sp b{font:900 15px var(--f-mono);color:var(--glow);} .pf-sp small{font:700 10.5px var(--f-mono);color:var(--text-faint);}
+.pf-in{display:grid;grid-template-columns:84px 1fr;gap:8px 10px;align-items:center;} .pf-in label{font-size:12.5px;font-weight:800;color:var(--text-dim);}
+  .pf-in .u{position:relative;} .pf-in input{width:100%;min-height:44px;padding:0 48px 0 12px;border-radius:12px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);font:800 17px var(--f-mono);outline:none;}
+  .pf-in input:focus{border-color:var(--glow);} .pf-in input::placeholder{font:600 13px var(--f-body);color:var(--text-faint);} .pf-in input[readonly]{color:var(--glow);}
+  .pf-in .u span{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--text-faint);pointer-events:none;}
+  .pf-hn{margin:6px 0 12px;line-height:1.6;} .pf-hn b{color:var(--glow);}
+  .pf-r{grid-template-columns:1fr 104px 38px !important;column-gap:10px !important;padding:11px 12px !important;min-height:62px;}
+  .pf-r .n{line-height:1.35;} .pf-r .n small{margin-top:2px;} .pf-r b{text-align:right;line-height:1.2;} .pf-r em{align-self:center;}
+  .pf-sp{gap:8px !important;margin-top:8px !important;} .pf-sp .sp{padding:8px 6px !important;gap:1px;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div><h1>🏛 QLD 파이낸셜 로드맵 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.24 (261021) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.25 (261021) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
   <div class="bsw" id="bsw"></div>
   <nav class="tabs" id="tabs"><button data-t="pf">🗺 배분</button><button data-t="goal">🏝 목표</button><button data-t="rev">🎯 역산</button><button data-t="prog">📈 진행</button><button data-t="wd">💸 인출</button><button data-t="ai">🤖 AI</button></nav>
 
   <section class="card" data-tab="pf"><div class="kick">🗺 PORTFOLIO · 공격형 배분</div><h2>총 투자금, 어디에 얼마?</h2>
-    <div class="rv-in"><label for="pfAmt">총 투자금</label><input id="pfAmt" inputmode="numeric" placeholder="예: 100000" autocomplete="off"><span class="hint" id="pfHint"></span></div>
-    <div class="rv-in"><label for="pfSafe">메리츠 밖<br>안전 자산</label><input id="pfSafe" inputmode="numeric" placeholder="없으면 0" autocomplete="off"><span class="hint">만원 · 계좌 안 단기채(SGOV·BIL 등)는 <b>자동</b> · 다른 은행 예금·MMF만 직접 (선택 · 평생 저장)</span></div>
+    <div class="pf-in"><label for="pfAmt">총 투자금</label><div class="u"><input id="pfAmt" inputmode="numeric" placeholder="100,000" autocomplete="off"><span>만원</span></div>
+      <label for="pfSafe">밖 안전자산</label><div class="u"><input id="pfSafe" inputmode="numeric" placeholder="없으면 비워 두기" autocomplete="off"><span>만원</span></div></div>
+    <div class="hint pf-hn"><span id="pfHint"></span><br>계좌 안 단기채(SGOV·BIL)는 <b>자동</b> · 다른 은행 예금·MMF만 직접 입력 (선택)</div>
     <div id="pf"></div></section>
 
   <section class="card" data-tab="goal"><div class="kick">STEP 1 · 자산 목표</div><h2>은퇴 시점 내 자산은?</h2>
@@ -183,7 +192,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.24", RELEASE_DATE = "261021";
+const APP_VERSION = "V1.25", RELEASE_DATE = "261021";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -509,7 +518,7 @@ function pf() {
   inp.readOnly = act; if (document.activeElement !== inp) inp.value = Math.round(A).toLocaleString("ko-KR");
   const g = ymParse(V.goalYM), now = new Date(), yl = g ? ((g.y - now.getFullYear()) * 12 + (g.mo - 1 - now.getMonth())) / 12 : Math.round(V.n);
   const L = levAt(yl), k = L / 75, safe = 100 - L, up = Math.min(95, L + 10), lo = Math.max(10, L - 15);
-  $("pfHint").innerHTML = `만원 · 은퇴까지 <b>${yl.toFixed(1)}년</b> ${g ? `(${g.y}.${String(g.mo).padStart(2, "0")})` : "(🎯역산에 년월을 넣으면 더 정확)"}`;
+  $("pfHint").innerHTML = `⏳ 은퇴까지 <b>${yl.toFixed(1)}년</b> ${g ? `(${g.y}.${String(g.mo).padStart(2, "0")})` : "(🎯역산에 년월을 넣으면 더 정확)"}`;
   const AV = { q: LEV && LEV.q, s: LEV && LEV.s, t: LEV && LEV.t }, acN = x => act ? `<small class="ac">실제 ${man(x * V.fx / 1e4)} · ${(x * V.fx / 1e4 / A * 100).toFixed(0)}%</small>` : "";
   const $u = m => "$" + Math.round(m * 1e4 / V.fx).toLocaleString("en-US"), amt2 = m => `${$u(m)}<small class="kw">₩ ${man(m)}</small>`;
   const rows = PF.map(([nm, w, c, how]) => { const pct = w * k, m = A * pct / 100;
