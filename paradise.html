@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.19-261021-FinancialRoadmap">
+<meta name="version" content="V1.20-261021-FinancialRoadmap">
 <meta name="release-date" content="261021">
-<title>QLD 파이낸셜 로드맵 (V1.19 - 261021)</title>
+<title>QLD 파이낸셜 로드맵 (V1.20 - 261021)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -105,12 +105,17 @@
   .pf-rules{margin-top:10px;padding:11px 12px;border-radius:13px;border:1px solid rgba(94,234,212,.4);background:rgba(94,234,212,.05);} .pf-rules .t{font-size:13.5px;font-weight:900;margin-bottom:2px;}
   .ru{display:grid;grid-template-columns:24px 1fr;gap:8px;padding:8px 0;border-top:1px solid rgba(255,255,255,.06);} .ru i{font-style:normal;font-weight:900;color:var(--glow);font-size:15px;}
   .ru b{font-size:13px;} .ru span{display:block;font-size:12.5px;line-height:1.55;color:var(--text-dim);margin-top:1px;} .ru span b{color:var(--text);font-size:12.5px;} .ru span b.up{color:#FF8A8A;} .ru span b.dn{color:var(--up);} .ru small{display:block;font-size:11px;color:var(--text-faint);}
+.pf-a{margin-bottom:10px;padding:10px 12px;border-radius:13px;border:1px solid var(--border);background:var(--panel-2);font-size:12.5px;line-height:1.55;color:var(--text-dim);}
+  .pf-a.wa{border-color:rgba(245,165,36,.5);background:rgba(245,165,36,.08);} .pf-a.ok{border-color:rgba(56,217,140,.45);background:rgba(56,217,140,.07);} .pf-a.hi{border-color:rgba(255,77,94,.55);background:rgba(255,77,94,.09);} .pf-a.lo{border-color:rgba(56,217,140,.55);background:rgba(56,217,140,.1);}
+  .pf-a .g{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;} .pf-a .g span{font-weight:800;} .pf-a .g b{font:900 24px var(--f-mono);color:var(--text);} .pf-a .g small{color:var(--text-faint);font-size:11px;}
+  .pf-a .m{margin-top:4px;font-size:13px;color:var(--text);} .pf-a .m b{font-family:var(--f-mono);}
+  .pf-r b small.ac{display:block;font:700 10.5px var(--f-mono);color:var(--text-faint);text-align:right;} .pf-r.cs{border-left-color:var(--amber);opacity:.9;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div><h1>🏛 QLD 파이낸셜 로드맵 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.19 (261021) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.20 (261021) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
   <div class="bsw" id="bsw"></div>
@@ -118,6 +123,7 @@
 
   <section class="card" data-tab="pf"><div class="kick">🗺 PORTFOLIO · 공격형 배분</div><h2>총 투자금, 어디에 얼마?</h2>
     <div class="rv-in"><label for="pfAmt">총 투자금</label><input id="pfAmt" inputmode="numeric" placeholder="예: 100000" autocomplete="off"><span class="hint" id="pfHint"></span></div>
+    <div class="rv-in"><label for="pfSafe">안전 자산</label><input id="pfSafe" inputmode="numeric" placeholder="단기채·MMF 합계" autocomplete="off"><span class="hint">만원 · 메리츠 밖에 둔 단기채·MMF·예금 (직접 입력 · 평생 저장)</span></div>
     <div id="pf"></div></section>
 
   <section class="card" data-tab="goal"><div class="kick">STEP 1 · 자산 목표</div><h2>은퇴 시점 내 자산은?</h2>
@@ -170,7 +176,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.19", RELEASE_DATE = "261021";
+const APP_VERSION = "V1.20", RELEASE_DATE = "261021";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -490,14 +496,23 @@ const PF = [["QLD 평생매수", 45, "q", "3분의 2 즉시 매수 + 3분의 1 �
 const levAt = r => { const y = Math.max(0, Math.ceil(r - 1e-9)); return y >= 5 ? 75 : Math.max(20, 75 - 15 * (5 - y)); };   // r = 은퇴까지 남은 해 (올림)
 function pf() {
   const el = $("pf"), inp = $("pfAmt"); if (!el) return;
-  const A = +V.pfAmt > 0 ? +V.pfAmt : 100000; if (document.activeElement !== inp) inp.value = A.toLocaleString("ko-KR");
+  const SF = +V.pfSafe >= 0 ? +V.pfSafe : 0, sIn = $("pfSafe"); if (document.activeElement !== sIn) sIn.value = V.pfSafe != null ? SF.toLocaleString("ko-KR") : "";
+  const levM = LEV ? LEV.usd * V.fx / 1e4 : 0, act = LEV && V.pfSafe != null, A = act ? levM + SF : (+V.pfAmt > 0 ? +V.pfAmt : 100000);
+  inp.readOnly = act; if (document.activeElement !== inp) inp.value = Math.round(A).toLocaleString("ko-KR");
   const g = ymParse(V.goalYM), now = new Date(), yl = g ? ((g.y - now.getFullYear()) * 12 + (g.mo - 1 - now.getMonth())) / 12 : Math.round(V.n);
   const L = levAt(yl), k = L / 75, safe = 100 - L, up = Math.min(95, L + 10), lo = Math.max(10, L - 15);
   $("pfHint").innerHTML = `만원 · 은퇴까지 <b>${yl.toFixed(1)}년</b> ${g ? `(${g.y}.${String(g.mo).padStart(2, "0")})` : "(🎯역산에 년월을 넣으면 더 정확)"}`;
-  const rows = PF.map(([nm, w, c, how]) => { const pct = w * k; return `<div class="pf-r ${c}"><span class="n">${nm}<small>${how}</small></span><b>${man(A * pct / 100)}원</b><em>${pct.toFixed(0)}%</em></div>`; }).join("")
-    + `<div class="pf-r sf"><span class="n">🛡 단기채·MMF<small>폭락 때 사들일 돈 · 비상금</small></span><b>${man(A * safe / 100)}원</b><em>${safe}%</em></div>`;
+  const AV = { q: LEV && LEV.q, s: LEV && LEV.s, t: LEV && LEV.t }, acN = x => act ? `<small class="ac">실제 ${man(x * V.fx / 1e4)} · ${(x * V.fx / 1e4 / A * 100).toFixed(0)}%</small>` : "";
+  const rows = PF.map(([nm, w, c, how]) => { const pct = w * k; return `<div class="pf-r ${c}"><span class="n">${nm}<small>${how}</small></span><b>${man(A * pct / 100)}원${acN(AV[c] || 0)}</b><em>${pct.toFixed(0)}%</em></div>`; }).join("")
+    + (act && LEV.cash > 0 ? `<div class="pf-r cs"><span class="n">⏳ 계좌 매수 대기 현금<small>무한·평생매수가 쓸 돈 · 레버리지 몫</small></span><b>${man(LEV.cash * V.fx / 1e4)}원</b><em></em></div>` : "")
+    + `<div class="pf-r sf"><span class="n">🛡 단기채·MMF<small>폭락 때 사들일 돈 · 비상금</small></span><b>${man(A * safe / 100)}원${act ? `<small class="ac">실제 ${man(SF)} · ${(SF / A * 100).toFixed(0)}%</small>` : ""}</b><em>${safe}%</em></div>`;
   const Y = Math.max(0, Math.ceil(yl - 1e-9)), tl = [...new Set([Y, 5, 4, 3, 2, 1, 0])].filter(r => r <= Y).sort((a, b) => b - a).map(r => `<span class="${r === Y ? "now" : ""}"><b>${levAt(r)}%</b><small>${r === Y ? "올해" : r ? r + "년 전" : "은퇴"}</small></span>`).join("");
-  el.innerHTML = `<div class="pf-h"><span>올해 레버리지 목표</span><b>${L}%</b><small>안전 자산 ${safe}% · 나스닥 ${(55 * k).toFixed(0)}% · 반도체 ${(20 * k).toFixed(0)}%</small></div>
+  const aP = act ? levM / A * 100 : 0, need = act ? (aP > up || aP < lo ? A * L / 100 - levM : 0) : 0;
+  const st = !LEV ? `<div class="pf-a"><b>🏦 계좌 데이터 없음</b> — 매수가 시작되면 레버리지 3종 실제 평가금이 자동으로 들어옵니다 · 지금은 총 투자금 계획 기준</div>`
+    : V.pfSafe == null ? `<div class="pf-a wa"><b>🟠 안전 자산 금액을 넣어 주세요</b> — 레버리지 실제 ${man(levM)}원은 계좌에서 자동 (${LEV.d})</div>`
+    : `<div class="pf-a ${need > 0 ? "lo" : need < 0 ? "hi" : "ok"}"><div class="g"><span>지금 레버리지</span><b>${aP.toFixed(1)}%</b><small>${man(levM)} / ${man(A)}원 · ${LEV.d}</small></div>
+        <div class="m">${need < 0 ? `🔴 <b>${up}% 초과</b> → 1월에 레버리지 <b>${man(-need)}원</b> 팔아 단기채로` : need > 0 ? `🟢 <b>${lo}% 미만</b> → 1월에 단기채 <b>${man(need)}원</b>으로 레버리지 사기` : `✅ 범위 안 (${lo}~${up}%) — 할 일 없음`}</div></div>`;
+  el.innerHTML = st + `<div class="pf-h"><span>올해 레버리지 목표</span><b>${L}%</b><small>안전 자산 ${safe}% · 나스닥 ${(55 * k).toFixed(0)}% · 반도체 ${(20 * k).toFixed(0)}%</small></div>
     <div class="pf-l">${rows}</div>
     <div class="pf-tl"><div class="t">📉 은퇴까지 레버리지 목표 (매년 자동)</div><div class="row">${tl}</div></div>
     <div class="pf-rules"><div class="t">📌 운영 규칙 · 1년에 한 번 1월</div>
@@ -507,6 +522,7 @@ function pf() {
     <div class="hint" style="margin-top:8px">⚠ 2008·2022년 같은 하락장에선 전체 −65~75%까지 갈 수 있음 · 과거 데이터 기반 예시이며 투자 자문이 아님</div>`;
 }
 document.addEventListener("input", e => { if (e.target.id !== "pfAmt") return; const v = Math.round(+e.target.value.replace(/[^\d]/g, "")); if (!(v >= 100 && v <= 10000000)) return; V.pfAmt = v; pf(); save(); });
+document.addEventListener("input", e => { if (e.target.id !== "pfSafe") return; const t = e.target.value.replace(/[^\d]/g, ""); V.pfSafe = t === "" ? null : Math.min(10000000, +t); pf(); save(); });
 document.addEventListener("change", e => { if (e.target.id === "pfAmt") { e.target.value = (+V.pfAmt || 100000).toLocaleString("ko-KR"); } });
 /* 저장: 이 기기 + ☁️ Gist(paradise.json, 동기화 켜져 있으면) */
 let saveT = 0, TOUCH = {}; try { TOUCH = JSON.parse(localStorage.getItem(KEY + "_t") || "{}"); } catch (e) {}
@@ -526,6 +542,18 @@ function setAuto(k, v, src) { if (!(v > 0)) return; AUTO[k] = v;          // 직
   if (!TOUCH[k]) { V[k] = Math.round(v); $("i_" + k).value = V[k]; } $("s_" + k).textContent = ` · ${src} ${Math.round(v).toLocaleString("en-US")}`; }
 /* 🏦 실제 자산 = 통합 앱 계좌 설정 그대로 (봇마다 넣은 앱키: 같은 키 = 같은 계좌) — 설정을 바꾸면 다음 동기화부터 자동 반영
    QLD평생·QLD무한 봇이 쓰는 계좌마다: QLD 평가금 + 현금 × (그 계좌 시드 중 QLD 비중) · 다른 종목과 같은 계좌면 현금만 시드 비율로 나눔 */
+let LEV = null;
+function levActual(J) {
+  const F = ["muhan-bot.json", "muhan-bot-tqqq.json", "muhan-bot-qldm.json", "muhan-bot-qld.json"], cfg = f => J(f) || {}, G = {};
+  F.filter(f => cfg(f).installed_at).forEach(f => { const k = cfg(f).keys && cfg(f).keys.tail ? "k:" + cfg(f).keys.tail : "f:" + f; (G[k] = G[k] || []).push(f); });
+  const r = { q: 0, s: 0, t: 0, cash: 0, d: "", n: 0 };
+  for (const fs of Object.values(G)) {
+    const a = fs.map(f => J(f.replace("muhan-bot", "muhan-account"))).filter(x => x && x.holdings).sort((x, y) => String(y.as_of).localeCompare(String(x.as_of)))[0]; if (!a) continue;
+    a.holdings.forEach(h => { const v = +h.value || 0, sy = String(h.symbol).toUpperCase(); if (sy === "QLD") r.q += v; else if (sy === "SOXL") r.s += v; else if (sy === "TQQQ") r.t += v; });
+    r.cash += +a.cash_usd || 0; r.n++; const dd = String(a.et_date || a.as_of || "").slice(0, 10); if (dd > r.d) r.d = dd;
+  }
+  r.usd = r.q + r.s + r.t + r.cash; return r.n && r.usd > 0 ? r : null;
+}
 function qldActual(J) {
   const cfg = f => J(f) || {}, sd = (n, k) => +(((J(n) || {})[k]) || {})[k === "seed" ? "v" : "seed"] || 0;
   const split = ((cfg("muhan-bot.json").symbols || {}).TQQQ === false) && !!cfg("muhan-bot-tqqq.json").installed_at;
@@ -558,11 +586,11 @@ async function pull() {
     const r = await fetch("https://api.github.com/gists/" + g, { headers: { Authorization: "Bearer " + t }, cache: "no-store" }); if (!r.ok) return;
     const fs = (await r.json()).files || {}, J = n => { try { return fs[n] ? JSON.parse(fs[n].content) : null; } catch (e) { return null; } };
     const p = J(GFILE); if (p) { const local = (() => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } })();
-      if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; } }); if (p.plan) V.plan = p.plan; if (p.goalYM != null) V.goalYM = p.goalYM; if (p.wdY !== undefined) V.wdY = p.wdY; if (p.wdStart !== undefined) V.wdStart = p.wdStart; if (p.base) V.base = p.base; if (p.pfAmt) V.pfAmt = p.pfAmt; V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
+      if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; } }); if (p.plan) V.plan = p.plan; if (p.goalYM != null) V.goalYM = p.goalYM; if (p.wdY !== undefined) V.wdY = p.wdY; if (p.wdStart !== undefined) V.wdStart = p.wdStart; if (p.base) V.base = p.base; if (p.pfAmt) V.pfAmt = p.pfAmt; if (p.pfSafe !== undefined) V.pfSafe = p.pfSafe; V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
     if (p) { V.hist = mergeHist(V.hist, p.hist); if (!V.plan && p.plan) V.plan = p.plan; }
     const q = J("qld.json"), qm = J("qldm.json");
     setAuto("life", q && q.seed && q.seed.v, "통합 앱"); setAuto("inf", qm && qm.params && +qm.params.seed, "통합 앱");
-    { const a = qldActual(J); if (a) track(a); }
+    { const a = qldActual(J); if (a) track(a); } LEV = levActual(J);
     { const gt = parseFloat(qm && qm.params ? qm.params.ddGate : NaN); if (isFinite(gt) && gt >= 0 && gt < 50) GATE = gt / 100; }
     if (MAC) aiRates(MAC);          // 서버 값 덮어쓴 뒤에도 🤖 자동값 다시 (직접 바꾼 값은 유지)
     PULLED = true; render();
