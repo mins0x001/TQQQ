@@ -1,4 +1,4 @@
-# 미국 ETF 일봉 + 시장 지표 자동 저장 V1.05 (261019) — 매일 한국 10:10 (+10:40 예비)
+# 미국 ETF 일봉 + 시장 지표 자동 저장 V1.06 (261021) — 매일 한국 10:10 (+10:40 예비)
 # 앱(SOXL·TQQQ·QLD 무한매수 / QLD 평생매수)은 이 파일(data/<심볼>.json)을 먼저 읽고, 최신이 아니면 시세 API로 받습니다.
 # 데이터: Twelve Data 일봉(앱과 같은 출처) → 실패 시 Yahoo. 바뀐 게 없으면 커밋하지 않음(주말·휴장일).
 name: 미국 시세 저장
@@ -190,18 +190,23 @@ jobs:
           import json, urllib.request
           from datetime import datetime, timezone
           from zoneinfo import ZoneInfo
-          r = urllib.request.urlopen(urllib.request.Request("https://query1.finance.yahoo.com/v8/finance/chart/QLD?period1=0&period2=" + str(int(datetime.now(timezone.utc).timestamp())) + "&interval=1d&events=history", headers={"User-Agent": "Mozilla/5.0"}), timeout=40)
-          c = json.loads(r.read().decode())["chart"]["result"][0]
-          bars = [[datetime.fromtimestamp(t, timezone.utc).strftime("%Y-%m-%d"), round(v, 4)] for t, v in zip(c["timestamp"], c["indicators"]["quote"][0]["close"]) if v]
-          try:
-              old = json.load(open("data/QLD_max.json")).get("bars")
-          except Exception:
-              old = None
-          if len(bars) > 3000 and bars != old:
-              json.dump({"symbol": "QLD", "source": "yahoo", "updated_kst": datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y-%m-%d %H:%M"), "fields": "date,close", "bars": bars}, open("data/QLD_max.json", "w"), separators=(",", ":"))
-              print("QLD_max", len(bars), bars[0], bars[-1])
-          else:
-              print("QLD_max 저장 안 함:", len(bars), "봉", c.get("meta", {}).get("dataGranularity"))
+          for SYM in ("QLD", "SOXL", "TQQQ"):        # 상장 이후 전체 종가 (낙원계산기·백테스트용)
+              try:
+                  r = urllib.request.urlopen(urllib.request.Request(f"https://query1.finance.yahoo.com/v8/finance/chart/{SYM}?period1=0&period2=" + str(int(datetime.now(timezone.utc).timestamp())) + "&interval=1d&events=history", headers={"User-Agent": "Mozilla/5.0"}), timeout=40)
+                  c = json.loads(r.read().decode())["chart"]["result"][0]
+                  bars = [[datetime.fromtimestamp(t, timezone.utc).strftime("%Y-%m-%d"), round(v, 4)] for t, v in zip(c["timestamp"], c["indicators"]["quote"][0]["close"]) if v]
+                  fn = f"data/{SYM}_max.json"
+                  try:
+                      old = json.load(open(fn)).get("bars")
+                  except Exception:
+                      old = None
+                  if len(bars) > 2000 and bars != old:
+                      json.dump({"symbol": SYM, "source": "yahoo", "updated_kst": datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y-%m-%d %H:%M"), "fields": "date,close", "bars": bars}, open(fn, "w"), separators=(",", ":"))
+                      print(SYM, "max", len(bars), bars[0], bars[-1])
+                  else:
+                      print(SYM, "max 저장 안 함:", len(bars))
+              except Exception as e:
+                  print(SYM, "max 실패:", e)
           PYEOF
       - name: 커밋
         if: always()
