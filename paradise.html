@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.22-261021-FinancialRoadmap">
+<meta name="version" content="V1.23-261021-FinancialRoadmap">
 <meta name="release-date" content="261021">
-<title>QLD 파이낸셜 로드맵 (V1.22 - 261021)</title>
+<title>QLD 파이낸셜 로드맵 (V1.23 - 261021)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -110,12 +110,16 @@
   .pf-a .g{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;} .pf-a .g span{font-weight:800;} .pf-a .g b{font:900 24px var(--f-mono);color:var(--text);} .pf-a .g small{color:var(--text-faint);font-size:11px;}
   .pf-a .m{margin-top:4px;font-size:13px;color:var(--text);} .pf-a .m b{font-family:var(--f-mono);}
   .pf-r b small.ac{display:block;font:700 10.5px var(--f-mono);color:var(--text-faint);text-align:right;} .pf-r.cs{border-left-color:var(--amber);opacity:.9;}
+.pf-rb{margin-bottom:10px;padding:11px 12px;border-radius:13px;border:1px solid rgba(94,234,212,.4);background:rgba(94,234,212,.05);} .pf-rb .t{font-size:13.5px;font-weight:900;margin-bottom:6px;} .pf-rb .t b.dn{color:#FF8A8A;} .pf-rb .t b.up{color:var(--up);}
+  .pf-rb table{width:100%;border-collapse:separate;border-spacing:0 3px;font-size:12px;} .pf-rb th{font-size:10.5px;color:var(--text-faint);text-align:right;padding:0 6px;font-weight:800;} .pf-rb th:first-child,.pf-rb td:first-child{text-align:left;}
+  .pf-rb td{padding:7px 6px;background:var(--panel-2);text-align:right;font:700 12px var(--f-mono);white-space:nowrap;} .pf-rb td:first-child{font-family:inherit;border-radius:8px 0 0 8px;white-space:normal;} .pf-rb td:last-child{border-radius:0 8px 8px 0;}
+  .pf-rb td.dn{color:#FF8A8A;} .pf-rb td.up{color:var(--up);} .pf-rb td b{font-weight:900;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div><h1>🏛 QLD 파이낸셜 로드맵 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.22 (261021) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.23 (261021) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
   <div class="bsw" id="bsw"></div>
@@ -176,7 +180,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.22", RELEASE_DATE = "261021";
+const APP_VERSION = "V1.23", RELEASE_DATE = "261021";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -512,11 +516,22 @@ function pf() {
   const st = !LEV ? `<div class="pf-a"><b>🏦 계좌 데이터 없음</b> — 매수가 시작되면 레버리지 3종 실제 평가금이 자동으로 들어옵니다 · 지금은 총 투자금 계획 기준</div>`
     : `<div class="pf-a ${need > 0 ? "lo" : need < 0 ? "hi" : "ok"}"><div class="g"><span>지금 레버리지</span><b>${aP.toFixed(1)}%</b><small>${man(levM)} / ${man(A)}원 · ${LEV.d} 계좌 자동</small></div>
         <div class="m">${need < 0 ? `🔴 <b>${up}% 초과</b> → 1월에 레버리지 <b>${man(-need)}원</b> 팔아 단기채로` : need > 0 ? `🟢 <b>${lo}% 미만</b> → 1월에 단기채 <b>${man(need)}원</b>으로 레버리지 사기` : `✅ 범위 안 (${lo}~${up}%) — 할 일 없음`}</div></div>`;
-  el.innerHTML = st + `<div class="pf-h"><span>올해 레버리지 목표</span><b>${L}%</b><small>안전 자산 ${safe}% · 나스닥 ${(55 * k).toFixed(0)}% · 반도체 ${(20 * k).toFixed(0)}%</small></div>
+  let plan = "";
+  if (act && V.base === "acct") {
+    const fx = V.fx / 1e4, cashM = LEV.cash * fx, LT = Math.max(0, A * L / 100 - cashM),   // 레버리지 목표에서 매수 대기 현금 몫을 뺀 나머지를 3종에 45:20:10
+      items = [["QLD", "QLD평생", LEV.q * fx, LT * 45 / 75], ["SOXL", "SOXL무한", LEV.s * fx, LT * 20 / 75], ["TQQQ", "TQQQ거치", LEV.t * fx, LT * 10 / 75], ["SAFE", "🛡 단기채", SF, A * safe / 100]];
+    const go = need !== 0, sh = (sy, m) => PX[sy] ? ` · 약 <b>${Math.ceil(Math.abs(m) / fx / PX[sy])}주</b>` : "";
+    const rows = items.map(([sy, nm, a, t]) => { const d = t - a, small = Math.abs(d) < A * 0.02;
+      return `<tr><td>${nm}</td><td>${man(t)}</td><td>${man(a)}</td><td class="${!go || small ? "" : d < 0 ? "dn" : "up"}">${!go || small ? "유지" : d < 0 ? `팔기 ${man(-d)}${sy !== "SAFE" ? sh(sy, d) : ""}` : `사기 ${man(d)}${sy !== "SAFE" ? sh(sy, d) : ""}`}</td></tr>`; }).join("");
+    plan = `<div class="pf-rb"><div class="t">🔁 리밸런싱 플랜 · ${go ? "<b class='dn'>1월에 실행</b>" : "<b class='up'>지금은 할 일 없음</b>"}</div>
+      <table><tr><th>자산</th><th>목표</th><th>실제</th><th>할 일</th></tr>${rows}</table>
+      <div class="hint">${go ? "① <b>팔기</b> 먼저 → ② 그 돈으로 <b>사기</b> (계좌가 다르면 판 돈을 QLD평생 계좌로 이체) · 차이 2% 미만은 유지 · 매수 대기 현금 " + man(cashM) + "원은 무한·평생매수 몫이라 그대로" : `레버리지가 ${lo}~${up}% 범위 안이라 사고팔 필요 없음 · 1월 점검 때 다시 계산`} · 종가 기준 주수는 대략</div></div>`;
+  } else if (act) plan = `<div class="pf-a"><b>🔁 구체 리밸런싱 플랜</b> — 위 <b>계산 기준</b>에서 <b>🏦 실제 계좌</b>를 고르면 자산별 팔기·사기 금액과 주수가 자동으로 나옵니다</div>`;
+  el.innerHTML = st + plan + `<div class="pf-h"><span>올해 레버리지 목표</span><b>${L}%</b><small>안전 자산 ${safe}% · 나스닥 ${(55 * k).toFixed(0)}% · 반도체 ${(20 * k).toFixed(0)}%</small></div>
     <div class="pf-l">${rows}</div>
     <div class="pf-tl"><div class="t">📉 은퇴까지 레버리지 목표 (매년 자동)</div><div class="row">${tl}</div></div>
     <div class="pf-rules"><div class="t">📌 운영 규칙 · 1년에 한 번 1월</div>
-      <div class="ru"><i>①</i><div><b>비율 되돌리기</b><span>레버리지 비중 <b class="up">${up}% 넘으면</b> 초과분 팔아 단기채로 · <b class="dn">${lo}% 아래면</b>(폭락 후) 단기채로 다시 사서 <b>${L}%</b>로<small>레버리지 비중 = (QLD + SOXL + TQQQ 평가금 + 그 전략의 매수 대기 현금) ÷ 총자산 · "비쌀 때 팔고, 쌀 때 사기"가 저절로</small></span></div></div>
+      <div class="ru"><i>①</i><div><b>리밸런싱</b><span>레버리지 비중 <b class="up">${up}% 넘으면</b> 초과분 팔아 단기채로 · <b class="dn">${lo}% 아래면</b>(폭락 후) 단기채로 다시 사서 <b>${L}%</b>로<small>레버리지 비중 = (QLD + SOXL + TQQQ 평가금 + 그 전략의 매수 대기 현금) ÷ 총자산 · "비쌀 때 팔고, 쌀 때 사기"가 저절로</small></span></div></div>
       <div class="ru"><i>②</i><div><b>세금 줄이기</b><span>해외 ETF 이익 <b>연 250만원까지 비과세</b> → 매년 그만큼 팔았다 다시 사기<small>연금계좌는 레버리지 불가 → 1배 지수·커버드콜용</small></span></div></div>
       <div class="ru"><i>③</i><div><b>은퇴 준비</b><span>은퇴 4년 전부터 <b>매년 15%p씩</b> 레버리지 → 안전 자산<small>은퇴 때 레버리지 20% · 생활비 2년치 완충 (💸인출 탭)</small></span></div></div></div>
     <div class="hint" style="margin-top:8px">⚠ 2008·2022년 같은 하락장에선 전체 −65~75%까지 갈 수 있음 · 과거 데이터 기반 예시이며 투자 자문이 아님</div>`;
@@ -542,7 +557,8 @@ function setAuto(k, v, src) { if (!(v > 0)) return; AUTO[k] = v;          // 직
   if (!TOUCH[k]) { V[k] = Math.round(v); $("i_" + k).value = V[k]; } $("s_" + k).textContent = ` · ${src} ${Math.round(v).toLocaleString("en-US")}`; }
 /* 🏦 실제 자산 = 통합 앱 계좌 설정 그대로 (봇마다 넣은 앱키: 같은 키 = 같은 계좌) — 설정을 바꾸면 다음 동기화부터 자동 반영
    QLD평생·QLD무한 봇이 쓰는 계좌마다: QLD 평가금 + 현금 × (그 계좌 시드 중 QLD 비중) · 다른 종목과 같은 계좌면 현금만 시드 비율로 나눔 */
-let LEV = null; const SAFE = new Set(["SGOV", "BIL", "SHV", "USFR", "TFLO", "BILS", "SCHO", "VGSH", "SHY", "TBIL", "XHLF", "GBIL", "JPST", "MINT"]);   // 🛡 단기국채·초단기채 ETF = 안전 자산
+let LEV = null, PX = {};
+["SOXL", "TQQQ", "QLD"].forEach(sy => fetch(`data/${sy}.json?h=${new Date().toISOString().slice(0, 10)}`, { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(j => { const b = j && j.bars; if (b && b.length) { PX[sy] = +b[b.length - 1][4]; render(); } }).catch(() => {})); const SAFE = new Set(["SGOV", "BIL", "SHV", "USFR", "TFLO", "BILS", "SCHO", "VGSH", "SHY", "TBIL", "XHLF", "GBIL", "JPST", "MINT"]);   // 🛡 단기국채·초단기채 ETF = 안전 자산
 function levActual(J) {
   const F = ["muhan-bot.json", "muhan-bot-tqqq.json", "muhan-bot-qldm.json", "muhan-bot-qld.json"], cfg = f => J(f) || {}, G = {};
   F.filter(f => cfg(f).installed_at).forEach(f => { const k = cfg(f).keys && cfg(f).keys.tail ? "k:" + cfg(f).keys.tail : "f:" + f; (G[k] = G[k] || []).push(f); });
