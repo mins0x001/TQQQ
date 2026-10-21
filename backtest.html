@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="version" content="V1.00-261021-Backtest">
+<meta name="release-date" content="261021">
+<title>무한매수 vs 거치식 (V1.00 - 261021)</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+  :root{--bg:#070B16;--panel:#111A2E;--panel-2:#0B1224;--border:#24345A;--text:#E6EDF7;--dim:#B7C2D6;--faint:#8E9AB0;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--dn:#FF7A86;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;}
+  *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Pretendard","Noto Sans KR",sans-serif;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;}
+  .wrap{max-width:640px;margin:0 auto;padding:16px 16px 40px;}
+  h1{font-size:21px;margin:4px 0 2px;letter-spacing:-.3px;} .ver{font-size:11.5px;color:var(--faint);margin-bottom:12px;}
+  .pill{display:inline-block;vertical-align:middle;margin-left:8px;padding:3px 10px;border-radius:99px;border:1px solid #2F4A7A;color:#8C98AD;font-size:12px;font-weight:700;text-decoration:none;}
+  .card{padding:14px;border-radius:18px;background:var(--panel);border:1px solid var(--border);margin-bottom:12px;}
+  .in{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end;}
+  .in label{display:block;font-size:11.5px;font-weight:800;color:var(--faint);margin-bottom:4px;}
+  .in input{width:100%;min-height:46px;padding:0 44px 0 12px;border-radius:12px;border:1px solid var(--border);background:var(--panel-2);color:var(--text);font:800 17px var(--mono);outline:none;} .in input:focus{border-color:var(--glow);}
+  .in .u{position:relative;} .in .u span{position:absolute;right:12px;bottom:13px;font-size:12px;color:var(--faint);font-weight:700;pointer-events:none;}
+  .btn{min-height:46px;padding:0 14px;border-radius:12px;border:0;background:linear-gradient(90deg,#5EEAD4,#38BDF8);color:#04121C;font-weight:900;font-size:14px;cursor:pointer;white-space:nowrap;}
+  .hint{font-size:11.5px;color:var(--faint);margin-top:8px;line-height:1.6;} .hint b{color:var(--dim);}
+  .sym h2{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;white-space:nowrap;margin:0 0 2px;font-size:17px;} .sym h2 small{font-size:11.5px;color:var(--faint);font-weight:600;}
+  .verdict{margin:8px 0 10px;padding:9px 12px;border-radius:12px;font-size:13px;font-weight:800;line-height:1.5;}
+  .verdict.inf{background:rgba(94,234,212,.1);border:1px solid rgba(94,234,212,.4);color:var(--glow);} .verdict.bh{background:rgba(245,165,36,.1);border:1px solid rgba(245,165,36,.45);color:var(--amber);} .verdict.eq{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--dim);}
+  table{width:100%;border-collapse:separate;border-spacing:0 3px;font-size:12.5px;}
+  th{white-space:nowrap;font-size:11px;font-weight:800;color:var(--faint);text-align:right;padding:2px 8px;} th:first-child{text-align:left;}
+  td{padding:8px;text-align:right;white-space:nowrap;background:var(--panel-2);font:700 13px var(--mono);} td:first-child{text-align:left;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--dim);border-radius:9px 0 0 9px;} td:last-child{border-radius:0 9px 9px 0;}
+  td.w{color:var(--up);} td small{display:block;font-size:10px;color:var(--faint);font-weight:600;}
+  .th-i{color:var(--glow) !important;} .th-b{color:var(--amber) !important;}
+  .win{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin-top:8px;font-size:12px;font-weight:800;color:var(--dim);}
+  .bar{height:8px;border-radius:99px;background:rgba(245,165,36,.35);overflow:hidden;} .bar i{display:block;height:100%;background:var(--glow);}
+  .busy{color:var(--faint);font-size:13px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📊 무한매수 vs 거치식 <a class="pill" href="./">🏠 허브</a></h1>
+  <div class="ver">V1.00 (261021) · QLD · TQQQ · SOXL 상장 이후 실제 종가로 기간별 구간 백테스트</div>
+
+  <section class="card">
+    <div class="in">
+      <div class="u"><label for="amt">투자금액</label><input id="amt" inputmode="numeric" value="10000"><span>만원</span></div>
+      <div class="u"><label for="yrs">투자기간</label><input id="yrs" inputmode="numeric" value="5"><span>년</span></div>
+      <button class="btn" id="go" type="button">↻ 새로고침</button>
+    </div>
+    <div class="hint">값은 이 기기 + ☁️ 동기화(연결 시)에 평생 저장 · 종가는 매일 10:10 자동 저장 · <b>100봉(약 5개월)마다 시작점을 옮긴 모든 구간</b>을 비교</div>
+  </section>
+
+  <div id="out"><div class="busy">불러오는 중…</div></div>
+
+  <section class="card"><div class="hint">
+    <b>무한매수</b> = 앱 규칙 단순화: 종가 ≤ min(평단, 전일 종가)일 때 1회분 매수 · 평단 대비 익절가 도달 시 전량 매도 · QLD는 1년 고점 −10% 이하에서만 매수 · 쉬는 현금 수익 0%<br>
+    <b>거치식</b> = 첫날 전액 매수 후 보유 · 수수료·세금·환율 제외 · 과거 결과이며 미래를 보장하지 않습니다 (2010년 이후는 레버리지 ETF에 매우 좋았던 시기)
+  </div></section>
+</div>
+<script>
+const KEY = "bt_v1", GF = "backtest.json", $ = id => document.getElementById(id);
+const SYMS = [
+  { s: "QLD", nm: "QLD 무한매수", sub: "12분할 · 익절 +10% · 1년 고점 −10% 이하만", nsp: 12, tp: 0.10, gate: 0.10 },
+  { s: "TQQQ", nm: "TQQQ 무한매수", sub: "12분할 · 익절 +10%", nsp: 12, tp: 0.10, gate: 0 },
+  { s: "SOXL", nm: "SOXL 무한매수", sub: "21분할 · 익절 +15%", nsp: 21, tp: 0.15, gate: 0 },
+];
+let V = { amt: 10000, yrs: 5, at: 0 }; try { Object.assign(V, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) {}
+const tok = () => { try { return localStorage.getItem("muhansync_token") || ""; } catch (e) { return ""; } }, gid = () => { try { return localStorage.getItem("muhansync_gist") || ""; } catch (e) { return ""; } };
+function save() { V.at = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(V)); } catch (e) {}
+  const t = tok(), g = gid(); if (t && g) fetch("https://api.github.com/gists/" + g, { method: "PATCH", headers: { Authorization: "Bearer " + t, "Content-Type": "application/json" }, body: JSON.stringify({ files: { [GF]: { content: JSON.stringify(V) } } }) }).catch(() => {}); }
+const won = m => { m = Math.round(m); const e = Math.floor(Math.abs(m) / 10000), r = Math.abs(m) % 10000, s = m < 0 ? "-" : ""; return s + (e ? e.toLocaleString("ko-KR") + "억" + (r ? " " + r.toLocaleString("ko-KR") + "만" : "") : r.toLocaleString("ko-KR") + "만"); };
+const pc = x => (x >= 0 ? "+" : "") + Math.round(x * 100).toLocaleString("en-US") + "%";
+const med = a => { const s = a.slice().sort((x, y) => x - y), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2; }, avg = a => a.reduce((x, y) => x + y, 0) / a.length;
+function inf(C, o, L, p) {               // 무한매수 단순 모형 (시드 1 기준 · 수익 재투자)
+  let cash = 1, sh = 0, cost = 0, pk = 1, mdd = 0;
+  for (let i = o; i < o + L; i++) {
+    const c = C[i], pcl = C[i - 1];
+    if (sh > 0 && c >= cost / sh * (1 + p.tp)) { cash += sh * c; sh = 0; cost = 0; }
+    if (cash > 1e-9) { let ok = true; if (p.gate) { let hi = 0; for (let j = Math.max(0, i - 251); j <= i; j++) hi = Math.max(hi, C[j]); ok = c <= hi * (1 - p.gate); }
+      const lim = sh > 0 ? Math.min(cost / sh, pcl) : pcl;
+      if (ok && c <= lim) { const a = Math.min(1 / p.nsp * Math.max(1, cash + sh * c), cash); sh += a / c; cost += a; cash -= a; } }
+    const e = cash + sh * c; pk = Math.max(pk, e); mdd = Math.min(mdd, e / pk - 1);
+  }
+  return [cash + sh * C[o + L - 1] - 1, mdd];
+}
+function bh(C, o, L) { let pk = C[o], mdd = 0; for (let i = o; i < o + L; i++) { pk = Math.max(pk, C[i]); mdd = Math.min(mdd, C[i] / pk - 1); } return [C[o + L - 1] / C[o] - 1, mdd]; }
+const DATA = {};
+async function load(force) { await Promise.all(SYMS.map(async p => { if (DATA[p.s] && !force) return;
+  const r = await fetch(`data/${p.s}_max.json?t=${force ? Date.now() : new Date().toISOString().slice(0, 10)}`, { cache: "no-cache" }).catch(() => null);
+  DATA[p.s] = r && r.ok ? await r.json() : null; })); }
+function card(p) {
+  const d = DATA[p.s]; if (!d || !d.bars || d.bars.length < 600) return `<section class="card sym"><h2>${p.nm}</h2><div class="busy">⚠ 데이터 준비 중 (매일 10:10 저장)</div></section>`;
+  const C = d.bars.map(b => b[1]), D = d.bars.map(b => b[0]), L = Math.round(V.yrs * 252);
+  if (C.length - L < 300) return `<section class="card sym"><h2>${p.nm}</h2><div class="busy">⚠ ${V.yrs}년은 데이터(${D[0].slice(0, 4)}~)보다 김 — 기간을 줄여 주세요</div></section>`;
+  const R = []; for (let o = Math.max(1, p.gate ? 252 : 1); o + L < C.length; o += 100) R.push([D[o], inf(C, o, L, p), bh(C, o, L)]);
+  const I = R.map(r => r[1][0]), B = R.map(r => r[2][0]), Im = R.map(r => r[1][1]), Bm = R.map(r => r[2][1]), w = R.filter(r => r[1][0] > r[2][0]).length, n = R.length, A = V.amt;
+  const row = (lab, a, b, money, hiBetter = true) => { const iw = hiBetter ? a > b : a < b; return `<tr><td>${lab}</td><td class="${iw ? "w" : ""}">${money ? won(A * (1 + a)) : pc(a)}${money ? `<small>${pc(a)}</small>` : ""}</td><td class="${!iw && a !== b ? "w" : ""}">${money ? won(A * (1 + b)) : pc(b)}${money ? `<small>${pc(b)}</small>` : ""}</td></tr>`; };
+  const mi = med(I), mb = med(B), v = w / n >= 0.6 ? ["inf", `🟢 무한매수 우세 — ${n}개 구간 중 ${w}개 승`] : w / n <= 0.4 ? ["bh", `🟠 거치식 우세 — ${n}개 구간 중 ${n - w}개 승`] : ["eq", `⚖ 막상막하 — 무한 ${w} : 거치 ${n - w} (중간값은 ${mi >= mb ? "무한매수" : "거치식"} 우위)`];
+  return `<section class="card sym"><h2>${p.nm}<small>${p.sub}</small></h2><div class="hint" style="margin:0">${D[0]}~ 실제 종가 · ${V.yrs}년 구간 <b>${n}개</b> (시작 ${R[0][0].slice(0, 7)} ~ ${R[n - 1][0].slice(0, 7)})</div>
+    <div class="verdict ${v[0]}">${v[1]}</div>
+    <table><tr><th>${won(A)}원 → ${V.yrs}년 후</th><th class="th-i">무한매수</th><th class="th-b">거치식</th></tr>
+      ${row("평균", avg(I), avg(B), 1)}${row("중간", mi, mb, 1)}${row("최악", Math.min(...I), Math.min(...B), 1)}${row("최고", Math.max(...I), Math.max(...B), 1)}
+      ${(li => `<tr><td>손실 구간</td><td class="${li[0] < li[1] ? "w" : ""}">${li[0]}개</td><td class="${li[1] < li[0] ? "w" : ""}">${li[1]}개</td></tr>`)([I.filter(x => x < 0).length, B.filter(x => x < 0).length])}
+      ${row("최대 낙폭 평균", avg(Im), avg(Bm))}${row("최대 낙폭 최악", Math.min(...Im), Math.min(...Bm))}</table>
+    <div class="win"><span>무한 ${w}</span><div class="bar"><i style="width:${w / n * 100}%"></i></div><span>거치 ${n - w}</span></div></section>`;
+}
+function run() { $("out").innerHTML = SYMS.map(card).join(""); }
+function readIn() { const a = Math.round(+$("amt").value.replace(/[^\d]/g, "")), y = Math.round(+$("yrs").value);
+  if (a >= 100 && a <= 10000000) V.amt = a; if (y >= 1 && y <= 15) V.yrs = y; $("amt").value = V.amt.toLocaleString("ko-KR"); $("yrs").value = V.yrs; }
+$("amt").value = V.amt.toLocaleString("ko-KR"); $("yrs").value = V.yrs;
+["amt", "yrs"].forEach(k => $(k).addEventListener("change", () => { readIn(); save(); run(); }));
+$("go").onclick = async () => { readIn(); save(); $("out").innerHTML = `<div class="busy">↻ 최신 종가 불러오는 중…</div>`; await load(true); run(); };
+(async () => {
+  await load(); run();
+  const t = tok(), g = gid(); if (!t || !g) return;          // ☁️ 다른 기기에서 바꾼 값
+  try { const r = await fetch("https://api.github.com/gists/" + g, { headers: { Authorization: "Bearer " + t }, cache: "no-store" }); const f = r.ok ? (await r.json()).files[GF] : null;
+    if (f) { const p = JSON.parse(f.content); if (p.at > (V.at || 0)) { Object.assign(V, p); try { localStorage.setItem(KEY, JSON.stringify(V)); } catch (e) {} $("amt").value = V.amt.toLocaleString("ko-KR"); $("yrs").value = V.yrs; run(); } } } catch (e) {}
+})();
+</script>
+</body>
+</html>
