@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="release-date" content="261021">
+<meta name="release-date" content="261022">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="무한매수">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -86,6 +86,7 @@
 .hc .it.no{background:rgba(255,77,94,.1);border:1px solid rgba(255,77,94,.45);color:#FFB3BA;} .hc .it.no b{color:#FF6B78;}
 .hc .it.wa{background:rgba(245,165,36,.08);border:1px solid rgba(245,165,36,.35);color:#F2D29B;}
 .hc details{margin-top:6px;} .hc summary{cursor:pointer;color:#38D98C;font-weight:700;font-size:12px;} .hc .ok-l{margin-top:4px;color:#8FD9B6;font-size:12px;}
+.dash .st2{display:block;margin-top:1px;opacity:.85;} .dash .st2::before{content:'⚡ ';}
 </style>
 </head>
 <body>
@@ -220,7 +221,7 @@ async function authChangePw(a) {
 </script><script>if (typeof AUTHGATE === "function") AUTHGATE();</script>
   <header>
     <h1>무한매수 허브<span class="app-pill" id="appPill" hidden>앱</span></h1>
-    <p>메리츠 자동주문(통합) · SOXL · TQQQ · QLD무한매수 · QLD평생매수 · 계좌는 봇마다 앱키로 자유 구성 <span class="ver">· 허브 V1.72 (261021)</span></p>
+    <p>메리츠 자동주문(통합) · SOXL · TQQQ · QLD무한매수 · QLD평생매수 · 계좌는 봇마다 앱키로 자유 구성 <span class="ver">· 허브 V1.73 (261022)</span></p>
   </header>
 
   <section class="hc" id="health" aria-live="polite"></section>
@@ -238,45 +239,25 @@ async function authChangePw(a) {
     <span class="go">›</span>
   </a>
   <div style="font-size:12px;color:#93A3BD;margin:14px 2px 4px;font-weight:800;">무한매수 · 메리츠 A계좌</div>
-  <a class="dash" href="api-soxl.html" style="--c:#2ECC71;">
-    <span class="tk" style="font-size:20px;">🔌</span>
-    <span class="info"><span class="nm">메리츠 자동주문(SOXL무한매수) <small>V1.15</small></span><span class="st" id="st-api">📒 기록·사이클 · SOXL 봇</span></span>
-    <span class="go">›</span>
-  </a>
   <a class="dash" href="soxl.html" style="--c:var(--amber);">
     <span class="tk" >SOXL</span>
-    <span class="info"><span class="nm">SOXL 무한매수AI분석 <small>V1.11</small></span><span class="st" id="st-soxl">기록 확인 중…</span></span>
-    <span class="go">›</span>
-  </a>
-  <a class="dash" href="api-tqqq.html" style="--c:#2ECC71;">
-    <span class="tk" style="font-size:20px;">🔌</span>
-    <span class="info"><span class="nm">메리츠 자동주문(TQQQ무한매수) <small>V1.15</small></span><span class="st" id="st-api2">📒 기록·사이클 · TQQQ 봇 (계좌 자유 선택)</span></span>
+    <span class="info"><span class="nm">SOXL 무한매수 <small>V1.12</small></span><span class="st" id="st-soxl">기록 확인 중…</span><span class="st st2" id="st-api">📒 기록·사이클 · SOXL 봇</span></span>
     <span class="go">›</span>
   </a>
   <a class="dash" href="tqqq.html" style="--c:var(--glow);">
     <span class="tk" >TQQQ</span>
-    <span class="info"><span class="nm">TQQQ 무한매수AI분석 <small>V1.12</small></span><span class="st" id="st-tqqq">기록 확인 중…</span></span>
+    <span class="info"><span class="nm">TQQQ 무한매수 <small>V1.13</small></span><span class="st" id="st-tqqq">기록 확인 중…</span><span class="st st2" id="st-api2">📒 기록·사이클 · TQQQ 봇 (계좌 자유 선택)</span></span>
     <span class="go">›</span>
   </a>
-  <div style="font-size:12px;color:#93A3BD;margin:14px 2px 4px;font-weight:800;">QLD · 메리츠 B계좌</div>
-  <a class="dash" href="api-qm.html" style="--c:#2ECC71;">
-    <span class="tk" style="font-size:20px;">🔌</span>
-    <span class="info"><span class="nm">메리츠 자동주문(QLD무한매수) <small>V1.20</small></span><span class="st" id="st-apiqm">⏰ 1년 고점 -10% 이하에서 LOC 축적 · 매도는 선택</span></span>
-    <span class="go">›</span>
-  </a>
+  <div style="font-size:12px;color:#93A3BD;margin:14px 2px 4px;font-weight:800;">QLD</div>
   <a class="dash" href="qldm.html" style="--c:#00C2FF;">
     <span class="tk" >QLD∞</span>
-    <span class="info"><span class="nm">QLD 무한매수AI분석 <small>V1.14</small></span><span class="st" id="st-qldm">기록 확인 중…</span></span>
-    <span class="go">›</span>
-  </a>
-  <a class="dash" href="api-qld.html" style="--c:#2ECC71;">
-    <span class="tk" style="font-size:20px;">🔌</span>
-    <span class="info"><span class="nm">메리츠 자동주문(QLD평생매수) <small>V1.29</small></span><span class="st" id="st-apiqld">⏰ 주 1회 LOC · 🤖 시드 엔진</span></span>
+    <span class="info"><span class="nm">QLD 무한매수 <small>V1.15</small></span><span class="st" id="st-qldm">기록 확인 중…</span><span class="st st2" id="st-apiqm">⏰ 1년 고점 -10% 이하에서 LOC 축적 · 매도는 선택</span></span>
     <span class="go">›</span>
   </a>
   <a class="dash" href="qld.html" style="--c:var(--violet);">
     <span class="tk" >QLD</span>
-    <span class="info"><span class="nm">QLD 평생매수AI분석 <small>V1.15</small></span><span class="st" id="st-qld">기록 확인 중…</span></span>
+    <span class="info"><span class="nm">QLD 평생매수 <small>V1.16</small></span><span class="st" id="st-qld">기록 확인 중…</span><span class="st st2" id="st-apiqld">⏰ 주 1회 LOC · 🤖 시드 엔진</span></span>
     <span class="go">›</span>
   </a>
 
@@ -317,7 +298,7 @@ async function authChangePw(a) {
   <p class="note">매수 기록은 자동주문 앱 🛠 설정 탭의 <b>☁️ 동기화</b>를 켜면 PC와 폰이 같은 기록을 씁니다. 이 목록은 이 기기에 마지막으로 맞춰진 기록입니다.</p>
 </div>
 <script>
-const HUB_VERSION = "V1.72", HUB_RELEASE = "261020";
+const HUB_VERSION = "V1.73", HUB_RELEASE = "261020";
 function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
 function realized(tk, won){
   const t = readJSON(tk + "_trades_v1");
