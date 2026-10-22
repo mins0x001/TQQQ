@@ -914,7 +914,7 @@ body.panel .sell-row{display:none !important;}
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V1.20";
+const APP_VERSION = "V1.21";
 const RELEASE_DATE = "261022";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
@@ -2013,9 +2013,6 @@ function renderTpCompare(rAi, seed, splits, prevDown, cycleDays) {
       </table>
       <div class="tp-cmp-verdict">${verdict}</div>
       <div class="tp-cmp-sweep">${sweepHtml}</div>
-      <details><summary>고정 +${tp}% 매매 내역 ${rFx.trades.length}건 보기</summary>
-        <table style="margin-top:6px;"><thead><tr><th>진입·회차</th><th>청산</th><th>손익</th></tr></thead><tbody>${fxRows}</tbody></table>
-      </details>
     </div>`;
 }
 (function () {
