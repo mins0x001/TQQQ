@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.27-261022-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.28-261022-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261022">
-<title>QLD 평생매수AI분석 (V1.27 - 261022)</title>
+<title>QLD 평생매수AI분석 (V1.28 - 261022)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -534,6 +534,9 @@
 body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.panel #todayContent .cycle-alert,body.panel #todayContent .cycle-wait{display:none !important;}
 .pk-tb{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums;} .pk-tb th{font-size:11px;color:var(--text-faint);font-weight:700;text-align:right;padding:6px 4px;border-bottom:1px solid var(--border);} .pk-tb th:first-child,.pk-tb td:first-child{text-align:left;}
 .pk-tb td{padding:8px 4px;text-align:right;border-bottom:1px solid var(--border-soft);font-family:'JetBrains Mono',monospace;font-weight:700;} .pk-tb td small{display:block;font-family:inherit;font-size:10.5px;color:var(--text-faint);font-weight:500;} .pk-tb tr.now td{background:rgba(94,234,212,.08);} .pk-tb tr.now td:first-child{box-shadow:inset 3px 0 0 #5EEAD4;}
+.pk-ord{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;margin-top:6px;padding:9px 11px;border-radius:11px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);} .pk-ord.off{opacity:.5;}
+.pk-ord .sd{font-size:12px;font-weight:900;padding:3px 9px;border-radius:7px;} .pk-ord.buy .sd{background:rgba(56,217,140,.16);color:#38D98C;} .pk-ord.sell .sd{background:rgba(240,71,90,.16);color:#FF6B78;}
+.pk-ord .cn{font-size:13px;font-weight:800;line-height:1.2;} .pk-ord .cn small{display:block;font-size:10.5px;font-weight:600;color:var(--text-faint);} .pk-ord b{font-family:'JetBrains Mono',monospace;font-size:15px;text-align:right;line-height:1.2;} .pk-ord b em{display:block;font-style:normal;font-size:12px;color:var(--text-dim);font-weight:700;}
 </style>
 </head>
 <body>
@@ -629,8 +632,8 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
   <div hidden><section id="card-excel"></section><button id="xlsxBtn"></button><div id="xlsxMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_27_261022.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.27 (261022)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_28_261022.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.28 (261022)</code></div>
   </footer>
 
   </div>
@@ -813,7 +816,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.27";
+const APP_VERSION = "V1.28";
 const RELEASE_DATE = "261022";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -1992,13 +1995,15 @@ function parkPlan(E) {
   const p = ctx.hist[ctx.hist.length - 1].y, t = E.tier, cur = E.amt || 0, nx = E.nextAmt || 0, nxPx = E.nextPx || 0;
   let st, R, why;
   const nr = E.rows[1] ? E.rows[1].from : 0;
-  if (nx && p <= nxPx * 1.10) { st = 2; R = Math.max(2 * cur, cur + nx); why = `${nr}회차 진입가 $${nxPx.toFixed(2)} 10% 이내 → ${nr}회차 금액 전액 현금 확보`; }
-  else if (p <= E.px[0]) { st = 1; R = 2 * cur + nx * 0.5; why = `매수 구간 → ${E.round}회차 2회분 + ${nr ? nr + "회차의 절반" : ""} 미리`; }
-  else { st = 0; R = 2 * cur; why = `평온 → ${E.round}회차 1회 × 2만 현금`; }
+  const r1 = E.round, r2 = Math.min(E.N, E.round + 1), two = r2 > r1 ? `${r1}회차, ${r2}회차` : `${r1}회차`;
+  if (nx && p <= nxPx * 1.10) { st = 2; R = Math.max(2 * cur, cur + nx); why = `단계 근접 → QLD매수 ${r1}회차 + ${nr}회차(진입가 $${nxPx.toFixed(2)}) 전액 대기현금 필요`; }
+  else if (p <= E.px[0]) { st = 1; R = 2 * cur + nx * 0.5; why = `매수 구간 → QLD매수 ${two} + ${nr ? nr + "회차 절반" : ""} 대기현금 필요`; }
+  else { st = 0; R = 2 * cur; why = `평온 → QLD매수 ${two} 대기현금 필요`; }
   R = Math.min(R, E.remain); const target = Math.max(0, E.remain - R);
   const L = parseJ(lsGet("qld_park_v1"), {}) || {}, a = qldAcct(), h = a && (a.holdings || []).find(x => String(x.symbol).toUpperCase() === "SPYM");
-  const lq = Math.min(+L.qty || 0, h ? +h.qty : 0), px = h && +h.qty ? (+h.value || 0) / +h.qty : 0, pv = lq * px, cash = a && a.cash_usd != null ? +a.cash_usd : null;
-  return { p, st, R, why, target, lq, px, pv, cash, cur, nx, t, nr };
+  // 계좌 동기화가 없으면 = SPYM 보유 없음 · 남은 시드 전부 현금으로 보고 계산
+  const sync = !!(a && a.cash_usd != null), lq = sync ? Math.min(+L.qty || 0, h ? +h.qty : 0) : 0, px = h && +h.qty ? (+h.value || 0) / +h.qty : 0, pv = lq * px, cash = sync ? +a.cash_usd : E.remain;
+  return { p, st, R, why, target, lq, px, pv, cash, cur, nx, t, nr, sync };
 }
 let SPYM_PX = null;
 fetch("data/SPYM.json?h=" + new Date().toISOString().slice(0, 10), { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(j => { const b = j && j.bars; if (b && b.length) { SPYM_PX = { px: +b[b.length - 1][4], d: b[b.length - 1][0] }; try { renderPark(seedEngine()); } catch (e) {} } }).catch(() => {});
@@ -2009,15 +2014,19 @@ function renderPark(E) {
   const ST = [["🟢 평온", "var(--up)"], ["🟡 매수 구간", "var(--amber)"], ["🔴 단계 근접", "var(--down)"]][P.st];
   const u0 = v => "$" + Math.round(v).toLocaleString("en-US"), row = (l, v) => `<div style="padding:9px 2px;border-top:1px solid var(--border-soft)"><div style="font-size:11.5px;color:var(--text-faint);margin-bottom:3px">${l}</div><div style="font-size:13.5px;font-weight:700;line-height:1.45;word-break:keep-all;overflow-wrap:anywhere">${v}</div></div>`;
   const kpi = (l, v, c) => `<div class="tb-kpi"><div class="l">${l}</div><div class="v" ${c ? `style="color:${c}"` : ""}>${v}</div></div>`;
-  let todo = "계좌 동기화 후 표시";
-  if (P.cash != null) { const free = P.R; todo = P.cash < free - 1 && P.lq >= 1 ? `🔴 SPYM 약 ${u0(free - P.cash)} 매도 → 현금 채우기` : P.cash > free + 200 && P.pv < P.target - 200 ? `🟢 SPYM 약 ${u0(Math.min(P.cash - free, P.target - P.pv))} 매수` : "✅ 유지 (할 일 없음)"; }
+  const sp0 = SPYM_PX ? SPYM_PX.px : P.px, bpx = sp0 > 0 ? Math.ceil(sp0 * 1.03 * 100) / 100 : 0, spx0 = sp0 > 0 ? Math.floor(sp0 * 0.95 * 100) / 100 : 0, pv0 = P.lq * sp0;
+  const bq = bpx && P.cash > P.R + sp0 * 2 && pv0 < P.target - sp0 ? Math.floor(Math.min(P.cash - P.R, P.target - pv0) / bpx) : 0;
+  const sNow = spx0 && P.cash < P.R - 1 && P.lq >= 1, sq = spx0 ? (sNow ? Math.min(P.lq, Math.ceil((P.R - P.cash) / spx0)) : Math.ceil(P.cur / spx0)) : 0;
+  const ol = (side, px, q, sub) => `<div class="pk-ord ${side}${q ? "" : " off"}"><span class="sd">${side === "buy" ? "매수" : "매도"}</span><span class="cn">LOC<small>${sub}</small></span><b>${px ? u0c(px) : "-"}<em>× ${q.toLocaleString("en-US")}주</em></b></div>`;
+  const lines = ol("buy", bpx, bq, bq ? "오늘 · 장 마감 지정가 +3%" : "오늘 없음 · 대기 시드 이미 SPYM") + ol("sell", spx0, sq, sNow ? "오늘 · 대기현금 채우기 −5%" : `QLD ${E.round}회차 체결 뒤 · −5%`);
+  const todo = bq ? `🟢 SPYM ${bq.toLocaleString("en-US")}주 매수` : sNow ? `🔴 SPYM ${sq.toLocaleString("en-US")}주 매도` : "✅ 유지 (할 일 없음)";
   const crash = P.pv * 0.7 + (P.cash || 0), sp = SPYM_PX ? SPYM_PX.px : P.px, spx = sp > 0 ? Math.floor(sp * 0.95 * 100) / 100 : 0;
   const rr = r => r.from === r.to ? `${r.from}` : `${r.from}~${r.to}`, cnd = r => r.now ? `≤ ${u0c(r.px)}<small>이번 LOC</small>` : `≤ ${u0c(r.px)}<small>고점 −${(E.cum[r.T] * 100).toFixed(1)}%</small>`;
   const tbl = `<table class="pk-tb"><tr><th>회차</th><th>QLD 종가</th><th>QLD 매수</th><th>SPYM 매도</th></tr>${E.rows.map(r => `<tr class="${r.now ? "now" : ""}"><td><b>${rr(r)}</b>${r.from !== r.to ? "<small>각 회</small>" : ""}</td><td>${cnd(r)}</td><td>${u0(r.each)}</td><td>${spx ? `<b>${Math.ceil(r.each / spx).toLocaleString("en-US")}주</b><small>LOC ${u0c(spx)}</small>` : "-"}</td></tr>`).join("")}</table>
     <div style="margin-top:6px;font-size:11.5px;line-height:1.55;color:var(--text-dim)">📌 ${E.round} / ${E.N}회차 진행 중 · 고점 −${(E.cum[1] * 100).toFixed(1)}% 오면 앞 회차가 남아도 바로 ${E.n[0] + 1}회차, −${(E.cum[2] * 100).toFixed(1)}% 오면 ${E.n[0] + E.n[1] + 1}회차 (남은 시드 자동 배분) · SPYM 매도가 = SPYM ${sp > 0 ? u0c(sp) : "-"} × 0.95 (그날 종가로 봇이 다시 계산)</div>`;
-  el.innerHTML = `<div class="sub-title"><span class="n">📉</span>${E.N}회차 대응 SPYM 매도 <small style="font-weight:500;color:var(--text-faint)">(AI 배분 ${E.w.join("/")}% · ${E.n.join("/")}분할 → 바뀌면 자동)</small></div>${tbl}<div style="height:10px"></div><div class="tb-kpis">${kpi("지금 상태", ST[0], ST[1])}${kpi("QLD매수 대기현금", u0(P.R))}${kpi("SPYM 목표", u0(P.target))}</div>
+  el.innerHTML = `${P.sync ? "" : `<div style="font-size:11.5px;color:var(--amber);margin-bottom:6px">💼 계좌 동기화 전 → SPYM 보유 없음 · 남은 시드 ${u0(E.remain)} 전부 현금으로 보고 계산</div>`}${lines}<div style="height:8px"></div><div class="sub-title"><span class="n">📉</span>${E.N}회차 대응 SPYM 매도 <small style="font-weight:500;color:var(--text-faint)">(AI 배분 ${E.w.join("/")}% · ${E.n.join("/")}분할 → 바뀌면 자동)</small></div>${tbl}<div style="height:10px"></div><div class="tb-kpis">${kpi("지금 상태", ST[0], ST[1])}${kpi("QLD매수 대기현금", u0(P.R))}${kpi("SPYM 목표", u0(P.target))}</div>
     ${row("AI 판단", `${P.why}`)}
-    ${row("현재 · 계좌 현금", `${P.cash != null ? u0(P.cash) + k(P.cash) : "-"}`)}
+    ${row("현재 · 계좌 현금", `${u0(P.cash)}${k(P.cash)}${P.sync ? "" : " <small>(동기화 전 · 남은 시드로 가정)</small>"}`)}
     ${row("현재 · 봇 SPYM", `${P.lq ? `${P.lq.toLocaleString("en-US")}주 · ${u0(P.pv)}${k(P.pv)}` : "없음 (다음 실행부터 자동)"}`)}
     ${row("오늘 봇이 할 일", `<b>${todo}</b>`)}
     ${row("폭락 대비 점검", `SPYM −30% 가정 시 쓸 돈 ${u0(crash)} · ${P.nr && P.nx ? `${P.nr}회차 ${u0(P.nx)} ${crash >= P.nx ? "✅ 충분" : "<b style='color:var(--down)'>⚠ 부족</b>"}` : "마지막 단계"}`)}
