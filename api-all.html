@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.29-261022-MeritzAutoOrder-All">
+<meta name="version" content="V1.30-261022-MeritzAutoOrder-All">
 <meta name="release-date" content="261022">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>자동주문(통합) (V1.29 - 261022)</title>
+<title>자동주문(통합) (V1.30 - 261022)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -22,7 +22,7 @@
   .pos{font-size:12.5px;color:var(--text-dim);margin:6px 0 2px;padding:6px 10px;border-radius:9px;background:rgba(255,255,255,0.035);line-height:1.6;} .pos b{color:var(--text,#E6EDF7);} .pos b.up{color:#38D98C;} .pos b.dn{color:#F0475A;}
   .rl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0 2px;}
   .rp{font-size:11.5px;font-weight:900;padding:3px 9px;border-radius:999px;border:1.5px solid;white-space:nowrap;}
-  .rp.rule{color:#1A1203;background:var(--amber);border-color:var(--amber);} .rp.bt{color:#04211C;background:var(--glow);border-color:var(--glow);}
+  .rp.no{color:#fff;background:#F0475A;border-color:#F0475A;} .rp.rule{color:#1A1203;background:var(--amber);border-color:var(--amber);} .rp.bt{color:#04211C;background:var(--glow);border-color:var(--glow);}
   .rp.manual{color:var(--text);background:rgba(75,90,115,.25);border-color:var(--border);} .rp.st{color:var(--amber);background:rgba(245,165,36,.12);border-color:rgba(245,165,36,.55);font-weight:800;white-space:normal;}
   .rv{font-size:12px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--text-dim);}
   .chk{display:inline-flex;gap:4px;align-items:center;font-size:13px;font-weight:700;margin-left:8px;} .chk input{width:18px;height:18px;}
@@ -57,7 +57,10 @@
   .adj{display:grid;grid-template-columns:60px 34px minmax(74px,1fr) 34px auto;gap:6px;align-items:center;margin:0 0 6px;}
   .adj .lb{font-size:12px;} .adj button{height:30px;min-width:34px;padding:0;} .adj button.rs{padding:0 10px;white-space:nowrap;font-size:11.5px;} .adj .pv{min-width:0;font-size:14.5px;line-height:1.15;font-family:'JetBrains Mono',monospace;}
   .adj .nt{grid-column:2/-1;margin-top:-2px;font-size:11.5px;line-height:1.35;}
-  .pk{margin-top:10px;padding:10px 11px;border-radius:12px;border:1px dashed rgba(94,234,212,.35);background:rgba(94,234,212,.04);}
+  .pk-tb{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums;margin-top:4px;} .pk-tb th{font-size:10.5px;color:var(--text-faint);font-weight:700;text-align:right;padding:5px 4px;border-bottom:1px solid var(--border);} .pk-tb th:first-child,.pk-tb td:first-child{text-align:left;}
+.pk-tb td{padding:7px 4px;text-align:right;border-bottom:1px solid rgba(255,255,255,.05);font-family:'JetBrains Mono',monospace;font-weight:700;} .pk-tb td small{display:block;font-family:inherit;font-size:10px;color:var(--text-faint);font-weight:500;} .pk-tb tr.now td{background:rgba(94,234,212,.08);} .pk-tb tr.now td:first-child{box-shadow:inset 3px 0 0 #5EEAD4;}
+.pk-sym .pk-t{margin-top:10px;}
+.pk{margin-top:10px;padding:10px 11px;border-radius:12px;border:1px dashed rgba(94,234,212,.35);background:rgba(94,234,212,.04);}
 .pk-h{font-weight:900;font-size:13.5px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
 .pk-s{font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap;flex:none;} .pk-s.ok{background:rgba(56,217,140,.14);color:#38D98C;} .pk-s.wa{background:rgba(245,165,36,.14);color:#F5A524;} .pk-s.no{background:rgba(240,71,90,.14);color:#FF6B78;}
 .pk-g{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;} .pk-g div{background:rgba(255,255,255,.035);border-radius:9px;padding:7px 4px;text-align:center;} .pk-g span{display:block;font-size:10.5px;color:var(--text-faint);} .pk-g b{font-family:'JetBrains Mono',monospace;font-size:13.5px;} .pk-g small{display:block;font-size:10.5px;color:var(--text-dim);}
@@ -72,7 +75,7 @@
 </head>
 <body>
 <div class="app">
-  <div class="top"><span class="mono" id="ver" style="color:var(--text-faint)">V1.29 (261022)</span></div>
+  <div class="top"><span class="mono" id="ver" style="color:var(--text-faint)">V1.30 (261022)</span></div>
   <h1>🔌 자동주문(통합) <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1><script>if(/[?&]embed=/.test(location.search)){var _hp=document.querySelector(".hub-pill");if(_hp)_hp.remove();}</script>
   <p class="sub">SOXL · TQQQ · QLD무한매수 · QLD평생매수 — 열면 4종목 계산, ⚡ 한 번에 실제 주문</p>
   <div id="msg"></div>
@@ -161,7 +164,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.29", RELEASE_DATE = "261022";
+const APP_VERSION = "V1.30", RELEASE_DATE = "261022";
 try { document.getElementById("ver").textContent = `${APP_VERSION} (${RELEASE_DATE})`; document.title = `자동주문(통합) (${APP_VERSION} - ${RELEASE_DATE})`; } catch (e) {}   // 화면 버전 = 항상 APP_VERSION
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
@@ -277,7 +280,7 @@ function pos(P) {                         // 📦 현재 상태: 앱 계획(last
 function rnd(P) {                         // 📍 분할매수 회차: X회차 / 총 N회 (무한매수 = 앱 회차 · 평생매수 = 엔진 분할 합계)
   const b = P.bot || {};
   if (b.kind === "lifetime") {
-    const N = (b.engine_n || []).reduce((a, x) => a + (+x || 0), 0), done = +b.buy_count || 0;
+    const N = +b.engine_N || (b.engine_n || []).reduce((a, x) => a + (+x || 0), 0), done = b.engine_round ? +b.engine_round - 1 : +b.buy_count || 0;
     if (!N) return "";
     const t = b.engine_remain != null && +b.engine_remain <= 0 ? `시드 소진 (${done}회 매수)` : done + 1 <= N ? `<b>${done + 1}</b> / ${N}회차 진행 중` : `<b>${done + 1}</b>회차 (기본 ${N}회 이후 · 잔여 시드)`, w = (done + 1) / N * 100;
     return `<div class="pr"><span>📍 ${t}</span><i><u style="width:${Math.min(100, Math.max(3, w))}%"></u></i></div>`;
@@ -313,7 +316,7 @@ function parkCalc(P) {
   const R1 = Math.min(remain, 2 * cur + nx * 0.5), R2 = Math.min(remain, Math.max(2 * cur, cur + nx));
   if (nx && st < 1 && R1 > R) nxt.push({ k: `QLD 종가 ≤ <b>${usd(+px[0])}</b> (1차 매수가) → 🟡 매수 구간`, amt: R1 - R, d: `${t + 2}차 1회의 절반 미리 현금` });
   if (nx && st < 2 && R2 > Math.max(R, R1)) nxt.push({ k: `QLD 종가 ≤ <b>${usd(fl(nxPx * 1.1))}</b> (${t + 2}차 진입가 ${usd(nxPx)}의 +10%) → 🔴 단계 근접`, amt: R2 - Math.max(R, st < 1 ? R1 : R), d: `${t + 2}차 1회 전액 현금 확보` });
-  return { spx, R, target, lq, pv, cash, o, st, remain, seed: +b.engine_seed || remain, why: b.park ? b.park.why : `기본 규칙 · ${t + 1}차 1회 × 2`, nxt: nxt.map(x => ({ ...x, q: sq(x.amt), p: fl(spx * 0.95) })), pend, d: SPYM ? SPYM.d : (a && a.as_of || "").slice(0, 10) };
+  return { spx, R, target, lq, pv, cash, o, st, remain, seed: +b.engine_seed || remain, avg: h && +h.avg ? +h.avg : 0, why: b.park ? b.park.why : `기본 규칙 · ${t + 1}차 1회 × 2`, nxt: nxt.map(x => ({ ...x, q: sq(x.amt), p: fl(spx * 0.95) })), pend, d: SPYM ? SPYM.d : (a && a.as_of || "").slice(0, 10) };
 }
 /* 🅿 QLD 평생매수(SPYM) 카드 — 4종목과 같은 주문 카드 · ☑매수·☑매도 (봇 설정 park_sides · 모든 기기 동기화) · 시드·계좌 연동 자동 */
 const parkSides = () => Object.assign({ buy: true, sell: true }, (G.cfg["muhan-bot-qld.json"] || {}).park_sides || {});
@@ -331,17 +334,24 @@ document.addEventListener("change", async e => {
   try { await writeFiles({ [f]: c }); G.cfg[f] = c; msg(`QLD 평생매수(SPYM) ${t.dataset.park === "buy" ? "매수" : "매도"} ${t.checked ? "☑ 자동 주문" : "☐ 주문 안 함"} · 저장 (모든 기기)`, true); render(); }
   catch (x) { t.checked = !t.checked; msg("⚠ " + x.message, false); }
 });
-function parkHtml(P, ps) {
-  const k = parkCalc(P);
-  if (!k.spx) return `<div class="hint" style="margin-top:6px">${esc(k.why)}</div>`;
-  const ST = [["🟢 평온", "ok"], ["🟡 매수 구간", "wa"], ["🔴 단계 근접", "no"]][k.st] || ["🟢 평온", "ok"];
+function parkHtml(P, ps) {                 // QLD 평생매수 카드와 같은 모양: 📦 보유 · 📍 회차 · 규칙 줄 · 오늘 주문 · 12회차 대응 표
+  const k = parkCalc(P), b = P.bot || {};
+  if (!k.spx) return `<div class="busy">${esc(k.why)}</div>`;
+  const ST = [["🟢 평온", "bt"], ["🟡 매수 구간", "rule"], ["🔴 단계 근접", "no"]][k.st] || ["🟢 평온", "bt"];
+  const N = +b.engine_N || 12, rd = +b.engine_round || 1, gain = k.lq && k.avg ? (k.spx / k.avg - 1) * 100 : null;
+  const pos = `<div class="pos"><div class="pl"><span>🅿 SPYM <b>${k.lq ? k.lq.toLocaleString("en-US") + "주" : "없음"}</b></span>${k.lq ? `<span>평가 <b>${$0(k.pv)}</b></span>` : ""}${gain != null ? `<b class="pc ${gain >= 0 ? "up" : "dn"}">${gain >= 0 ? "+" : ""}${gain.toFixed(2)}%</b>` : ""}</div>
+    <div class="pr"><span>📍 QLD <b>${rd}</b> / ${N}회차 대응 중</span><i><u style="width:${Math.min(100, Math.max(3, rd / N * 100))}%"></u></i></div></div>`;
+  const rl = `<div class="rl"><span class="rp ${ST[1]}">${ST[0]}</span><span class="rv">QLD매수 대기현금 ${$0(k.R)}</span></div>
+    <div class="rl"><span class="rp st">🤖 ${esc(k.why)}</span></div>
+    <div class="rl"><span class="rv">시드 ${$0(k.seed)}</span><span class="rv">남은 시드 ${$0(k.remain)}</span><span class="rv">SPYM 목표 ${$0(k.target)}</span></div>`;
   const off = k.o && !ps[k.o.side];
-  const ord = k.o ? `<div class="ord ${k.o.side}${off ? " off" : ""}"><span class="sd">SPYM ${k.o.side === "buy" ? "매수" : "매도"}</span><span class="cn">LOC<small>${k.o.side === "buy" ? "종가 +3%까지" : "종가 −5%까지"}</small></span><b>${usd(k.o.price)}<em>× ${k.o.qty.toLocaleString("en-US")}주 ≈ ${$0(k.o.price * k.o.qty)}</em></b></div><div class="hint" style="margin:3px 0 0">${off ? `☐ ${k.o.side === "buy" ? "매수" : "매도"} 체크 해제 — 봇이 주문하지 않음` : (k.o.side === "buy" ? "남는 대기 시드 → SPYM (보유 없으면 여기서 처음 매수)" : "QLD매수 대기현금 채우기 — 판 돈은 다음 실행부터 QLD 매수에 사용") + " · ⚡ 바로 실행·자동 실행 때 봇이 QLD 주문 뒤 실제 주문"}</div>`
-    : `<div class="busy">🅿 SPYM 오늘 주문 없음 — ${k.cash == null ? "계좌 동기화 대기" : "목표 유지 중"}</div>`;
-  const nx = k.nxt.length ? `<div class="pk-n"><div class="pk-t">📉 다음 SPYM 매도 조건 <small>(SPYM ${usd(k.spx)} 기준 추정 · 그날 가격으로 봇이 자동 재계산)</small></div>${k.nxt.map(x => `<div class="pk-r"><span>${x.k}<small>${x.d}</small></span><b>SPYM ${x.q.toLocaleString("en-US")}주<em>LOC ${usd(x.p)} · ≈${$0(x.amt)}</em></b></div>`).join("")}</div>` : "";
-  return `<div class="pk-h" style="margin-top:6px"><span class="hint" style="margin:0">🔗 시드 ${$0(k.seed)} − 사용 ${$0(k.seed - k.remain)} = 남은 시드 ${$0(k.remain)}</span><span class="pk-s ${ST[1]}">${ST[0]}</span></div>
-    <div class="pk-g"><div><span>QLD매수 대기현금</span><b>${$0(k.R)}</b></div><div><span>SPYM 목표</span><b>${$0(k.target)}</b></div><div><span>봇 SPYM</span><b>${k.lq ? k.lq.toLocaleString("en-US") + "주" : "없음"}</b><small>${k.lq ? "≈" + $0(k.pv) : ""}</small></div></div>
-    <div class="hint" style="margin:4px 0 0">🤖 ${esc(k.why)} · 계좌 현금 ${k.cash == null ? "-" : $0(k.cash)}${k.pend ? ` (오늘 QLD 주문 ${$0(k.pend)} 포함해 계산)` : ""} · SPYM ${usd(k.spx)} (${esc(k.d)})</div>${ord}${nx}`;
+  const ord = k.o ? `<div class="ord ${k.o.side}${off ? " off" : ""}"><span class="sd">${k.o.side === "buy" ? "매수" : "매도"}</span><span class="cn">LOC<small>장 마감 지정가 · ${k.o.side === "buy" ? "+3%" : "−5%"}</small></span><b>${usd(k.o.price)}<em>× ${k.o.qty.toLocaleString("en-US")}주</em></b></div>
+      ${off ? `<div class="busy">☐ ${k.o.side === "buy" ? "매수" : "매도"} 체크 해제 — 봇이 주문하지 않음</div>` : ""}`
+    : `<div class="busy">오늘 SPYM 주문 없음 · ${k.cash == null ? "계좌 동기화 대기" : "목표 유지"}</div>`;
+  const rows = (b.engine_rows || []).map(r => { const q = Math.ceil(r.each / (k.spx * 0.95)), rr = r.from === r.to ? r.from : `${r.from}~${r.to}`;
+    return `<tr class="${r.now ? "now" : ""}"><td><b>${rr}</b>${r.from !== r.to ? "<small>각 회</small>" : ""}</td><td>≤ ${usd(r.px)}<small>${r.now ? "이번 LOC" : r.tier + "차 진입"}</small></td><td>${$0(r.each)}</td><td><b>${r.each > 0 ? q.toLocaleString("en-US") + "주" : "-"}</b><small>LOC ${usd(fl(k.spx * 0.95))}</small></td></tr>`; }).join("");
+  const tb = rows ? `<div class="pk-t">📉 12회차 대응 SPYM 매도 <small>SPYM ${usd(k.spx)} × 0.95 · 그날 종가로 봇이 재계산</small></div><table class="pk-tb"><tr><th>회차</th><th>QLD 종가</th><th>QLD 매수</th><th>SPYM 매도</th></tr>${rows}</table>` : "";
+  return pos + rl + ord + tb;
 }
 function render() {
   { const lb = document.getElementById("live"); if (ONLY && lb && !lb.disabled && !lb.classList.contains("armed")) lb.textContent = LIVE_LAB(); }
