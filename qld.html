@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.16-261022-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.17-261022-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261022">
-<title>QLD 평생매수AI분석 (V1.16 - 261022)</title>
+<title>QLD 평생매수AI분석 (V1.17 - 261022)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -627,8 +627,8 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
   <div hidden><section id="card-excel"></section><button id="xlsxBtn"></button><div id="xlsxMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_16_261022.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.16 (261022)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_17_261022.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.17 (261022)</code></div>
   </footer>
 
   </div>
@@ -807,7 +807,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.16";
+const APP_VERSION = "V1.17";
 const RELEASE_DATE = "261022";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -1994,7 +1994,7 @@ function renderSeedCard() {
     <div style="font-size:12px;font-weight:700;margin:12px 0 4px;">견고성 상위 5개 조합 (시드 ${fmtUsd0(E.seed)} · 남은 현금 수익 0%)</div>
     <div style="overflow-x:auto;"><table style="width:100%;font-size:12px;border-collapse:collapse;text-align:center;">
       <tr style="color:var(--text-dim);"><th>배분 1/2/3차</th><th>분할</th><th>시드 대비 수익률</th><th>견고성(인접 평균)</th><th>투입률</th></tr>${top}</table></div>
-    <div class="note">저장한 시드·적용 방식은 ☁️ 동기화로 모든 기기에 영구 보관되고, ⚡ 오늘의 LOC와 메리츠 자동주문(QLD)이 이 수량으로 주문합니다. 백테스트는 과거 성과이며 미래를 보장하지 않습니다.</div>`;
+    <div class="note">저장한 시드·적용 방식은 ☁️ 동기화로 모든 기기에 영구 보관되고, ⚡ 오늘의 LOC와 자동주문(QLD)이 이 수량으로 주문합니다. 백테스트는 과거 성과이며 미래를 보장하지 않습니다.</div>`;
 }
 document.addEventListener("click", e => {
   const t = e.target; if (!t) return;
@@ -2042,7 +2042,7 @@ function renderTodayCard() {
     basis_close_date: fmtDateFull(lastX), generated_at: new Date().toISOString(),
     stage: `평생매수 · 하락 목표 -${plan.pct.toFixed(1)}%`, ...(hs => ({ avg_price: hs ? Number(hs.avg.toFixed(4)) : null, holding_qty: hs ? hs.qty : 0 }))(holdingSummary(valid)),
     orders: qty >= 1 ? [{ side: "buy", type: "LOC", price: Number(plan.locPx.toFixed(2)), qty: Math.floor(qty) }] : [],
-    /* V0.21: 메리츠 자동주문(QLD) 봇 검산용 — 매수가 = 기준가 × (1 − 하락목표%) 센트 내림 · 이번 주 아직 안 샀으면 매일 주문(주 1회) · 매도 없음 */
+    /* V0.21: 자동주문(QLD) 봇 검산용 — 매수가 = 기준가 × (1 − 하락목표%) 센트 내림 · 이번 주 아직 안 샀으면 매일 주문(주 1회) · 매도 없음 */
     bot: { kind: "lifetime", last_close: ctx.hist[ctx.hist.length - 1].y, ref_peak: plan.refPeak, pct: plan.pct, loc_px: Number(plan.locPx.toFixed(2)),
            qty_unit: LOC_LOT, order_today: !!isReserveDay, next_session: fmtDateFull(nextSession.getTime()), fx: (liveFx && liveFx.rate) || null,
            records_src: (typeof qldApiActive === "function" && qldApiActive()) ? "meritz" : "app", buy_count: valid.length,
@@ -2734,7 +2734,7 @@ function applyViewMode() {
     if (bb && tb) { bb.remove(); tb.style.gridTemplateColumns = `repeat(${tb.querySelectorAll(".tb").length},minmax(0,1fr))`; if (document.getElementById("pg-backup").classList.contains("on")) goTab("pg-order"); } }
   setTimeout(() => { const b = document.getElementById("fetchBtn"); if (b && !b.disabled && typeof lastLocOrder !== "undefined" && !lastLocOrder) b.click(); }, 700);   // 열면 시세 자동 1회
   const o = document.getElementById("pg-order");
-  if (o) o.insertAdjacentHTML("afterbegin", `<a class="solo-note" href="api-qld.html#pg-qld">🔌 메리츠 자동주문(QLD) ›<small>주 1회 LOC 매수(체결될 때까지 매일)를 메리츠 Open API로 자동 접수 · 계좌 현황 · 결과</small></a>`);
+  if (o) o.insertAdjacentHTML("afterbegin", `<a class="solo-note" href="api-qld.html#pg-qld">🔌 자동주문(QLD) ›<small>주 1회 LOC 매수(체결될 때까지 매일)를 증권사 Open API로 자동 접수 · 계좌 현황 · 결과</small></a>`);
 }
 function initTabs() {
   document.querySelectorAll("#tabbar .tb").forEach(b => b.addEventListener("click", () => {
@@ -3204,7 +3204,7 @@ function mergeDocs(L, R) {
     skip: [...new Set([...(L.skip || []), ...(R.skip || [])])].sort().slice(-60),
   };
 }
-/* V0.21 💼 메리츠 체결 자동 등록 — 평생매수는 매도가 없으므로 체결된 매수 전부가 매수 기록 */
+/* V0.21 💼 증권사 체결 자동 등록 — 평생매수는 매도가 없으므로 체결된 매수 전부가 매수 기록 */
 const QLD_ACCT_KEY = "muhan_account_qld_v1";
 function qldAcct() { const a = parseJ(lsGet(QLD_ACCT_KEY), null); return a && a.symbols && a.symbols.QLD ? a : null; }
 function qldApiActive() { const a = qldAcct(); return !!(a && a.symbols.QLD.complete && a.symbols.QLD.current); }
@@ -3221,7 +3221,7 @@ function qldApiReconcile(M, g) {
   if (canonR(next) === canonR(M.records || [])) return "";
   M.tombs = [...new Set([...(M.tombs || []), ...(M.records || []).map(recKeyOf).filter(k => !next.some(r => recKeyOf(r) === k))])].slice(-500);
   M.records = next;
-  return `💼 메리츠 체결로 매수 기록 ${want.length}건을 맞춤 (${covered} 장까지)`;
+  return `💼 증권사 체결로 매수 기록 ${want.length}건을 맞춤 (${covered} 장까지)`;
 }
 let __syncBusy = false, __syncAgain = false, __syncErr = "";
 async function syncNow(why) {
@@ -3238,7 +3238,7 @@ async function syncNow(why) {
     const M = mergeDocs(L, R);
     M.seed = [L.seed, R.seed].filter(x => x && x.v > 0).sort((a, b) => String(b.at).localeCompare(String(a.at)))[0] || null;
     if (M.seed && (!L.seed || M.seed.at !== L.seed.at || M.seed.v !== L.seed.v || M.seed.mode !== L.seed.mode)) { seedSet(M.seed, true); note = `다른 기기 시드 ${fmtUsd0(M.seed.v)} 반영`; try { if (guideCtx) renderGuideResult(); } catch (e) {} }
-    const apiNote = qldApiReconcile(M, g);        // V0.21 💼 메리츠 체결 → 매수 기록 (복원이 완전할 때만)
+    const apiNote = qldApiReconcile(M, g);        // V0.21 💼 증권사 체결 → 매수 기록 (복원이 완전할 때만)
     const same = (a, b) => canon(a.records, recKeyOf) === canon(b.records, recKeyOf) && canon(a.trades, tradeKeyOf) === canon(b.trades, tradeKeyOf) && canon(a.fed, fedKeyOf) === canon(b.fed, fedKeyOf) && JSON.stringify([...(a.skip || [])].sort()) === JSON.stringify([...(b.skip || [])].sort());
     if (!same(M, L)) {
       const dR = M.records.length - L.records.length, dT = M.trades.length - L.trades.length;

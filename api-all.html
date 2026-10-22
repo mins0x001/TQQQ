@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.19-261020-MeritzAutoOrder-All">
-<meta name="release-date" content="261020">
+<meta name="version" content="V1.20-261022-MeritzAutoOrder-All">
+<meta name="release-date" content="261022">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>메리츠 자동주문(통합) (V1.19 - 261020)</title>
+<title>자동주문(통합) (V1.20 - 261022)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -66,7 +66,7 @@
 <body>
 <div class="app">
   <div class="top"><span class="mono" id="ver" style="color:var(--text-faint)">V1.00 (261016)</span></div>
-  <h1>🔌 메리츠 자동주문(통합) <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1><script>if(/[?&]embed=/.test(location.search)){var _hp=document.querySelector(".hub-pill");if(_hp)_hp.remove();}</script>
+  <h1>🔌 자동주문(통합) <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1><script>if(/[?&]embed=/.test(location.search)){var _hp=document.querySelector(".hub-pill");if(_hp)_hp.remove();}</script>
   <p class="sub">SOXL · TQQQ · QLD무한매수 · QLD평생매수 — 열면 4종목 계산, ⚡ 한 번에 실제 주문</p>
   <div id="msg"></div>
 
@@ -80,7 +80,7 @@
       <div class="kick">TODAY'S LOC · API ORDER</div><h2>오늘의 LOC 주문</h2>
       <div id="plans"></div>
       <button class="btn live" id="live" type="button">⚡ 바로 실행 (4종목 실제 주문)</button>
-      <div class="hint" style="margin-top:6px;">한 번 누르면 확인, 6초 안에 한 번 더 누르면 실제 주문. 메리츠 실제 주문내역에 같은 주문이 있으면 🔁 중복으로 건너뜁니다. 종목마다 봇 1개 · 계좌는 각 봇의 앱키로 정해집니다 (🛠 설정).</div>
+      <div class="hint" style="margin-top:6px;">한 번 누르면 확인, 6초 안에 한 번 더 누르면 실제 주문. 증권사 실제 주문내역에 같은 주문이 있으면 🔁 중복으로 건너뜁니다. 종목마다 봇 1개 · 계좌는 각 봇의 앱키로 정해집니다 (🛠 설정).</div>
       <button class="btn" id="recalc" type="button" style="width:100%;margin-top:8px;">↻ 다시 계산</button>
     </section>
   </div>
@@ -91,10 +91,10 @@
   </div>
 
   <div class="page" id="pg-acct">
-    <section class="card"><div class="kick">ACCOUNT · 메리츠 실제 계좌</div><h2>💼 계좌 현황</h2>
+    <section class="card"><div class="kick">ACCOUNT · 증권사 실제 계좌</div><h2>💼 계좌 현황</h2>
       <div id="accts" class="busy">불러오는 중…</div>
       <button class="btn" id="acctSync" type="button" style="width:100%;margin-top:8px;">↻ 지금 계좌 동기화 (1~2분)</button>
-      <div class="hint" style="margin-top:6px;">봇이 평일 06:40·주문 실행 때마다 메리츠 계좌(보유·평단·평가손익·주문가능 달러)를 Gist에 저장합니다. 같은 앱키(=같은 계좌)를 쓰는 봇은 하나로 합쳐 보여 줍니다.</div>
+      <div class="hint" style="margin-top:6px;">봇이 평일 06:40·주문 실행 때마다 증권사 계좌(보유·평단·평가손익·주문가능 달러)를 Gist에 저장합니다. 같은 앱키(=같은 계좌)를 쓰는 봇은 하나로 합쳐 보여 줍니다.</div>
     </section>
   </div>
   <div class="page" id="pg-cron">
@@ -107,7 +107,7 @@
       <div class="hint" style="margin-top:6px;">주문코드는 ⚡ 주문 탭 공통 코드 · 해외주식 주문 가능 시간: 한국 18:00~익일 08:50. 저장하면 각 봇의 GitHub 예약 시각과 cron-job.org 시각을 자동으로 다시 맞춥니다 (1~3분).</div>
     </section>
     <section class="card"><div class="kick">CRON-JOB.ORG · 정시 실행 보장</div><h2>⏰ 정시 실행</h2>
-      <p class="sub" style="margin:0 0 10px;">GitHub 정기 실행은 가끔 늦거나 빠집니다. 무료 cron-job.org 가 정한 시각에 봇을 정확히 깨웁니다 (GitHub 예약은 예비로 유지 · 같은 날 두 번 돌아도 메리츠 주문내역 중복 확인으로 주문은 1번).</p>
+      <p class="sub" style="margin:0 0 10px;">GitHub 정기 실행은 가끔 늦거나 빠집니다. 무료 cron-job.org 가 정한 시각에 봇을 정확히 깨웁니다 (GitHub 예약은 예비로 유지 · 같은 날 두 번 돌아도 증권사 주문내역 중복 확인으로 주문은 1번).</p>
       <div id="crons" class="busy">불러오는 중…</div>
       <p class="sub" style="margin:10px 0 6px;">API 키: <a href="https://console.cron-job.org/settings" target="_blank" rel="noopener">cron-job.org → Settings → API</a> 에서 만들어 붙여넣기 (3개 봇 저장소 금고에 한 번에 저장 · 화면·Gist에는 남지 않음). 주문 시각은 각 종목 앱 🛠 설정에서 바꾸면 자동으로 맞춰집니다.</p>
       <input class="inp" type="password" id="cronKey" placeholder="cron-job.org API 키 (이미 저장했으면 비워 두고 누르기)" autocomplete="off" spellcheck="false" style="width:100%;">
@@ -129,7 +129,7 @@
     <section class="card"><div class="kick">BOTS · 공통 설정</div><h2>🤖 봇 설정 (4개 봇 한 곳에서)</h2>
       <div id="bots" class="busy">불러오는 중…</div>
       <div class="hint" style="margin:6px 0 10px;">봇 설치·업데이트는 각 종목 앱을 한 번 열면 자동 (<a style="color:var(--glow)" href="api-soxl.html">SOXL</a> · <a style="color:var(--glow)" href="api-tqqq.html">TQQQ</a> · <a style="color:var(--glow)" href="api-qm.html">QLD무한</a> · <a style="color:var(--glow)" href="api-qld.html">QLD평생</a>). 봇마다 앱키를 넣으면 같은 키끼리 같은 계좌로 묶입니다 · 언제든 변경 가능 · 모든 설정은 서버(Gist)에 평생 저장.</div>
-      <h3 class="h3" id="keyHead">🔐 메리츠 앱키</h3>
+      <h3 class="h3" id="keyHead">🔐 증권사 앱키</h3>
       <div class="hint" style="margin:0 0 6px;">openapi.imeritz.com 운영 앱키 · 같은 계좌 봇을 체크하면 한 번에 같은 키로 저장 — 같은 키 = 같은 계좌로 자동 묶임 (예: SOXL+QLD무한 = A계좌 · TQQQ+QLD평생 = B계좌). GitHub 금고에만 봉인 저장 — 이 기기·Gist에 남지 않음.</div>
       <div id="keyPick" class="chkrow"></div>
       <input class="inp" type="password" id="mzKey" placeholder="App Key" autocomplete="off" spellcheck="false" style="width:100%;margin-top:6px;">
@@ -154,7 +154,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.19", RELEASE_DATE = "261020";
+const APP_VERSION = "V1.20", RELEASE_DATE = "261022";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -163,7 +163,7 @@ const S = [
   { id: "QLDL", name: "QLD 평생매수", app: "qld.html", cfg: "muhan-bot-qld.json", sync: "qld.json", key: "QLD", seedDef: 370000, life: true },
 ];
 const CFGS = ["muhan-bot.json", "muhan-bot-tqqq.json", "muhan-bot-qldm.json", "muhan-bot-qld.json"];
-/* 🏦 계좌 = 봇마다 넣은 메리츠 앱키 (같은 키 = 같은 계좌) → SOXL·TQQQ·QLD무한·QLD평생을 아무 계좌 조합으로 · TQQQ 는 A 봇 symbols.TQQQ=false 일 때만 전용 봇이 주문 */
+/* 🏦 계좌 = 봇마다 넣은 증권사 앱키 (같은 키 = 같은 계좌) → SOXL·TQQQ·QLD무한·QLD평생을 아무 계좌 조합으로 · TQQQ 는 A 봇 symbols.TQQQ=false 일 때만 전용 봇이 주문 */
 const tqqqSplit = () => ((G.cfg["muhan-bot.json"] || {}).symbols || {}).TQQQ === false && !!(G.cfg["muhan-bot-tqqq.json"] || {}).installed_at;
 const acctFile = f => f.replace("muhan-bot", "muhan-account");
 const acctKey = f => { const c = G.cfg[f] || {}; return c.keys && c.keys.tail ? "k:" + c.keys.tail : "f:" + f; };
@@ -317,7 +317,7 @@ function ovOk(m) { return m >= 18 * 60 || m < 8 * 60 + 50; }
 function ovWarn(m, what) {
   if (ovOk(m)) return true;
   const t = String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
-  return confirm(`⏰ ${what} 한국 ${t} — 해외주식 주문 시간이 아닙니다.\n\n주문 가능: 한국 18:00 ~ 익일 08:50 (프리마켓부터 · 서머타임 무관)\n이 시간에는 메리츠가 주문을 받지 않아 실패합니다.\n\n그래도 계속할까요?`);
+  return confirm(`⏰ ${what} 한국 ${t} — 해외주식 주문 시간이 아닙니다.\n\n주문 가능: 한국 18:00 ~ 익일 08:50 (프리마켓부터 · 서머타임 무관)\n이 시간에는 증권사가 주문을 받지 않아 실패합니다.\n\n그래도 계속할까요?`);
 }
 let armed = 0;
 document.getElementById("live").addEventListener("click", async () => {
@@ -525,7 +525,7 @@ function renderBots() {
     document.getElementById("bots").insertAdjacentHTML("beforeend", `<div class="res">🔀 <b>TQQQ 담당</b> · 지금 <b>${sp ? "TQQQ 봇" : "SOXL·TQQQ 봇"}</b>${!a.installed_at ? "" : sp ? ` <button class="btn" type="button" data-ho="off">↩ SOXL 봇으로 되돌리기</button>`
       : t.installed_at && t.keys ? ` <button class="btn" type="button" data-ho="on">🔀 TQQQ 봇으로 넘기기</button>` : `<br><span class="hint">TQQQ 를 다른 계좌로: TQQQ 앱을 열어 봇 설치 → 아래 앱키 등록 → 여기서 넘기기 (넘기기 전엔 TQQQ 봇은 주문 안 함 · 이중 주문 방지)</span>`}</div>`); }
   { const miss = CFGS.filter(f => (G.cfg[f] || {}).installed_at && !(G.cfg[f] || {}).keys), kh = document.getElementById("keyHead");
-    kh.classList.toggle("needh", miss.length > 0); kh.innerHTML = miss.length ? `🔐 메리츠 앱키 <span class="needt">🔴 ${miss.map(f => BOTNAME[f]).join(" · ")} 등록 필요</span>` : "🔐 메리츠 앱키 ✅";
+    kh.classList.toggle("needh", miss.length > 0); kh.innerHTML = miss.length ? `🔐 증권사 앱키 <span class="needt">🔴 ${miss.map(f => BOTNAME[f]).join(" · ")} 등록 필요</span>` : "🔐 증권사 앱키 ✅";
     needJump("keys", kh); }
   const kp = document.getElementById("keyPick");
   if (!kp.dataset.touched) { kp.innerHTML = CFGS.map(f => { const c = G.cfg[f] || {}; return `<label class="chk"><input type="checkbox" value="${f}" ${c.installed_at ? "" : "disabled"} ${c.installed_at && !c.keys ? "checked" : ""}> ${c.installed_at && !c.keys ? `<b class="needt">🔴 ${BOTNAME[f]}</b>` : BOTNAME[f]}</label>`; }).join(""); kp.onchange = () => { kp.dataset.touched = 1; }; }
@@ -586,7 +586,7 @@ document.getElementById("tgSave").addEventListener("click", async () => {
       if (!m) throw new Error("방금 만든 봇에게 텔레그램에서 아무 말이나 한 번 보낸 뒤 다시 누르세요");
       chat = String(m.chat.id);
     }
-    const r = await tgApi(tk, "sendMessage", { chat_id: chat, text: "✅ 메리츠 자동주문 — 알림 연결 완료 (모든 봇 공용)\n주문·중복·실패 결과가 여기로 옵니다." });
+    const r = await tgApi(tk, "sendMessage", { chat_id: chat, text: "✅ 자동주문 — 알림 연결 완료 (모든 봇 공용)\n주문·중복·실패 결과가 여기로 옵니다." });
     if (r && !r.ok) throw new Error("테스트 메시지 실패: " + (r.description || ""));
     for (const f of fs) { const c = G.cfg[f]; await putSecret(c, "TELEGRAM_BOT_TOKEN", tk); await putSecret(c, "TELEGRAM_CHAT_ID", chat); await cfgPatch(f, { tg: { at: new Date().toISOString(), chat_tail: chat.slice(-4), device: "통합" } }); }
     document.getElementById("tgTok").value = "";

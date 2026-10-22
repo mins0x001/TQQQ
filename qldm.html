@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.15-261022-QLD-Panel-Unified">
+<meta name="version" content="V1.16-261022-QLD-Panel-Unified">
 <meta name="release-date" content="261022">
-<title>QLD 무한매수AI분석 (V1.15 - 261022)</title>
+<title>QLD 무한매수AI분석 (V1.16 - 261022)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -591,7 +591,7 @@
   .tp-cmp-sweep span.ai{border-color:var(--glow);color:var(--glow);}
   .tp-cmp details{margin-top:10px;}
   .tp-cmp summary{cursor:pointer;font-size:12.5px;color:var(--text-dim);}
-  /* V0.68/V0.41: 🤖 메리츠 자동주문(해외) */
+  /* V0.68/V0.41: 🤖 자동주문(해외) */
   .bot-line{margin:0 0 10px;padding:9px 12px;border-radius:12px;font-size:12.5px;line-height:1.5;border:1px solid var(--border);background:var(--panel-2);color:var(--text-dim);overflow-wrap:anywhere;}
   .bot-line b{color:var(--text);}
   .bot-line.m-live{border-color:rgba(46,204,113,0.45);background:rgba(46,204,113,0.08);}
@@ -631,7 +631,7 @@
   .bot-run.run{border-color:rgba(245,165,36,0.45);} .bot-run.ok{border-color:rgba(46,204,113,0.45);} .bot-run.bad{border-color:rgba(240,71,90,0.5);}
   .bot-step .bk-row .bk-btn{flex:1;}
   .bot-sym summary{cursor:pointer;font-size:12px;color:var(--text-dim);}
-  /* V0.72 💼 메리츠 체결 자동 등록 */
+  /* V0.72 💼 증권사 체결 자동 등록 */
   .api-strip{margin:0 0 12px;padding:10px 12px;border-radius:12px;border:1px solid rgba(94,234,212,0.35);background:rgba(94,234,212,0.06);font-size:12.5px;line-height:1.6;color:var(--text-dim);overflow-wrap:anywhere;}
   .api-strip b{color:var(--text);} .api-strip.off{border-color:var(--border);background:var(--panel-2);} .api-strip.warn{border-color:rgba(245,165,36,0.5);background:rgba(245,165,36,0.07);}
   .api-strip .as-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;}
@@ -743,8 +743,8 @@ body.panel .sell-row{display:none !important;}
   <div hidden><section id="card-backup"></section><div id="backupPanel"></div><button id="bkCopyBtn"></button><button id="bkRestoreBtn"></button><textarea id="bkText"></textarea><div id="bkMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD무한매수_V1_15_261022.HTML</span>)</button>
-  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.15 (261022)</code> · SOXL판(V0.48)과 동일 기능 · QLD 변동성 최적화판</div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD무한매수_V1_16_261022.HTML</span>)</button>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.16 (261022)</code> · SOXL판(V0.48)과 동일 기능 · QLD 변동성 최적화판</div>
   </footer>
 
   </div>
@@ -794,15 +794,15 @@ body.panel .sell-row{display:none !important;}
     </div>
     <div class="help-group">🤖 자동주문</div>
       <details class="help-item">
-        <summary><span class="hi-ic">🤖</span>메리츠 Open API 자동주문 · 설치와 안전장치</summary>
-        <p><b>어떻게 도나:</b> 내 GitHub 비공개 저장소(muhan-bot)의 Actions가 매일 미국 정규장 중(한국 00:10 무렵, 예비 02:10)에 이 앱을 클라우드에서 그대로 열어 동기화된 기록·설정으로 <b>오늘의 LOC</b>를 계산하고, 검수 8단계를 통과한 주문만 메리츠 Open API로 LOC 접수합니다. 결과는 🔌 메리츠 자동주문(해외) 앱과 ⚡ 주문 탭 맨 위에 모든 기기 공통으로 표시됩니다. 폰·PC를 켜 둘 필요가 없습니다.</p>
-        <p><b>준비 (한 번):</b> ① ☁️ 동기화에 쓰는 GitHub 토큰(classic)에 <b>repo · workflow</b> 권한을 추가합니다 — github.com → Settings → Developer settings → Personal access tokens → Tokens (classic) → 기존 토큰 클릭 → repo·workflow 체크 → Update token (토큰 값은 그대로라 다시 붙여넣을 필요 없음). ② 무한매수 허브 맨 위 <b>🔌 메리츠 자동주문(해외)</b> 앱에서 [봇 설치] → [앱키 등록] → [🔧 연결 점검] → [⚡ 지금 실전 주문] 또는 매일 자동 [실전]. 봇 프로그램은 그 앱(api.html) 안에 들어 있어 api.html 만 새 버전으로 올리면 다음 실행 때 봇도 자동으로 업데이트됩니다.</p>
+        <summary><span class="hi-ic">🤖</span>증권사 Open API 자동주문 · 설치와 안전장치</summary>
+        <p><b>어떻게 도나:</b> 내 GitHub 비공개 저장소(muhan-bot)의 Actions가 매일 미국 정규장 중(한국 00:10 무렵, 예비 02:10)에 이 앱을 클라우드에서 그대로 열어 동기화된 기록·설정으로 <b>오늘의 LOC</b>를 계산하고, 검수 8단계를 통과한 주문만 증권사 Open API로 LOC 접수합니다. 결과는 🔌 자동주문(해외) 앱과 ⚡ 주문 탭 맨 위에 모든 기기 공통으로 표시됩니다. 폰·PC를 켜 둘 필요가 없습니다.</p>
+        <p><b>준비 (한 번):</b> ① ☁️ 동기화에 쓰는 GitHub 토큰(classic)에 <b>repo · workflow</b> 권한을 추가합니다 — github.com → Settings → Developer settings → Personal access tokens → Tokens (classic) → 기존 토큰 클릭 → repo·workflow 체크 → Update token (토큰 값은 그대로라 다시 붙여넣을 필요 없음). ② 무한매수 허브 맨 위 <b>🔌 자동주문(해외)</b> 앱에서 [봇 설치] → [앱키 등록] → [🔧 연결 점검] → [⚡ 지금 실전 주문] 또는 매일 자동 [실전]. 봇 프로그램은 그 앱(api.html) 안에 들어 있어 api.html 만 새 버전으로 올리면 다음 실행 때 봇도 자동으로 업데이트됩니다.</p>
         <p><b>앱키 보관:</b> App Key·Secret은 입력하는 순간 GitHub 공개키로 봉인 암호화되어 저장소 금고(Actions Secrets)로만 갑니다. 이 기기·Gist·백업 어디에도 남지 않고 GitHub에서도 되읽을 수 없습니다. 한 번 등록하면 봇이 계속 쓰고, 어느 기기에서든 새 키로 교체할 수 있습니다.</p>
-        <p><b>검수 8단계 (하나라도 어긋나면 그 주문은 내지 않음):</b> V1 계획이 최신(직전 거래일 종가 기준) · V2 같은 공식으로 가격·수량 재계산 일치 · V3 메리츠 일봉 종가와 앱 종가 대조 · V4 실제 계좌 보유 수량 = 앱 기록 · V5 주문가능금액 ≥ 매수금액 · V6 매도가능수량 ≥ 매도수량 · V7 매수 1건 한도 · V8 같은 주문 중복 방지. 접수 뒤에는 당일 주문내역을 다시 읽어 종목·매매·LOC·수량·가격을 대조하고, 다르면 즉시 취소합니다. 메리츠가 경고(착오매매 등)를 주면 자동으로 확인하지 않고 멈춥니다.</p>
+        <p><b>검수 8단계 (하나라도 어긋나면 그 주문은 내지 않음):</b> V1 계획이 최신(직전 거래일 종가 기준) · V2 같은 공식으로 가격·수량 재계산 일치 · V3 증권사 일봉 종가와 앱 종가 대조 · V4 실제 계좌 보유 수량 = 앱 기록 · V5 주문가능금액 ≥ 매수금액 · V6 매도가능수량 ≥ 매도수량 · V7 매수 1건 한도 · V8 같은 주문 중복 방지. 접수 뒤에는 당일 주문내역을 다시 읽어 종목·매매·LOC·수량·가격을 대조하고, 다르면 즉시 취소합니다. 증권사가 경고(착오매매 등)를 주면 자동으로 확인하지 않고 멈춥니다.</p>
         <p><b>예:</b> 평단 $30.1234 · 전일 종가 $29.875 · 1분할 $8,850 → 매수 = min(평단, 종가) 센트 내림 $29.87 × (8,850÷29.87 = 296 → 1주 단위) 296주, 매도 = 30.1234 × 1.08 센트 올림 $32.54 × 보유 200주. 앱 계획과 봇 검산이 한 푼이라도 다르면 차단됩니다.</p>
-        <p><b>문제가 생기면:</b> [🔧 연결 점검]이 메리츠 토큰·해외 잔고·주문가능금액·당일 주문·SOXL/QLD 시세·앱 주소를 하나씩 확인해, 막힌 곳과 고칠 방법(메리츠 공식 응답 코드 기준 — 예: EGW00103 앱키 오류, 0760 해외주식 권한 없음)을 보여 줍니다. 봇이 결과를 남기지 못하고 멈춰도 ‘GitHub 실행’ 줄에 멈춘 단계와 로그 링크가 뜹니다.</p>
+        <p><b>문제가 생기면:</b> [🔧 연결 점검]이 증권사 토큰·해외 잔고·주문가능금액·당일 주문·SOXL/QLD 시세·앱 주소를 하나씩 확인해, 막힌 곳과 고칠 방법(증권사 공식 응답 코드 기준 — 예: EGW00103 앱키 오류, 0760 해외주식 권한 없음)을 보여 줍니다. 봇이 결과를 남기지 못하고 멈춰도 ‘GitHub 실행’ 줄에 멈춘 단계와 로그 링크가 뜹니다.</p>
         <p><b>모드:</b> 끄기 · 리허설(매일 검수만, 주문 안 냄) · 실전. 실전은 최근 7일 안에 리허설이 통과해야 켜지고, 두 번 눌러야 전환됩니다. 결과가 ⛔면 GitHub가 메일로도 알려 주며, ntfy 주제를 넣으면 폰 푸시가 옵니다.</p>
-        <p><b>AI(MCP)로 확인:</b> 메리츠 공식 MCP 서버(github.com/meritz-securities/open-api-mcp)를 <b>조회 전용</b>으로 Claude에 연결하면 "오늘 SOXL 주문내역 보여줘"처럼 대화로 검수할 수 있습니다. 메리츠는 MCP를 무인 자동주문에 쓰지 말라고 안내하므로, 주문은 이 봇이, 확인은 AI가 맡습니다.</p>
+        <p><b>AI(MCP)로 확인:</b> 증권사 공식 MCP 서버(github.com/meritz-securities/open-api-mcp)를 <b>조회 전용</b>으로 Claude에 연결하면 "오늘 SOXL 주문내역 보여줘"처럼 대화로 검수할 수 있습니다. 증권사는 MCP를 무인 자동주문에 쓰지 말라고 안내하므로, 주문은 이 봇이, 확인은 AI가 맡습니다.</p>
         <p>수수료·세금·환율은 반영하지 않으며, 투자 판단과 결과의 책임은 본인에게 있습니다.</p>
       </details>
     <div class="help-group">⚡ 주문 탭</div>
@@ -914,7 +914,7 @@ body.panel .sell-row{display:none !important;}
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V1.15";
+const APP_VERSION = "V1.16";
 const RELEASE_DATE = "261022";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
@@ -2208,7 +2208,7 @@ function setDefaultBuyDate(force) {
      · 기준가 = min(평단가, D-1 종가) 를 센트 단위 내림  (LOC 가이드와 동일)
      · 수량   = 1분할 금액 ÷ 기준가 → 1주 단위 내림
      · 최대 회차(1단계 N + 2단계 (분할−N)×3)를 다 샀으면 주문이 없었던 것으로 본다 (V0.72: 2단계는 대기 없음 · 시드÷(분할×3))
-     · 💼 메리츠 체결 자동 등록이 켜져 있으면 이 추정은 쓰지 않는다 (실제 체결이 우선)
+     · 💼 증권사 체결 자동 등록이 켜져 있으면 이 추정은 쓰지 않는다 (실제 체결이 우선)
    D 종가 ≤ 기준가 이면 LOC가 체결된 것이므로 (체결가 = D 종가) 기록을 자동 추가한다.
    · 이미 D 이후 기록이 있거나, 사용자가 이 자동 기록을 삭제한 적이 있으면 추가하지 않는다
    · 기록이 하나도 없는 신규 진입 전 상태는 실제 진입 여부를 알 수 없어 자동 저장하지 않는다 */
@@ -2367,7 +2367,7 @@ function addSellRecord() {
 function deleteTrade(id) {
   const all = loadTrades(), t = all.find(x => x.id === id);
   if (!t) return;
-  if (t.api && apiActive()) { showCopyToast("💼 메리츠 체결로 만든 사이클은 자동으로 다시 생깁니다 — 지우려면 [자동 등록 끄기] 후 삭제", false); return; }
+  if (t.api && apiActive()) { showCopyToast("💼 증권사 체결로 만든 사이클은 자동으로 다시 생깁니다 — 지우려면 [자동 등록 끄기] 후 삭제", false); return; }
   const latest = all.reduce((x, y) => (y.sellDate > x.sellDate || (y.sellDate === x.sellDate && y.id > x.id)) ? y : x);
   const cur = loadBuyRecords();
   const restore = t === latest && cur.every(r => r.date <= t.sellDate) && Array.isArray(t.buys) && t.buys.length;
@@ -2449,7 +2449,7 @@ function renderTrades() {
             <div><span>최대 낙폭</span><b style="color:${c.mdd !== null && c.mdd < 0 ? "var(--down)" : "var(--text)"}">${c.mdd !== null ? (c.mdd < 0 ? fmtPctSigned(c.mdd, 1) : "0.0%") : "—"}</b></div>
             <div><span>거래일</span><b>${c.tdays !== null ? c.tdays + "일" : "—"}</b></div>
             <div><span>분할 사용</span><b>${c.rounds}회${c.splits ? " · " + c.splits + "분할" + (c.mult > 1 ? "×" + c.mult : "") : ""}</b></div>
-            <div><span>종료 방식</span><b>${c.api ? "💼 메리츠 체결" : c.auto ? "LOC 자동" : "직접 기록"}</b></div>
+            <div><span>종료 방식</span><b>${c.api ? "💼 증권사 체결" : c.auto ? "LOC 자동" : "직접 기록"}</b></div>
           </div>
           <div class="cy-buys">${(c.buys || []).map((r, k) => `<i>${k + 1}회</i> ${mdShort(r.date)} · ${r.qty}주 @ ${usd(r.price)}`).join("<br>")}<br><i>매도</i> ${mdShort(c.sellDate)} · ${c.qty}주 @ ${usd(c.sellPrice)}</div>
           <button class="cy-del" type="button" onclick="deleteTrade(${c.id})">이 사이클 삭제</button>
@@ -2484,7 +2484,7 @@ document.getElementById("sellRecSaveBtn").addEventListener("click", addSellRecor
 
 function deleteBuyRecord(id) {
   const target = loadBuyRecords().find(r => r.id === id);
-  if (target && target.api && apiActive()) { showCopyToast("💼 메리츠 체결 기록은 자동으로 맞춰집니다 — 지우려면 위 [자동 등록 끄기] 후 삭제", false); return; }
+  if (target && target.api && apiActive()) { showCopyToast("💼 증권사 체결 기록은 자동으로 맞춰집니다 — 지우려면 위 [자동 등록 끄기] 후 삭제", false); return; }
   if (target && target.autoRecorded) { const sk = loadAutoSkip(); sk.push(target.date); saveAutoSkip(sk); lastAutoRecordMsg = ""; }
   saveBuyRecordsToStorage(loadBuyRecords().filter(r => r.id !== id));
   hideBuyRecMsg();
@@ -2529,7 +2529,7 @@ function renderBuyRecords() {
       <td class="num">${r.round}</td>
       <td>${fmtKrDate(r.date)}</td>
       <td class="num">${r.qty.toLocaleString("en-US")}주<span class="sub-price">${fmtUsdCompact(r.amount)}</span></td>
-      <td class="num">${usd(r.price)}${r.api ? `<span class="sub-price auto-tag api">${r.synthetic ? "부분매도 후 잔여" : "💼 메리츠 체결"}</span>` : r.autoRecorded ? '<span class="sub-price auto-tag">자동 저장</span>' : ''}</td>
+      <td class="num">${usd(r.price)}${r.api ? `<span class="sub-price auto-tag api">${r.synthetic ? "부분매도 후 잔여" : "💼 증권사 체결"}</span>` : r.autoRecorded ? '<span class="sub-price auto-tag">자동 저장</span>' : ''}</td>
       <td class="num">${usd(r.cumAvg)}</td>
       <td class="buyrec-del-cell"><button class="buy-del-btn" type="button" onclick="deleteBuyRecord(${r.id})" aria-label="삭제" title="삭제">✕</button></td>
     </tr>
@@ -3207,9 +3207,9 @@ function goTab(id, opts) {
   window.scrollTo({ top: y, behavior: "instant" });
 }
 /* V0.73 화면 모드 — 같은 파일 하나로 두 곳에서 쓴다 (기능을 두 번 만들지 않음)
-   · ?embed=panel : 메리츠 자동주문(해외) 앱의 SOXL·QLD 탭 안 → 📒 주문·사이클 화면만
-   · ?embed=api   : 메리츠 앱이 보이지 않게 띄워 오늘의 LOC 계산 (화면 무관)
-   · 단독 실행     : AI 분석 앱 → 주문·사이클·백업은 메리츠 자동주문(해외)로 안내 */
+   · ?embed=panel : 자동주문(해외) 앱의 SOXL·QLD 탭 안 → 📒 주문·사이클 화면만
+   · ?embed=api   : 증권사 앱이 보이지 않게 띄워 오늘의 LOC 계산 (화면 무관)
+   · 단독 실행     : AI 분석 앱 → 주문·사이클·백업은 자동주문(해외)로 안내 */
 
 /* 공통: 시세 재시도 */
 async function fetchRetry(u, opt) {        // 무료 시세 API 는 여러 앱이 동시에 부르면 한도(429)·순간 끊김으로 'Failed to fetch' — 1.5·4·8초 뒤 다시
@@ -3237,7 +3237,7 @@ function applyViewMode() {
   ["pg-order", "pg-backup"].forEach(id => { const b = document.querySelector(`#tabbar .tb[data-p="${id}"]`); if (b) b.remove(); });
   const tb = document.getElementById("tabbar"); if (tb) tb.style.gridTemplateColumns = `repeat(${tb.querySelectorAll(".tb").length},minmax(0,1fr))`;
   const eng = document.getElementById("pg-engine");
-  if (eng) eng.insertAdjacentHTML("afterbegin", `<a class="solo-note" href="api-qm.html#pg-${LEV_TICKER.toLowerCase()}">📒 ${LEV_TICKER} 주문·사이클·백업 → 메리츠 자동주문 ›<small>이 앱은 AI 분석(엔진·가이드·통계·설명) 전용입니다. 기록·오늘의 LOC·자동주문은 메리츠 자동주문(해외) 한 곳에서.</small></a>`);
+  if (eng) eng.insertAdjacentHTML("afterbegin", `<a class="solo-note" href="api-qm.html#pg-${LEV_TICKER.toLowerCase()}">📒 ${LEV_TICKER} 주문·사이클·백업 → 자동주문 ›<small>이 앱은 AI 분석(엔진·가이드·통계·설명) 전용입니다. 기록·오늘의 LOC·자동주문은 자동주문(해외) 한 곳에서.</small></a>`);
   const cur = document.querySelector(".page.on");
   if (!cur || cur.id === "pg-order" || cur.id === "pg-backup") goTab("pg-engine", { top: true });
 }
@@ -3357,9 +3357,9 @@ function mergeDocs(local, remote) {
 }
 
 
-/* ======================== 💼 메리츠 체결 → 나의 매수 기록 · 사이클 기록 자동 등록 (V0.72) ========================
+/* ======================== 💼 증권사 체결 → 나의 매수 기록 · 사이클 기록 자동 등록 (V0.72) ========================
    자동주문 봇이 동기화 Gist에 남기는 muhan-account.json(계좌 보유 + 체결내역 전 기간 → 사이클 복원)을 읽어
-   · 이번 사이클 매수 기록 = 메리츠 체결 그대로 (스냅숏이 반영한 날짜 이후에 직접 넣은 기록은 유지)
+   · 이번 사이클 매수 기록 = 증권사 체결 그대로 (스냅숏이 반영한 날짜 이후에 직접 넣은 기록은 유지)
    · 끝난 사이클 = 사이클 기록에 자동 추가 (같은 날·±3일 같은 수량의 직접 기록이 있으면 그대로 둠)
    바꾸기 전 기록은 이 기기에 백업 → [되돌리기]. 끄면 예전처럼 직접 입력 + 종가 추정 자동 저장.
    복원이 불완전하면(입고·액면분할 등으로 '보유 0' 시점을 못 찾음) 아무것도 바꾸지 않는다. */
@@ -3374,7 +3374,7 @@ function apiIdOf(key, kind) { const d = String(key).replace(/\D/g, "").slice(-14
 const apiR4 = x => Math.round(Number(x) * 1e4) / 1e4;
 const apiDayGap = (a, b) => Math.abs((Date.parse(a + "T00:00:00Z") - Date.parse(b + "T00:00:00Z")) / 864e5);
 function apiWhen(iso) { const d = new Date(iso); return isNaN(d) ? "-" : d.toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }); }
-function apiInfoLine() { const a = acctData(); return `💼 메리츠 체결내역으로 자동 등록 중 (${a ? apiWhen(a.as_of) : "-"} 기준) — 종가 추정 자동 저장은 쉬고 있습니다`; }
+function apiInfoLine() { const a = acctData(); return `💼 증권사 체결내역으로 자동 등록 중 (${a ? apiWhen(a.as_of) : "-"} 기준) — 종가 추정 자동 저장은 쉬고 있습니다`; }
 function apiReconcile(m, g) {
   try {
     const f = g && g.files && g.files["muhan-account.json"];
@@ -3399,7 +3399,7 @@ function apiReconcile(m, g) {
     const removed = (m.records || []).map(recKeyOf).filter(k => !nk.has(k));
     m.tombs = [...new Set([...(m.tombs || []), ...removed])].slice(-500);
     m.records = next;
-    notes.push(`매수 기록 ${want.length}건을 메리츠 체결로 맞춤`);
+    notes.push(`매수 기록 ${want.length}건을 증권사 체결로 맞춤`);
     changed = true;
   }
   m.tombs = (m.tombs || []).filter(k => !wantKeys.has(k));      // 체결 기록은 지움 표시보다 우선
@@ -3410,7 +3410,7 @@ function apiReconcile(m, g) {
     if (!c.sell_date || c.sell_date > covered) continue;
     const tr = { id: apiIdOf(c.key, 3), sellDate: c.sell_date, sellPrice: apiR4(c.sell_price), qty: Number(c.qty), avg: Number(c.avg), cost: Number(c.cost),
                  proceeds: Number(c.proceeds), profit: Number(c.profit), pct: Number(c.pct), rounds: c.rounds, firstBuy: c.first_buy,
-                 auto: true, api: true, limit: null, note: "메리츠 체결", buys: (c.buys || []).map(b => ({ date: b.date, qty: Number(b.qty), price: apiR4(b.price), auto: true })) };
+                 auto: true, api: true, limit: null, note: "증권사 체결", buys: (c.buys || []).map(b => ({ date: b.date, qty: Number(b.qty), price: apiR4(b.price), auto: true })) };
     const i = trades.findIndex(t => t.sellDate === c.sell_date || (apiDayGap(t.sellDate, c.sell_date) <= 3 && Math.abs(t.qty - c.qty) < 1e-6));
     if (i === -1) { trades.push(tr); added++; }
     else if (trades[i].auto && !trades[i].api && trades[i].sellDate === c.sell_date) {
@@ -3426,29 +3426,29 @@ function apiReconcile(m, g) {
     if (added) notes.push(`끝난 사이클 ${added}건 추가`);
     if (upd) notes.push(`사이클 ${upd}건을 실제 체결가로 갱신`);
   }
-  return notes.length ? "💼 메리츠 체결 반영: " + notes.join(" · ") : "";
+  return notes.length ? "💼 증권사 체결 반영: " + notes.join(" · ") : "";
 }
 function apiStripHtml(where) {
   if (!syncTok() || !syncGist()) return "";
   const a = acctData(), s = acctSym(), on = apiSyncOn();
   const e = x => String(x == null ? "" : x).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const go = `<a class="as-a" href="api.html">💼 계좌 다시 읽기 ›</a>`;
-  if (!a || !a.symbols) return `<div class="api-strip off"><div class="as-h"><b>💼 메리츠 체결 자동 등록</b><span>준비 전</span></div>
-    메리츠 자동주문(해외) 앱에서 <b>[💼 계좌 현황]</b>을 한 번 누르면(또는 봇이 다음에 돌면) 체결내역으로 매수 기록·사이클 기록이 자동으로 채워집니다.${a && a.error ? `<br>⚠ ${e(a.error)}` : ""}<div class="as-btns">${go}</div></div>`;
+  if (!a || !a.symbols) return `<div class="api-strip off"><div class="as-h"><b>💼 증권사 체결 자동 등록</b><span>준비 전</span></div>
+    자동주문(해외) 앱에서 <b>[💼 계좌 현황]</b>을 한 번 누르면(또는 봇이 다음에 돌면) 체결내역으로 매수 기록·사이클 기록이 자동으로 채워집니다.${a && a.error ? `<br>⚠ ${e(a.error)}` : ""}<div class="as-btns">${go}</div></div>`;
   const bk = (() => { try { return JSON.parse(lsGet(API_BACKUP_KEY) || "null"); } catch (x) { return null; } })();
   const undo = bk ? `<button type="button" data-api-act="undo">↩ 되돌리기 (${apiWhen(new Date(bk.at).toISOString())} 이전)</button>` : "";
   const tog = `<button type="button" data-api-act="toggle">${on ? "자동 등록 끄기" : "자동 등록 켜기"}</button>`;
-  if (!s) return `<div class="api-strip off"><div class="as-h"><b>💼 메리츠 체결</b><span>${apiWhen(a.as_of)}</span></div>${LEV_TICKER} 정보가 없습니다.<div class="as-btns">${go}</div></div>`;
+  if (!s) return `<div class="api-strip off"><div class="as-h"><b>💼 증권사 체결</b><span>${apiWhen(a.as_of)}</span></div>${LEV_TICKER} 정보가 없습니다.<div class="as-btns">${go}</div></div>`;
   const recs = sortedBuyRecords(), q = recs.reduce((x, r) => x + r.qty, 0), avg = q ? recs.reduce((x, r) => x + r.qty * r.price, 0) / q : 0;
   const same = Math.abs(q - s.qty) < 1e-6 && (!q || Math.abs(avg / s.avg - 1) < 0.002);
   const acctTxt = `계좌 <b>${Number(s.qty).toLocaleString("en-US")}주</b>${s.qty ? ` @ ${usd(s.avg)}` : ""}` + (a.symbols[LEV_TICKER].price ? ` · 현재가 ${usd(a.symbols[LEV_TICKER].price)}` : "");
   const matchTxt = same ? `<span class="ok">= 앱 기록 일치 ✓</span>` : `<span class="bad">앱 기록 ${q.toLocaleString("en-US")}주${q ? " @ " + usd(avg) : ""}</span>`;
-  if (!on) return `<div class="api-strip off"><div class="as-h"><b>💼 메리츠 체결 자동 등록 꺼짐</b><span>${apiWhen(a.as_of)}</span></div>${acctTxt} · ${matchTxt}<br>직접 입력과 종가 추정 자동 저장을 씁니다.<div class="as-btns">${tog}${undo}${go}</div></div>`;
+  if (!on) return `<div class="api-strip off"><div class="as-h"><b>💼 증권사 체결 자동 등록 꺼짐</b><span>${apiWhen(a.as_of)}</span></div>${acctTxt} · ${matchTxt}<br>직접 입력과 종가 추정 자동 저장을 씁니다.<div class="as-btns">${tog}${undo}${go}</div></div>`;
   if (!s.complete) return `<div class="api-strip warn"><div class="as-h"><b>💼 자동 맞춤 보류</b><span>${apiWhen(a.as_of)}</span></div>${acctTxt} · ${matchTxt}<br>⚠ ${e(s.why || "체결 복원 불완전")} — 기록은 그대로 두고 직접 입력·종가 추정 자동 저장을 씁니다.<div class="as-btns">${tog}${go}</div></div>`;
   const body = where === "cy"
     ? `체결내역으로 복원한 끝난 사이클 <b>${(s.cycles || []).length}건</b>${s.since ? ` (${e(s.since)}부터)` : ""} · 같은 날 직접 기록이 있으면 그대로 둡니다`
     : `${acctTxt} · ${matchTxt}<br>이번 사이클 체결 <b>${(s.current.records || []).length}건</b>${s.current.start ? ` (${e(s.current.start)}부터)` : ""} · ${e(a.covered || a.et_date)} 장까지 반영${s.note ? `<br>ℹ️ ${e(s.note)}` : ""}`;
-  return `<div class="api-strip"><div class="as-h"><b>💼 메리츠 체결 자동 등록 ON</b><span>${apiWhen(a.as_of)}</span></div>${body}<div class="as-btns">${tog}${undo}${go}</div></div>`;
+  return `<div class="api-strip"><div class="as-h"><b>💼 증권사 체결 자동 등록 ON</b><span>${apiWhen(a.as_of)}</span></div>${body}<div class="as-btns">${tog}${undo}${go}</div></div>`;
 }
 function renderApiStrips() {
   const r = document.getElementById("apiRecStrip"), c = document.getElementById("apiCyStrip");
@@ -3487,7 +3487,7 @@ async function syncNow(why) {
     const meta = syncMeta();
     const local = { records: loadBuyRecords(), skip: loadAutoSkip(), tombs: meta.tombs, trades: loadTrades() };
     const m = mergeDocs(local, remote);
-    const apiNote = apiReconcile(m, g);          // 💼 메리츠 체결 → 매수 기록·사이클 (켜져 있고 복원이 완전할 때만)
+    const apiNote = apiReconcile(m, g);          // 💼 증권사 체결 → 매수 기록·사이클 (켜져 있고 복원이 완전할 때만)
     const recLocalChanged = canonTrades(m.trades) !== canonTrades(local.trades) || canonRecs(m.records) !== canonRecs(local.records) || JSON.stringify(m.skip) !== JSON.stringify([...(local.skip || [])].sort().slice(-60));
     /* 설정 동기화: 마지막으로 바꾼 기기가 이김(같으면 원격 우선 → 기기끼리 덮어쓰기 반복 없음) */
     const pLocal = paramsCore(loadParamMode()), pRemote = remote.params || null;
@@ -3595,8 +3595,8 @@ setInterval(() => { if (!document.hidden) syncSchedule(100); }, 90000);
 syncRender();
 try { renderApiStrips(); } catch (e) {}
 syncSchedule(400);
-/* ======================== 🤖 메리츠 자동주문(해외) — 상태 한 줄 ========================
-   설정·실행·주문은 허브의 ‘🔌 메리츠 자동주문(해외)’ 앱(api.html). 이 앱은 오늘의 LOC 계획(lastLocOrder · bot 필드)을 계산해 주고,
+/* ======================== 🤖 자동주문(해외) — 상태 한 줄 ========================
+   설정·실행·주문은 허브의 ‘🔌 자동주문(해외)’ 앱(api.html). 이 앱은 오늘의 LOC 계획(lastLocOrder · bot 필드)을 계산해 주고,
    동기화 Gist의 봇 설정·결과를 읽어 ⚡ 주문 탭 맨 위에 한 줄로 보여 준다. */
 const BOT = { cfg: null, status: null };
 function botLoadFromGist(g) {
@@ -3617,7 +3617,7 @@ function botRender() {
   line.className = "bot-line m-" + (c.mode || "off") + (fresh && st && ["blocked", "error"].includes(st.overall) ? " bad" : "");
   line.innerHTML = `<b>🔌 자동주문 ${c.mode === "live" ? "실전" : c.mode === "dry" ? "리허설" : "수동"}</b> · ` +
     (fresh ? `${when} ${esc(r && r.summary ? r.summary : st.note || st.overall)}` : "최근 실행 없음") +
-    ` <a class="bot-go" href="api.html">메리츠 자동주문 ›</a>`;
+    ` <a class="bot-go" href="api.html">자동주문 ›</a>`;
 }
 
 /* ======================== 📊 엑셀(.xlsx) 내보내기 ======================== */
