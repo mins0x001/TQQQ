@@ -154,7 +154,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.21", RELEASE_DATE = "261022";
+const APP_VERSION = "V1.22", RELEASE_DATE = "261022";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -167,7 +167,7 @@ const CFGS = ["muhan-bot.json", "muhan-bot-tqqq.json", "muhan-bot-qldm.json", "m
 const ONLY = (() => { try { const v = (new URLSearchParams(location.search).get("only") || "").toUpperCase(); return S.some(s => s.id === v) ? v : ""; } catch (e) { return ""; } })();
 if (ONLY) S.splice(0, S.length, ...S.filter(s => s.id === ONLY));
 const onF = f => !ONLY || f === S[0].cfg;
-const LIVE_LAB = () => ONLY ? `⚡ 바로 실행 (${BOTNAME[S[0].cfg].replace(" 봇", "")} 실제 주문)` : "⚡ 바로 실행 (4종목 실제 주문)";
+const LIVE_LAB = () => ONLY ? `⚡ 바로 실행 (${({ QLDM: "QLD무한", QLDL: "QLD평생" })[S[0].id] || S[0].id} 실제 주문)` : "⚡ 바로 실행 (4종목 실제 주문)";
 if (ONLY) { document.documentElement.classList.add("only");
   const st = document.createElement("style"); st.textContent = ".only .top,.only h1,.only p.sub,.only #tabbar,.only #pg-setup{display:none !important}.only .page{display:block !important}.only #aRm,.only #aRn{width:52px !important}.only body,.only .app{padding-bottom:16px !important}"; document.head.appendChild(st);
   const cs = document.getElementById("code"); if (cs) cs.closest("section").style.display = "none";
@@ -342,7 +342,7 @@ document.getElementById("live").addEventListener("click", async () => {
   for (const f of CFGS.filter(onF)) {
     const c = G.cfg[f] || {};
     if (!c.installed_at) { out.push(`⚠ ${f.replace(".json", "")} 미설치`); continue; }
-    try { await gh(`/repos/${c.owner}/${c.repo}/actions/workflows/muhan-bot.yml/dispatches`, { method: "POST", body: { ref: "main", inputs: { mode: "live" } } }); out.push(`✅ ${c.repo} 실행 요청`); }
+    try { await gh(`/repos/${c.owner}/${c.repo}/actions/workflows/muhan-bot.yml/dispatches`, { method: "POST", body: { ref: "main", inputs: ONLY && f === "muhan-bot.json" ? { mode: "live", only: S[0].key } : { mode: "live" } } }); out.push(`✅ ${c.repo}${ONLY ? " · " + S[0].key + "만" : ""} 실행 요청`); }
     catch (x) { out.push(`✖ ${c.repo}: ${esc(x.message)}`); }
   }
   msg(out.join("<br>") + "<br>1~3분 뒤 🧾 결과·텔레그램에 실행 결과가 뜹니다", !out.some(x => x.startsWith("✖")));

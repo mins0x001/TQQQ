@@ -807,7 +807,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.20";
+const APP_VERSION = "V1.21";
 const RELEASE_DATE = "261022";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -3311,7 +3311,7 @@ syncRender();
 syncSchedule(400);
 </script>
 <script id="auto-tab">
-/* ⚡ 자동주문 탭 통합 V1.04 (261022): 종목 앱 하나 = 분석(이 파일) + 자동주문 화면(api-*.html)을 탭으로
+/* ⚡ 자동주문 탭 통합 V1.05 (261022): 종목 앱 하나 = 분석(이 파일) + 자동주문 화면(api-*.html)을 탭으로
    파일은 그대로 둠 (봇이 주문 계산·자동 업데이트에 두 파일을 각각 읽음) · 다른 앱 안에 들어간 화면(?embed=)에서는 실행 안 함 */
 (function () {
   if (/[?&]embed=/.test(location.search)) return;
@@ -3335,10 +3335,10 @@ syncSchedule(400);
   const vis = () => [...nav.children].filter(x => getComputedStyle(x).display !== "none");
   nav.insertBefore(b, vis()[0] || null); const cols = () => { nav.style.gridTemplateColumns = "repeat(" + vis().length + ",minmax(0,1fr))"; }; cols(); addEventListener("load", cols);
   const pg = document.createElement("div"); pg.className = "page"; pg.id = "pg-auto"; pg.setAttribute("role", "tabpanel"); pg.setAttribute("aria-label", "자동주문");
-  pg.innerHTML = '<iframe title="자동주문" style="display:block;width:100%;height:calc(100vh - 130px);min-height:560px;border:0;border-radius:14px;background:transparent;"></iframe>';
+  pg.innerHTML = '<iframe title="자동주문" style="display:block;width:100%;height:600px;overflow:hidden;" scrolling="noborder:0;border-radius:14px;background:transparent;"></iframe>';
   first.parentNode.appendChild(pg);
   const AK = (typeof TAB_SS_KEY === "string" ? TAB_SS_KEY : f) + "_auto";   // 앱 초기화가 탭 기억을 덮어써도 자동주문 탭 복원용
-  const open = () => { const fr = pg.querySelector("iframe"); if (!fr.getAttribute("src")) { fr.setAttribute("src", view); const h = document.createElement("iframe"); h.src = src + "?bg=1"; h.tabIndex = -1; h.setAttribute("aria-hidden", "true"); h.style.cssText = "position:fixed;left:-9999px;top:0;width:360px;height:640px;border:0;opacity:0;pointer-events:none;"; document.body.appendChild(h); setTimeout(() => h.remove(), 180000); } if (typeof goTab === "function") goTab("pg-auto", { top: true }); try { sessionStorage.setItem(AK, "1"); } catch (e) {} };
+  const open = () => { const fr = pg.querySelector("iframe"); if (!fr.getAttribute("src")) { fr.addEventListener("load", () => { try { const d = fr.contentDocument, ap = d.querySelector(".app") || d.body; d.documentElement.style.overflow = "hidden"; const fit = () => { fr.style.height = Math.max(300, Math.ceil(ap.getBoundingClientRect().bottom + 24)) + "px"; }; fit(); new ResizeObserver(fit).observe(ap); } catch (e) {} }); fr.setAttribute("src", view); const h = document.createElement("iframe"); h.src = src + "?bg=1"; h.tabIndex = -1; h.setAttribute("aria-hidden", "true"); h.style.cssText = "position:fixed;left:-9999px;top:0;width:360px;height:640px;border:0;opacity:0;pointer-events:none;"; document.body.appendChild(h); setTimeout(() => h.remove(), 180000); } if (typeof goTab === "function") goTab("pg-auto", { top: true }); try { sessionStorage.setItem(AK, "1"); } catch (e) {} };
   nav.addEventListener("click", e => { const t = e.target.closest(".tb"); if (t && t !== b) try { sessionStorage.removeItem(AK); } catch (x) {} });
   b.addEventListener("click", e => { e.stopPropagation(); open(); }, true);
   const want = () => { try { return location.hash === "#auto" || sessionStorage.getItem(AK) === "1"; } catch (e) { return false; } };
