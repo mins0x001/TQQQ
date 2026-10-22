@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.18-261022-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.19-261022-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261022">
-<title>QLD 평생매수AI분석 (V1.18 - 261022)</title>
+<title>QLD 평생매수AI분석 (V1.19 - 261022)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -627,8 +627,8 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
   <div hidden><section id="card-excel"></section><button id="xlsxBtn"></button><div id="xlsxMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_18_261022.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.18 (261022)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_19_261022.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.19 (261022)</code></div>
   </footer>
 
   </div>
@@ -807,7 +807,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.18";
+const APP_VERSION = "V1.19";
 const RELEASE_DATE = "261022";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -3311,7 +3311,7 @@ syncRender();
 syncSchedule(400);
 </script>
 <script id="auto-tab">
-/* ⚡ 자동주문 탭 통합 V1.02 (261022): 종목 앱 하나 = 분석(이 파일) + 자동주문 화면(api-*.html)을 탭으로
+/* ⚡ 자동주문 탭 통합 V1.03 (261022): 종목 앱 하나 = 분석(이 파일) + 자동주문 화면(api-*.html)을 탭으로
    파일은 그대로 둠 (봇이 주문 계산·자동 업데이트에 두 파일을 각각 읽음) · 다른 앱 안에 들어간 화면(?embed=)에서는 실행 안 함 */
 (function () {
   if (/[?&]embed=/.test(location.search)) return;
@@ -3323,6 +3323,7 @@ syncSchedule(400);
   const od = nav.querySelector('.tb[data-p="pg-order"]'), en = nav.querySelector('.tb[data-p="pg-engine"]');
   if (od) { od.innerHTML = '<span class="ic">📒</span><span class="tx">종목</span>'; if (en) en.after(od); }
   document.querySelectorAll(".solo-note").forEach(x => x.remove());
+  { const st = document.createElement("style"); st.textContent = "#botLine{display:none !important}"; document.head.appendChild(st); }   // 봇 상태 한 줄은 🔌 자동주문 탭과 중복
   const key = f.replace(".html", ""), hp = document.querySelector(".hub-pill");
   const dl = document.createElement("a"); dl.className = "hub-pill"; dl.href = "help-" + key + ".html"; dl.setAttribute("download", key.toUpperCase() + "_설명서.html"); dl.textContent = "📖 설명서"; dl.title = "설명서 파일 저장";
   if (hp) hp.after(dl); else (document.querySelector("h1") || document.body).appendChild(dl);
