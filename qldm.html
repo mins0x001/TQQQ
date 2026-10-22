@@ -914,7 +914,7 @@ body.panel .sell-row{display:none !important;}
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V1.21";
+const APP_VERSION = "V1.22";
 const RELEASE_DATE = "261022";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
@@ -1920,6 +1920,7 @@ function simTrades(hist, seed, splits, prevDown, cycleDays, tp) {
 }
 /* V0.72 근거: 같은 200봉 · 같은 시드·분할 · 같은 익절·손절에서 '2단계 규칙'만 바꿔 비교 */
 function renderRuleCompare(rNew, seed, splits, prevDown) {
+  return "";   // 🧭 2단계 규칙 비교 카드 삭제 (사용자 요청 261022)
   const oldCycle = (engineRecs && engineRecs.oldCycle) || 5;
   const rOld = simulateSeedBacktest(lastTqqqHist, seed, splits, prevDown, 1, undefined, oldCycle);
   if (!rOld || !rNew) return "";
