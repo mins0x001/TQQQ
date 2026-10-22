@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.30-261022-MeritzAutoOrder-All">
+<meta name="version" content="V1.31-261022-MeritzAutoOrder-All">
 <meta name="release-date" content="261022">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>자동주문(통합) (V1.30 - 261022)</title>
+<title>자동주문(통합) (V1.31 - 261022)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -75,7 +75,7 @@
 </head>
 <body>
 <div class="app">
-  <div class="top"><span class="mono" id="ver" style="color:var(--text-faint)">V1.30 (261022)</span></div>
+  <div class="top"><span class="mono" id="ver" style="color:var(--text-faint)">V1.31 (261022)</span></div>
   <h1>🔌 자동주문(통합) <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1><script>if(/[?&]embed=/.test(location.search)){var _hp=document.querySelector(".hub-pill");if(_hp)_hp.remove();}</script>
   <p class="sub">SOXL · TQQQ · QLD무한매수 · QLD평생매수 — 열면 4종목 계산, ⚡ 한 번에 실제 주문</p>
   <div id="msg"></div>
@@ -164,7 +164,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.30", RELEASE_DATE = "261022";
+const APP_VERSION = "V1.31", RELEASE_DATE = "261022";
 try { document.getElementById("ver").textContent = `${APP_VERSION} (${RELEASE_DATE})`; document.title = `자동주문(통합) (${APP_VERSION} - ${RELEASE_DATE})`; } catch (e) {}   // 화면 버전 = 항상 APP_VERSION
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
@@ -334,11 +334,11 @@ document.addEventListener("change", async e => {
   try { await writeFiles({ [f]: c }); G.cfg[f] = c; msg(`QLD 평생매수(SPYM) ${t.dataset.park === "buy" ? "매수" : "매도"} ${t.checked ? "☑ 자동 주문" : "☐ 주문 안 함"} · 저장 (모든 기기)`, true); render(); }
   catch (x) { t.checked = !t.checked; msg("⚠ " + x.message, false); }
 });
-function parkHtml(P, ps) {                 // QLD 평생매수 카드와 같은 모양: 📦 보유 · 📍 회차 · 규칙 줄 · 오늘 주문 · 12회차 대응 표
+function parkHtml(P, ps) {                 // QLD 평생매수 카드와 같은 모양: 📦 보유 · 📍 회차 · 규칙 줄 · 오늘 주문 · N회차 대응 표 (N = AI 분할 합계)
   const k = parkCalc(P), b = P.bot || {};
   if (!k.spx) return `<div class="busy">${esc(k.why)}</div>`;
   const ST = [["🟢 평온", "bt"], ["🟡 매수 구간", "rule"], ["🔴 단계 근접", "no"]][k.st] || ["🟢 평온", "bt"];
-  const N = +b.engine_N || 12, rd = +b.engine_round || 1, gain = k.lq && k.avg ? (k.spx / k.avg - 1) * 100 : null;
+  const N = +b.engine_N || (b.engine_n || []).reduce((a, x) => a + (+x || 0), 0) || 12, rd = +b.engine_round || 1, gain = k.lq && k.avg ? (k.spx / k.avg - 1) * 100 : null;
   const pos = `<div class="pos"><div class="pl"><span>🅿 SPYM <b>${k.lq ? k.lq.toLocaleString("en-US") + "주" : "없음"}</b></span>${k.lq ? `<span>평가 <b>${$0(k.pv)}</b></span>` : ""}${gain != null ? `<b class="pc ${gain >= 0 ? "up" : "dn"}">${gain >= 0 ? "+" : ""}${gain.toFixed(2)}%</b>` : ""}</div>
     <div class="pr"><span>📍 QLD <b>${rd}</b> / ${N}회차 대응 중</span><i><u style="width:${Math.min(100, Math.max(3, rd / N * 100))}%"></u></i></div></div>`;
   const rl = `<div class="rl"><span class="rp ${ST[1]}">${ST[0]}</span><span class="rv">QLD매수 대기현금 ${$0(k.R)}</span></div>
@@ -350,7 +350,7 @@ function parkHtml(P, ps) {                 // QLD 평생매수 카드와 같은 
     : `<div class="busy">오늘 SPYM 주문 없음 · ${k.cash == null ? "계좌 동기화 대기" : "목표 유지"}</div>`;
   const rows = (b.engine_rows || []).map(r => { const q = Math.ceil(r.each / (k.spx * 0.95)), rr = r.from === r.to ? r.from : `${r.from}~${r.to}`;
     return `<tr class="${r.now ? "now" : ""}"><td><b>${rr}</b>${r.from !== r.to ? "<small>각 회</small>" : ""}</td><td>≤ ${usd(r.px)}<small>${r.now ? "이번 LOC" : r.tier + "차 진입"}</small></td><td>${$0(r.each)}</td><td><b>${r.each > 0 ? q.toLocaleString("en-US") + "주" : "-"}</b><small>LOC ${usd(fl(k.spx * 0.95))}</small></td></tr>`; }).join("");
-  const tb = rows ? `<div class="pk-t">📉 12회차 대응 SPYM 매도 <small>SPYM ${usd(k.spx)} × 0.95 · 그날 종가로 봇이 재계산</small></div><table class="pk-tb"><tr><th>회차</th><th>QLD 종가</th><th>QLD 매수</th><th>SPYM 매도</th></tr>${rows}</table>` : "";
+  const tb = rows ? `<div class="pk-t">📉 ${N}회차 대응 SPYM 매도 <small>${b.engine_n ? b.engine_n.join("/") + "분할 · " : ""}SPYM ${usd(k.spx)} × 0.95 · 그날 종가로 봇이 재계산</small></div><table class="pk-tb"><tr><th>회차</th><th>QLD 종가</th><th>QLD 매수</th><th>SPYM 매도</th></tr>${rows}</table>` : "";
   return pos + rl + ord + tb;
 }
 function render() {

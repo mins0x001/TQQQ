@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.26-261022-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.27-261022-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261022">
-<title>QLD 평생매수AI분석 (V1.26 - 261022)</title>
+<title>QLD 평생매수AI분석 (V1.27 - 261022)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -629,8 +629,8 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
   <div hidden><section id="card-excel"></section><button id="xlsxBtn"></button><div id="xlsxMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_26_261022.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.26 (261022)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_27_261022.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.27 (261022)</code></div>
   </footer>
 
   </div>
@@ -813,7 +813,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.26";
+const APP_VERSION = "V1.27";
 const RELEASE_DATE = "261022";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -1963,7 +1963,7 @@ function seedEngine() {
   const w = use.w, n = use.n, px = cum.map(c => Math.floor(H * (1 - c) * 100) / 100), per = w.map((x, i) => seed * x / 100 / n[i]);
   const spent = valid.reduce((a, r) => a + r.price * r.qty, 0), remain = Math.max(0, seed - spent);
   const depth = 1 - plan.locPx / H, tier = depth < cum[1] - 1e-9 ? 0 : depth < cum[2] - 1e-9 ? 1 : 2;
-  /* V1.26 12회차 사다리: 가격이 2차(고점 −27.8%)·3차(−38.6%) 구간에 오면 앞 회차가 남아도 바로 그 단계 첫 회차로 (예: 3회차 → 11회차)
+  /* V1.27 N회차 사다리 (N = AI 분할 합계, 예 10/1/1 → 12 · 6/3/1 → 10): 가격이 2차(고점 −27.8%)·3차(−38.6%) 구간에 오면 앞 회차가 남아도 바로 그 단계 첫 회차로 (예: 3회차 → 11회차)
      이번 단계 1회 금액 = (남은 시드 − 뒤 단계 몫(시드 × 뒤 단계 %)) ÷ 이번 단계 남은 회차 → 건너뛴 회차 돈은 이번 단계로 자동 합산 */
   const N = n.reduce((a, b) => a + b, 0), done = valid.length, startOf = T => n.slice(0, T).reduce((a, b) => a + b, 0);
   const after = (T, rem) => Math.min(rem, seed * w.slice(T + 1).reduce((a, b) => a + b, 0) / 100);
@@ -2015,7 +2015,7 @@ function renderPark(E) {
   const rr = r => r.from === r.to ? `${r.from}` : `${r.from}~${r.to}`, cnd = r => r.now ? `≤ ${u0c(r.px)}<small>이번 LOC</small>` : `≤ ${u0c(r.px)}<small>고점 −${(E.cum[r.T] * 100).toFixed(1)}%</small>`;
   const tbl = `<table class="pk-tb"><tr><th>회차</th><th>QLD 종가</th><th>QLD 매수</th><th>SPYM 매도</th></tr>${E.rows.map(r => `<tr class="${r.now ? "now" : ""}"><td><b>${rr(r)}</b>${r.from !== r.to ? "<small>각 회</small>" : ""}</td><td>${cnd(r)}</td><td>${u0(r.each)}</td><td>${spx ? `<b>${Math.ceil(r.each / spx).toLocaleString("en-US")}주</b><small>LOC ${u0c(spx)}</small>` : "-"}</td></tr>`).join("")}</table>
     <div style="margin-top:6px;font-size:11.5px;line-height:1.55;color:var(--text-dim)">📌 ${E.round} / ${E.N}회차 진행 중 · 고점 −${(E.cum[1] * 100).toFixed(1)}% 오면 앞 회차가 남아도 바로 ${E.n[0] + 1}회차, −${(E.cum[2] * 100).toFixed(1)}% 오면 ${E.n[0] + E.n[1] + 1}회차 (남은 시드 자동 배분) · SPYM 매도가 = SPYM ${sp > 0 ? u0c(sp) : "-"} × 0.95 (그날 종가로 봇이 다시 계산)</div>`;
-  el.innerHTML = `<div class="sub-title"><span class="n">📉</span>12회차 대응 SPYM 매도</div>${tbl}<div style="height:10px"></div><div class="tb-kpis">${kpi("지금 상태", ST[0], ST[1])}${kpi("QLD매수 대기현금", u0(P.R))}${kpi("SPYM 목표", u0(P.target))}</div>
+  el.innerHTML = `<div class="sub-title"><span class="n">📉</span>${E.N}회차 대응 SPYM 매도 <small style="font-weight:500;color:var(--text-faint)">(AI 배분 ${E.w.join("/")}% · ${E.n.join("/")}분할 → 바뀌면 자동)</small></div>${tbl}<div style="height:10px"></div><div class="tb-kpis">${kpi("지금 상태", ST[0], ST[1])}${kpi("QLD매수 대기현금", u0(P.R))}${kpi("SPYM 목표", u0(P.target))}</div>
     ${row("AI 판단", `${P.why}`)}
     ${row("현재 · 계좌 현금", `${P.cash != null ? u0(P.cash) + k(P.cash) : "-"}`)}
     ${row("현재 · 봇 SPYM", `${P.lq ? `${P.lq.toLocaleString("en-US")}주 · ${u0(P.pv)}${k(P.pv)}` : "없음 (다음 실행부터 자동)"}`)}
