@@ -32,7 +32,7 @@ jobs:
           import json, os, time, urllib.request, urllib.parse
           from datetime import datetime, timedelta, timezone
           from zoneinfo import ZoneInfo
-          SYMS = ["QQQ", "TQQQ", "QLD", "SOXX", "SOXL"]
+          SYMS = ["QQQ", "TQQQ", "QLD", "SOXX", "SOXL", "SPYM"]   # SPYM = QLD평생 대기 시드 파킹 (S&P 500)
           N = 600
           KEY = os.environ.get("TWELVE_DATA_KEY") or "7382ca9c267944f49ae850dbbdb7545f"
           NY = ZoneInfo("America/New_York")
