@@ -914,7 +914,7 @@ body.panel .sell-row{display:none !important;}
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V1.18";
+const APP_VERSION = "V1.19";
 const RELEASE_DATE = "261022";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
@@ -3766,12 +3766,15 @@ document.title = `QLD 무한매수 AI (${APP_VERSION} - ${RELEASE_DATE})`;
 document.getElementById("fetchBtn").addEventListener("click", fetchAll);
 </script>
 <script id="auto-tab">
-/* ⚡ 자동주문 탭 통합 V1.03 (261022): 종목 앱 하나 = 분석(이 파일) + 자동주문 화면(api-*.html)을 탭으로
+/* ⚡ 자동주문 탭 통합 V1.04 (261022): 종목 앱 하나 = 분석(이 파일) + 자동주문 화면(api-*.html)을 탭으로
    파일은 그대로 둠 (봇이 주문 계산·자동 업데이트에 두 파일을 각각 읽음) · 다른 앱 안에 들어간 화면(?embed=)에서는 실행 안 함 */
 (function () {
   if (/[?&]embed=/.test(location.search)) return;
   const f = (location.pathname.split("/").pop() || "").toLowerCase();
   const src = f.indexOf("soxl") === 0 ? "api-soxl.html" : f.indexOf("tq") === 0 ? "api-t" + "qqq.html" : f.indexOf("qldm") === 0 ? "api-q" + "m.html" : f.indexOf("qld") === 0 ? "api-q" + "ld.html" : "";
+  // 화면 = 통합 앱의 이 종목만 보기 (오늘의 LOC 주문 · ⚡ 바로 실행 · 결과 · 자동 · 계좌) · 기존 주문 앱은 숨겨서 열어 봇 자동 업데이트만
+  const sid = f.indexOf("soxl") === 0 ? "SO" + "XL" : f.indexOf("tq") === 0 ? "T" + "QQQ" : f.indexOf("qldm") === 0 ? "QL" + "DM" : "QL" + "DL";
+  const view = (/\/QLD\//.test(location.pathname) ? "/T" + "QQQ/" : "") + "api-all.html?embed=tab&only=" + sid;
   const nav = document.getElementById("tabbar"), first = document.querySelector(".page"); if (!src || !nav || !first) return;
   // 탭 정리: 📖 설명 탭 → 설명서 파일 다운로드 · 📒 종목(주문·사이클) 탭은 AI엔진 옆 · 안내 링크 제거
   const help = nav.querySelector('.tb[data-p="pg-help"]'); if (help) help.remove();
@@ -3790,7 +3793,7 @@ document.getElementById("fetchBtn").addEventListener("click", fetchAll);
   pg.innerHTML = '<iframe title="자동주문" style="display:block;width:100%;height:calc(100vh - 130px);min-height:560px;border:0;border-radius:14px;background:transparent;"></iframe>';
   first.parentNode.appendChild(pg);
   const AK = (typeof TAB_SS_KEY === "string" ? TAB_SS_KEY : f) + "_auto";   // 앱 초기화가 탭 기억을 덮어써도 자동주문 탭 복원용
-  const open = () => { const fr = pg.querySelector("iframe"); if (!fr.getAttribute("src")) fr.setAttribute("src", src + "?embed=tab"); if (typeof goTab === "function") goTab("pg-auto", { top: true }); try { sessionStorage.setItem(AK, "1"); } catch (e) {} };
+  const open = () => { const fr = pg.querySelector("iframe"); if (!fr.getAttribute("src")) { fr.setAttribute("src", view); const h = document.createElement("iframe"); h.src = src + "?bg=1"; h.tabIndex = -1; h.setAttribute("aria-hidden", "true"); h.style.cssText = "position:fixed;left:-9999px;top:0;width:360px;height:640px;border:0;opacity:0;pointer-events:none;"; document.body.appendChild(h); setTimeout(() => h.remove(), 180000); } if (typeof goTab === "function") goTab("pg-auto", { top: true }); try { sessionStorage.setItem(AK, "1"); } catch (e) {} };
   nav.addEventListener("click", e => { const t = e.target.closest(".tb"); if (t && t !== b) try { sessionStorage.removeItem(AK); } catch (x) {} });
   b.addEventListener("click", e => { e.stopPropagation(); open(); }, true);
   const want = () => { try { return location.hash === "#auto" || sessionStorage.getItem(AK) === "1"; } catch (e) { return false; } };

@@ -154,7 +154,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.20", RELEASE_DATE = "261022";
+const APP_VERSION = "V1.21", RELEASE_DATE = "261022";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -163,6 +163,18 @@ const S = [
   { id: "QLDL", name: "QLD 평생매수", app: "qld.html", cfg: "muhan-bot-qld.json", sync: "qld.json", key: "QLD", seedDef: 370000, life: true },
 ];
 const CFGS = ["muhan-bot.json", "muhan-bot-tqqq.json", "muhan-bot-qldm.json", "muhan-bot-qld.json"];
+/* 🔌 종목 앱 안 자동주문 탭 (?embed=tab&only=SOXL|TQQQ|QLDM|QLDL): 그 종목만 주문·결과·자동·계좌 · 공통 주문코드·설정은 통합 앱에서 */
+const ONLY = (() => { try { const v = (new URLSearchParams(location.search).get("only") || "").toUpperCase(); return S.some(s => s.id === v) ? v : ""; } catch (e) { return ""; } })();
+if (ONLY) S.splice(0, S.length, ...S.filter(s => s.id === ONLY));
+const onF = f => !ONLY || f === S[0].cfg;
+const LIVE_LAB = () => ONLY ? `⚡ 바로 실행 (${BOTNAME[S[0].cfg].replace(" 봇", "")} 실제 주문)` : "⚡ 바로 실행 (4종목 실제 주문)";
+if (ONLY) { document.documentElement.classList.add("only");
+  const st = document.createElement("style"); st.textContent = ".only .top,.only h1,.only p.sub,.only #tabbar,.only #pg-setup{display:none !important}.only .page{display:block !important}.only #aRm,.only #aRn{width:52px !important}.only body,.only .app{padding-bottom:16px !important}"; document.head.appendChild(st);
+  const cs = document.getElementById("code"); if (cs) cs.closest("section").style.display = "none";
+  document.querySelectorAll("#pg-cron .kick").forEach(k => k.textContent = k.textContent.replace("3개 봇 공용", "이 종목 봇"));
+  const as = document.getElementById("aSave"); if (as) as.textContent = "💾 설정 저장 (이 종목 봇)";
+  if (/[?&]embed=tab/.test(location.search)) addEventListener("click", e => { const a = e.target.closest && e.target.closest("a[href]"); if (a && !/^#/.test(a.getAttribute("href")) && !a.hasAttribute("download") && a.target !== "_blank") { e.preventDefault(); top.location.href = a.href; } }, true);
+}
 /* 🏦 계좌 = 봇마다 넣은 증권사 앱키 (같은 키 = 같은 계좌) → SOXL·TQQQ·QLD무한·QLD평생을 아무 계좌 조합으로 · TQQQ 는 A 봇 symbols.TQQQ=false 일 때만 전용 봇이 주문 */
 const tqqqSplit = () => ((G.cfg["muhan-bot.json"] || {}).symbols || {}).TQQQ === false && !!(G.cfg["muhan-bot-tqqq.json"] || {}).installed_at;
 const acctFile = f => f.replace("muhan-bot", "muhan-account");
@@ -268,6 +280,7 @@ function rnd(P) {                         // 📍 분할매수 회차: X회차 /
   return `<div class="pr"><span>📍 ${t}</span><i><u style="width:${Math.min(100, Math.max(3, w))}%"></u></i></div>`;
 }
 function render() {
+  { const lb = document.getElementById("live"); if (ONLY && lb && !lb.disabled && !lb.classList.contains("armed")) lb.textContent = LIVE_LAB(); }
   const code = codeNow(), mk = MKT.includes(code);
   const sel = document.getElementById("code");
   if (document.activeElement !== sel) sel.innerHTML = CODES.map(([v, n]) => `<option value="${v}" ${v === code ? "selected" : ""}>"${v}" ${n}</option>`).join("");
@@ -288,7 +301,7 @@ function renderSeeds() {
   }).join("");
 }
 function renderResults() {
-  document.getElementById("results").innerHTML = CFGS.map(f => {
+  document.getElementById("results").innerHTML = CFGS.filter(onF).map(f => {
     const st = J(f.replace(".json", "-status.json"), null);
     if (!st) return `<div class="res"><b>${f.replace(".json", "")}</b> · 실행 기록 없음</div>`;
     const rows = Object.entries(st.results || {}).map(([k, r]) => `${esc(k)}: ${esc(r.summary || "")}`).join("<br>");
@@ -323,17 +336,17 @@ let armed = 0;
 document.getElementById("live").addEventListener("click", async () => {
   const b = document.getElementById("live");
   if (Object.keys(SAVE_T).length) { msg("💾 매도 % 저장 중 — 1초 뒤 다시 누르세요", false); return; }
-  if (Date.now() - armed > 6000) { if (!ovWarn(kstMin(), "지금")) return; armed = Date.now(); b.classList.add("armed"); b.textContent = "⚡ 한 번 더 누르면 실제 주문"; setTimeout(() => { b.classList.remove("armed"); b.textContent = "⚡ 바로 실행 (4종목 실제 주문)"; }, 6000); return; }
+  if (Date.now() - armed > 6000) { if (!ovWarn(kstMin(), "지금")) return; armed = Date.now(); b.classList.add("armed"); b.textContent = "⚡ 한 번 더 누르면 실제 주문"; setTimeout(() => { b.classList.remove("armed"); b.textContent = LIVE_LAB(); }, 6000); return; }
   armed = 0; b.disabled = true; b.textContent = "요청 중…";
   const out = [];
-  for (const f of CFGS) {
+  for (const f of CFGS.filter(onF)) {
     const c = G.cfg[f] || {};
     if (!c.installed_at) { out.push(`⚠ ${f.replace(".json", "")} 미설치`); continue; }
     try { await gh(`/repos/${c.owner}/${c.repo}/actions/workflows/muhan-bot.yml/dispatches`, { method: "POST", body: { ref: "main", inputs: { mode: "live" } } }); out.push(`✅ ${c.repo} 실행 요청`); }
     catch (x) { out.push(`✖ ${c.repo}: ${esc(x.message)}`); }
   }
   msg(out.join("<br>") + "<br>1~3분 뒤 🧾 결과·텔레그램에 실행 결과가 뜹니다", !out.some(x => x.startsWith("✖")));
-  b.disabled = false; b.textContent = "⚡ 바로 실행 (4종목 실제 주문)";
+  b.disabled = false; b.textContent = LIVE_LAB();
   setTimeout(() => refresh(), 90000);
 });
 document.getElementById("seedSave").addEventListener("click", async () => {
@@ -478,7 +491,7 @@ function botSeal(pkB64, text) {           // libsodium crypto_box_seal: epk ‖ 
 const CRON_WF = "muhan-bot.yml", BOTNAME = { get "muhan-bot.json"() { return tqqqSplit() ? "SOXL 봇" : "SOXL·TQQQ 봇"; }, "muhan-bot-tqqq.json": "TQQQ 봇", "muhan-bot-qldm.json": "QLD무한 봇", "muhan-bot-qld.json": "QLD평생 봇" };
 const whenK = t => { try { return new Date(t).toLocaleString("ko-KR", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }); } catch (e) { return "-"; } };
 function renderCron() {
-  document.getElementById("crons").innerHTML = CFGS.map(f => {
+  document.getElementById("crons").innerHTML = CFGS.filter(onF).map(f => {
     const c = G.cfg[f] || {}, r = J(f.replace(".json", "-cron.json"), null);
     return `<div class="res"><b>${BOTNAME[f]}</b> · ${c.installed_at ? `한국 <b>${esc(c.run_kst || "-")}</b> · ${c.retry_n ?? 2}회 재시도 (${c.retry_min || 30}분 간격)` : "⚠ 봇 미설치"}<br>
       ${c.cronapi ? "🔑 키 저장됨 (" + whenK(c.cronapi.at) + ")" : "🔑 키 없음"} · ${r ? (r.ok ? "✅ " : "⚠ ") + esc(r.msg || "") + " · " + whenK(r.at) : "아직 맞춘 기록 없음"}</div>`;
@@ -644,7 +657,7 @@ function bgRefresh(fs) {                  // 각 봇의 앱을 보이지 않게 
     fr.style.cssText = "position:fixed;left:-9999px;top:0;width:360px;height:640px;border:0;opacity:0;pointer-events:none;"; document.body.appendChild(fr); setTimeout(() => fr.remove(), 180000); }, i * 4000));
 }
 function renderAuto() {
-  const fs = CFGS.filter(f => (G.cfg[f] || {}).installed_at), c0 = fs.length ? G.cfg[fs[0]] : {};
+  const fs = CFGS.filter(f => onF(f) && (G.cfg[f] || {}).installed_at), c0 = fs.length ? G.cfg[fs[0]] : {};
   const el = id => document.getElementById(id);
   if (document.activeElement !== el("aTime")) el("aTime").value = c0.run_kst || "18:10";
   if (document.activeElement !== el("aRm")) el("aRm").value = c0.retry_min || 30;
@@ -659,7 +672,7 @@ document.getElementById("aSave").addEventListener("click", async () => {
   const m0 = +v.slice(0, 2) * 60 + +v.slice(3), last = (m0 + rm * rn) % 1440;
   if (!ovOk(m0) ? !ovWarn(m0, "주문 시각") : !ovOk(last) && !ovWarn(last, "마지막 재시도 시각")) return;
   try {
-    await loadGist(); const fs = CFGS.filter(f => (G.cfg[f] || {}).installed_at); if (!fs.length) throw new Error("설치된 봇이 없습니다");
+    await loadGist(); const fs = CFGS.filter(f => onF(f) && (G.cfg[f] || {}).installed_at); if (!fs.length) throw new Error("설치된 봇이 없습니다");
     const m = {}; fs.forEach(f => m[f] = Object.assign({}, G.cfg[f], { run_kst: v, retry_min: rm, retry_n: rn, updated: new Date().toISOString() }));
     await writeFiles(m); fs.forEach(f => G.cfg[f] = m[f]);
     for (const f of fs) if (G.cfg[f].cronapi) { try { await cronKick(G.cfg[f]); } catch (e) {} }
@@ -671,7 +684,7 @@ let modeArm = 0;
 document.querySelectorAll("[data-amode]").forEach(b => b.addEventListener("click", async () => {
   const mode = b.dataset.amode;
   try {
-    await loadGist(); const fs = CFGS.filter(f => (G.cfg[f] || {}).installed_at); if (!fs.length) throw new Error("설치된 봇이 없습니다");
+    await loadGist(); const fs = CFGS.filter(f => onF(f) && (G.cfg[f] || {}).installed_at); if (!fs.length) throw new Error("설치된 봇이 없습니다");
     const ok = mode === "live" ? fs.filter(f => G.cfg[f].keys) : fs, skip = fs.filter(f => !ok.includes(f));
     if (mode === "live") {
       if (!ok.length) throw new Error("앱키가 등록된 봇이 없습니다 — 🛠 설정에서 앱키 먼저");
@@ -684,7 +697,7 @@ document.querySelectorAll("[data-amode]").forEach(b => b.addEventListener("click
   } catch (x) { msg("⚠ " + x.message, false); }
 }));
 function renderAcct() {
-  const gs = acctGroups(); if (!gs.length) { document.getElementById("accts").innerHTML = `<div class="res">설치된 봇이 없습니다</div>`; return; }
+  const gs = acctGroups().filter(g => !ONLY || g.fs.includes(S[0].cfg)); if (!gs.length) { document.getElementById("accts").innerHTML = `<div class="res">설치된 봇이 없습니다</div>`; return; }
   document.getElementById("accts").innerHTML = gs.map(({ fs, name }) => { const nm = `${esc(name)} · ${fs.map(f => BOTNAME[f].replace(" 봇", "")).join("·")}`, files = fs.map(acctFile);
     const a = files.map(f => J(f, null)).filter(x => x && x.holdings).sort((x, y) => (y.as_of || "").localeCompare(x.as_of || ""))[0];
     if (!a) return `<div class="res"><b>${nm}</b><br>아직 동기화 기록이 없습니다 — ↻ 지금 계좌 동기화</div>`;
