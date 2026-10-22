@@ -59,12 +59,13 @@
   .adj .nt{grid-column:2/-1;margin-top:-2px;font-size:11.5px;line-height:1.35;}
   .pk{margin-top:10px;padding:10px 11px;border-radius:12px;border:1px dashed rgba(94,234,212,.35);background:rgba(94,234,212,.04);}
 .pk-h{font-weight:900;font-size:13.5px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
-.pk-s{font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px;} .pk-s.ok{background:rgba(56,217,140,.14);color:#38D98C;} .pk-s.wa{background:rgba(245,165,36,.14);color:#F5A524;} .pk-s.no{background:rgba(240,71,90,.14);color:#FF6B78;}
+.pk-s{font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap;flex:none;} .pk-s.ok{background:rgba(56,217,140,.14);color:#38D98C;} .pk-s.wa{background:rgba(245,165,36,.14);color:#F5A524;} .pk-s.no{background:rgba(240,71,90,.14);color:#FF6B78;}
 .pk-g{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;} .pk-g div{background:rgba(255,255,255,.035);border-radius:9px;padding:7px 4px;text-align:center;} .pk-g span{display:block;font-size:10.5px;color:var(--text-faint);} .pk-g b{font-family:'JetBrains Mono',monospace;font-size:13.5px;} .pk-g small{display:block;font-size:10.5px;color:var(--text-dim);}
 .pk-n{margin-top:8px;} .pk-t{font-size:12.5px;font-weight:800;margin-bottom:4px;} .pk-t small{font-weight:500;color:var(--text-faint);font-size:10.5px;}
 .pk-r{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:7px 0;border-top:1px solid rgba(255,255,255,.06);font-size:12.5px;} .pk-r span small{display:block;color:var(--text-faint);font-size:10.5px;} .pk-r b{font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;white-space:nowrap;} .pk-r b em{display:block;font-style:normal;font-size:10.5px;color:var(--text-dim);}
 .ord{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;margin-top:6px;padding:9px 11px;border-radius:11px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);}
-  .ord .sd{font-size:12px;font-weight:900;padding:3px 9px;border-radius:7px;} .ord.buy .sd{background:rgba(56,217,140,.16);color:#38D98C;} .ord.sell .sd{background:rgba(240,71,90,.16);color:#FF6B78;}
+  .ord.off{opacity:.45;} .pk-sym{border-color:rgba(94,234,212,.35);}
+.ord .sd{font-size:12px;font-weight:900;padding:3px 9px;border-radius:7px;} .ord.buy .sd{background:rgba(56,217,140,.16);color:#38D98C;} .ord.sell .sd{background:rgba(240,71,90,.16);color:#FF6B78;}
   .ord .cn{font-size:13px;font-weight:800;line-height:1.2;} .ord .cn small{display:block;font-size:10.5px;font-weight:600;color:var(--text-faint);}
   .ord b{font-family:'JetBrains Mono',monospace;font-size:15.5px;text-align:right;line-height:1.2;} .ord b em{display:block;font-style:normal;font-size:12px;color:var(--text-dim);font-weight:700;}
 </style>
@@ -160,7 +161,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.26", RELEASE_DATE = "261022";
+const APP_VERSION = "V1.27", RELEASE_DATE = "261022";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -285,8 +286,8 @@ function rnd(P) {                         // 📍 분할매수 회차: X회차 /
   const t = done >= N ? `분할 소진 (총 ${N}회차)` : `<b>${done + 1}</b> / ${N}회차 진행 중`, w = Math.min(done + 1, N) / N * 100;
   return `<div class="pr"><span>📍 ${t}</span><i><u style="width:${Math.min(100, Math.max(3, w))}%"></u></i></div>`;
 }
-/* 🅿 SPYM 파킹 (QLD평생): 앱 AI 엔진의 '남길 현금' + 계좌(서버 저장) + SPYM 시세(data/SPYM.json, 매일 10:10) → 오늘 봇이 낼 SPYM 주문과 다음 매도 조건
-   봇과 같은 식: 현금 < 남길 현금(오늘 QLD 매수 주문 금액 제외) → SPYM LOC 매도(전일 종가 −5%) · 넘치면 (남은 시드 − 남길 현금)까지 LOC 매수(+3%) */
+/* 🅿 SPYM 파킹 (QLD평생): 앱 AI 엔진의 'QLD매수 대기현금' + 계좌(서버 저장) + SPYM 시세(data/SPYM.json, 매일 10:10) → 오늘 봇이 낼 SPYM 주문과 다음 매도 조건
+   봇과 같은 식: 현금 < QLD매수 대기현금(오늘 QLD 매수 주문 금액 제외) → SPYM LOC 매도(전일 종가 −5%) · 넘치면 (남은 시드 − QLD매수 대기현금)까지 LOC 매수(+3%) */
 let SPYM = null;
 fetch("data/SPYM.json?h=" + new Date().toISOString().slice(0, 10), { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(j => { const b = j && j.bars; if (b && b.length) { SPYM = { px: +b[b.length - 1][4], d: b[b.length - 1][0] }; render(); } }).catch(() => {});
 const fl = x => Math.floor(x * 100 + 1e-6) / 100, cl = x => Math.ceil(x * 100 - 1e-6) / 100;
@@ -300,7 +301,7 @@ function parkCalc(P) {
   const t = Math.max(0, Math.min((+b.engine_tier || 1) - 1, per.length - 1)), cur = +per[t], nx = t + 1 < per.length ? +per[t + 1] : 0, nxPx = t + 1 < px.length ? +px[t + 1] : 0, remain = +b.engine_remain;
   const R = Math.min(remain, b.park && b.park.reserve != null ? +b.park.reserve : 2 * cur), st = b.park ? +b.park.state : 0, target = Math.max(0, remain - R);
   const lq = Math.min(+L.qty || 0, h ? +h.qty : 0), pv = lq * spx, cash = a && a.cash_usd != null ? +a.cash_usd : null;
-  // 계좌 현금 = 봇이 06:40·실행 때 저장한 값(오늘 QLD 주문 전) → 봇의 '주문 뒤 현금 vs (남길 현금 − QLD 주문)'과 같은 판단 = 현금 vs 남길 현금
+  // 계좌 현금 = 봇이 06:40·실행 때 저장한 값(오늘 QLD 주문 전) → 봇의 '주문 뒤 현금 vs (QLD매수 대기현금 − QLD 주문)'과 같은 판단 = 현금 vs QLD매수 대기현금
   const qb = (P.orders || []).find(o => o.side === "buy"), pend = qb ? qb.price * qb.qty : 0;
   let o = null;
   if (cash != null && cash < R - 1 && lq >= 1) o = { side: "sell", qty: Math.min(lq, Math.ceil((R - cash) / (spx * 0.95))), price: fl(spx * 0.95) };
@@ -311,18 +312,35 @@ function parkCalc(P) {
   const R1 = Math.min(remain, 2 * cur + nx * 0.5), R2 = Math.min(remain, Math.max(2 * cur, cur + nx));
   if (nx && st < 1 && R1 > R) nxt.push({ k: `QLD 종가 ≤ <b>${usd(+px[0])}</b> (1차 매수가) → 🟡 매수 구간`, amt: R1 - R, d: `${t + 2}차 1회의 절반 미리 현금` });
   if (nx && st < 2 && R2 > Math.max(R, R1)) nxt.push({ k: `QLD 종가 ≤ <b>${usd(fl(nxPx * 1.1))}</b> (${t + 2}차 진입가 ${usd(nxPx)}의 +10%) → 🔴 단계 근접`, amt: R2 - Math.max(R, st < 1 ? R1 : R), d: `${t + 2}차 1회 전액 현금 확보` });
-  return { spx, R, target, lq, pv, cash, o, st, why: b.park ? b.park.why : `기본 규칙 · ${t + 1}차 1회 × 2`, nxt: nxt.map(x => ({ ...x, q: sq(x.amt), p: fl(spx * 0.95) })), pend, d: SPYM ? SPYM.d : (a && a.as_of || "").slice(0, 10) };
+  return { spx, R, target, lq, pv, cash, o, st, remain, seed: +b.engine_seed || remain, why: b.park ? b.park.why : `기본 규칙 · ${t + 1}차 1회 × 2`, nxt: nxt.map(x => ({ ...x, q: sq(x.amt), p: fl(spx * 0.95) })), pend, d: SPYM ? SPYM.d : (a && a.as_of || "").slice(0, 10) };
 }
-function parkHtml(s, P) {
-  if (s.id !== "QLDL" || !P) return ""; const k = parkCalc(P);
-  if (!k.spx) return `<div class="pk"><div class="pk-h">🅿 SPYM 파킹</div><div class="hint">${esc(k.why)}</div></div>`;
+/* 🅿 QLD 평생매수(SPYM) 카드 — 4종목과 같은 주문 카드 · ☑매수·☑매도 (봇 설정 park_sides · 모든 기기 동기화) · 시드·계좌 연동 자동 */
+const parkSides = () => Object.assign({ buy: true, sell: true }, (G.cfg["muhan-bot-qld.json"] || {}).park_sides || {});
+function parkSym() {
+  if (!S.some(s => s.id === "QLDL")) return "";
+  const P = G.plan.QLDL, ps = parkSides(), c = G.cfg["muhan-bot-qld.json"] || {};
+  const head = `<div class="sym-h"><b>QLD 평생매수 <span style="color:#5EEAD4">(SPYM)</span></b><span><label class="chk"><input type="checkbox" data-park="buy" ${ps.buy ? "checked" : ""}>매수</label><label class="chk"><input type="checkbox" data-park="sell" ${ps.sell ? "checked" : ""}>매도</label></span></div>`;
+  if (!c.installed_at) return `<div class="sym pk-sym">${head}<div class="busy">⚠ QLD평생 봇 미설치 — 🛠 설정에서</div></div>`;
+  if (!P) return `<div class="sym pk-sym">${head}<div class="busy">QLD평생 계산 중…</div></div>`;
+  return `<div class="sym pk-sym">${head}${parkHtml(P, ps)}</div>`;
+}
+document.addEventListener("change", async e => {
+  const t = e.target; if (!t.dataset || !t.dataset.park) return;
+  const f = "muhan-bot-qld.json", c = Object.assign({}, G.cfg[f] || {}); c.park_sides = Object.assign(parkSides(), { [t.dataset.park]: t.checked }); c.updated = new Date().toISOString();
+  try { await writeFiles({ [f]: c }); G.cfg[f] = c; msg(`QLD 평생매수(SPYM) ${t.dataset.park === "buy" ? "매수" : "매도"} ${t.checked ? "☑ 자동 주문" : "☐ 주문 안 함"} · 저장 (모든 기기)`, true); render(); }
+  catch (x) { t.checked = !t.checked; msg("⚠ " + x.message, false); }
+});
+function parkHtml(P, ps) {
+  const k = parkCalc(P);
+  if (!k.spx) return `<div class="hint" style="margin-top:6px">${esc(k.why)}</div>`;
   const ST = [["🟢 평온", "ok"], ["🟡 매수 구간", "wa"], ["🔴 단계 근접", "no"]][k.st] || ["🟢 평온", "ok"];
-  const ord = k.o ? `<div class="ord ${k.o.side}"><span class="sd">SPYM ${k.o.side === "buy" ? "매수" : "매도"}</span><span class="cn">LOC<small>${k.o.side === "buy" ? "종가 +3%까지" : "종가 −5%까지"}</small></span><b>${usd(k.o.price)}<em>× ${k.o.qty.toLocaleString("en-US")}주 ≈ ${$0(k.o.price * k.o.qty)}</em></b></div><div class="hint" style="margin:3px 0 0">${k.o.side === "buy" ? "남는 대기 시드 → SPYM (보유 없으면 여기서 처음 매수)" : "남길 현금 채우기 — 판 돈은 다음 실행부터 QLD 매수에 사용"} · ⚡ 바로 실행·자동 실행 때 봇이 QLD 주문 뒤 실제 주문</div>`
+  const off = k.o && !ps[k.o.side];
+  const ord = k.o ? `<div class="ord ${k.o.side}${off ? " off" : ""}"><span class="sd">SPYM ${k.o.side === "buy" ? "매수" : "매도"}</span><span class="cn">LOC<small>${k.o.side === "buy" ? "종가 +3%까지" : "종가 −5%까지"}</small></span><b>${usd(k.o.price)}<em>× ${k.o.qty.toLocaleString("en-US")}주 ≈ ${$0(k.o.price * k.o.qty)}</em></b></div><div class="hint" style="margin:3px 0 0">${off ? `☐ ${k.o.side === "buy" ? "매수" : "매도"} 체크 해제 — 봇이 주문하지 않음` : (k.o.side === "buy" ? "남는 대기 시드 → SPYM (보유 없으면 여기서 처음 매수)" : "QLD매수 대기현금 채우기 — 판 돈은 다음 실행부터 QLD 매수에 사용") + " · ⚡ 바로 실행·자동 실행 때 봇이 QLD 주문 뒤 실제 주문"}</div>`
     : `<div class="busy">🅿 SPYM 오늘 주문 없음 — ${k.cash == null ? "계좌 동기화 대기" : "목표 유지 중"}</div>`;
   const nx = k.nxt.length ? `<div class="pk-n"><div class="pk-t">📉 다음 SPYM 매도 조건 <small>(SPYM ${usd(k.spx)} 기준 추정 · 그날 가격으로 봇이 자동 재계산)</small></div>${k.nxt.map(x => `<div class="pk-r"><span>${x.k}<small>${x.d}</small></span><b>SPYM ${x.q.toLocaleString("en-US")}주<em>LOC ${usd(x.p)} · ≈${$0(x.amt)}</em></b></div>`).join("")}</div>` : "";
-  return `<div class="pk"><div class="pk-h">🅿 SPYM 파킹 <span class="pk-s ${ST[1]}">${ST[0]}</span></div>
-    <div class="pk-g"><div><span>남길 현금</span><b>${$0(k.R)}</b></div><div><span>SPYM 목표</span><b>${$0(k.target)}</b></div><div><span>봇 SPYM</span><b>${k.lq ? k.lq.toLocaleString("en-US") + "주" : "없음"}</b><small>${k.lq ? "≈" + $0(k.pv) : ""}</small></div></div>
-    <div class="hint" style="margin:4px 0 0">🤖 ${esc(k.why)} · 계좌 현금 ${k.cash == null ? "-" : $0(k.cash)}${k.pend ? ` (오늘 QLD 주문 ${$0(k.pend)} 포함해 계산)` : ""} · SPYM ${usd(k.spx)} (${esc(k.d)})</div>${ord}${nx}</div>`;
+  return `<div class="pk-h" style="margin-top:6px"><span class="hint" style="margin:0">🔗 시드 ${$0(k.seed)} − 사용 ${$0(k.seed - k.remain)} = 남은 시드 ${$0(k.remain)}</span><span class="pk-s ${ST[1]}">${ST[0]}</span></div>
+    <div class="pk-g"><div><span>QLD매수 대기현금</span><b>${$0(k.R)}</b></div><div><span>SPYM 목표</span><b>${$0(k.target)}</b></div><div><span>봇 SPYM</span><b>${k.lq ? k.lq.toLocaleString("en-US") + "주" : "없음"}</b><small>${k.lq ? "≈" + $0(k.pv) : ""}</small></div></div>
+    <div class="hint" style="margin:4px 0 0">🤖 ${esc(k.why)} · 계좌 현금 ${k.cash == null ? "-" : $0(k.cash)}${k.pend ? ` (오늘 QLD 주문 ${$0(k.pend)} 포함해 계산)` : ""} · SPYM ${usd(k.spx)} (${esc(k.d)})</div>${ord}${nx}`;
 }
 function render() {
   { const lb = document.getElementById("live"); if (ONLY && lb && !lb.disabled && !lb.classList.contains("armed")) lb.textContent = LIVE_LAB(); }
@@ -336,8 +354,8 @@ function render() {
     const o = Object.fromEntries((P.orders || []).map(x => [x.side, x]));
     const cn = CODES.find(c => c[0] === code)[1], cm = cn.split(" (")[0], cs = cn.includes(" (") ? cn.slice(cn.indexOf(" (") + 2, -1) : "";
     const line = (side, lab) => o[side] ? `<div class="ord ${side}"><span class="sd">${lab}</span><span class="cn">${cm}${cs ? `<small>${cs}</small>` : ""}</span><b>${mk ? "시장가" : usd(o[side].price)}<em>× ${(+o[side].qty).toLocaleString("en-US")}주</em></b></div>` : "";
-    return `<div class="sym">${head}${pos(P)}${rule(P)}${gadj(s, P)}${adj(s, P)}${line("buy", "매수")}${line("sell", "매도")}${parkHtml(s, P)}${!o.buy && !o.sell ? `<div class="busy">오늘 규칙상 주문 없음${sd.buy ? " (☑매수면 봇이 같은 공식으로 주문)" : ""}</div>` : ""}${inst ? "" : `<div class="busy">⚠ 봇 미설치 — 🛠 설정에서 해당 앱으로</div>`}</div>`;
-  }).join("");
+    return `<div class="sym">${head}${pos(P)}${rule(P)}${gadj(s, P)}${adj(s, P)}${line("buy", "매수")}${line("sell", "매도")}${!o.buy && !o.sell ? `<div class="busy">오늘 규칙상 주문 없음${sd.buy ? " (☑매수면 봇이 같은 공식으로 주문)" : ""}</div>` : ""}${inst ? "" : `<div class="busy">⚠ 봇 미설치 — 🛠 설정에서 해당 앱으로</div>`}</div>`;
+  }).join("") + parkSym();
 }
 function renderSeeds() {
   document.getElementById("seeds").innerHTML = S.map(s => {

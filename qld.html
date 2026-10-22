@@ -811,7 +811,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.23";
+const APP_VERSION = "V1.24";
 const RELEASE_DATE = "261022";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -1965,7 +1965,7 @@ function seedEngine() {
   return { seed, H, cum, prob, sig, kk, rule, best, top: top.filter((o, i, A) => A.findIndex(x => x.w.join() === o.w.join() && Math.abs(x.ret - o.ret) < 1e-9) === i).slice(0, 5), mode: seedMode(), w, n, px, per, spent, remain, tier, amt,
            qty: Math.floor(amt / plan.locPx), locPx: plan.locPx, bars: ys.length };
 }
-/* 🅿 SPYM 파킹 AI 전략 (봇이 이 값 그대로 실행): 평생매수 대기 시드 중 '남길 현금'만 현금 · 나머지는 SPYM(S&P 500)
+/* 🅿 SPYM 파킹 AI 전략 (봇이 이 값 그대로 실행): 평생매수 대기 시드 중 'QLD매수 대기현금'만 현금 · 나머지는 SPYM(S&P 500)
    QLD 1년 고점 대비 낙폭으로 3단계 — SPYM 도 같이 빠지는 폭락 전에 큰 회차 돈을 미리 현금으로 돌려 놓는다
    🟢 평온 (1차 매수가 위)        : 현금 = 이번 단계 1회 × 2
    🟡 매수 구간 (1차 매수가 이하) : 현금 = 이번 단계 1회 × 2 + 다음 단계 1회의 절반 (미리 반)
@@ -1991,7 +1991,7 @@ function renderPark(E) {
   let todo = "계좌 동기화 후 표시";
   if (P.cash != null) { const free = P.R; todo = P.cash < free - 1 && P.lq >= 1 ? `🔴 SPYM 약 ${u0(free - P.cash)} 매도 → 현금 채우기` : P.cash > free + 200 && P.pv < P.target - 200 ? `🟢 SPYM 약 ${u0(Math.min(P.cash - free, P.target - P.pv))} 매수` : "✅ 유지 (할 일 없음)"; }
   const crash = P.pv * 0.7 + (P.cash || 0);
-  el.innerHTML = `<div class="tb-kpis">${kpi("지금 상태", ST[0], ST[1])}${kpi("남길 현금", u0(P.R))}${kpi("SPYM 목표", u0(P.target))}</div>
+  el.innerHTML = `<div class="tb-kpis">${kpi("지금 상태", ST[0], ST[1])}${kpi("QLD매수 대기현금", u0(P.R))}${kpi("SPYM 목표", u0(P.target))}</div>
     ${row("AI 판단", `${P.why}`)}
     ${row("현재 · 계좌 현금", `${P.cash != null ? u0(P.cash) + k(P.cash) : "-"}`)}
     ${row("현재 · 봇 SPYM", `${P.lq ? `${P.lq.toLocaleString("en-US")}주 · ${u0(P.pv)}${k(P.pv)}` : "없음 (다음 실행부터 자동)"}`)}
@@ -2001,7 +2001,7 @@ function renderPark(E) {
       🟢 <b>평온</b>(QLD가 1차 매수가 ${u0(E.px[0])} 위): 현금 = 이번 단계 1회 × 2 · 나머지 대기 시드는 전부 SPYM<br>
       🟡 <b>매수 구간</b>(1차 매수가 이하): 다음 단계 1회의 <b>절반</b>을 미리 현금으로 — SPYM 이 더 빠지기 전에 반 확보<br>
       🔴 <b>다음 단계 근접</b>(진입가 10% 이내): 다음 단계 1회 <b>전액</b>을 현금으로 — 큰 회차를 SPYM 폭락 값에 팔지 않게<br>
-      매일 봇 실행 때 QLD 주문 후 자동: 현금 &lt; 남길 현금 → SPYM 매도(LOC −5%까지) · 넘치면 SPYM 매수(LOC +3%까지) · 판 돈은 다음 실행부터 QLD 매수에 사용<br>
+      매일 봇 실행 때 QLD 주문 후 자동: 현금 &lt; QLD매수 대기현금 → SPYM 매도(LOC −5%까지) · 넘치면 SPYM 매수(LOC +3%까지) · 판 돈은 다음 실행부터 QLD 매수에 사용<br>
       봇이 산 SPYM 만 관리 (직접 산 SPYM 은 건드리지 않음) · QLD평생 전용 계좌일 때만 동작<br>
       💸 세금: SPYM 을 이익 상태로 팔면 해외주식 양도차익 연 250만원 초과분 22% — 12월에 연간 실현 이익을 확인하세요</div></details>`;
 }
