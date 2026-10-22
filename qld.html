@@ -643,6 +643,10 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
     </div>
     <div id="seedLadder"></div><div id="seedContent"><div class="empty"><span class="ico">🤖</span>상단 '시세 불러오기'를 누르면 전체 시드를 1·2·3차에 나눈 최적 배분과 분할 매수 금액이 표시됩니다.</div></div>
   </section>
+  <section class="card" id="card-park" style="--c:var(--glow);">
+    <div class="card-head"><div class="card-icon">🅿</div><div><div class="card-kicker">03 · AI PARKING</div><h2>대기 시드 SPYM 파킹 AI 전략</h2></div></div>
+    <div id="parkContent"><div class="empty"><span class="ico">🅿</span>시세를 불러오면 현금으로 남길 금액·SPYM에 둘 금액·오늘 봇이 할 일이 표시됩니다.</div></div>
+  </section>
   </div>
   <div class="page" id="pg-guide" role="tabpanel" aria-label="가이드">
   <div hidden><section id="card-loc"></section><div id="locGuideContent"></div></div>
@@ -807,7 +811,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.22";
+const APP_VERSION = "V1.23";
 const RELEASE_DATE = "261022";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -1961,6 +1965,46 @@ function seedEngine() {
   return { seed, H, cum, prob, sig, kk, rule, best, top: top.filter((o, i, A) => A.findIndex(x => x.w.join() === o.w.join() && Math.abs(x.ret - o.ret) < 1e-9) === i).slice(0, 5), mode: seedMode(), w, n, px, per, spent, remain, tier, amt,
            qty: Math.floor(amt / plan.locPx), locPx: plan.locPx, bars: ys.length };
 }
+/* 🅿 SPYM 파킹 AI 전략 (봇이 이 값 그대로 실행): 평생매수 대기 시드 중 '남길 현금'만 현금 · 나머지는 SPYM(S&P 500)
+   QLD 1년 고점 대비 낙폭으로 3단계 — SPYM 도 같이 빠지는 폭락 전에 큰 회차 돈을 미리 현금으로 돌려 놓는다
+   🟢 평온 (1차 매수가 위)        : 현금 = 이번 단계 1회 × 2
+   🟡 매수 구간 (1차 매수가 이하) : 현금 = 이번 단계 1회 × 2 + 다음 단계 1회의 절반 (미리 반)
+   🔴 다음 단계 근접 (진입가 10% 이내): 현금 = 이번 단계 1회 + 다음 단계 1회 (큰 회차 전액 확보) */
+function parkPlan(E) {
+  const ctx = guideCtx; if (!E || !ctx || !ctx.hist || !ctx.hist.length) return null;
+  const p = ctx.hist[ctx.hist.length - 1].y, t = E.tier, cur = E.per[t] || 0, nx = t + 1 < E.per.length ? E.per[t + 1] : 0, nxPx = t + 1 < E.px.length ? E.px[t + 1] : 0;
+  let st, R, why;
+  if (nx && p <= nxPx * 1.10) { st = 2; R = Math.max(2 * cur, cur + nx); why = `${t + 2}차 진입가 $${nxPx.toFixed(2)} 10% 이내 → ${t + 2}차 1회 전액 현금 확보`; }
+  else if (p <= E.px[0]) { st = 1; R = 2 * cur + nx * 0.5; why = `매수 구간 → ${t + 1}차 2회 + ${t + 2}차 1회의 절반 미리`; }
+  else { st = 0; R = 2 * cur; why = `평온 → ${t + 1}차 1회 × 2만 현금`; }
+  R = Math.min(R, E.remain); const target = Math.max(0, E.remain - R);
+  const L = parseJ(lsGet("qld_park_v1"), {}) || {}, a = qldAcct(), h = a && (a.holdings || []).find(x => String(x.symbol).toUpperCase() === "SPYM");
+  const lq = Math.min(+L.qty || 0, h ? +h.qty : 0), px = h && +h.qty ? (+h.value || 0) / +h.qty : 0, pv = lq * px, cash = a && a.cash_usd != null ? +a.cash_usd : null;
+  return { p, st, R, why, target, lq, px, pv, cash, cur, nx, t };
+}
+function renderPark(E) {
+  const el = document.getElementById("parkContent"); if (!el) return; const P = parkPlan(E); if (!P) return;
+  const fx = (liveFx && liveFx.rate > 0) ? liveFx.rate : 0, k = v => fx ? ` <small style="color:var(--text-faint)">(${krw(v * fx)})</small>` : "";
+  const ST = [["🟢 평온", "var(--up)"], ["🟡 매수 구간", "var(--amber)"], ["🔴 단계 근접", "var(--down)"]][P.st];
+  const u0 = v => "$" + Math.round(v).toLocaleString("en-US"), row = (l, v) => `<div style="padding:9px 2px;border-top:1px solid var(--border-soft)"><div style="font-size:11.5px;color:var(--text-faint);margin-bottom:3px">${l}</div><div style="font-size:13.5px;font-weight:700;line-height:1.45;word-break:keep-all;overflow-wrap:anywhere">${v}</div></div>`;
+  const kpi = (l, v, c) => `<div class="tb-kpi"><div class="l">${l}</div><div class="v" ${c ? `style="color:${c}"` : ""}>${v}</div></div>`;
+  let todo = "계좌 동기화 후 표시";
+  if (P.cash != null) { const free = P.R; todo = P.cash < free - 1 && P.lq >= 1 ? `🔴 SPYM 약 ${u0(free - P.cash)} 매도 → 현금 채우기` : P.cash > free + 200 && P.pv < P.target - 200 ? `🟢 SPYM 약 ${u0(Math.min(P.cash - free, P.target - P.pv))} 매수` : "✅ 유지 (할 일 없음)"; }
+  const crash = P.pv * 0.7 + (P.cash || 0);
+  el.innerHTML = `<div class="tb-kpis">${kpi("지금 상태", ST[0], ST[1])}${kpi("남길 현금", u0(P.R))}${kpi("SPYM 목표", u0(P.target))}</div>
+    ${row("AI 판단", `${P.why}`)}
+    ${row("현재 · 계좌 현금", `${P.cash != null ? u0(P.cash) + k(P.cash) : "-"}`)}
+    ${row("현재 · 봇 SPYM", `${P.lq ? `${P.lq.toLocaleString("en-US")}주 · ${u0(P.pv)}${k(P.pv)}` : "없음 (다음 실행부터 자동)"}`)}
+    ${row("오늘 봇이 할 일", `<b>${todo}</b>`)}
+    ${row("폭락 대비 점검", `SPYM −30% 가정 시 쓸 돈 ${u0(crash)} · ${P.t + 2 <= 3 && P.nx ? `${P.t + 2}차 1회 ${u0(P.nx)} ${crash >= P.nx ? "✅ 충분" : "<b style='color:var(--down)'>⚠ 부족</b>"}` : "마지막 단계"}`)}
+    <details style="margin-top:8px"><summary>📘 AI 파킹 규칙 · 세금</summary><div class="hint" style="line-height:1.6">
+      🟢 <b>평온</b>(QLD가 1차 매수가 ${u0(E.px[0])} 위): 현금 = 이번 단계 1회 × 2 · 나머지 대기 시드는 전부 SPYM<br>
+      🟡 <b>매수 구간</b>(1차 매수가 이하): 다음 단계 1회의 <b>절반</b>을 미리 현금으로 — SPYM 이 더 빠지기 전에 반 확보<br>
+      🔴 <b>다음 단계 근접</b>(진입가 10% 이내): 다음 단계 1회 <b>전액</b>을 현금으로 — 큰 회차를 SPYM 폭락 값에 팔지 않게<br>
+      매일 봇 실행 때 QLD 주문 후 자동: 현금 &lt; 남길 현금 → SPYM 매도(LOC −5%까지) · 넘치면 SPYM 매수(LOC +3%까지) · 판 돈은 다음 실행부터 QLD 매수에 사용<br>
+      봇이 산 SPYM 만 관리 (직접 산 SPYM 은 건드리지 않음) · QLD평생 전용 계좌일 때만 동작<br>
+      💸 세금: SPYM 을 이익 상태로 팔면 해외주식 양도차익 연 250만원 초과분 22% — 12월에 연간 실현 이익을 확인하세요</div></details>`;
+}
 function renderSeedCard() {
   const el = document.getElementById("seedContent"); if (!el) return;
   const E = seedEngine(); if (!E) return;
@@ -2046,10 +2090,11 @@ function renderTodayCard() {
     bot: { kind: "lifetime", last_close: ctx.hist[ctx.hist.length - 1].y, ref_peak: plan.refPeak, pct: plan.pct, loc_px: Number(plan.locPx.toFixed(2)),
            qty_unit: LOC_LOT, order_today: !!isReserveDay, next_session: fmtDateFull(nextSession.getTime()), fx: (liveFx && liveFx.rate) || null,
            records_src: (typeof qldApiActive === "function" && qldApiActive()) ? "meritz" : "app", buy_count: valid.length,
-           ...(() => { const E = seedEngine(); return E ? { engine_amt: Math.round(E.amt * 100) / 100, engine_mode: E.mode, engine_w: E.w, engine_n: E.n, engine_tier: E.tier + 1, engine_seed: E.seed, engine_remain: Math.round(E.remain), engine_per: E.per.map(x => Math.round(x * 100) / 100), engine_px: E.px } : { engine_amt: null }; })() }
+           ...(() => { const E = seedEngine(); return E ? { engine_amt: Math.round(E.amt * 100) / 100, engine_mode: E.mode, engine_w: E.w, engine_n: E.n, engine_tier: E.tier + 1, engine_seed: E.seed, engine_remain: Math.round(E.remain), engine_per: E.per.map(x => Math.round(x * 100) / 100), engine_px: E.px, ...(P => P ? { park: { reserve: Math.round(P.R * 100) / 100, state: P.st, why: P.why } } : {})(parkPlan(E)) } : { engine_amt: null }; })() }
   };
   document.title = (isReserveDay ? "🔔 " : "") + document.title.replace(/^🔔 /, "");
   try { renderSeedCard(); } catch (e) {}
+  try { renderPark(seedEngine()); } catch (e) {}
   el.innerHTML = `
     ${alert}
     ${(hs => `<div class="loc-pos">📦 보유 <b>${hs ? hs.qty.toLocaleString("en-US") + "주" : "없음"}</b>${hs ? ` · 평단 <b>${usd(hs.avg)}</b> · (<b style="color:${refPrice >= hs.avg ? "var(--up)" : "var(--down)"};">${refPrice >= hs.avg ? "+" : ""}${((refPrice / hs.avg - 1) * 100).toFixed(2)}%</b>)` : ""}${(() => { const E = seedEngine(), N = E ? E.n.reduce((t, x) => t + x, 0) : 0, X = valid.length + 1; if (!N) return ""; if (E.remain <= 0) return ` · 📍 시드 소진 (${valid.length}회 매수)`; return X <= N ? ` · 📍 총 ${N}회차 중 <b>${X}</b>회차 진행 중` : ` · 📍 <b>${X}</b>회차 진행 중 (기본 ${N}회 이후 · 잔여 시드)`; })()}</div>`)(holdingSummary(valid))}
@@ -3210,6 +3255,7 @@ function qldAcct() { const a = parseJ(lsGet(QLD_ACCT_KEY), null); return a && a.
 function qldApiActive() { const a = qldAcct(); return !!(a && a.symbols.QLD.complete && a.symbols.QLD.current); }
 function qldApiReconcile(M, g) {
   try { const f = g && g.files && g.files["muhan-account-qld.json"]; if (f && f.content) lsSet(QLD_ACCT_KEY, f.content); } catch (e) {}
+  try { const f = g && g.files && g.files["muhan-bot-qld-park.json"]; if (f && f.content) lsSet("qld_park_v1", f.content); } catch (e) {}
   if (!qldApiActive()) return "";
   const a = qldAcct(), s = a.symbols.QLD, covered = a.covered || a.et_date || "";
   if (!covered) return "";
