@@ -154,7 +154,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.24", RELEASE_DATE = "261022";
+const APP_VERSION = "V1.25", RELEASE_DATE = "261022";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -535,7 +535,7 @@ function renderBots() {
       🔐 앱키 ${c.keys ? "…" + esc(c.keys.tail) : "<b class='needt'>🔴 미등록 — 아래에서 등록</b>"} · 📨 ${c.tg ? "…" + esc(c.tg.chat_tail) : "없음"} · 🔧 ${s && s.mode === "check" ? (s.overall === "checked" ? "점검 ✓" : "점검 ⚠") : "점검 전"}${f in SEC_OK ? (SEC_OK[f] ? " · 🔑 금고 권한 ✓" : " · <b style='color:#F0475A'>🔑 금고 권한 ✗ — 토큰에 Secrets 쓰기 권한 필요</b>") : ""}
       ${c.installed_at ? "" : ` · <a style="color:var(--glow)" href="${{ "muhan-bot.json": "api-soxl.html", "muhan-bot-tqqq.json": "api-tqqq.html", "muhan-bot-qldm.json": "api-qm.html", "muhan-bot-qld.json": "api-qld.html" }[f]}#pg-setup">설치 화면 ›</a>`}</div>`; }).join("");
   { const a = G.cfg["muhan-bot.json"] || {}, t = G.cfg["muhan-bot-tqqq.json"] || {}, sp = tqqqSplit();
-    document.getElementById("bots").insertAdjacentHTML("beforeend", `<div class="res${sp || !a.installed_at ? "" : " need"}">🧩 <b>종목마다 단독 봇</b> · SOXL · TQQQ · QLD무한 · QLD평생 ${sp ? "✅ 4개 모두 단독" : !a.installed_at ? "" : !t.installed_at ? `<br><span class="hint">⏳ TQQQ 전용 봇 <b>자동 설치 중</b> (1~2분) — 지금은 SOXL 봇이 TQQQ도 주문 (끊김 없음)</span>`
+    document.getElementById("bots").insertAdjacentHTML("beforeend", `<div class="res${sp || !a.installed_at ? "" : " need"}">🧩 <b>종목마다 단독 봇</b> · SOXL · TQQQ · QLD무한 · QLD평생 ${sp ? "✅ 4개 모두 단독" : !a.installed_at ? "" : !t.installed_at ? `<br><span class="hint">⏳ TQQQ 전용 봇 <b>자동 설치 중</b> (1~2분, 이 화면을 열어 두기) — 지금은 SOXL 봇이 TQQQ도 주문 (끊김 없음)</span> <a class="btn" style="display:inline-block;margin-top:6px;text-decoration:none" href="api-tqqq.html#pg-setup">🤖 안 되면 TQQQ 봇 직접 설치 ›</a>`
       : !t.keys ? `<br><b class="needt">🔴 TQQQ 봇 앱키 등록</b> <span class="hint">→ 아래 🔐에서 TQQQ 봇 체크 후 저장하면 <b>자동으로 넘어갑니다</b> (그 전엔 SOXL 봇이 TQQQ 주문 · 이중 주문 없음)</span>` : `<br><span class="hint">🔀 TQQQ 전용 봇으로 자동 전환 중…</span>`}</div>`); }
   autoSplit();
   { const miss = CFGS.filter(f => (G.cfg[f] || {}).installed_at && !(G.cfg[f] || {}).keys), kh = document.getElementById("keyHead");
@@ -552,8 +552,11 @@ let AUTO_SPLIT = 0;
 async function autoSplit() {
   const A = G.cfg["muhan-bot.json"] || {}, T = G.cfg["muhan-bot-tqqq.json"] || {};
   if (!A.installed_at || tqqqSplit() || AUTO_SPLIT) return;
-  if (!T.installed_at) { try { if (sessionStorage.getItem("autosplit_inst")) return; sessionStorage.setItem("autosplit_inst", "1"); } catch (x) {}
-    AUTO_SPLIT = 1; bgRefresh(["muhan-bot-tqqq.json"]); setTimeout(() => { AUTO_SPLIT = 0; refresh(); }, 120000); return; }
+  if (!T.installed_at) { try { const n = +sessionStorage.getItem("autosplit_n") || 0; if (n >= 3) return; sessionStorage.setItem("autosplit_n", n + 1);
+      sessionStorage.removeItem("autoinst_muhan-bot-tqqq.json"); } catch (x) {}     // TQQQ 앱의 '한 번만 자동 설치' 표시를 지워야 숨김 설치가 다시 동작
+    AUTO_SPLIT = 1;
+    if (!G.files["muhan-bot-tqqq.json"]) { try { await writeFiles({ "muhan-bot-tqqq.json": { mode: "off", created: new Date().toISOString() } }); } catch (x) { AUTO_SPLIT = 0; return; } }   // 설정 파일이 있어야 TQQQ 앱이 자동 설치를 시작
+    bgRefresh(["muhan-bot-tqqq.json"]); setTimeout(() => { AUTO_SPLIT = 0; refresh(); }, 120000); return; }
   if (!T.keys) return;
   AUTO_SPLIT = 1; try { await handover(true); } catch (x) { msg("⚠ TQQQ 자동 전환 실패 — " + x.message, false); } finally { AUTO_SPLIT = 0; }
 }
