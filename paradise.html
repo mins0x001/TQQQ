@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.26-261021-FinancialRoadmap">
+<meta name="version" content="V1.27-261022-FinancialRoadmap">
 <meta name="release-date" content="261021">
-<title>QLD 파이낸셜 로드맵 (V1.26 - 261021)</title>
+<title>QLD 파이낸셜 로드맵 (V1.27 - 261022)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -133,7 +133,7 @@
 <body>
 <div class="wrap">
   <div><h1>🏛 QLD 파이낸셜 로드맵 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.26 (261021) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.27 (261022) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
   <div class="bsw" id="bsw"></div>
@@ -195,7 +195,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.26", RELEASE_DATE = "261021";
+const APP_VERSION = "V1.27", RELEASE_DATE = "261022";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -222,7 +222,7 @@ function fieldHtml(f) {
 }
 $("fields").innerHTML = F1.map(fieldHtml).join(""); $("fields2").innerHTML = F2.map(fieldHtml).join("");
 /* 🔀 계산 기준: 💰 시드(최종 투입 계획) · 🏦 실제 계좌(평가금+현금) — 계좌 데이터가 없으면 시드로 계산 · 평생/무한 비율은 시드 비율 유지 */
-function SB() { const s = V.life + V.inf, a = V.base === "acct" && ACT && ACT.usd > 0 && s > 0, f = a ? ACT.usd / s : 1; return { life: V.life * f, inf: V.inf * f, tot: s * f, acct: a, want: V.base === "acct" }; }
+function SB() { const s = V.life + V.inf, a = V.base !== "seed" && ACT && ACT.usd > 0 && s > 0, f = a ? ACT.usd / s : 1; return { life: V.life * f, inf: V.inf * f, tot: s * f, acct: a, want: V.base !== "seed" }; }
 function calc(n) {
   const r0 = (V.sav > 0 ? (V.lifeR + V.infR) / 2 : V.etcR) / 100, r1 = V.lifeR / 100, r2 = V.infR / 100, g = V.savG / 100;
   const usd2man = V.fx / 10000, B = SB();
@@ -250,7 +250,7 @@ function bsw() {
   $("bsw").innerHTML = `<span class="l">계산 기준</span><button data-b="seed" class="${b.want ? "" : "on"}">💰 시드<small>투입 계획 ${f(sU)}</small></button><button data-b="acct" class="${b.want ? "on" : ""}">🏦 실제 계좌<small>${a ? "평가금+현금 " + f(ACT.usd) : "아직 데이터 없음"}</small></button>`
     + (b.want && !a ? `<div class="n">🏦 아직 QLD 매수 전이라 계좌 데이터가 없어요 → <b>시드로 계산 중</b> · 매수가 시작되면 자동으로 실제 계좌 기준</div>` : "");
 }
-document.addEventListener("click", e => { const x = e.target.closest("[data-b]"); if (!x || V.base === x.dataset.b || (!V.base && x.dataset.b === "seed")) return; V.base = x.dataset.b; render(); save(); });
+document.addEventListener("click", e => { const x = e.target.closest("[data-b]"); if (!x || V.base === x.dataset.b || (!V.base && x.dataset.b === "acct")) return; V.base = x.dataset.b; render(); save(); });
 function render() {
   bsw();
   btApply(); krw(); live();
@@ -535,7 +535,7 @@ function pf() {
     : `<div class="pf-a ${need > 0 ? "lo" : need < 0 ? "hi" : "ok"}"><div class="g"><span>지금 레버리지</span><b>${aP.toFixed(1)}%</b><small>${man(levM)} / ${man(A)}원 · ${LEV.d} 계좌 자동</small></div>
         <div class="m">${need < 0 ? `🔴 <b>${up}% 초과</b> → 1월에 레버리지 <b>${man(-need)}원</b> 팔아 단기채로` : need > 0 ? `🟢 <b>${lo}% 미만</b> → 1월에 단기채 <b>${man(need)}원</b>으로 레버리지 사기` : `✅ 범위 안 (${lo}~${up}%) — 할 일 없음`}</div></div>`;
   let plan = "";
-  if (act && V.base === "acct") {
+  if (act && V.base !== "seed") {
     const fx = V.fx / 1e4, cashM = LEV.cash * fx, LT = Math.max(0, A * L / 100 - cashM),   // 레버리지 목표에서 매수 대기 현금 몫을 뺀 나머지를 3종에 45:20:10
       items = [["QLD", "QLD평생", LEV.q * fx, LT * 45 / 75], ["SOXL", "SOXL무한", LEV.s * fx, LT * 20 / 75], ["TQQQ", "TQQQ거치", LEV.t * fx, LT * 10 / 75], ["SAFE", "🛡 단기채", SF, A * safe / 100]];
     const go = need !== 0, sh = (sy, m) => PX[sy] ? ` · 약 <b>${Math.ceil(Math.abs(m) / fx / PX[sy])}주</b>` : "";
