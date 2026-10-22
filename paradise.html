@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.30-261022-FinancialRoadmap">
+<meta name="version" content="V1.31-261022-FinancialRoadmap">
 <meta name="release-date" content="261021">
-<title>QLD 파이낸셜 로드맵 (V1.30 - 261022)</title>
+<title>QLD 파이낸셜 로드맵 (V1.31 - 261022)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -129,7 +129,7 @@
 <body>
 <div class="wrap">
   <div><h1>🏛 QLD 파이낸셜 로드맵 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.30 (261022) · 경제적 자유 설계 · QLD평생매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.31 (261022) · 경제적 자유 설계 · QLD평생매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
   <nav class="tabs" id="tabs"><button data-t="pf">🗺 배분</button><button data-t="goal">🏝 목표</button><button data-t="rev">🎯 역산</button><button data-t="prog">📈 진행</button><button data-t="wd">💸 인출</button><button data-t="ai">🤖 AI</button></nav>
@@ -191,7 +191,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.30", RELEASE_DATE = "261022";
+const APP_VERSION = "V1.31", RELEASE_DATE = "261022";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -515,7 +515,7 @@ function pf() {
   const rows = PF.map(([nm, w, c, how]) => { const pct = w * k, m = A * pct / 100;
       const sub = c === "q" ? `<span class="sp"><i>⚡ 즉시 매수</i><b>${$u(m * 2 / 3)}</b><small>₩ ${man(m * 2 / 3)}</small></span><span class="sp"><i>🤖 평생매수 엔진</i><b>${$u(m / 3)}</b><small>₩ ${man(m / 3)}</small></span>` : "";
       return `<div class="pf-r ${c}"><span class="n">${nm}<small>${c === "q" ? "즉시 2/3 + 엔진 1/3 (하락 때 매수)" : how}</small></span><b>${amt2(m)}</b><em>${pct.toFixed(0)}%</em>${sub ? `<div class="pf-sp">${sub}</div>` : ""}${acN(AV[c] || 0, pct)}</div>`; }).join("")
-    + (act && LEV.cash > 0 ? `<div class="pf-r cs"><span class="n">⏳ 계좌 매수 대기 현금${LEV.park ? " + 🅿 SGOV" : ""}<small>무한·평생매수가 쓸 돈 · 레버리지 몫${LEV.park ? ` · 🅿 평생매수 SGOV 파킹 ${man(LEV.park * V.fx / 1e4)}원 포함` : ""}</small></span><b>${amt2(LEV.cash * V.fx / 1e4)}</b><em>—</em></div>` : "")
+    + (act && LEV.cash > 0 ? `<div class="pf-r cs"><span class="n">⏳ 계좌 매수 대기 현금${LEV.park ? " + 🅿 SPYM" : ""}<small>무한·평생매수가 쓸 돈 · 레버리지 몫${LEV.park ? ` · 🅿 평생매수 SPYM 파킹 ${man(LEV.park * V.fx / 1e4)}원 포함 (주식이라 하락장엔 같이 빠짐)` : ""}</small></span><b>${amt2(LEV.cash * V.fx / 1e4)}</b><em>—</em></div>` : "")
     + `<div class="pf-r sf"><span class="n">🛡 단기채 (SGOV·BIL)<small>QLD평생 계좌 · 폭락 때 쓸 돈</small></span><b>${amt2(A * safe / 100)}</b><em>${safe}%</em>${act ? `<div class="pf-ac"><span>실제${EX ? " (밖 포함)" : ""}</span><b>$${Math.round(SF * 1e4 / V.fx).toLocaleString("en-US")}</b><small>₩ ${man(SF)}</small><em class="${Math.abs(SF / A * 100 - safe) < 2 ? "" : SF / A * 100 > safe ? "hi" : "lo"}">${(SF / A * 100).toFixed(0)}%</em></div>` : ""}</div>`;
   const Y = Math.max(0, Math.ceil(yl - 1e-9)), tl = [...new Set([Y, 5, 4, 3, 2, 1, 0])].filter(r => r <= Y).sort((a, b) => b - a).map(r => `<span class="${r === Y ? "now" : ""}"><b>${levAt(r)}%</b><small>${r === Y ? "올해" : r ? r + "년 전" : "은퇴"}</small></span>`).join("");
   const aP = act ? levM / A * 100 : 0, need = act ? (aP > up || aP < lo ? A * L / 100 - levM : 0) : 0;
@@ -566,8 +566,9 @@ function setAuto(k, v, src) { if (!(v > 0)) return; AUTO[k] = v;          // 직
    QLD평생 봇이 쓰는 계좌마다: QLD 평가금 + 현금 × (그 계좌 시드 중 QLD 비중) · 다른 종목과 같은 계좌면 현금만 시드 비율로 나눔 */
 let LEV = null, PX = {};
 ["SOXL", "TQQQ", "QLD"].forEach(sy => fetch(`data/${sy}.json?h=${new Date().toISOString().slice(0, 10)}`, { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(j => { const b = j && j.bars; if (b && b.length) { PX[sy] = +b[b.length - 1][4]; render(); } }).catch(() => {})); const SAFE = new Set(["SGOV", "BIL", "SHV", "USFR", "TFLO", "BILS", "SCHO", "VGSH", "SHY", "TBIL", "XHLF", "GBIL", "JPST", "MINT"]);   // 🛡 단기국채·초단기채 ETF = 안전 자산
-/* 🅿 SGOV 파킹: QLD평생 봇이 산 SGOV(장부 muhan-bot-qld-sgov.json) 평가금 — 사용자가 따로 산 SGOV 는 안전자산 그대로 */
-function parkV(J, a) { const L = J("muhan-bot-qld-sgov.json") || {}, h = (a.holdings || []).find(x => String(x.symbol).toUpperCase() === "SGOV");
+/* 🅿 파킹: QLD평생 봇이 대기 시드로 산 종목(장부 muhan-bot-qld-park.json · 지금 SPYM) 평가금 = 평생매수 대기 몫 — 사용자가 따로 산 건 그대로 */
+const parkSym = J => String((J("muhan-bot-qld-park.json") || {}).sym || "SPYM").toUpperCase();
+function parkV(J, a) { const L = J("muhan-bot-qld-park.json") || {}, sy = parkSym(J), h = (a.holdings || []).find(x => String(x.symbol).toUpperCase() === sy);
   return h && +h.qty > 0 && +L.qty > 0 ? Math.min(+h.value || 0, (+h.value || 0) / +h.qty * +L.qty) : 0; }
 function levActual(J) {
   const F = ["muhan-bot.json", "muhan-bot-tqqq.json", "muhan-bot-qldm.json", "muhan-bot-qld.json"], cfg = f => J(f) || {}, G = {};
@@ -577,7 +578,7 @@ function levActual(J) {
     const a = fs.map(f => J(f.replace("muhan-bot", "muhan-account"))).filter(x => x && x.holdings).sort((x, y) => String(y.as_of).localeCompare(String(x.as_of)))[0]; if (!a) continue;
     a.holdings.forEach(h => { const v = +h.value || 0, sy = String(h.symbol).toUpperCase(); if (sy === "QLD") r.q += v; else if (sy === "SOXL") r.s += v; else if (sy === "TQQQ") r.t += v; else if (SAFE.has(sy)) r.safe += v; });
     r.cash += +a.cash_usd || 0; r.n++;
-    if (fs.includes("muhan-bot-qld.json")) { const pk = parkV(J, a); r.safe -= pk; r.cash += pk; r.park = (r.park || 0) + pk; }   // 🅿 평생매수 대기 시드로 산 SGOV = 안전자산 아님 → 매수 대기 몫 const dd = String(a.et_date || a.as_of || "").slice(0, 10); if (dd > r.d) r.d = dd;
+    if (fs.includes("muhan-bot-qld.json")) { const pk = parkV(J, a); if (SAFE.has(parkSym(J))) r.safe -= pk; r.cash += pk; r.park = (r.park || 0) + pk; }   // 🅿 평생매수 대기 시드로 산 SPYM = 매수 대기 몫 (레버리지 전략 돈) const dd = String(a.et_date || a.as_of || "").slice(0, 10); if (dd > r.d) r.d = dd;
   }
   r.usd = r.q + r.s + r.t + r.cash; return r.n && (r.usd > 0 || r.safe > 0) ? r : null;
 }
@@ -596,7 +597,7 @@ function qldActual(J) {
     if (!snap) continue;
     const qv = snap.holdings.filter(h => String(h.symbol).toUpperCase() === "QLD").reduce((x, h) => x + (+h.value || 0), 0);
     const all = fs.reduce((x, f) => x + seed[f], 0), qs = q.reduce((x, f) => x + seed[f], 0), share = q.length === fs.length || !(all > 0) ? 1 : qs / all, cash = (+snap.cash_usd || 0) * share;
-    const pk = fs.includes("muhan-bot-qld.json") ? parkV(J, snap) : 0;   // 🅿 SGOV 파킹도 평생매수 시드
+    const pk = fs.includes("muhan-bot-qld.json") ? parkV(J, snap) : 0;   // 🅿 SPYM 파킹도 평생매수 시드
     usd += qv + cash + pk; const dd = String(snap.et_date || snap.as_of || "").slice(0, 10); if (dd > d) d = dd;
     parts.push({ name: fs.map(f => cfg(f).acct).find(Boolean) || "", bots: "평생", qv, cash, share });
   }
