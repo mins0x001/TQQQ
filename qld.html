@@ -807,7 +807,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.21";
+const APP_VERSION = "V1.22";
 const RELEASE_DATE = "261022";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -2046,7 +2046,7 @@ function renderTodayCard() {
     bot: { kind: "lifetime", last_close: ctx.hist[ctx.hist.length - 1].y, ref_peak: plan.refPeak, pct: plan.pct, loc_px: Number(plan.locPx.toFixed(2)),
            qty_unit: LOC_LOT, order_today: !!isReserveDay, next_session: fmtDateFull(nextSession.getTime()), fx: (liveFx && liveFx.rate) || null,
            records_src: (typeof qldApiActive === "function" && qldApiActive()) ? "meritz" : "app", buy_count: valid.length,
-           ...(() => { const E = seedEngine(); return E ? { engine_amt: Math.round(E.amt * 100) / 100, engine_mode: E.mode, engine_w: E.w, engine_n: E.n, engine_tier: E.tier + 1, engine_seed: E.seed, engine_remain: Math.round(E.remain) } : { engine_amt: null }; })() }
+           ...(() => { const E = seedEngine(); return E ? { engine_amt: Math.round(E.amt * 100) / 100, engine_mode: E.mode, engine_w: E.w, engine_n: E.n, engine_tier: E.tier + 1, engine_seed: E.seed, engine_remain: Math.round(E.remain), engine_per: E.per.map(x => Math.round(x * 100) / 100), engine_px: E.px } : { engine_amt: null }; })() }
   };
   document.title = (isReserveDay ? "🔔 " : "") + document.title.replace(/^🔔 /, "");
   try { renderSeedCard(); } catch (e) {}
