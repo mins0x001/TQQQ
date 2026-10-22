@@ -154,7 +154,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.23", RELEASE_DATE = "261022";
+const APP_VERSION = "V1.24", RELEASE_DATE = "261022";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -535,8 +535,9 @@ function renderBots() {
       🔐 앱키 ${c.keys ? "…" + esc(c.keys.tail) : "<b class='needt'>🔴 미등록 — 아래에서 등록</b>"} · 📨 ${c.tg ? "…" + esc(c.tg.chat_tail) : "없음"} · 🔧 ${s && s.mode === "check" ? (s.overall === "checked" ? "점검 ✓" : "점검 ⚠") : "점검 전"}${f in SEC_OK ? (SEC_OK[f] ? " · 🔑 금고 권한 ✓" : " · <b style='color:#F0475A'>🔑 금고 권한 ✗ — 토큰에 Secrets 쓰기 권한 필요</b>") : ""}
       ${c.installed_at ? "" : ` · <a style="color:var(--glow)" href="${{ "muhan-bot.json": "api-soxl.html", "muhan-bot-tqqq.json": "api-tqqq.html", "muhan-bot-qldm.json": "api-qm.html", "muhan-bot-qld.json": "api-qld.html" }[f]}#pg-setup">설치 화면 ›</a>`}</div>`; }).join("");
   { const a = G.cfg["muhan-bot.json"] || {}, t = G.cfg["muhan-bot-tqqq.json"] || {}, sp = tqqqSplit();
-    document.getElementById("bots").insertAdjacentHTML("beforeend", `<div class="res">🔀 <b>TQQQ 담당</b> · 지금 <b>${sp ? "TQQQ 봇" : "SOXL·TQQQ 봇"}</b>${!a.installed_at ? "" : sp ? ` <button class="btn" type="button" data-ho="off">↩ SOXL 봇으로 되돌리기</button>`
-      : t.installed_at && t.keys ? ` <button class="btn" type="button" data-ho="on">🔀 TQQQ 봇으로 넘기기</button>` : `<br><span class="hint">TQQQ 를 다른 계좌로: TQQQ 앱을 열어 봇 설치 → 아래 앱키 등록 → 여기서 넘기기 (넘기기 전엔 TQQQ 봇은 주문 안 함 · 이중 주문 방지)</span>`}</div>`); }
+    document.getElementById("bots").insertAdjacentHTML("beforeend", `<div class="res${sp || !a.installed_at ? "" : " need"}">🧩 <b>종목마다 단독 봇</b> · SOXL · TQQQ · QLD무한 · QLD평생 ${sp ? "✅ 4개 모두 단독" : !a.installed_at ? "" : !t.installed_at ? `<br><span class="hint">⏳ TQQQ 전용 봇 <b>자동 설치 중</b> (1~2분) — 지금은 SOXL 봇이 TQQQ도 주문 (끊김 없음)</span>`
+      : !t.keys ? `<br><b class="needt">🔴 TQQQ 봇 앱키 등록</b> <span class="hint">→ 아래 🔐에서 TQQQ 봇 체크 후 저장하면 <b>자동으로 넘어갑니다</b> (그 전엔 SOXL 봇이 TQQQ 주문 · 이중 주문 없음)</span>` : `<br><span class="hint">🔀 TQQQ 전용 봇으로 자동 전환 중…</span>`}</div>`); }
+  autoSplit();
   { const miss = CFGS.filter(f => (G.cfg[f] || {}).installed_at && !(G.cfg[f] || {}).keys), kh = document.getElementById("keyHead");
     kh.classList.toggle("needh", miss.length > 0); kh.innerHTML = miss.length ? `🔐 증권사 앱키 <span class="needt">🔴 ${miss.map(f => BOTNAME[f]).join(" · ")} 등록 필요</span>` : "🔐 증권사 앱키 ✅";
     needJump("keys", kh); }
@@ -545,16 +546,26 @@ function renderBots() {
 }
 async function cfgPatch(f, patch) { await loadGist(); const c = Object.assign({}, J(f, {}), patch, { updated: new Date().toISOString() }); await writeFiles({ [f]: c }); G.cfg[f] = c; }
 const DEFREPO = { "muhan-bot.json": "muhan-bot", "muhan-bot-tqqq.json": "muhan-bot-tqqq", "muhan-bot-qldm.json": "muhan-bot-qldm", "muhan-bot-qld.json": "muhan-bot-qld" };
-document.getElementById("bots").addEventListener("click", async e => {     // 🔀 TQQQ 담당 넘기기/되돌리기 — 한 번의 저장으로 A·TQQQ 봇을 동시에 바꿈 (이중 주문 없음)
-  const b = e.target.closest("[data-ho]"); if (!b) return; const on = b.dataset.ho === "on";
-  if (!confirm(on ? "TQQQ 주문을 TQQQ 봇(그 봇의 앱키 계좌)으로 넘길까요?\n다음 실행부터 SOXL 봇은 TQQQ 를 주문하지 않습니다." : "TQQQ 주문을 SOXL 봇으로 되돌릴까요?")) return;
-  try { await loadGist(); const A = G.cfg["muhan-bot.json"] || {}, T = G.cfg["muhan-bot-tqqq.json"] || {}, now = new Date().toISOString();
+/* 🧩 종목마다 단독 봇 (자동): TQQQ 전용 봇이 없으면 숨겨서 설치 → 앱키가 등록되면 TQQQ 를 자동으로 넘김 (SOXL 봇 = SOXL 만)
+   넘기기는 한 번의 저장으로 A·TQQQ 봇을 동시에 바꿈 → 이중 주문·빈 날 없음 */
+let AUTO_SPLIT = 0;
+async function autoSplit() {
+  const A = G.cfg["muhan-bot.json"] || {}, T = G.cfg["muhan-bot-tqqq.json"] || {};
+  if (!A.installed_at || tqqqSplit() || AUTO_SPLIT) return;
+  if (!T.installed_at) { try { if (sessionStorage.getItem("autosplit_inst")) return; sessionStorage.setItem("autosplit_inst", "1"); } catch (x) {}
+    AUTO_SPLIT = 1; bgRefresh(["muhan-bot-tqqq.json"]); setTimeout(() => { AUTO_SPLIT = 0; refresh(); }, 120000); return; }
+  if (!T.keys) return;
+  AUTO_SPLIT = 1; try { await handover(true); } catch (x) { msg("⚠ TQQQ 자동 전환 실패 — " + x.message, false); } finally { AUTO_SPLIT = 0; }
+}
+async function handover(on) {
+  await loadGist(); if (on === tqqqSplit()) { renderBots(); return; }
+  { const A = G.cfg["muhan-bot.json"] || {}, T = G.cfg["muhan-bot-tqqq.json"] || {}, now = new Date().toISOString();
     const m = { "muhan-bot.json": Object.assign({}, A, { symbols: Object.assign({}, A.symbols || { SOXL: true }, { TQQQ: !on }), updated: now }) };
-    if (on) m["muhan-bot-tqqq.json"] = Object.assign({}, T, { mode: A.mode || "off", run_kst: A.run_kst, retry_min: A.retry_min, retry_n: A.retry_n, oder_code: A.oder_code, symbols: { TQQQ: true }, updated: now });
+    if (on) m["muhan-bot-tqqq.json"] = Object.assign({}, T, { mode: A.mode || "off", run_kst: A.run_kst, retry_min: A.retry_min, retry_n: A.retry_n, oder_code: A.oder_code, symbols: { TQQQ: true }, sides: (A.sides || {}).TQQQ ? { TQQQ: A.sides.TQQQ } : T.sides, updated: now });
     await writeFiles(m); Object.assign(G.cfg, m); if (on && G.cfg["muhan-bot-tqqq.json"].cronapi) { try { await cronKick(G.cfg["muhan-bot-tqqq.json"]); } catch (x) {} }
-    if (on) bgRefresh(["muhan-bot-tqqq.json"]); renderBots(); renderAcct(); msg(on ? "🔀 TQQQ → TQQQ 봇 (다음 실행부터)" : "↩ TQQQ → SOXL 봇 (다음 실행부터)", true);
-  } catch (x) { msg("⚠ " + x.message, false); }
-});
+    if (on) bgRefresh(["muhan-bot-tqqq.json"]); renderBots(); renderAcct(); msg(on ? "🧩 TQQQ 전용 봇으로 자동 전환 완료 — 다음 실행부터 SOXL 봇은 SOXL 만 · TQQQ 봇은 TQQQ 만" : "↩ TQQQ → SOXL 봇 (다음 실행부터)", true);
+  }
+}
 document.getElementById("bots").addEventListener("change", async e => {
   if (e.target.dataset.ac != null && e.target.dataset.ac !== "") {      // 🏦 계좌 이름 (표시용 · 같은 앱키끼리 묶임)
     const f = e.target.dataset.ac, v = e.target.value.trim().slice(0, 12);
