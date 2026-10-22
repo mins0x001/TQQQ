@@ -35,7 +35,7 @@
   .page{display:none;} .page.on{display:block;}
   .tabbar{position:fixed;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(11,18,32,.96);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom);}
   .tb{background:none;border:0;color:var(--text-faint);padding:9px 0 8px;font-size:12px;font-weight:700;} .tb.on{color:var(--glow);} .tb .ic{display:block;font-size:19px;}
-  .seed{display:grid;grid-template-columns:110px 1fr;gap:8px;align-items:center;margin:8px 0;} .seed label{font-weight:800;font-size:14px;}
+  .seed{display:grid;grid-template-columns:110px 1fr;gap:8px;align-items:center;margin:8px 0;} .seed label{font-weight:800;font-size:14px;} .seed-in{position:relative;} .seed-in .cur{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-weight:800;color:var(--text-faint);pointer-events:none;} .seed-in input{width:100%;padding-left:24px !important;font-family:'JetBrains Mono',monospace;} .seed-kw{grid-column:2;margin-top:-4px;font-size:11.5px;color:var(--text-dim);font-weight:700;}
   .plan-frame{position:fixed;left:-2000px;top:0;width:412px;height:900px;border:0;opacity:0;pointer-events:none;}
   .res{border-left:3px solid var(--border);padding:6px 10px;margin:8px 0;font-size:13px;} .res.done{border-color:var(--up);} .res.blocked,.res.error{border-color:var(--down);}
 .hub-pill{display:inline-flex;align-items:center;gap:3px;vertical-align:middle;margin-left:8px;padding:4px 10px;border-radius:99px;border:1px solid #2F4A7A;background:none;color:#8C98AD;font-size:12px;font-weight:700;line-height:1.3;letter-spacing:0;white-space:nowrap;text-decoration:none;-webkit-text-fill-color:#8C98AD;}.hub-pill:hover{border-color:#4A6FB0;color:#C9D4E5;-webkit-text-fill-color:#C9D4E5;}
@@ -161,7 +161,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.27", RELEASE_DATE = "261022";
+const APP_VERSION = "V1.28", RELEASE_DATE = "261022";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -357,11 +357,21 @@ function render() {
     return `<div class="sym">${head}${pos(P)}${rule(P)}${gadj(s, P)}${adj(s, P)}${line("buy", "매수")}${line("sell", "매도")}${!o.buy && !o.sell ? `<div class="busy">오늘 규칙상 주문 없음${sd.buy ? " (☑매수면 봇이 같은 공식으로 주문)" : ""}</div>` : ""}${inst ? "" : `<div class="busy">⚠ 봇 미설치 — 🛠 설정에서 해당 앱으로</div>`}</div>`;
   }).join("") + parkSym();
 }
+/* 💱 시드 달러 ↔ 원화 (환율 = 매일 10:10 서버 저장 data/macro.json · 입력하는 즉시 자동 표시) */
+let FXR = 0;
+fetch("data/macro.json?h=" + new Date().toISOString().slice(0, 13), { cache: "no-cache" }).then(r => r.ok ? r.json() : null).then(m => { if (m && m.fx && m.fx.last > 0) { FXR = +m.fx.last; seedKrwAll(); } }).catch(() => {});
+const wonK = w => { w = Math.round(w / 1e4); const e = Math.floor(w / 1e4), r = w % 1e4; return "₩ " + (e ? e + "억" + (r ? " " : "") : "") + (r || !e ? r.toLocaleString("ko-KR") + "만" : "") + "원"; };
+function seedKrw(id) { const i = document.getElementById("seed-" + id), o = document.getElementById("kw-" + id); if (!i || !o) return;
+  const v = parseFloat(String(i.value).replace(/[^\d.]/g, "")); o.textContent = v > 0 ? (FXR ? `${wonK(v * FXR)} · $1 = ${Math.round(FXR).toLocaleString("ko-KR")}원` : "환율 불러오는 중…") : ""; }
+function seedKrwAll() { S.forEach(s => seedKrw(s.id)); }
+document.addEventListener("input", e => { const t = e.target; if (!t.id || t.id.indexOf("seed-") !== 0) return; const id = t.id.slice(5), d = t.value.replace(/[^\d]/g, "");
+  const pos = t.value.length - t.selectionStart; t.value = d ? (+d).toLocaleString("en-US") : ""; try { const n = Math.max(0, t.value.length - pos); t.setSelectionRange(n, n); } catch (x) {} seedKrw(id); });
 function renderSeeds() {
   document.getElementById("seeds").innerHTML = S.map(s => {
     const d = J(s.sync, {}), v = s.life ? ((d.seed && d.seed.v) || s.seedDef) : (+(d.params && d.params.seed) || s.seedDef);
-    return `<div class="seed"><label>${s.name}</label><input type="text" inputmode="numeric" id="seed-${s.id}" value="${Math.round(v).toLocaleString("en-US")}"></div>`;
+    return `<div class="seed"><label>${s.name}</label><div class="seed-in"><span class="cur">$</span><input type="text" inputmode="numeric" id="seed-${s.id}" value="${Math.round(v).toLocaleString("en-US")}"></div><small class="seed-kw" id="kw-${s.id}"></small></div>`;
   }).join("");
+  seedKrwAll();
 }
 function renderResults() {
   document.getElementById("results").innerHTML = CFGS.filter(onF).map(f => {
