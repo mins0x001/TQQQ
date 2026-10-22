@@ -811,7 +811,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.24";
+const APP_VERSION = "V1.25";
 const RELEASE_DATE = "261022";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
@@ -2018,9 +2018,8 @@ function renderSeedCard() {
   const used = E.seed > 0 ? Math.min(1, E.spent / E.seed) : 0;
   const top = E.top.map((o, i) => `<tr><td>${i ? "" : "★ "}${o.w.join(" / ")}%</td><td>${o.n.join(" / ")}</td><td>${pc(o.ret)}</td><td>${pc(o.rob)}</td><td>${(o.used * 100).toFixed(0)}%</td></tr>`).join("");
   el.innerHTML = `
-    <div style="display:flex;gap:8px;align-items:center;margin:0 0 10px;"><span style="font-weight:700;">전체 시드 $</span>
-      <input type="text" id="seedInput" inputmode="numeric" value="${Math.round(E.seed).toLocaleString("en-US")}" style="flex:1;min-height:44px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);padding:0 10px;font-size:16px;">
-      <button type="button" class="bk-btn" id="seedSave">저장</button></div>
+    <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;margin:0 0 10px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);"><span style="font-weight:700;">전체 시드 <b style="font-family:'JetBrains Mono',monospace;font-size:16px;">${fmtUsd0(E.seed)}</b>${k(E.seed)}</span>
+      <a class="bk-btn" href="api-all.html#pg-setup" target="_top" style="text-decoration:none;white-space:nowrap;">✎ 자동주문(통합)에서 변경</a></div>
     <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">k = <b>${E.kk.toFixed(2)}</b> · QLD σ ${E.sig.toFixed(2)}% ÷ 기준σ ${SIG_BASE}% · 백테스트 ${E.bars}봉 · 주 1회 LOC</div>
     <div class="sub-title"><span class="n">①</span>규칙 기반 환산</div>
     <div class="tb-kpis">${kpi("배분 1/2/3차", E.rule.w.join("/") + "%")}${kpi("분할 ([6,3,1]×√k)", E.rule.n.join("/"))}${kpi("시드 대비 수익률", pc(E.rule.ret), "var(--glow)")}</div>
