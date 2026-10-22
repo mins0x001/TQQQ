@@ -914,7 +914,7 @@ body.panel .sell-row{display:none !important;}
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V1.22";
+const APP_VERSION = "V1.23";
 const RELEASE_DATE = "261022";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
@@ -1886,10 +1886,10 @@ function renderSeedSimCard(n, requirePrevDown) {
     <div class="kv-row"><span class="k">2단계 (대기 없음 · ×${r.mult})</span><span class="v">최대 ${r.maxRounds - r.n1}회 × ${fmtUsd0(r.per2)} (시드÷${r.splits * r.mult})</span></div>
     <div class="kv-row"><span class="k">적용 규칙</span><span class="v">최대 ${r.maxRounds}회 매수 · +${r.sellPct.toFixed(2)}% 익절 · ${r.stopPct !== null ? fmtPctSigned(r.stopPct) + " 손절" : "손절선 없음"}</span></div>
     <div class="kv-row"><span class="k">매매 결과</span><span class="v">익절 ${r.profit.length} · 손절 ${r.loss.length} · 보유중 ${r.open.length} (총 ${r.trades.length}건)</span></div>
-    <div class="kv-row"><span class="k">총 수익 (익절분)</span><span class="v" style="color:var(--up);">${fmtUsd0Signed(r.realizedProfit)}</span></div>
-    <div class="kv-row"><span class="k">총 손실 (손절분)</span><span class="v" style="color:var(--down);">${fmtUsd0Signed(r.realizedLoss)}</span></div>
-    <div class="kv-row"><span class="k">실현 손익 합계</span><span class="v" style="${col(r.realizedTotal)}">${fmtUsd0Signed(r.realizedTotal)}</span></div>
-    <div class="kv-row"><span class="k">보유중 평가손익</span><span class="v" style="${col(r.unrealized)}">${fmtUsd0Signed(r.unrealized)}</span></div>
+    <div class="kv-row"><span class="k">총 수익 (익절분)</span><span class="v" style="color:var(--up);">${fmtUsd0Signed(r.realizedProfit)} <small style="opacity:.75;font-weight:500">(시드 ${fmtPctSigned(r.realizedProfit / r.seed * 100)})</small></span></div>
+    <div class="kv-row"><span class="k">총 손실 (손절분)</span><span class="v" style="color:var(--down);">${fmtUsd0Signed(r.realizedLoss)} <small style="opacity:.75;font-weight:500">(시드 ${fmtPctSigned(r.realizedLoss / r.seed * 100)})</small></span></div>
+    <div class="kv-row"><span class="k">실현 손익 합계</span><span class="v" style="${col(r.realizedTotal)}">${fmtUsd0Signed(r.realizedTotal)} <small style="opacity:.75;font-weight:500">(시드 ${fmtPctSigned(r.realizedTotal / r.seed * 100)})</small></span></div>
+    <div class="kv-row"><span class="k">보유중 평가손익</span><span class="v" style="${col(r.unrealized)}">${fmtUsd0Signed(r.unrealized)} <small style="opacity:.75;font-weight:500">(시드 ${fmtPctSigned(r.unrealized / r.seed * 100)})</small></span></div>
     <div class="kv-row"><span class="k">1건 최대 투입금</span><span class="v">${fmtUsd0(r.maxInvested)} (시드의 ${(r.maxInvested / r.seed * 100).toFixed(1)}%)</span></div>
     <table class="stat-table trade-table" style="margin-top:12px;">
       <thead><tr><th>매수 내역 (회차·날짜·종가)</th><th>청산</th><th class="num">손익</th></tr></thead>
