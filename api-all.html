@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.33-261022-MeritzAutoOrder-All">
+<meta name="version" content="V1.34-261022-MeritzAutoOrder-All">
 <meta name="release-date" content="261022">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>자동주문(통합) (V1.33 - 261022)</title>
+<title>자동주문(통합) (V1.34 - 261022)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -70,8 +70,8 @@
   .ord.off{opacity:.45;} .pk-sym{border-color:rgba(94,234,212,.35);}
 .ord{transition:box-shadow .2s,opacity .2s,border-color .2s;} .ord.buy.on{border-color:rgba(56,217,140,.55);background:linear-gradient(90deg,rgba(56,217,140,.13),rgba(56,217,140,.03));box-shadow:0 0 0 1px rgba(56,217,140,.25),0 6px 18px -8px rgba(56,217,140,.55);}
 .ord.sell.on{border-color:rgba(240,71,90,.55);background:linear-gradient(90deg,rgba(240,71,90,.13),rgba(240,71,90,.03));box-shadow:0 0 0 1px rgba(240,71,90,.25),0 6px 18px -8px rgba(240,71,90,.55);}
-.ord.off{opacity:.35;filter:grayscale(.7);} .ord.later{opacity:.75;border-style:dashed;}
-.chk.on.b{color:#38D98C;} .chk.on.s{color:#FF6B78;} .sym.nc{opacity:.55;} .sym.nc .sym-h b{color:var(--text-dim);}
+.ord.off{opacity:.62;filter:grayscale(.6);} .ord.later{opacity:.75;border-style:dashed;}
+.chk.on.b{color:#38D98C;} .chk.on.s{color:#FF6B78;} .sym.nc{border-style:dashed;border-color:rgba(245,165,36,.45);background:rgba(245,165,36,.03);} .sym.nc .chk{opacity:.7;}
 .nc-b{display:inline-block;margin-left:6px;font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(245,165,36,.14);color:#F5A524;vertical-align:middle;}
 .ord .sd{font-size:12px;font-weight:900;padding:3px 9px;border-radius:7px;} .ord.buy .sd{background:rgba(56,217,140,.16);color:#38D98C;} .ord.sell .sd{background:rgba(240,71,90,.16);color:#FF6B78;}
   .ord .cn{font-size:13px;font-weight:800;line-height:1.2;} .ord .cn small{display:block;font-size:10.5px;font-weight:600;color:var(--text-faint);}
@@ -80,7 +80,7 @@
 </head>
 <body>
 <div class="app">
-  <div class="top"><span class="mono" id="ver" style="color:var(--text-faint)">V1.33 (261022)</span></div>
+  <div class="top"><span class="mono" id="ver" style="color:var(--text-faint)">V1.34 (261022)</span></div>
   <h1>🔌 자동주문(통합) <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1><script>if(/[?&]embed=/.test(location.search)){var _hp=document.querySelector(".hub-pill");if(_hp)_hp.remove();}</script>
   <p class="sub">SOXL · TQQQ · QLD무한매수 · QLD평생매수 — 열면 4종목 계산, ⚡ 한 번에 실제 주문</p>
   <div id="msg"></div>
@@ -169,7 +169,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.33", RELEASE_DATE = "261022";
+const APP_VERSION = "V1.34", RELEASE_DATE = "261022";
 try { document.getElementById("ver").textContent = `${APP_VERSION} (${RELEASE_DATE})`; document.title = `자동주문(통합) (${APP_VERSION} - ${RELEASE_DATE})`; } catch (e) {}   // 화면 버전 = 항상 APP_VERSION
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
