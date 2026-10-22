@@ -154,7 +154,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.22", RELEASE_DATE = "261022";
+const APP_VERSION = "V1.23", RELEASE_DATE = "261022";
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
   { id: "SOXL", name: "SOXL 무한매수", app: "soxl.html", cfg: "muhan-bot.json", sync: "soxl.json", key: "SOXL", seedDef: 36000 },
@@ -169,7 +169,7 @@ if (ONLY) S.splice(0, S.length, ...S.filter(s => s.id === ONLY));
 const onF = f => !ONLY || f === S[0].cfg;
 const LIVE_LAB = () => ONLY ? `⚡ 바로 실행 (${({ QLDM: "QLD무한", QLDL: "QLD평생" })[S[0].id] || S[0].id} 실제 주문)` : "⚡ 바로 실행 (4종목 실제 주문)";
 if (ONLY) { document.documentElement.classList.add("only");
-  const st = document.createElement("style"); st.textContent = ".only .top,.only h1,.only p.sub,.only #tabbar,.only #pg-setup{display:none !important}.only .page{display:block !important}.only #aRm,.only #aRn{width:52px !important}.only body,.only .app{padding-bottom:16px !important}"; document.head.appendChild(st);
+  const st = document.createElement("style"); st.textContent = ".only .top,.only h1,.only p.sub,.only #tabbar,.only #pg-setup{display:none !important}.only .page{display:block !important}.only #aRm,.only #aRn{width:62px !important;padding-left:6px !important;padding-right:6px !important;text-align:center}.only body,.only .app{padding-bottom:16px !important}"; document.head.appendChild(st);
   const cs = document.getElementById("code"); if (cs) cs.closest("section").style.display = "none";
   document.querySelectorAll("#pg-cron .kick").forEach(k => k.textContent = k.textContent.replace("3개 봇 공용", "이 종목 봇"));
   const as = document.getElementById("aSave"); if (as) as.textContent = "💾 설정 저장 (이 종목 봇)";
