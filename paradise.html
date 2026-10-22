@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.27-261022-FinancialRoadmap">
+<meta name="version" content="V1.28-261022-FinancialRoadmap">
 <meta name="release-date" content="261021">
-<title>QLD 파이낸셜 로드맵 (V1.27 - 261022)</title>
+<title>QLD 파이낸셜 로드맵 (V1.28 - 261022)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -133,7 +133,7 @@
 <body>
 <div class="wrap">
   <div><h1>🏛 QLD 파이낸셜 로드맵 <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1>
-  <div class="ver">V1.27 (261022) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
+  <div class="ver">V1.28 (261022) · 경제적 자유 설계 · QLD평생매수·QLD무한매수 시드 + 백테스트 수익률로 은퇴 자산·낙원 금액 계산</div></div>
 
   <div class="sum" id="sum" aria-live="polite">계산 중…</div>
   <div class="bsw" id="bsw"></div>
@@ -195,7 +195,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.27", RELEASE_DATE = "261022";
+const APP_VERSION = "V1.28", RELEASE_DATE = "261022";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -517,11 +517,11 @@ function pf() {
   const el = $("pf"), inp = $("pfAmt"); if (!el) return;
   const EX = +V.pfSafe > 0 ? +V.pfSafe : 0, sIn = $("pfSafe"); if (document.activeElement !== sIn) sIn.value = EX ? EX.toLocaleString("ko-KR") : "";
   const autoS = LEV ? LEV.safe * V.fx / 1e4 : 0, SF = autoS + EX;
-  const levM = LEV ? LEV.usd * V.fx / 1e4 : 0, act = !!LEV, A = act ? levM + SF : (+V.pfAmt > 0 ? +V.pfAmt : 100000);
-  inp.readOnly = act; if (document.activeElement !== inp) inp.value = Math.round(A).toLocaleString("ko-KR");
+  const levM = LEV ? LEV.usd * V.fx / 1e4 : 0, act = !!LEV, manA = !!V.pfMan && +V.pfAmt > 0, A = manA || !act ? (+V.pfAmt > 0 ? +V.pfAmt : (act ? levM + SF : 100000)) : levM + SF;
+  inp.readOnly = false; if (document.activeElement !== inp) inp.value = Math.round(A).toLocaleString("ko-KR");
   const g = ymParse(V.goalYM), now = new Date(), yl = g ? ((g.y - now.getFullYear()) * 12 + (g.mo - 1 - now.getMonth())) / 12 : Math.round(V.n);
   const L = levAt(yl), k = L / 75, safe = 100 - L, up = Math.min(95, L + 10), lo = Math.max(10, L - 15);
-  $("pfHint").innerHTML = `⏳ 은퇴까지 <b>${yl.toFixed(1)}년</b> ${g ? `(${g.y}.${String(g.mo).padStart(2, "0")})` : "(🎯역산에 년월을 넣으면 더 정확)"}`;
+  $("pfHint").innerHTML = `⏳ 은퇴까지 <b>${yl.toFixed(1)}년</b> ${g ? `(${g.y}.${String(g.mo).padStart(2, "0")})` : "(🎯역산에 년월을 넣으면 더 정확)"}` + (act ? (manA ? ` · ✎ 총 투자금 직접 입력 (저장됨) <a href="#" id="pfAuto" style="color:var(--accent,#5eead4)">↺ 계좌 금액으로</a>` : ` · 총 투자금 = 계좌 자동 (고쳐 쓰면 그 값으로 저장)`) : "");
   const AV = { q: LEV && LEV.q, s: LEV && LEV.s, t: LEV && LEV.t }, acN = (x, tp) => act ? `<div class="pf-ac"><span>실제</span><b>$${Math.round(x).toLocaleString("en-US")}</b><small>₩ ${man(x * V.fx / 1e4)}</small><em class="${Math.abs(x * V.fx / 1e4 / A * 100 - tp) < 2 ? "" : x * V.fx / 1e4 / A * 100 > tp ? "hi" : "lo"}">${(x * V.fx / 1e4 / A * 100).toFixed(0)}%</em></div>` : "";
   const $u = m => "$" + Math.round(m * 1e4 / V.fx).toLocaleString("en-US"), amt2 = m => `${$u(m)}<small class="kw">₩ ${man(m)}</small>`;
   const rows = PF.map(([nm, w, c, how]) => { const pct = w * k, m = A * pct / 100;
@@ -554,7 +554,8 @@ function pf() {
       <div class="ru"><i>③</i><div><b>은퇴 준비</b><span>은퇴 4년 전부터 <b>매년 15%p씩</b> 레버리지 → 안전 자산<small>은퇴 때 레버리지 20% · 생활비 2년치 완충 (💸인출 탭)</small></span></div></div></div>
     <div class="hint" style="margin-top:8px">⚠ 2008·2022년 같은 하락장에선 전체 −65~75%까지 갈 수 있음 · 과거 데이터 기반 예시이며 투자 자문이 아님</div>`;
 }
-document.addEventListener("input", e => { if (e.target.id !== "pfAmt") return; const v = Math.round(+e.target.value.replace(/[^\d]/g, "")); if (!(v >= 100 && v <= 10000000)) return; V.pfAmt = v; pf(); save(); });
+document.addEventListener("input", e => { if (e.target.id !== "pfAmt") return; const v = Math.round(+e.target.value.replace(/[^\d]/g, "")); if (!(v >= 100 && v <= 10000000)) return; V.pfAmt = v; V.pfMan = true; pf(); save(); });
+document.addEventListener("click", e => { if (!e.target.closest("#pfAuto")) return; e.preventDefault(); V.pfMan = false; pf(); save(); });
 document.addEventListener("input", e => { if (e.target.id !== "pfSafe") return; const t = e.target.value.replace(/[^\d]/g, ""); V.pfSafe = t === "" ? null : Math.min(10000000, +t); pf(); save(); });
 document.addEventListener("change", e => { if (e.target.id === "pfAmt") { e.target.value = (+V.pfAmt || 100000).toLocaleString("ko-KR"); } });
 /* 저장: 이 기기 + ☁️ Gist(paradise.json, 동기화 켜져 있으면) */
@@ -620,7 +621,7 @@ async function pull() {
     const r = await fetch("https://api.github.com/gists/" + g, { headers: { Authorization: "Bearer " + t }, cache: "no-store" }); if (!r.ok) return;
     const fs = (await r.json()).files || {}, J = n => { try { return fs[n] ? JSON.parse(fs[n].content) : null; } catch (e) { return null; } };
     const p = J(GFILE); if (p) { const local = (() => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } })();
-      if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; } }); if (p.plan) V.plan = p.plan; if (p.goalYM != null) V.goalYM = p.goalYM; if (p.wdY !== undefined) V.wdY = p.wdY; if (p.wdStart !== undefined) V.wdStart = p.wdStart; if (p.base) V.base = p.base; if (p.pfAmt) V.pfAmt = p.pfAmt; if (p.pfSafe !== undefined) V.pfSafe = p.pfSafe; V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
+      if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; } }); if (p.plan) V.plan = p.plan; if (p.goalYM != null) V.goalYM = p.goalYM; if (p.wdY !== undefined) V.wdY = p.wdY; if (p.wdStart !== undefined) V.wdStart = p.wdStart; if (p.base) V.base = p.base; if (p.pfAmt) V.pfAmt = p.pfAmt; if (p.pfMan !== undefined) V.pfMan = p.pfMan; if (p.pfSafe !== undefined) V.pfSafe = p.pfSafe; V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
     if (p) { V.hist = mergeHist(V.hist, p.hist); if (!V.plan && p.plan) V.plan = p.plan; }
     const q = J("qld.json"), qm = J("qldm.json");
     setAuto("life", q && q.seed && q.seed.v, "통합 앱"); setAuto("inf", qm && qm.params && +qm.params.seed, "통합 앱");
