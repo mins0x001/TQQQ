@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.20-261022-SOXL-Panel-Unified">
+<meta name="version" content="V1.21-261024-SOXL-Panel-Unified">
 <meta name="release-date" content="261022">
-<title>SOXL 무한매수 AI (V1.20 - 261022)</title>
+<title>SOXL 무한매수 AI (V1.21 - 261024)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -694,7 +694,7 @@ body.panel .sell-row{display:none !important;}
 
 
   <div class="page on" id="pg-order" role="tabpanel" aria-label="주문·사이클">
-  <section class="card today-card" id="card-today" style="--c:var(--glow);">
+  <div hidden><section class="card today-card" id="card-today" style="--c:var(--glow);">
     <div class="card-head">
       <div class="card-icon">⚡</div>
       <div><div class="card-kicker">00 · TODAY'S LOC</div><h2>오늘의 LOC 주문</h2></div>
@@ -723,7 +723,7 @@ body.panel .sell-row{display:none !important;}
     </div>
     <div id="buyRecMsg" class="banner hidden" style="margin-top:10px;"></div>
     <div id="buyRecordContent"></div>
-  </section>
+  </section></div>
   <section class="card" id="card-cycle" style="--c:var(--up);">
     <div class="card-head">
       <div class="card-icon">🏁</div>
@@ -743,8 +743,8 @@ body.panel .sell-row{display:none !important;}
   <div hidden><section id="card-backup"></section><div id="backupPanel"></div><button id="bkCopyBtn"></button><button id="bkRestoreBtn"></button><textarea id="bkText"></textarea><div id="bkMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">SOXL무한매수_V1_20_261022.HTML</span>)</button>
-  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.20 (261022)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">SOXL무한매수_V1_21_261024.HTML</span>)</button>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.21 (261024)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>
   </footer>
 
   </div>
@@ -774,7 +774,7 @@ body.panel .sell-row{display:none !important;}
       <div class="field"><label for="seedSimSplits1">분할 수</label><input type="number" id="seedSimSplits1" min="1" step="1" inputmode="numeric" value="8"></div>
       <div class="field"><label for="seedSimCycle1">2단계 분할 배수 (×)</label><input type="number" id="seedSimCycle1" min="1" max="10" step="1" inputmode="numeric" value="3"></div>
     </div>
-    <div class="tp-cmp-bar">
+    <div class="tp-cmp-bar" hidden>
       <div class="field"><label for="seedSimTp1">비교 익절 (%)</label><input type="number" id="seedSimTp1" min="0.5" max="100" step="0.5" inputmode="decimal" value="13"></div>
       <div class="tp-cmp-hint">AI 최적 익절과 <b>같은 매수·손절 규칙</b>으로 익절%만 바꿔 총 수익률을 비교합니다. 값을 바꾸면 바로 다시 계산되고 이 기기에 기억됩니다.</div>
     </div>
@@ -806,16 +806,6 @@ body.panel .sell-row{display:none !important;}
         <p>수수료·세금·환율은 반영하지 않으며, 투자 판단과 결과의 책임은 본인에게 있습니다.</p>
       </details>
     <div class="help-group">⚡ 주문 탭</div>
-      <details class="help-item" open>
-        <summary><span class="hi-ic">⚡</span>오늘의 LOC 주문</summary>
-        
-        <div class="help-dyn" data-for="card-today"></div>
-      </details>
-      <details class="help-item" open>
-        <summary><span class="hi-ic">📒</span>나의 매수 기록</summary>
-        <p>실제 매수 내역을 입력해 누적 평단가를 계산합니다. 매수 수량을 비워두면 1분할 금액(시드 ÷ 분할 수) ÷ 매수가를 1주 단위로 내림한 수량(LOC 가이드와 같은 공식)이 자동으로 들어갑니다. 매수 날짜는 어제(가장 최근 확정 종가일)가 기본으로 들어갑니다. 시세를 불러왔을 때 어제 종가가 LOC 매수가 이하였으면(체결 조건 충족) 저장 버튼을 누르지 않아도 그 매수가 자동으로 기록됩니다. 매수가를 비워두면 입력한 매수일의 SOXL 종가를 자동으로 채웁니다(주말·휴장일은 직전 거래일 종가, 오늘 장중이면 실시간 현재가). 이 기록은 이 브라우저(로컬 저장소)에만 저장되며 서버로 전송되지 않으므로, 다른 기기·브라우저에서는 보이지 않습니다.</p>
-        <div class="help-dyn" data-for="card-records"></div>
-      </details>
     <div class="help-group">🏁 사이클 탭</div>
       <details class="help-item" open>
         <summary><span class="hi-ic">🏁</span>사이클 기록</summary>
@@ -914,8 +904,7 @@ body.panel .sell-row{display:none !important;}
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V1.20";
-const RELEASE_DATE = "261022";
+const APP_VERSION = "V1.21", RELEASE_DATE = "261024";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
 const FINNHUB_API_KEY = "daik4m9r01qr9o8hnfj0daik4m9r01qr9o8hnfjg";
@@ -1952,6 +1941,7 @@ function renderRuleCompare(rNew, seed, splits, prevDown) {
     </div>`;
 }
 function renderTpCompare(rAi, seed, splits, prevDown, cycleDays) {
+  return "";   // 익절 기준 비교 카드 제거 (V1.2x)
   const inp = document.getElementById("seedSimTp1");
   const tp = inp ? parseFloat(inp.value) : NaN;
   if (!(tp > 0)) return `<div class="tp-cmp"><div class="tp-cmp-title">🎯 익절 기준 비교</div><div class="fg-empty">비교 익절(%)을 0보다 크게 입력하세요.</div></div>`;
