@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.22-261024-SOXL-Panel-Unified">
+<meta name="version" content="V1.23-261024-SOXL-Panel-Unified">
 <meta name="release-date" content="261022">
-<title>SOXL 무한매수 AI (V1.22 - 261024)</title>
+<title>SOXL 무한매수 AI (V1.23 - 261024)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -366,6 +366,11 @@
   table.stat-table.trade-table td .sub-price{display:block;color:var(--text-faint);margin-top:2px;overflow-wrap:anywhere;}
   table.stat-table.trade-table .buy-event{font-size:12px;line-height:1.65;font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere;}
   table.stat-table.trade-table .buy-event b{color:var(--text-dim);font-weight:700;}
+  table.stat-table.trade-table .buy-events-cell{text-align:left !important;}
+  table.stat-table.trade-table .buy-event{display:grid;grid-template-columns:max-content max-content max-content max-content;column-gap:10px;row-gap:3px;align-items:baseline;justify-content:start;text-align:left;}
+  table.stat-table.trade-table .buy-event .bn{font-weight:700;color:var(--text-dim);}
+  table.stat-table.trade-table .buy-event .bp{text-align:right;}
+  table.stat-table.trade-table .buy-event .bt{color:var(--glow);font-size:11px;}
   table.stat-table.trade-table td.num{text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700;overflow-wrap:anywhere;}
   /* 매수 기록 표: 카드 폭에 맞춤 (6열 고정 비율, 숫자는 한 줄 유지) */
   table.stat-table.detail-table.sim-table{table-layout:fixed;width:100%;}
@@ -743,8 +748,8 @@ body.panel .sell-row{display:none !important;}
   <div hidden><section id="card-backup"></section><div id="backupPanel"></div><button id="bkCopyBtn"></button><button id="bkRestoreBtn"></button><textarea id="bkText"></textarea><div id="bkMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">SOXL무한매수_V1_22_261024.HTML</span>)</button>
-  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.22 (261024)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">SOXL무한매수_V1_23_261024.HTML</span>)</button>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.23 (261024)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>
   </footer>
 
   </div>
@@ -904,7 +909,7 @@ body.panel .sell-row{display:none !important;}
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V1.22", RELEASE_DATE = "261024";
+const APP_VERSION = "V1.23", RELEASE_DATE = "261024";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
 const FINNHUB_API_KEY = "daik4m9r01qr9o8hnfj0daik4m9r01qr9o8hnfjg";
@@ -1850,8 +1855,8 @@ function renderSeedSimCard(n, requirePrevDown) {
     const label = t.outcome === "profit" ? "익절" : t.outcome === "loss" ? "손절" : "보유중(평가)";
     const lc = t.outcome === "profit" ? "var(--up)" : t.outcome === "loss" ? "var(--down)" : "var(--text-faint)";
     const buysHtml = t.buys.map(b => {
-      const phaseTag = b.round <= r.n1 ? "" : ` <span style="color:var(--glow);">[2단계]</span>`;
-      return `<div class="buy-event"><b>${b.round}회</b> ${fmtCompactDate(b.x)} ${usd(b.price)}${phaseTag}</div>`;
+      const phaseTag = b.round <= r.n1 ? "" : `<span class="bt">2단계</span>`;
+      return `<div class="buy-event"><span class="bn">${b.round}회</span><span class="bd">${fmtCompactDate(b.x)}</span><span class="bp">${usd(b.price)}</span>${phaseTag}</div>`;
     }).join("");
     return `
       <tr>
