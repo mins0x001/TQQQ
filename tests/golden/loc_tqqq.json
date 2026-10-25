@@ -1,0 +1,1694 @@
+{
+ "A.none.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--text-dim);background:rgba(75,90,115,0.14);border-color:var(--border-soft);\">신규 진입 전</span> <div class=\"loc-pos\">📦 보유 <b>없음</b> · 📍 총 16회차 중 <b>1</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"57.93\" data-label=\"매수가\">$57.93</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"77\" data-label=\"매수수량\">77주</div> <div class=\"loc-sub\">1주 단위 내림 (1분할 기준 77주 → 실투입 $4,460.61)</div> <div class=\"loc-sub\">전일종가 이하 · 전일 확정 종가(2025-11-06) 적용 (신규 진입, 평단 없음) · 1회차 매수 트리거 (종가가 이 가격 이하일 때 체결)</div> </div> <div class=\"loc-box off\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price \">--</div> <div class=\"loc-qty\">보유 수량 없음</div> <div class=\"loc-sub\">매수 기록을 추가하면 매도 목표가가 계산됩니다.</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "신규 진입 전",
+   "avg_price": null,
+   "holding_qty": 0,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 57.93,
+     "qty": 77
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 4500,
+    "qty_unit": 1,
+    "avg_exact": null,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 0,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.none.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--text-dim);background:rgba(75,90,115,0.14);border-color:var(--border-soft);\">신규 진입 전</span> <div class=\"loc-pos\">📦 보유 <b>없음</b> · 📍 총 28회차 중 <b>1</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"57.93\" data-label=\"매수가\">$57.93</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"120\" data-label=\"매수수량\">120주</div> <div class=\"loc-sub\">1주 단위 내림 (1분할 기준 120주 → 실투입 $6,951.60)</div> <div class=\"loc-sub\">전일종가 이하 · 전일 확정 종가(2025-11-06) 적용 (신규 진입, 평단 없음) · 1회차 매수 트리거 (종가가 이 가격 이하일 때 체결)</div> </div> <div class=\"loc-box off\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price \">--</div> <div class=\"loc-qty\">보유 수량 없음</div> <div class=\"loc-sub\">매수 기록을 추가하면 매도 목표가가 계산됩니다.</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "신규 진입 전",
+   "avg_price": null,
+   "holding_qty": 0,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 57.93,
+     "qty": 120
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 7000,
+    "qty_unit": 1,
+    "avg_exact": null,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 0,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.one.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--glow);background:rgba(94,234,212,0.12);border-color:rgba(94,234,212,0.35);\">1단계 (AI 추천 4회 이내, 현재 1회)</span> <div class=\"loc-pos\">📦 보유 <b>40주</b> · 평단 <b>$63.73</b> · (<b style=\"color:var(--down);\">-9.09%</b>) · 📍 총 16회차 중 <b>2</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"57.93\" data-label=\"매수가\">$57.93</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"77\" data-label=\"매수수량\">77주</div> <div class=\"loc-sub\">1주 단위 내림 (1분할 기준 77주 → 실투입 $4,460.61)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2회차 매수 트리거 (종가가 이 가격 이하일 때 체결)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"70.11\" data-label=\"매도가\">$70.11</div> <div class=\"loc-qty\">40주 (전량)</div> <div class=\"loc-sub\">평단가 $63.73 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "1단계 (AI 추천 4회 이내, 현재 1회)",
+   "avg_price": 63.73,
+   "holding_qty": 40,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 57.93,
+     "qty": 77
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 70.11,
+     "qty": 40
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 4500,
+    "qty_unit": 1,
+    "avg_exact": 63.73,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 1,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.one.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--glow);background:rgba(94,234,212,0.12);border-color:rgba(94,234,212,0.35);\">1단계 (AI 추천 4회 이내, 현재 1회)</span> <div class=\"loc-pos\">📦 보유 <b>40주</b> · 평단 <b>$63.73</b> · (<b style=\"color:var(--down);\">-9.09%</b>) · 📍 총 28회차 중 <b>2</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"57.93\" data-label=\"매수가\">$57.93</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"120\" data-label=\"매수수량\">120주</div> <div class=\"loc-sub\">1주 단위 내림 (1분할 기준 120주 → 실투입 $6,951.60)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2회차 매수 트리거 (종가가 이 가격 이하일 때 체결)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"70.11\" data-label=\"매도가\">$70.11</div> <div class=\"loc-qty\">40주 (전량)</div> <div class=\"loc-sub\">평단가 $63.73 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "1단계 (AI 추천 4회 이내, 현재 1회)",
+   "avg_price": 63.73,
+   "holding_qty": 40,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 57.93,
+     "qty": 120
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 70.11,
+     "qty": 40
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 7000,
+    "qty_unit": 1,
+    "avg_exact": 63.73,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 1,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.three.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--glow);background:rgba(94,234,212,0.12);border-color:rgba(94,234,212,0.35);\">1단계 (AI 추천 4회 이내, 현재 3회)</span> <div class=\"loc-pos\">📦 보유 <b>93주</b> · 평단 <b>$60.58</b> · (<b style=\"color:var(--down);\">-4.37%</b>) · 📍 총 16회차 중 <b>4</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"57.93\" data-label=\"매수가\">$57.93</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"77\" data-label=\"매수수량\">77주</div> <div class=\"loc-sub\">1주 단위 내림 (1분할 기준 77주 → 실투입 $4,460.61)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 4회차 매수 트리거 (종가가 이 가격 이하일 때 체결)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"66.64\" data-label=\"매도가\">$66.64</div> <div class=\"loc-qty\">93주 (전량)</div> <div class=\"loc-sub\">평단가 $60.58 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "1단계 (AI 추천 4회 이내, 현재 3회)",
+   "avg_price": 60.5814,
+   "holding_qty": 93,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 57.93,
+     "qty": 77
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 66.64,
+     "qty": 93
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 4500,
+    "qty_unit": 1,
+    "avg_exact": 60.58139784946236,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 3,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.three.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--glow);background:rgba(94,234,212,0.12);border-color:rgba(94,234,212,0.35);\">1단계 (AI 추천 4회 이내, 현재 3회)</span> <div class=\"loc-pos\">📦 보유 <b>93주</b> · 평단 <b>$60.58</b> · (<b style=\"color:var(--down);\">-4.37%</b>) · 📍 총 28회차 중 <b>4</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"57.93\" data-label=\"매수가\">$57.93</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"120\" data-label=\"매수수량\">120주</div> <div class=\"loc-sub\">1주 단위 내림 (1분할 기준 120주 → 실투입 $6,951.60)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 4회차 매수 트리거 (종가가 이 가격 이하일 때 체결)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"66.64\" data-label=\"매도가\">$66.64</div> <div class=\"loc-qty\">93주 (전량)</div> <div class=\"loc-sub\">평단가 $60.58 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "1단계 (AI 추천 4회 이내, 현재 3회)",
+   "avg_price": 60.5814,
+   "holding_qty": 93,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 57.93,
+     "qty": 120
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 66.64,
+     "qty": 93
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 7000,
+    "qty_unit": 1,
+    "avg_exact": 60.58139784946236,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 3,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.five.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×3 (현재 5회 · 2/12회차 · 대기 없음)</span> <div class=\"loc-pos\">📦 보유 <b>135주</b> · 평단 <b>$54.58</b> · (<b style=\"color:var(--up);\">+6.14%</b>) · 📍 총 16회차 중 <b>6</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"54.58\" data-label=\"매수가\">$54.58</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"27\" data-label=\"매수수량\">27주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,500 기준 27주 → 실투입 $1,473.66)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 평단가 적용 · 2단계 2/12회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,500 (시드÷24 = 8분할×3)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"60.05\" data-label=\"매도가\">$60.05</div> <div class=\"loc-qty\">135주 (전량)</div> <div class=\"loc-sub\">평단가 $54.58 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×3 (현재 5회 · 2/12회차 · 대기 없음)",
+   "avg_price": 54.5837,
+   "holding_qty": 135,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 54.58,
+     "qty": 27
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 60.05,
+     "qty": 135
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 1500,
+    "qty_unit": 1,
+    "avg_exact": 54.583703703703705,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 5,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.five.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×4 (현재 5회 · 2/24회차 · 대기 없음)</span> <div class=\"loc-pos\">📦 보유 <b>135주</b> · 평단 <b>$54.58</b> · (<b style=\"color:var(--up);\">+6.14%</b>) · 📍 총 28회차 중 <b>6</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"54.58\" data-label=\"매수가\">$54.58</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"32\" data-label=\"매수수량\">32주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,750 기준 32주 → 실투입 $1,746.56)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 평단가 적용 · 2단계 2/24회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,750 (시드÷40 = 10분할×4)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"60.05\" data-label=\"매도가\">$60.05</div> <div class=\"loc-qty\">135주 (전량)</div> <div class=\"loc-sub\">평단가 $54.58 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×4 (현재 5회 · 2/24회차 · 대기 없음)",
+   "avg_price": 54.5837,
+   "holding_qty": 135,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 54.58,
+     "qty": 32
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 60.05,
+     "qty": 135
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 1750,
+    "qty_unit": 1,
+    "avg_exact": 54.583703703703705,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 5,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.eight.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×3 (현재 8회 · 5/12회차 · 대기 없음)</span> <span class=\"loc-status-badge\" style=\"color:var(--down);background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.4);margin-left:6px;\">⚠ 손절모드 (평단 -12% 이탈)</span> <div class=\"loc-pos\">📦 보유 <b>188주</b> · 평단 <b>$68.49</b> · (<b style=\"color:var(--down);\">-15.41%</b>) · 📍 총 16회차 중 <b>9</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"57.93\" data-label=\"매수가\">$57.93</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25\" data-label=\"매수수량\">25주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,500 기준 25주 → 실투입 $1,448.25)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2단계 5/12회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,500 (시드÷24 = 8분할×3)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"75.34\" data-label=\"매도가\">$75.34</div> <div class=\"loc-qty\">188주 (전량)</div> <div class=\"loc-sub\">평단가 $68.49 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×3 (현재 8회 · 5/12회차 · 대기 없음)",
+   "avg_price": 68.4867,
+   "holding_qty": 188,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 57.93,
+     "qty": 25
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 75.34,
+     "qty": 188
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 1500,
+    "qty_unit": 1,
+    "avg_exact": 68.48670212765957,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 8,
+    "recommended_n": 4,
+    "in_stop_mode": true,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.eight.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×4 (현재 8회 · 5/24회차 · 대기 없음)</span> <span class=\"loc-status-badge\" style=\"color:var(--down);background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.4);margin-left:6px;\">⚠ 손절모드 (평단 -12% 이탈)</span> <div class=\"loc-pos\">📦 보유 <b>188주</b> · 평단 <b>$68.49</b> · (<b style=\"color:var(--down);\">-15.41%</b>) · 📍 총 28회차 중 <b>9</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"57.93\" data-label=\"매수가\">$57.93</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"30\" data-label=\"매수수량\">30주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,750 기준 30주 → 실투입 $1,737.90)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2단계 5/24회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,750 (시드÷40 = 10분할×4)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"75.34\" data-label=\"매도가\">$75.34</div> <div class=\"loc-qty\">188주 (전량)</div> <div class=\"loc-sub\">평단가 $68.49 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×4 (현재 8회 · 5/24회차 · 대기 없음)",
+   "avg_price": 68.4867,
+   "holding_qty": 188,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 57.93,
+     "qty": 30
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 75.34,
+     "qty": 188
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 1750,
+    "qty_unit": 1,
+    "avg_exact": 68.48670212765957,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 8,
+    "recommended_n": 4,
+    "in_stop_mode": true,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.twelve.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×3 (현재 12회 · 9/12회차 · 대기 없음)</span> <span class=\"loc-status-badge\" style=\"color:var(--down);background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.4);margin-left:6px;\">⚠ 손절모드 (평단 -12% 이탈)</span> <div class=\"loc-pos\">📦 보유 <b>246주</b> · 평단 <b>$73.48</b> · (<b style=\"color:var(--down);\">-21.16%</b>) · 📍 총 16회차 중 <b>13</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"57.93\" data-label=\"매수가\">$57.93</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25\" data-label=\"매수수량\">25주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,500 기준 25주 → 실투입 $1,448.25)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2단계 9/12회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,500 (시드÷24 = 8분할×3)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"80.84\" data-label=\"매도가\">$80.84</div> <div class=\"loc-qty\">246주 (전량)</div> <div class=\"loc-sub\">평단가 $73.48 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×3 (현재 12회 · 9/12회차 · 대기 없음)",
+   "avg_price": 73.4832,
+   "holding_qty": 246,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 57.93,
+     "qty": 25
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 80.84,
+     "qty": 246
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 1500,
+    "qty_unit": 1,
+    "avg_exact": 73.48317073170732,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 12,
+    "recommended_n": 4,
+    "in_stop_mode": true,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.twelve.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×4 (현재 12회 · 9/24회차 · 대기 없음)</span> <span class=\"loc-status-badge\" style=\"color:var(--down);background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.4);margin-left:6px;\">⚠ 손절모드 (평단 -12% 이탈)</span> <div class=\"loc-pos\">📦 보유 <b>246주</b> · 평단 <b>$73.48</b> · (<b style=\"color:var(--down);\">-21.16%</b>) · 📍 총 28회차 중 <b>13</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"57.93\" data-label=\"매수가\">$57.93</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"30\" data-label=\"매수수량\">30주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,750 기준 30주 → 실투입 $1,737.90)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2단계 9/24회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,750 (시드÷40 = 10분할×4)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"80.84\" data-label=\"매도가\">$80.84</div> <div class=\"loc-qty\">246주 (전량)</div> <div class=\"loc-sub\">평단가 $73.48 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×4 (현재 12회 · 9/24회차 · 대기 없음)",
+   "avg_price": 73.4832,
+   "holding_qty": 246,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 57.93,
+     "qty": 30
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 80.84,
+     "qty": 246
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 1750,
+    "qty_unit": 1,
+    "avg_exact": 73.48317073170732,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 12,
+    "recommended_n": 4,
+    "in_stop_mode": true,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.many.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">분할 소진 (40/16회 · 시드 전액)</span> <div class=\"loc-pos\">📦 보유 <b>1,180주</b> · 평단 <b>$57.61</b> · (<b style=\"color:var(--up);\">+0.57%</b>) · 📍 분할 소진 (총 16회차)</div> <div class=\"loc-grid\"> <div class=\"loc-box off\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"57.60\" data-label=\"매수가\">$57.60</div> <div class=\"loc-qty \">매수 불가</div> <div class=\"loc-sub\">1주 단위 내림</div> <div class=\"loc-sub\">최대 16회(1단계 4 + 2단계 12)를 모두 매수해 시드를 다 썼습니다. 매도 후 새 진입을 준비하세요.</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"63.37\" data-label=\"매도가\">$63.37</div> <div class=\"loc-qty\">1,180주 (전량)</div> <div class=\"loc-sub\">평단가 $57.61 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "분할 소진 (40/16회 · 시드 전액)",
+   "avg_price": 57.6065,
+   "holding_qty": 1180,
+   "orders": [
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 63.37,
+     "qty": 1180
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 1500,
+    "qty_unit": 1,
+    "avg_exact": 57.6065254237288,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 40,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": true,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.many.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">분할 소진 (40/28회 · 시드 전액)</span> <div class=\"loc-pos\">📦 보유 <b>1,180주</b> · 평단 <b>$57.61</b> · (<b style=\"color:var(--up);\">+0.57%</b>) · 📍 분할 소진 (총 28회차)</div> <div class=\"loc-grid\"> <div class=\"loc-box off\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"57.60\" data-label=\"매수가\">$57.60</div> <div class=\"loc-qty \">매수 불가</div> <div class=\"loc-sub\">1주 단위 내림</div> <div class=\"loc-sub\">최대 28회(1단계 4 + 2단계 24)를 모두 매수해 시드를 다 썼습니다. 매도 후 새 진입을 준비하세요.</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"63.37\" data-label=\"매도가\">$63.37</div> <div class=\"loc-qty\">1,180주 (전량)</div> <div class=\"loc-sub\">평단가 $57.61 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "분할 소진 (40/28회 · 시드 전액)",
+   "avg_price": 57.6065,
+   "holding_qty": 1180,
+   "orders": [
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 63.37,
+     "qty": 1180
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 1750,
+    "qty_unit": 1,
+    "avg_exact": 57.6065254237288,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 40,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": true,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.full.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">분할 소진 (70/16회 · 시드 전액)</span> <div class=\"loc-pos\">📦 보유 <b>2,765주</b> · 평단 <b>$47.54</b> · (<b style=\"color:var(--up);\">+21.85%</b>) · 📍 분할 소진 (총 16회차)</div> <div class=\"loc-grid\"> <div class=\"loc-box off\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"47.54\" data-label=\"매수가\">$47.54</div> <div class=\"loc-qty \">매수 불가</div> <div class=\"loc-sub\">1주 단위 내림</div> <div class=\"loc-sub\">최대 16회(1단계 4 + 2단계 12)를 모두 매수해 시드를 다 썼습니다. 매도 후 새 진입을 준비하세요.</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"52.30\" data-label=\"매도가\">$52.30</div> <div class=\"loc-qty\">2,765주 (전량)</div> <div class=\"loc-sub\">평단가 $47.54 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "분할 소진 (70/16회 · 시드 전액)",
+   "avg_price": 47.5447,
+   "holding_qty": 2765,
+   "orders": [
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 52.3,
+     "qty": 2765
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 1500,
+    "qty_unit": 1,
+    "avg_exact": 47.544679927667275,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 70,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": true,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.full.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">분할 소진 (70/28회 · 시드 전액)</span> <div class=\"loc-pos\">📦 보유 <b>2,765주</b> · 평단 <b>$47.54</b> · (<b style=\"color:var(--up);\">+21.85%</b>) · 📍 분할 소진 (총 28회차)</div> <div class=\"loc-grid\"> <div class=\"loc-box off\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"47.54\" data-label=\"매수가\">$47.54</div> <div class=\"loc-qty \">매수 불가</div> <div class=\"loc-sub\">1주 단위 내림</div> <div class=\"loc-sub\">최대 28회(1단계 4 + 2단계 24)를 모두 매수해 시드를 다 썼습니다. 매도 후 새 진입을 준비하세요.</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"52.30\" data-label=\"매도가\">$52.30</div> <div class=\"loc-qty\">2,765주 (전량)</div> <div class=\"loc-sub\">평단가 $47.54 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "분할 소진 (70/28회 · 시드 전액)",
+   "avg_price": 47.5447,
+   "holding_qty": 2765,
+   "orders": [
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 52.3,
+     "qty": 2765
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 1750,
+    "qty_unit": 1,
+    "avg_exact": 47.544679927667275,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 70,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": true,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.stop.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×3 (현재 4회 · 1/12회차 · 대기 없음)</span> <span class=\"loc-status-badge\" style=\"color:var(--down);background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.4);margin-left:6px;\">⚠ 손절모드 (평단 -12% 이탈)</span> <div class=\"loc-pos\">📦 보유 <b>86주</b> · 평단 <b>$126.67</b> · (<b style=\"color:var(--down);\">-54.26%</b>) · 📍 총 16회차 중 <b>5</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"57.93\" data-label=\"매수가\">$57.93</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25\" data-label=\"매수수량\">25주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,500 기준 25주 → 실투입 $1,448.25)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2단계 1/12회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,500 (시드÷24 = 8분할×3)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"139.34\" data-label=\"매도가\">$139.34</div> <div class=\"loc-qty\">86주 (전량)</div> <div class=\"loc-sub\">평단가 $126.67 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×3 (현재 4회 · 1/12회차 · 대기 없음)",
+   "avg_price": 126.6653,
+   "holding_qty": 86,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 57.93,
+     "qty": 25
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 139.34,
+     "qty": 86
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 1500,
+    "qty_unit": 1,
+    "avg_exact": 126.66534883720932,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 4,
+    "recommended_n": 4,
+    "in_stop_mode": true,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "A.stop.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×4 (현재 4회 · 1/24회차 · 대기 없음)</span> <span class=\"loc-status-badge\" style=\"color:var(--down);background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.4);margin-left:6px;\">⚠ 손절모드 (평단 -12% 이탈)</span> <div class=\"loc-pos\">📦 보유 <b>86주</b> · 평단 <b>$126.67</b> · (<b style=\"color:var(--down);\">-54.26%</b>) · 📍 총 28회차 중 <b>5</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"57.93\" data-label=\"매수가\">$57.93</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"30\" data-label=\"매수수량\">30주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,750 기준 30주 → 실투입 $1,737.90)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2단계 1/24회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,750 (시드÷40 = 10분할×4)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"139.34\" data-label=\"매도가\">$139.34</div> <div class=\"loc-qty\">86주 (전량)</div> <div class=\"loc-sub\">평단가 $126.67 대비 +10.00%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"10\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+10.00%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +10.00% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×4 (현재 4회 · 1/24회차 · 대기 없음)",
+   "avg_price": 126.6653,
+   "holding_qty": 86,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 57.93,
+     "qty": 30
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 139.34,
+     "qty": 86
+    }
+   ],
+   "bot": {
+    "last_close": 57.9347,
+    "sell_pct": 10,
+    "sell_pct_rule": 10,
+    "per_split": 1750,
+    "qty_unit": 1,
+    "avg_exact": 126.66534883720932,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 4,
+    "recommended_n": 4,
+    "in_stop_mode": true,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.none.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--text-dim);background:rgba(75,90,115,0.14);border-color:var(--border-soft);\">신규 진입 전</span> <div class=\"loc-pos\">📦 보유 <b>없음</b> · 📍 총 16회차 중 <b>1</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.45\" data-label=\"매수가\">$25.45</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"176\" data-label=\"매수수량\">176주</div> <div class=\"loc-sub\">1주 단위 내림 (1분할 기준 176주 → 실투입 $4,479.20)</div> <div class=\"loc-sub\">전일종가 이하 · 전일 확정 종가(2025-11-06) 적용 (신규 진입, 평단 없음) · 1회차 매수 트리거 (종가가 이 가격 이하일 때 체결)</div> </div> <div class=\"loc-box off\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price \">--</div> <div class=\"loc-qty\">보유 수량 없음</div> <div class=\"loc-sub\">매수 기록을 추가하면 매도 목표가가 계산됩니다.</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "신규 진입 전",
+   "avg_price": null,
+   "holding_qty": 0,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 25.45,
+     "qty": 176
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 4500,
+    "qty_unit": 1,
+    "avg_exact": null,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 0,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.none.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--text-dim);background:rgba(75,90,115,0.14);border-color:var(--border-soft);\">신규 진입 전</span> <div class=\"loc-pos\">📦 보유 <b>없음</b> · 📍 총 28회차 중 <b>1</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.45\" data-label=\"매수가\">$25.45</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"275\" data-label=\"매수수량\">275주</div> <div class=\"loc-sub\">1주 단위 내림 (1분할 기준 275주 → 실투입 $6,998.75)</div> <div class=\"loc-sub\">전일종가 이하 · 전일 확정 종가(2025-11-06) 적용 (신규 진입, 평단 없음) · 1회차 매수 트리거 (종가가 이 가격 이하일 때 체결)</div> </div> <div class=\"loc-box off\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price \">--</div> <div class=\"loc-qty\">보유 수량 없음</div> <div class=\"loc-sub\">매수 기록을 추가하면 매도 목표가가 계산됩니다.</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "신규 진입 전",
+   "avg_price": null,
+   "holding_qty": 0,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 25.45,
+     "qty": 275
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 7000,
+    "qty_unit": 1,
+    "avg_exact": null,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 0,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.one.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--glow);background:rgba(94,234,212,0.12);border-color:rgba(94,234,212,0.35);\">1단계 (AI 추천 4회 이내, 현재 1회)</span> <div class=\"loc-pos\">📦 보유 <b>40주</b> · 평단 <b>$28.00</b> · (<b style=\"color:var(--down);\">-9.10%</b>) · 📍 총 16회차 중 <b>2</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.45\" data-label=\"매수가\">$25.45</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"176\" data-label=\"매수수량\">176주</div> <div class=\"loc-sub\">1주 단위 내림 (1분할 기준 176주 → 실투입 $4,479.20)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2회차 매수 트리거 (종가가 이 가격 이하일 때 체결)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"29.26\" data-label=\"매도가\">$29.26</div> <div class=\"loc-qty\">40주 (전량)</div> <div class=\"loc-sub\">평단가 $28.00 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "1단계 (AI 추천 4회 이내, 현재 1회)",
+   "avg_price": 28,
+   "holding_qty": 40,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 25.45,
+     "qty": 176
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 29.26,
+     "qty": 40
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 4500,
+    "qty_unit": 1,
+    "avg_exact": 28,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 1,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.one.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--glow);background:rgba(94,234,212,0.12);border-color:rgba(94,234,212,0.35);\">1단계 (AI 추천 4회 이내, 현재 1회)</span> <div class=\"loc-pos\">📦 보유 <b>40주</b> · 평단 <b>$28.00</b> · (<b style=\"color:var(--down);\">-9.10%</b>) · 📍 총 28회차 중 <b>2</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.45\" data-label=\"매수가\">$25.45</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"275\" data-label=\"매수수량\">275주</div> <div class=\"loc-sub\">1주 단위 내림 (1분할 기준 275주 → 실투입 $6,998.75)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2회차 매수 트리거 (종가가 이 가격 이하일 때 체결)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"29.26\" data-label=\"매도가\">$29.26</div> <div class=\"loc-qty\">40주 (전량)</div> <div class=\"loc-sub\">평단가 $28.00 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "1단계 (AI 추천 4회 이내, 현재 1회)",
+   "avg_price": 28,
+   "holding_qty": 40,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 25.45,
+     "qty": 275
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 29.26,
+     "qty": 40
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 7000,
+    "qty_unit": 1,
+    "avg_exact": 28,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 1,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.three.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--glow);background:rgba(94,234,212,0.12);border-color:rgba(94,234,212,0.35);\">1단계 (AI 추천 4회 이내, 현재 3회)</span> <div class=\"loc-pos\">📦 보유 <b>93주</b> · 평단 <b>$26.61</b> · (<b style=\"color:var(--down);\">-4.37%</b>) · 📍 총 16회차 중 <b>4</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.45\" data-label=\"매수가\">$25.45</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"176\" data-label=\"매수수량\">176주</div> <div class=\"loc-sub\">1주 단위 내림 (1분할 기준 176주 → 실투입 $4,479.20)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 4회차 매수 트리거 (종가가 이 가격 이하일 때 체결)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"27.82\" data-label=\"매도가\">$27.82</div> <div class=\"loc-qty\">93주 (전량)</div> <div class=\"loc-sub\">평단가 $26.61 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "1단계 (AI 추천 4회 이내, 현재 3회)",
+   "avg_price": 26.6144,
+   "holding_qty": 93,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 25.45,
+     "qty": 176
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 27.82,
+     "qty": 93
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 4500,
+    "qty_unit": 1,
+    "avg_exact": 26.614408602150537,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 3,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.three.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--glow);background:rgba(94,234,212,0.12);border-color:rgba(94,234,212,0.35);\">1단계 (AI 추천 4회 이내, 현재 3회)</span> <div class=\"loc-pos\">📦 보유 <b>93주</b> · 평단 <b>$26.61</b> · (<b style=\"color:var(--down);\">-4.37%</b>) · 📍 총 28회차 중 <b>4</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.45\" data-label=\"매수가\">$25.45</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"275\" data-label=\"매수수량\">275주</div> <div class=\"loc-sub\">1주 단위 내림 (1분할 기준 275주 → 실투입 $6,998.75)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 4회차 매수 트리거 (종가가 이 가격 이하일 때 체결)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"27.82\" data-label=\"매도가\">$27.82</div> <div class=\"loc-qty\">93주 (전량)</div> <div class=\"loc-sub\">평단가 $26.61 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "1단계 (AI 추천 4회 이내, 현재 3회)",
+   "avg_price": 26.6144,
+   "holding_qty": 93,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 25.45,
+     "qty": 275
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 27.82,
+     "qty": 93
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 7000,
+    "qty_unit": 1,
+    "avg_exact": 26.614408602150537,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 3,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.five.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×3 (현재 5회 · 2/12회차 · 대기 없음)</span> <div class=\"loc-pos\">📦 보유 <b>135주</b> · 평단 <b>$23.98</b> · (<b style=\"color:var(--up);\">+6.15%</b>) · 📍 총 16회차 중 <b>6</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"23.97\" data-label=\"매수가\">$23.97</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"62\" data-label=\"매수수량\">62주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,500 기준 62주 → 실투입 $1,486.14)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 평단가 적용 · 2단계 2/12회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,500 (시드÷24 = 8분할×3)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.06\" data-label=\"매도가\">$25.06</div> <div class=\"loc-qty\">135주 (전량)</div> <div class=\"loc-sub\">평단가 $23.98 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×3 (현재 5회 · 2/12회차 · 대기 없음)",
+   "avg_price": 23.9768,
+   "holding_qty": 135,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 23.97,
+     "qty": 62
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 25.06,
+     "qty": 135
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 1500,
+    "qty_unit": 1,
+    "avg_exact": 23.976814814814816,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 5,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.five.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×4 (현재 5회 · 2/24회차 · 대기 없음)</span> <div class=\"loc-pos\">📦 보유 <b>135주</b> · 평단 <b>$23.98</b> · (<b style=\"color:var(--up);\">+6.15%</b>) · 📍 총 28회차 중 <b>6</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"23.97\" data-label=\"매수가\">$23.97</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"73\" data-label=\"매수수량\">73주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,750 기준 73주 → 실투입 $1,749.81)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 평단가 적용 · 2단계 2/24회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,750 (시드÷40 = 10분할×4)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.06\" data-label=\"매도가\">$25.06</div> <div class=\"loc-qty\">135주 (전량)</div> <div class=\"loc-sub\">평단가 $23.98 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×4 (현재 5회 · 2/24회차 · 대기 없음)",
+   "avg_price": 23.9768,
+   "holding_qty": 135,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 23.97,
+     "qty": 73
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 25.06,
+     "qty": 135
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 1750,
+    "qty_unit": 1,
+    "avg_exact": 23.976814814814816,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 5,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.eight.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×3 (현재 8회 · 5/12회차 · 대기 없음)</span> <span class=\"loc-status-badge\" style=\"color:var(--down);background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.4);margin-left:6px;\">⚠ 손절모드 (평단 -12% 이탈)</span> <div class=\"loc-pos\">📦 보유 <b>188주</b> · 평단 <b>$30.09</b> · (<b style=\"color:var(--down);\">-15.41%</b>) · 📍 총 16회차 중 <b>9</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.45\" data-label=\"매수가\">$25.45</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"58\" data-label=\"매수수량\">58주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,500 기준 58주 → 실투입 $1,476.10)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2단계 5/12회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,500 (시드÷24 = 8분할×3)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"31.45\" data-label=\"매도가\">$31.45</div> <div class=\"loc-qty\">188주 (전량)</div> <div class=\"loc-sub\">평단가 $30.09 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×3 (현재 8회 · 5/12회차 · 대기 없음)",
+   "avg_price": 30.0865,
+   "holding_qty": 188,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 25.45,
+     "qty": 58
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 31.45,
+     "qty": 188
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 1500,
+    "qty_unit": 1,
+    "avg_exact": 30.086542553191492,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 8,
+    "recommended_n": 4,
+    "in_stop_mode": true,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.eight.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×4 (현재 8회 · 5/24회차 · 대기 없음)</span> <span class=\"loc-status-badge\" style=\"color:var(--down);background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.4);margin-left:6px;\">⚠ 손절모드 (평단 -12% 이탈)</span> <div class=\"loc-pos\">📦 보유 <b>188주</b> · 평단 <b>$30.09</b> · (<b style=\"color:var(--down);\">-15.41%</b>) · 📍 총 28회차 중 <b>9</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.45\" data-label=\"매수가\">$25.45</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"68\" data-label=\"매수수량\">68주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,750 기준 68주 → 실투입 $1,730.60)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2단계 5/24회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,750 (시드÷40 = 10분할×4)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"31.45\" data-label=\"매도가\">$31.45</div> <div class=\"loc-qty\">188주 (전량)</div> <div class=\"loc-sub\">평단가 $30.09 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×4 (현재 8회 · 5/24회차 · 대기 없음)",
+   "avg_price": 30.0865,
+   "holding_qty": 188,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 25.45,
+     "qty": 68
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 31.45,
+     "qty": 188
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 1750,
+    "qty_unit": 1,
+    "avg_exact": 30.086542553191492,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 8,
+    "recommended_n": 4,
+    "in_stop_mode": true,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.twelve.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×3 (현재 12회 · 9/12회차 · 대기 없음)</span> <span class=\"loc-status-badge\" style=\"color:var(--down);background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.4);margin-left:6px;\">⚠ 손절모드 (평단 -12% 이탈)</span> <div class=\"loc-pos\">📦 보유 <b>246주</b> · 평단 <b>$32.28</b> · (<b style=\"color:var(--down);\">-21.16%</b>) · 📍 총 16회차 중 <b>13</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.45\" data-label=\"매수가\">$25.45</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"58\" data-label=\"매수수량\">58주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,500 기준 58주 → 실투입 $1,476.10)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2단계 9/12회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,500 (시드÷24 = 8분할×3)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"33.74\" data-label=\"매도가\">$33.74</div> <div class=\"loc-qty\">246주 (전량)</div> <div class=\"loc-sub\">평단가 $32.28 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×3 (현재 12회 · 9/12회차 · 대기 없음)",
+   "avg_price": 32.2814,
+   "holding_qty": 246,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 25.45,
+     "qty": 58
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 33.74,
+     "qty": 246
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 1500,
+    "qty_unit": 1,
+    "avg_exact": 32.28142276422764,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 12,
+    "recommended_n": 4,
+    "in_stop_mode": true,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.twelve.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×4 (현재 12회 · 9/24회차 · 대기 없음)</span> <span class=\"loc-status-badge\" style=\"color:var(--down);background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.4);margin-left:6px;\">⚠ 손절모드 (평단 -12% 이탈)</span> <div class=\"loc-pos\">📦 보유 <b>246주</b> · 평단 <b>$32.28</b> · (<b style=\"color:var(--down);\">-21.16%</b>) · 📍 총 28회차 중 <b>13</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.45\" data-label=\"매수가\">$25.45</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"68\" data-label=\"매수수량\">68주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,750 기준 68주 → 실투입 $1,730.60)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2단계 9/24회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,750 (시드÷40 = 10분할×4)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"33.74\" data-label=\"매도가\">$33.74</div> <div class=\"loc-qty\">246주 (전량)</div> <div class=\"loc-sub\">평단가 $32.28 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×4 (현재 12회 · 9/24회차 · 대기 없음)",
+   "avg_price": 32.2814,
+   "holding_qty": 246,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 25.45,
+     "qty": 68
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 33.74,
+     "qty": 246
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 1750,
+    "qty_unit": 1,
+    "avg_exact": 32.28142276422764,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 12,
+    "recommended_n": 4,
+    "in_stop_mode": true,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.many.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">분할 소진 (40/16회 · 시드 전액)</span> <div class=\"loc-pos\">📦 보유 <b>1,180주</b> · 평단 <b>$25.31</b> · (<b style=\"color:var(--up);\">+0.57%</b>) · 📍 분할 소진 (총 16회차)</div> <div class=\"loc-grid\"> <div class=\"loc-box off\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.30\" data-label=\"매수가\">$25.30</div> <div class=\"loc-qty \">매수 불가</div> <div class=\"loc-sub\">1주 단위 내림</div> <div class=\"loc-sub\">최대 16회(1단계 4 + 2단계 12)를 모두 매수해 시드를 다 썼습니다. 매도 후 새 진입을 준비하세요.</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"26.45\" data-label=\"매도가\">$26.45</div> <div class=\"loc-qty\">1,180주 (전량)</div> <div class=\"loc-sub\">평단가 $25.31 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "분할 소진 (40/16회 · 시드 전액)",
+   "avg_price": 25.3061,
+   "holding_qty": 1180,
+   "orders": [
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 26.45,
+     "qty": 1180
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 1500,
+    "qty_unit": 1,
+    "avg_exact": 25.306101694915256,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 40,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": true,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.many.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">분할 소진 (40/28회 · 시드 전액)</span> <div class=\"loc-pos\">📦 보유 <b>1,180주</b> · 평단 <b>$25.31</b> · (<b style=\"color:var(--up);\">+0.57%</b>) · 📍 분할 소진 (총 28회차)</div> <div class=\"loc-grid\"> <div class=\"loc-box off\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.30\" data-label=\"매수가\">$25.30</div> <div class=\"loc-qty \">매수 불가</div> <div class=\"loc-sub\">1주 단위 내림</div> <div class=\"loc-sub\">최대 28회(1단계 4 + 2단계 24)를 모두 매수해 시드를 다 썼습니다. 매도 후 새 진입을 준비하세요.</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"26.45\" data-label=\"매도가\">$26.45</div> <div class=\"loc-qty\">1,180주 (전량)</div> <div class=\"loc-sub\">평단가 $25.31 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "분할 소진 (40/28회 · 시드 전액)",
+   "avg_price": 25.3061,
+   "holding_qty": 1180,
+   "orders": [
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 26.45,
+     "qty": 1180
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 1750,
+    "qty_unit": 1,
+    "avg_exact": 25.306101694915256,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 40,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": true,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.full.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">분할 소진 (70/16회 · 시드 전액)</span> <div class=\"loc-pos\">📦 보유 <b>2,765주</b> · 평단 <b>$20.89</b> · (<b style=\"color:var(--up);\">+21.85%</b>) · 📍 분할 소진 (총 16회차)</div> <div class=\"loc-grid\"> <div class=\"loc-box off\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"20.88\" data-label=\"매수가\">$20.88</div> <div class=\"loc-qty \">매수 불가</div> <div class=\"loc-sub\">1주 단위 내림</div> <div class=\"loc-sub\">최대 16회(1단계 4 + 2단계 12)를 모두 매수해 시드를 다 썼습니다. 매도 후 새 진입을 준비하세요.</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"21.83\" data-label=\"매도가\">$21.83</div> <div class=\"loc-qty\">2,765주 (전량)</div> <div class=\"loc-sub\">평단가 $20.89 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "분할 소진 (70/16회 · 시드 전액)",
+   "avg_price": 20.8866,
+   "holding_qty": 2765,
+   "orders": [
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 21.83,
+     "qty": 2765
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 1500,
+    "qty_unit": 1,
+    "avg_exact": 20.88660397830018,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 70,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": true,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.full.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">분할 소진 (70/28회 · 시드 전액)</span> <div class=\"loc-pos\">📦 보유 <b>2,765주</b> · 평단 <b>$20.89</b> · (<b style=\"color:var(--up);\">+21.85%</b>) · 📍 분할 소진 (총 28회차)</div> <div class=\"loc-grid\"> <div class=\"loc-box off\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"20.88\" data-label=\"매수가\">$20.88</div> <div class=\"loc-qty \">매수 불가</div> <div class=\"loc-sub\">1주 단위 내림</div> <div class=\"loc-sub\">최대 28회(1단계 4 + 2단계 24)를 모두 매수해 시드를 다 썼습니다. 매도 후 새 진입을 준비하세요.</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"21.83\" data-label=\"매도가\">$21.83</div> <div class=\"loc-qty\">2,765주 (전량)</div> <div class=\"loc-sub\">평단가 $20.89 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "분할 소진 (70/28회 · 시드 전액)",
+   "avg_price": 20.8866,
+   "holding_qty": 2765,
+   "orders": [
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 21.83,
+     "qty": 2765
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 1750,
+    "qty_unit": 1,
+    "avg_exact": 20.88660397830018,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 70,
+    "recommended_n": 4,
+    "in_stop_mode": false,
+    "buy_off": true,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.stop.a": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×3 (현재 4회 · 1/12회차 · 대기 없음)</span> <span class=\"loc-status-badge\" style=\"color:var(--down);background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.4);margin-left:6px;\">⚠ 손절모드 (평단 -12% 이탈)</span> <div class=\"loc-pos\">📦 보유 <b>86주</b> · 평단 <b>$55.64</b> · (<b style=\"color:var(--down);\">-54.26%</b>) · 📍 총 16회차 중 <b>5</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.45\" data-label=\"매수가\">$25.45</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"58\" data-label=\"매수수량\">58주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,500 기준 58주 → 실투입 $1,476.10)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2단계 1/12회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,500 (시드÷24 = 8분할×3)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"58.15\" data-label=\"매도가\">$58.15</div> <div class=\"loc-qty\">86주 (전량)</div> <div class=\"loc-sub\">평단가 $55.64 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×3 (현재 4회 · 1/12회차 · 대기 없음)",
+   "avg_price": 55.642,
+   "holding_qty": 86,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 25.45,
+     "qty": 58
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 58.15,
+     "qty": 86
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 1500,
+    "qty_unit": 1,
+    "avg_exact": 55.641976744186046,
+    "seed": 36000,
+    "splits": 8,
+    "mult": 3,
+    "stage1_n": 4,
+    "max_rounds": 16,
+    "per_split_1": 4500,
+    "per_split_2": 1500,
+    "rounds": 4,
+    "recommended_n": 4,
+    "in_stop_mode": true,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ },
+ "B.stop.b": {
+  "err": null,
+  "hero": " <span class=\"loc-status-badge\" style=\"color:var(--amber);background:rgba(245,165,36,0.12);border-color:rgba(245,165,36,0.4);\">2단계 ×4 (현재 4회 · 1/24회차 · 대기 없음)</span> <span class=\"loc-status-badge\" style=\"color:var(--down);background:rgba(240,71,90,0.12);border-color:rgba(240,71,90,0.4);margin-left:6px;\">⚠ 손절모드 (평단 -12% 이탈)</span> <div class=\"loc-pos\">📦 보유 <b>86주</b> · 평단 <b>$55.64</b> · (<b style=\"color:var(--down);\">-54.26%</b>) · 📍 총 28회차 중 <b>5</b>회차 진행 중</div> <div class=\"loc-grid\"> <div class=\"loc-box buy\"> <div class=\"loc-tag\">LOC 매수 예약가</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"25.45\" data-label=\"매수가\">$25.45</div> <div class=\"loc-qty copyable\" role=\"button\" tabindex=\"0\" data-copy=\"68\" data-label=\"매수수량\">68주</div> <div class=\"loc-sub\">1주 단위 내림 (2단계 1회 $1,750 기준 68주 → 실투입 $1,730.60)</div> <div class=\"loc-sub\">평단 &amp; 전일종가 이하 · 더 낮은 전일 확정 종가(2025-11-06) 적용 · 2단계 1/24회차 · 대기 없이 조건 충족 시 매수 · 1회 $1,750 (시드÷40 = 10분할×4)</div> </div> <div class=\"loc-box sell\"> <div class=\"loc-tag\">LOC 매도 예약가 (익절)</div> <div class=\"loc-price copyable\" role=\"button\" tabindex=\"0\" data-copy=\"58.15\" data-label=\"매도가\">$58.15</div> <div class=\"loc-qty\">86주 (전량)</div> <div class=\"loc-sub\">평단가 $55.64 대비 +4.50%</div> </div> </div> <div class=\"sell-row\"><div class=\"sell-adj\" data-cur=\"4.5\"><button type=\"button\" data-sellpct=\"-1\" aria-label=\"매도 % 내리기\">▼</button><span class=\"pv\">+4.50%<small>규칙 기반</small></span><button type=\"button\" data-sellpct=\"1\" aria-label=\"매도 % 올리기\">▲</button><button type=\"button\" class=\"rs\" data-sellpct=\"0\" disabled=\"\">↺ 초기화</button></div><div class=\"loc-sub\">규칙 기반 +4.50% · ▲▼ 0.5%씩 · 모든 기기 영구 저장</div></div> <p class=\"copy-hint\">👆 매수가·매수수량·매도가 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만)</p> ",
+  "order": {
+   "schema": "loc-order/1",
+   "app": "TQQQ무한매수",
+   "symbol": "TQQQ",
+   "basis_close_date": "2025-11-06",
+   "stage": "2단계 ×4 (현재 4회 · 1/24회차 · 대기 없음)",
+   "avg_price": 55.642,
+   "holding_qty": 86,
+   "orders": [
+    {
+     "side": "buy",
+     "type": "LOC",
+     "price": 25.45,
+     "qty": 68
+    },
+    {
+     "side": "sell",
+     "type": "LOC",
+     "price": 58.15,
+     "qty": 86
+    }
+   ],
+   "bot": {
+    "last_close": 25.4509,
+    "sell_pct": 4.5,
+    "sell_pct_rule": 4.5,
+    "per_split": 1750,
+    "qty_unit": 1,
+    "avg_exact": 55.641976744186046,
+    "seed": 70000,
+    "splits": 10,
+    "mult": 4,
+    "stage1_n": 4,
+    "max_rounds": 28,
+    "per_split_1": 7000,
+    "per_split_2": 1750,
+    "rounds": 4,
+    "recommended_n": 4,
+    "in_stop_mode": true,
+    "buy_off": false,
+    "records_src": "app",
+    "param_mode": "rule"
+   }
+  },
+  "title": "TQQQ 무한매수 AI (버전)"
+ }
+}
