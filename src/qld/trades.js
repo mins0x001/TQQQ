@@ -1,6 +1,6 @@
 /* ======================== 💰 매도 · 수익 기록 (평균단가법) ======================== */
 const TRADES_KEY = "qld_trades_v1";
-function loadTrades() { try { const a = JSON.parse(localStorage.getItem(TRADES_KEY) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+//@@include lib:loadTrades
 function saveTrades(a) { try { localStorage.setItem(TRADES_KEY, JSON.stringify(a.slice().sort((x, y) => x.date < y.date ? -1 : x.date > y.date ? 1 : String(x.id).localeCompare(String(y.id))))); } catch (e) {} }
 const pnlCol = v => v === null || v === undefined ? "var(--text-faint)" : v > 0 ? "var(--up)" : v < 0 ? "var(--down)" : "var(--text-dim)";
 const usd0s = n => (n === null || n === undefined || isNaN(n)) ? "--" : (n >= 0 ? "+" : "-") + "$" + Math.abs(Math.round(n)).toLocaleString("en-US");

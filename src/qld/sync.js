@@ -12,7 +12,7 @@ const tradeKeyOf = t => "T|" + (t && t.id);
 const fedKeyOf = f => "F|" + (f && f.recordedAt);
 const recsOf = raw => { const st = parseJ(raw, {}); return Array.isArray(st.records) ? st.records : []; };
 function syncMeta() { return Object.assign({ tombs: [], last: 0, dirty: false }, parseJ(lsGet(SYNC.metaKey), {})); }
-function saveSyncMeta(m) { lsSet(SYNC.metaKey, JSON.stringify(m)); }
+//@@include lib:saveSyncMeta
 const syncTok = () => lsGet(SYNC.tokKey) || "", syncGist = () => lsGet(SYNC.gistKey) || "";
 const syncDevice = () => /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent) ? "모바일" : "PC";
 let __syncMute = false, __syncTimer = null;
@@ -35,19 +35,8 @@ Storage.prototype.removeItem = function (k) {
   if (this === window.localStorage && !__syncMute && __syncTrack(this, k, k === GUIDE_STORE_KEY ? "{}" : "[]")) { __lsDel.call(this, k); syncSchedule(1500); return; }
   return __lsDel.call(this, k);
 };
-function syncSchedule(ms) { if (!syncTok() || !syncGist()) return; clearTimeout(__syncTimer); __syncTimer = setTimeout(() => syncNow("auto"), ms); }
-async function gh(path, opt) {
-  opt = opt || {};
-  const headers = { Authorization: "Bearer " + syncTok(), Accept: "application/vnd.github+json" };
-  if (opt.body) headers["Content-Type"] = "application/json";
-  let r;
-  try { r = await fetch("https://api.github.com" + path, { method: opt.method || "GET", headers, body: opt.body, cache: "no-store" }); }
-  catch (e) { throw new Error("인터넷 연결 없음 · 연결되면 자동으로 다시 맞춥니다"); }
-  if (r.status === 401) throw new Error("토큰이 틀렸거나 만료됐습니다. 새 토큰으로 다시 연결하세요");
-  if (r.status === 403 || r.status === 404) throw new Error("토큰에 gist 권한이 없거나 동기화 Gist를 찾을 수 없습니다 (" + r.status + ")");
-  if (!r.ok) throw new Error("GitHub 응답 오류 " + r.status);
-  return r.json();
-}
+//@@include lib:syncSchedule
+//@@include lib:gh
 function mergeList(a, b, kf, dead, sortFn) {
   const map = new Map();
   for (const x of [...(a || []), ...(b || [])]) { const k = kf(x); if (!dead.has(k) && !map.has(k)) map.set(k, x); }

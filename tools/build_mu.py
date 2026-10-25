@@ -7,9 +7,9 @@ rd = lambda p: open(f"{ROOT}/{p}", encoding="utf-8", newline="").read()
 T, CFG, SL = rd("src/mu/template.html"), json.loads(rd("src/mu/config.json")), json.loads(rd("src/mu/slots.json"))
 def load_fns():   # src/calc/*.js : '//@@fn 이름' 으로 시작하는 함수 조각 → {모듈:이름: 본문}
     fns = {}
-    for f in sorted(os.listdir(f"{ROOT}/src/calc")):
+    for f in sorted(os.listdir(f"{ROOT}/src/calc")) + sorted("../lib/" + x for x in os.listdir(f"{ROOT}/src/lib")):
         if not f.endswith(".js"): continue
-        mod = f[:-3]
+        mod = "lib" if f.startswith("../lib/") else f[:-3]
         for m in re.finditer(r"^//@@fn (\w+)\n(.*?)\n(?=//@@fn |\Z)", rd(f"src/calc/{f}") + "\n", re.S | re.M): fns[f"{mod}:{m.group(1)}"] = m.group(2).rstrip("\n")
     return fns
 FNS = load_fns()

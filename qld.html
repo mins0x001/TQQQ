@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.30-261025-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.31-261025-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261022">
-<title>QLD 평생매수AI분석 (V1.30 - 261025)</title>
+<title>QLD 평생매수AI분석 (V1.31 - 261025)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -632,8 +632,8 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
   <div hidden><section id="card-excel"></section><button id="xlsxBtn"></button><div id="xlsxMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_30_261025.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.30 (261025)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_31_261025.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.31 (261025)</code></div>
   </footer>
 
   </div>
@@ -816,7 +816,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.30", RELEASE_DATE = "261025";
+const APP_VERSION = "V1.31", RELEASE_DATE = "261025";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
@@ -886,7 +886,9 @@ function showBanner(msg, ok) {
   el.classList.remove("hidden");
   el.classList.toggle("ok", !!ok);
 }
-function hideBanner() { document.getElementById("errorBanner").classList.add("hidden"); }
+function hideBanner() {
+  document.getElementById("errorBanner").classList.add("hidden");
+}
 
 /* ---------- Finnhub ---------- */
 async function fhFetch(endpoint, params = {}) {
@@ -2191,8 +2193,10 @@ function exportLocOrder() {
   const name = `loc_orders_${lastLocOrder.symbol}_${lastLocOrder.basis_close_date}.json`;
   try {
     const blob = new Blob([JSON.stringify(lastLocOrder, null, 2)], { type: "application/json" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
-    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1500);
     showCopyToast(`✓ ${name} 저장됨 (다운로드 폴더)`, true);
   } catch (e) { showCopyToast("저장 실패: " + e.message, false); }
 }
@@ -2211,12 +2215,14 @@ function showCopyToast(msg, ok) {
   let t = document.getElementById("copyToast");
   if (!t) { t = document.createElement("div"); t.id = "copyToast"; document.body.appendChild(t); }
   t.textContent = msg; t.className = "copy-toast show" + (ok ? "" : " fail");
-  clearTimeout(showCopyToast._tm); showCopyToast._tm = setTimeout(() => { t.className = "copy-toast"; }, 1600);
+  clearTimeout(showCopyToast._tm);
+  showCopyToast._tm = setTimeout(() => { t.className = "copy-toast"; }, 1600);
 }
 async function handleCopyTap(el) {
   const text = el.dataset.copy, label = el.dataset.label || "값";
   const ok = await copyText(text);
-  el.classList.add(ok ? "copied" : "copy-fail"); setTimeout(() => el.classList.remove("copied", "copy-fail"), 1200);
+  el.classList.add(ok ? "copied" : "copy-fail");
+  setTimeout(() => el.classList.remove("copied", "copy-fail"), 1200);
   showCopyToast(ok ? `✓ ${label} ${text} 복사됨` : `복사 실패 — 길게 눌러 직접 복사하세요 (${text})`, ok);
   if (ok && navigator.vibrate) navigator.vibrate(15);
 }

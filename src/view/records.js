@@ -134,7 +134,7 @@ let lastAutoRecordMsg = "", lastAutoRecordInfo = "";
 
 /* ---------- 매도·수익 기록 ---------- */
 const TRADES_KEY = LEV_TICKER.toLowerCase() + "_trades_v1";
-function loadTrades() { try { const a = JSON.parse(localStorage.getItem(TRADES_KEY) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+//@@include lib:loadTrades
 function saveTrades(a) { try { localStorage.setItem(TRADES_KEY, JSON.stringify(a.slice().sort((x, y) => x.sellDate < y.sellDate ? -1 : x.sellDate > y.sellDate ? 1 : x.id - y.id))); } catch (e) {} }
 const tradeTombOf = t => "T|" + (t && t.auto ? "sell:" + t.sellDate : "t:" + (t && t.id));
 /* 보유 전량 매도 → 거래 1건 생성 (그 사이클의 매수 기록을 안에 보관) + 매수 기록 비우기 */

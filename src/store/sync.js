@@ -13,7 +13,7 @@ const lsDel = k => { try { localStorage.removeItem(k); } catch (e) {} };
 const parseArr = v => { try { const a = JSON.parse(v || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } };
 const recKeyOf = r => r && r.autoRecorded ? "auto:" + r.date : "id:" + (r && r.id);
 function syncMeta() { try { return Object.assign({ tombs: [], last: 0, dirty: false }, JSON.parse(lsGet(SYNC.metaKey) || "{}")); } catch (e) { return { tombs: [], last: 0, dirty: false }; } }
-function saveSyncMeta(m) { lsSet(SYNC.metaKey, JSON.stringify(m)); }
+//@@include lib:saveSyncMeta
 const syncTok = () => lsGet(SYNC.tokKey) || "";
 const syncGist = () => lsGet(SYNC.gistKey) || "";
 const syncDevice = () => window.__MUHAN_BOT__ ? "봇" : /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent) ? "모바일" : "PC";
@@ -36,20 +36,9 @@ Storage.prototype.setItem = function (k, v) {
   }
   return __lsSet.call(this, k, v);
 };
-function syncSchedule(ms) { if (!syncTok() || !syncGist()) return; clearTimeout(__syncTimer); __syncTimer = setTimeout(() => syncNow("auto"), ms); }
+//@@include lib:syncSchedule
 
-async function gh(path, opt) {
-  opt = opt || {};
-  const headers = { Authorization: "Bearer " + syncTok(), Accept: "application/vnd.github+json" };
-  if (opt.body) headers["Content-Type"] = "application/json";
-  let r;
-  try { r = await fetch("https://api.github.com" + path, { method: opt.method || "GET", headers, body: opt.body, cache: "no-store" }); }
-  catch (e) { throw new Error("인터넷 연결 없음 · 연결되면 자동으로 다시 맞춥니다"); }
-  if (r.status === 401) throw new Error("토큰이 틀렸거나 만료됐습니다. 새 토큰으로 다시 연결하세요");
-  if (r.status === 403 || r.status === 404) throw new Error("토큰에 gist 권한이 없거나 동기화 Gist를 찾을 수 없습니다 (" + r.status + ")");
-  if (!r.ok) throw new Error("GitHub 응답 오류 " + r.status);
-  return r.json();
-}
+//@@include lib:gh
 const sortRecs = a => a.slice().sort((x, y) => x.date !== y.date ? (x.date < y.date ? -1 : 1) : (x.id || 0) - (y.id || 0));
 const canonTrades = a => JSON.stringify((a || []).map(t => [tradeTombOf(t), t.qty, t.sellPrice]).sort());
 const canonRecs = a => JSON.stringify(sortRecs(a || []).map(r => [recKeyOf(r), r.date, r.qty, r.price]));

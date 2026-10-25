@@ -122,18 +122,7 @@ function renderLocGuideCard() {
 
 /* ---------- 자동주문 파일 저장 (Termux 봇 연동) ---------- */
 let lastLocOrder = null;
-function exportLocOrder() {
-  if (!lastLocOrder || !lastLocOrder.orders.length) { showCopyToast("내보낼 주문이 없습니다", false); return; }
-  const name = `loc_orders_${lastLocOrder.symbol}_${lastLocOrder.basis_close_date}.json`;
-  try {
-    const blob = new Blob([JSON.stringify(lastLocOrder, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob); a.download = name;
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 1500);
-    showCopyToast(`✓ ${name} 저장됨 (다운로드 폴더)`, true);
-  } catch (e) { showCopyToast("저장 실패: " + e.message, false); }
-}
+//@@include lib:exportLocOrder
 document.addEventListener("click", e => { if (e.target.closest("[data-export-loc]")) exportLocOrder(); });
 
 /* ---------- 숫자 탭 복사 (LOC 가이드) ---------- */
@@ -152,21 +141,8 @@ async function copyText(text) {
     return ok;
   } catch (e) { return false; }
 }
-function showCopyToast(msg, ok) {
-  let t = document.getElementById("copyToast");
-  if (!t) { t = document.createElement("div"); t.id = "copyToast"; document.body.appendChild(t); }
-  t.textContent = msg; t.className = "copy-toast show" + (ok ? "" : " fail");
-  clearTimeout(showCopyToast._tm);
-  showCopyToast._tm = setTimeout(() => { t.className = "copy-toast"; }, 1600);
-}
-async function handleCopyTap(el) {
-  const text = el.dataset.copy, label = el.dataset.label || "값";
-  const ok = await copyText(text);
-  el.classList.add(ok ? "copied" : "copy-fail");
-  setTimeout(() => el.classList.remove("copied", "copy-fail"), 1200);
-  showCopyToast(ok ? `✓ ${label} ${text} 복사됨` : `복사 실패 — 길게 눌러 직접 복사하세요 (${text})`, ok);
-  if (ok && navigator.vibrate) navigator.vibrate(15);
-}
+//@@include lib:showCopyToast
+//@@include lib:handleCopyTap
 document.addEventListener("click", e => {
   const el = e.target.closest(".copyable[data-copy]");
   if (el) handleCopyTap(el);
