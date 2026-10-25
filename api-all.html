@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://api.github.com https://gist.githubusercontent.com https://raw.githubusercontent.com https://api.twelvedata.com https://finnhub.io https://www.alphavantage.co https://production.dataviz.cnn.io https://openapi.imeritz.com https://api.telegram.org https://ntfy.sh https://api.cron-job.org https://www.cmegroup.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="version" content="V1.38-261025-MeritzAutoOrder-All">
+<meta name="version" content="V1.39-261025-MeritzAutoOrder-All">
 <meta name="release-date" content="261022">
 <meta name="theme-color" content="#0B1220">
 <link rel="manifest" href="manifest.webmanifest">
-<title>자동주문(통합) (V1.38 - 261025)</title>
+<title>자동주문(통합) (V1.39 - 261025)</title>
 <style>
   :root{--bg:#0B1220;--panel:#111A2C;--panel-2:#16213A;--border:#22314F;--text:#E6EDF7;--text-dim:#93A3BD;--text-faint:#62718C;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--down:#F0475A;--violet:#8B5CF6;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased;}
@@ -23,6 +23,7 @@
   .pos{font-size:12.5px;color:var(--text-dim);margin:6px 0 2px;padding:6px 10px;border-radius:9px;background:rgba(255,255,255,0.035);line-height:1.6;} .pos b{color:var(--text,#E6EDF7);} .pos b.up{color:#38D98C;} .pos b.dn{color:#F0475A;}
   .rl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0 2px;}
   .rp{font-size:11.5px;font-weight:900;padding:3px 9px;border-radius:999px;border:1.5px solid;white-space:nowrap;}
+  a.rl-a{text-decoration:none;cursor:pointer;} a.rl-a:hover{filter:brightness(1.12);}
   .rp.no{color:#fff;background:#F0475A;border-color:#F0475A;} .rp.rule{color:#1A1203;background:var(--amber);border-color:var(--amber);} .rp.bt{color:#04211C;background:var(--glow);border-color:var(--glow);}
   .rp.manual{color:var(--text);background:rgba(75,90,115,.25);border-color:var(--border);} .rp.st{color:var(--amber);background:rgba(245,165,36,.12);border-color:rgba(245,165,36,.55);font-weight:800;white-space:normal;}
   .rv{font-size:12px;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--text-dim);}
@@ -81,7 +82,7 @@
 </head>
 <body>
 <div class="app">
-  <div class="top"><span class="mono" id="ver" style="color:var(--text-faint)">V1.38 (261025)</span></div>
+  <div class="top"><span class="mono" id="ver" style="color:var(--text-faint)">V1.39 (261025)</span></div>
   <h1>🔌 자동주문(통합) <a class="hub-pill" href="./" aria-label="허브로 가기">🏠 허브</a></h1><script>if(/[?&]embed=/.test(location.search)){var _hp=document.querySelector(".hub-pill");if(_hp)_hp.remove();}</script>
   <p class="sub">SOXL · TQQQ · QLD무한매수 · QLD평생매수 — 열면 4종목 계산, ⚡ 한 번에 실제 주문</p>
   <div id="msg"></div>
@@ -172,7 +173,7 @@
   <button class="tb" data-p="pg-setup"><span class="ic">🛠</span>설정</button>
 </nav>
 <script>
-const APP_VERSION = "V1.38", RELEASE_DATE = "261025";
+const APP_VERSION = "V1.39", RELEASE_DATE = "261025";
 try { document.getElementById("ver").textContent = `${APP_VERSION} (${RELEASE_DATE})`; document.title = `자동주문(통합) (${APP_VERSION} - ${RELEASE_DATE})`; } catch (e) {}   // 화면 버전 = 항상 APP_VERSION
 /* 4개 전략 = (분석 앱 · 봇 설정 파일 · 동기화 파일 · Gist 안 종목 키) */
 const S = [
@@ -239,56 +240,59 @@ async function writeFiles(map) {           // { 파일명: 객체 } → Gist 한
 }
 
 /* 오늘의 LOC: 각 분석 앱을 보이지 않게 열어 lastLocOrder 를 받는다 (봇과 같은 코드 · 같은 기록) — 시세 API 한도 때문에 차례로 */
-function computePlan(app) {
+function computePlan(app, gate) {   // gate: 앞 종목 계산이 끝나면 풀리는 Promise — 페이지 로드는 동시에, 시세 호출(클릭)만 차례로
   return new Promise((resolve, reject) => {
     const f = document.createElement("iframe"); f.className = "plan-frame"; f.setAttribute("aria-hidden", "true"); f.tabIndex = -1;
     f.src = `${app}?embed=api&t=${Date.now()}`;
-    const t0 = Date.now(); let clicked = 0, mark = 0;
+    const t0 = Date.now(); let clicked = 0, mark = 0, open = !gate; if (gate) gate.then(() => { open = true; });
     const done = (e, v) => { try { f.remove(); } catch (x) {} e ? reject(e) : resolve(v); };
     const tick = () => {
       let w; try { w = f.contentWindow; } catch (e) {}
       const ev = x => w.eval(x);
       try {
         if (Date.now() - t0 > 150000) return done(new Error("시간 초과 — 시세 API 한도일 수 있어요. 1분 뒤 ↻ 다시 계산"));
-        if (w && !clicked && ev("typeof syncMeta==='function' && typeof lastLocOrder!=='undefined' && (!syncTok() || (syncMeta().last>0 && !__syncBusy))")) {
+        if (w && !clicked && open && ev("typeof syncMeta==='function' && typeof lastLocOrder!=='undefined' && (!syncTok() || (syncMeta().last>0 && !__syncBusy))")) {
           mark = ev("Date.now()"); clicked = Date.now(); w.document.getElementById("fetchBtn").click();
-        } else if (w && clicked && Date.now() - clicked > 2500 && ev(`!!lastLocOrder && Date.parse(lastLocOrder.generated_at) >= ${mark} && !__syncBusy`)) {
+        } else if (w && clicked && Date.now() - clicked > 800 && ev(`!!lastLocOrder && Date.parse(lastLocOrder.generated_at) >= ${mark} && !__syncBusy`)) {
           return done(null, JSON.parse(ev("JSON.stringify(lastLocOrder)")));
         }
       } catch (e) {}
-      setTimeout(tick, 400);
+      setTimeout(tick, 150);
     };
-    f.addEventListener("load", () => setTimeout(tick, 300));
+    f.addEventListener("load", () => setTimeout(tick, 100));
     document.body.appendChild(f);
   });
 }
 async function computeAll() {
   if (G.busy) return; G.busy = true;
   S.forEach(s => { G.plan[s.id] = null; G.err[s.id] = ""; }); render();
-  for (const s of S) {
-    try { G.plan[s.id] = await computePlan(s.app); } catch (e) { G.err[s.id] = e.message; }
-    render();
-  }
+  let prev = Promise.resolve();
+  const jobs = S.map(s => {
+    const job = computePlan(s.app, prev).then(v => { G.plan[s.id] = v; }, e => { G.err[s.id] = e.message; }).then(render);
+    prev = job; return job;
+  });
+  await Promise.all(jobs);
   G.busy = false; render();
 }
 
 /* 화면 */
 const sidesOf = s => { const c = G.cfg[s.cfg] || {}; return Object.assign({ buy: true, sell: !s.life && s.id !== "QLDM" }, (c.sides || {})[s.key] || {}); };
 const codeNow = () => String((G.cfg["muhan-bot.json"] || {}).oder_code || "32");
-function rule(P) {
+const ruleLink = (s, life) => `${s.app}#${life ? "card-seed" : "card-engine"}`;   // 앱의 AI엔진 규칙 카드로 직행 (앱 쪽 jumpToHash 가 처리)
+function rule(P, s) {
   const b = P.bot || {};
   if (b.kind === "lifetime") {
     const m = b.engine_mode === "rule" ? "rule" : "bt";
-    return `<div class="rl">${b.engine_w ? `<span class="rp ${m}">${ML[m]} 적용 중</span><span class="rv">배분 ${b.engine_w.join("/")}% · ${b.engine_n.join("/")}분할</span>` : ""}</div>
+    return `<div class="rl">${b.engine_w ? `<a class="rp ${m} rl-a" href="${ruleLink(s, 1)}" target="_blank" rel="noopener" title="규칙 카드로 이동">${ML[m]} 적용 중 ↗</a><span class="rv">배분 ${b.engine_w.join("/")}% · ${b.engine_n.join("/")}분할</span>` : ""}</div>
       <div class="rl"><span class="rp st">${b.engine_tier ? b.engine_tier + "차 구간 · " : ""}기준가 × (1 − ${(+b.pct || 0).toFixed(1)}%) · 주 1회${b.engine_amt ? " · 1회 " + $0(b.engine_amt) : ""}</span>${b.engine_seed ? `<span class="rv">시드 ${$0(b.engine_seed)}</span>` : ""}${b.engine_remain != null ? `<span class="rv">잔여 ${$0(b.engine_remain)}</span>` : ""}</div>`;
   }
   const m = ML[b.param_mode] ? b.param_mode : "rule";
-  return `<div class="rl"><span class="rp ${m}">${ML[m]} 적용 중</span>${b.splits ? `<span class="rv">${b.splits}분할${b.mult ? ` · 2단계 ×${b.mult}${b.max_rounds ? ` (총 ${b.max_rounds}회 = 1단계 ${b.stage1_n} + 2단계 ${b.max_rounds - b.stage1_n})` : ""}` : ""}</span>` : ""}</div>
+  return `<div class="rl"><a class="rp ${m} rl-a" href="${ruleLink(s)}" target="_blank" rel="noopener" title="규칙 카드로 이동">${ML[m]} 적용 중 ↗</a>${b.splits ? `<span class="rv">${b.splits}분할${b.mult ? ` · 2단계 ×${b.mult}${b.max_rounds ? ` (총 ${b.max_rounds}회 = 1단계 ${b.stage1_n} + 2단계 ${b.max_rounds - b.stage1_n})` : ""}` : ""}</span>` : ""}</div>
     <div class="rl"><span class="rp st">${esc(P.stage || "")}</span>${b.sell_pct ? `<span class="rv">익절 +${(+b.sell_pct).toFixed(2)}%</span>` : ""}${b.seed ? `<span class="rv">시드 ${$0(b.seed)}</span>` : ""}</div>`;
 }
 function pos(P) {                         // 📦 현재 상태: 앱 계획(lastLocOrder)의 보유수량·평단 · 종가 대비
   const q = +P.holding_qty || 0, a = +P.avg_price || 0, c = +(P.bot || {}).last_close || 0;
-  return `<div class="pos"><div class="pl"><span>📦 보유 <b>${q ? q.toLocaleString("en-US") + "주" : "없음"}</b></span>${q && a ? `<span>평단 <b>${usd(a)}</b></span>${c ? `<b class="pc ${c >= a ? "up" : "dn"}">${c >= a ? "+" : ""}${((c / a - 1) * 100).toFixed(2)}%</b>` : ""}` : ""}</div>${rnd(P)}</div>`;
+  return `<div class="pos"><div class="pl"><span>📦 보유 <b>${q ? q.toLocaleString("en-US") + "주" : "없음"}</b></span>${q && a ? `<span>평단 <b>${usd(a)}</b></span>${c ? `<b class="pc ${c >= a ? "up" : "dn"}">${c >= a ? "+" : ""}${((c / a - 1) * 100).toFixed(2)}%</b>` : ""}` : ""}${c ? `<span>종가 <b>${usd(c)}</b>${P.basis_close_date ? ` <small>(${esc(String(P.basis_close_date).slice(5).replace("-", "."))})</small>` : ""}</span>` : ""}</div>${rnd(P)}</div>`;
 }
 function rnd(P) {                         // 📍 분할매수 회차: X회차 / 총 N회 (무한매수 = 앱 회차 · 평생매수 = 엔진 분할 합계)
   const b = P.bot || {};
@@ -382,7 +386,7 @@ function render() {
     const o = Object.fromEntries((P.orders || []).map(x => [x.side, x]));
     const cn = CODES.find(c => c[0] === code)[1], cm = cn.split(" (")[0], cs = cn.includes(" (") ? cn.slice(cn.indexOf(" (") + 2, -1) : "";
     const line = (side, lab) => o[side] ? `<div class="ord ${side} ${e[side] ? "on" : "off"}"><span class="sd">${lab}</span><span class="cn">${cm}${cs ? `<small>${cs}</small>` : ""}</span><b>${mk ? "시장가" : usd(o[side].price)}<em>× ${(+o[side].qty).toLocaleString("en-US")}주</em></b></div>` : "";
-    return `<div class="sym${e.conn ? "" : " nc"}">${head}${pos(P)}${rule(P)}${gadj(s, P)}${adj(s, P)}${line("buy", "매수")}${line("sell", "매도")}${!o.buy && !o.sell ? `<div class="busy">오늘 규칙상 주문 없음${sd.buy ? " (☑매수면 봇이 같은 공식으로 주문)" : ""}</div>` : ""}${inst ? "" : `<div class="busy">⚠ 봇 미설치 — 🛠 설정에서 해당 앱으로</div>`}</div>`;
+    return `<div class="sym${e.conn ? "" : " nc"}">${head}${pos(P)}${rule(P, s)}${gadj(s, P)}${adj(s, P)}${line("buy", "매수")}${line("sell", "매도")}${!o.buy && !o.sell ? `<div class="busy">오늘 규칙상 주문 없음${sd.buy ? " (☑매수면 봇이 같은 공식으로 주문)" : ""}</div>` : ""}${inst ? "" : `<div class="busy">⚠ 봇 미설치 — 🛠 설정에서 해당 앱으로</div>`}</div>`;
   }).join("") + parkSym();
 }
 /* 💱 시드 달러 ↔ 원화 (환율 = 매일 10:10 서버 저장 data/macro.json · 입력하는 즉시 자동 표시) */
