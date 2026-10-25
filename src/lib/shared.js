@@ -147,3 +147,15 @@ function showCopyToast(msg, ok) {
 }
 //@@fn syncSchedule
 function syncSchedule(ms) { if (!syncTok() || !syncGist()) return; clearTimeout(__syncTimer); __syncTimer = setTimeout(() => syncNow("auto"), ms); }
+//@@fn computeCciSeries
+function computeCciSeries(hist, period) {
+  const out = [];
+  for (let i = period - 1; i < hist.length; i++) {
+    const window = hist.slice(i - period + 1, i + 1).map(d => d.y);
+    const sma = window.reduce((a, b) => a + b, 0) / period;
+    const meanDev = window.reduce((a, b) => a + Math.abs(b - sma), 0) / period;
+    const cci = meanDev === 0 ? 0 : (hist[i].y - sma) / (0.015 * meanDev);
+    out.push({ x: hist[i].x, y: cci });
+  }
+  return out;
+}
