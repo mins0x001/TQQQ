@@ -215,10 +215,9 @@ function applyViewMode() {
   }
   if (EMBED) return;
   { const bb = document.querySelector('#tabbar .tb[data-p="pg-backup"]'), tb = document.getElementById("tabbar");   // 💾 백업 탭 숨김 — ☁️ Gist 자동 동기화로 충분
-    if (bb && tb) { bb.remove(); tb.style.gridTemplateColumns = `repeat(${tb.querySelectorAll(".tb").length},minmax(0,1fr))`; if (document.getElementById("pg-backup").classList.contains("on")) goTab("pg-order"); } }
+    if (bb && tb) { bb.remove(); tb.style.gridTemplateColumns = `repeat(${tb.querySelectorAll(".tb").length},minmax(0,1fr))`; if (document.getElementById("pg-backup").classList.contains("on")) goTab("pg-engine"); } }
   setTimeout(() => { const b = document.getElementById("fetchBtn"); if (b && !b.disabled && typeof lastLocOrder !== "undefined" && !lastLocOrder) b.click(); }, 700);   // 열면 시세 자동 1회
-  const o = document.getElementById("pg-order");
-  if (o) o.insertAdjacentHTML("afterbegin", `<a class="solo-note" href="api-qld.html#pg-qld">🔌 자동주문(QLD) ›<small>주 1회 LOC 매수(체결될 때까지 매일)를 증권사 Open API로 자동 접수 · 계좌 현황 · 결과</small></a>`);
+  { const o = document.getElementById("pg-order"); if (o && o.classList.contains("on")) goTab("pg-engine"); }   // 종목 탭 삭제(261025): 저장된 탭이 종목이면 AI엔진으로 · 카드는 숨김 DOM으로 유지(자동주문 연동용)
 }
 //@@include lib:initTabs
 /* 상단 시세 영역 접기/펼치기 (기기별 기억) */
