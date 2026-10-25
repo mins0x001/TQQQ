@@ -20,4 +20,4 @@
 - src/view/{streak,seedsim,records,locguide,vol}.js 화면 카드 · src/shell/app.js 탭·백업·앱 뼈대
 - template.html 에는 `//@@include-file 경로` 로 연결됨. 빌드 결과는 모듈화 전과 바이트 동일.
 
-- qld.html(QLD평생): src/qld/template.html + src/calc/qld.js(계산 37개) → build_mu.py 가 함께 생성
+- qld.html(QLD평생): src/qld/template.html + src/qld/{market,streak,strategy,guide,shell,macro,trades,excel,sync}.js + src/calc/qld.js(계산 37개) → build_mu.py 가 함께 생성
