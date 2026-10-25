@@ -132,32 +132,14 @@ function initQuickNav() {
 
 /* ------------------------ 파일 자체 저장(다운로드) ------------------------ */
 const FILE_NAME = `⟦LEV⟧무한매수_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
-function downloadSelf() {
-  try {
-    const blob = new Blob([__PRISTINE_HTML], { type: "text/html;charset=utf-8" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = FILE_NAME;
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 1500);
-  } catch (e) { alert("저장에 실패했습니다: " + e.message); }
-}
+//@@include lib:downloadSelf
 document.getElementById("dlName").textContent = FILE_NAME;
 document.getElementById("downloadSelfBtn").addEventListener("click", downloadSelf);
 /* ------------------------ 기록 백업 · 복원 (온라인 이전용) ------------------------ */
 const BACKUP_PREFIXES = ["⟦lev⟧_"];
 const BACKUP_APP = "⟦LEV⟧";
-function collectBackup() {
-  const data = {};
-  try {
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (BACKUP_PREFIXES.some(p => k.startsWith(p))) data[k] = localStorage.getItem(k);
-    }
-  } catch (e) {}
-  return { schema: "dash-backup/1", app: BACKUP_APP, version: APP_VERSION, saved: new Date().toISOString(), data };
-}
-function setBkMsg(t, ok) { const m = document.getElementById("bkMsg"); m.textContent = t; m.className = "bk-msg " + (ok ? "ok" : "err"); }
+//@@include lib:collectBackup
+//@@include lib:setBkMsg
 document.getElementById("bkCopyBtn").addEventListener("click", async () => {
   const b = collectBackup();
   const n = Object.keys(b.data).length;
@@ -193,31 +175,13 @@ document.getElementById("bkRestoreBtn").addEventListener("click", () => {
 /* ------------------------ 하단 탭바: 화면 전환 ------------------------ */
 const TAB_SS_KEY = "⟦lev⟧_tab_v1";
 const __tabScroll = {};
-function goTab(id, opts) {
-  const pg = document.getElementById(id);
-  if (!pg) return;
-  const cur = document.querySelector(".page.on");
-  if (cur && cur !== pg) __tabScroll[cur.id] = window.scrollY;
-  document.querySelectorAll(".page").forEach(p => p.classList.toggle("on", p === pg));
-  document.querySelectorAll("#tabbar .tb").forEach(b => { const on = b.dataset.p === id; b.classList.toggle("on", on); b.setAttribute("aria-selected", on ? "true" : "false"); });
-  try { sessionStorage.setItem(TAB_SS_KEY, id); } catch (e) {}
-  const y = (opts && opts.top) ? 0 : (__tabScroll[id] || 0);
-  window.scrollTo({ top: y, behavior: "instant" });
-}
+//@@include lib:goTab
 /* V0.73 화면 모드 — 같은 파일 하나로 두 곳에서 쓴다 (기능을 두 번 만들지 않음)
 ⟦@s036⟧   · ?embed=api   : 증권사 앱이 보이지 않게 띄워 오늘의 LOC 계산 (화면 무관)
    · 단독 실행     : AI 분석 앱 → 주문·사이클·백업은 자동주문(해외)로 안내 */
 
 /* 공통: 시세 재시도 */
-async function fetchRetry(u, opt) {        // 무료 시세 API 는 여러 앱이 동시에 부르면 한도(429)·순간 끊김으로 'Failed to fetch' — 1.5·4·8초 뒤 다시
-  let last;
-  for (const w of [0, 1500, 4000, 8000]) {
-    if (w) await new Promise(r => setTimeout(r, w));
-    try { const r = await fetch(u, opt); if (r.status !== 429) return r; last = new Error("요청 한도 초과(429)"); }
-    catch (e) { last = e; }
-  }
-  throw new Error((last && last.message) + " — 4번 시도 실패 (인터넷 연결 또는 시세 API 한도 · 1분 뒤 다시)");
-}
+//@@include lib:fetchRetry
 const EMBED = (new URLSearchParams(location.search).get("embed") || "").toLowerCase();
 function applyViewMode() {
   if (EMBED === "panel") {
@@ -237,37 +201,7 @@ function applyViewMode() {
 ⟦@s037⟧  const cur = document.querySelector(".page.on");
   if (!cur || cur.id === "pg-backup") goTab("pg-engine", { top: true });
 }
-function initTabs() {
-  document.querySelectorAll("#tabbar .tb").forEach(b => b.addEventListener("click", () => {
-    const already = b.classList.contains("on");
-    goTab(b.dataset.p, { top: already });   // 같은 탭을 다시 누르면 맨 위로
-  }));
-  document.addEventListener("click", e => { const g = e.target.closest("[data-goto]"); if (g) goTab(g.dataset.goto, { top: true }); });
-  let saved = null;
-  try { saved = sessionStorage.getItem(TAB_SS_KEY); } catch (e) {}
-  if (saved && document.getElementById(saved)) goTab(saved);
-  applyViewMode();
-  /* 카드가 다시 그려질 때 생기는 설명 문구(각주)를 📖설명 탭으로 옮김 + 주문 탭 알림 점 */
-  const dynBox = {};
-  document.querySelectorAll(".help-dyn").forEach(d => dynBox[d.dataset.for] = d);
-  let pend = false;
-  const sync = () => {
-    pend = false;
-    Object.keys(dynBox).forEach(cid => {
-      const card = document.getElementById(cid);
-      if (!card) return;
-      const notes = card.querySelectorAll("p.desc");
-      if (!notes.length) return;
-      dynBox[cid].innerHTML = "";
-      notes.forEach(n => { n.removeAttribute("style"); dynBox[cid].appendChild(n); });
-    });
-    const t0 = document.querySelector('#tabbar .tb[data-p="pg-order"]');
-    if (t0) t0.classList.toggle("alert", !!document.querySelector(".cycle-alert"));
-  };
-  new MutationObserver(() => { if (!pend) { pend = true; requestAnimationFrame(sync); } })
-    .observe(document.body, { childList: true, subtree: true });
-  sync();
-}
+//@@include lib:initTabs
 /* 상단 시세 영역 접기/펼치기 (기기별 기억) */
 (function initHeaderToggle() {
   const KEY = "⟦lev⟧_hdr_open_v1";

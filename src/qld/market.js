@@ -1,14 +1,5 @@
 /* ---------- Finnhub ---------- */
-async function fhFetch(endpoint, params = {}) {
-  const url = new URL(`${FINNHUB_BASE_URL}${endpoint}`);
-  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
-  url.searchParams.set("token", FINNHUB_API_KEY);
-  const res = await fetchRetry(url.toString());
-  if (!res.ok) throw new Error(`HTTP 오류 (${res.status})`);
-  const data = await res.json();
-  if (data.error) throw new Error(data.error);
-  return data;
-}
+//@@include lib:fhFetch
 async function fetchQuote(symbol) {
   const data = await fhFetch("/quote", { symbol });
   if (!data || data.c === undefined || data.c === 0) throw new Error(`${symbol} 시세를 가져오지 못했습니다.`);
@@ -18,15 +9,7 @@ async function fetchQuote(symbol) {
 /* ---------- Twelve Data ---------- */
 /* 📦 매일 한국 10:10 자동 저장된 일봉(data/<심볼>.json)을 먼저 읽음 — 최신이면 시세 API 호출 없음 (한도 초과 실패↓ · 속도↑)
    유효 판단: 파일의 asof_ny(뉴욕 시각) ≥ 가장 최근 평일 뉴욕 16:15 마감 → 아니면(마감 직후~10:10 등) 기존처럼 API */
-function lastNyClose() {
-  const f = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23", weekday: "short" });
-  for (let k = 0; k < 8; k++) {
-    const p = Object.fromEntries(f.formatToParts(new Date(Date.now() - k * 864e5)).map(o => [o.type, o.value]));
-    if (p.weekday === "Sat" || p.weekday === "Sun" || (k === 0 && `${p.hour}:${p.minute}` < "16:15")) continue;
-    return `${p.year}-${p.month}-${p.day} 16:15`;
-  }
-  return "9999";
-}
+//@@include time:lastNyClose
 let dataSrc = {};
 async function dataFileBars(symbol, n) {
   try {
@@ -63,15 +46,7 @@ async function tdFetchTimeSeries(symbol, outputsize) {
 /* ---------- 미확정(장중) 일봉 제외 ----------
    미국 장중(뉴욕 16:15 이전)에 받은 일봉의 마지막 봉은 '오늘 진행 중인 봉'이고 close는 확정 종가가 아닌 현재가다.
    LOC 기준가·자동 저장이 장중 가격에 흔들리지 않도록 이 봉을 뺀다. */
-function nyNowParts() {
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit",
-    hour: "2-digit", minute: "2-digit", hour12: false
-  }).formatToParts(new Date());
-  const get = t => (parts.find(p => p.type === t) || {}).value;
-  const hour = parseInt(get("hour"), 10) % 24;
-  return { date: `${get("year")}-${get("month")}-${get("day")}`, minutes: hour * 60 + parseInt(get("minute"), 10) };
-}
+//@@include time:nyNowParts
 function dropIncompleteBar(bars) {
   if (!bars || bars.length === 0) return bars;
   const ny = nyNowParts();

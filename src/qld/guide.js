@@ -374,16 +374,7 @@ function renderTodayCard() {
     </div>
     <p class="copy-hint">👆 매수가·수량 숫자를 누르면 각각 복사됩니다 ($·쉼표 없이 숫자만) · 수량은 아래 LOC 카드의 원화 예산으로 조정</p>`;
 }
-function exportLocOrder() {
-  if (!lastLocOrder || !lastLocOrder.orders.length) { showCopyToast("내보낼 주문이 없습니다", false); return; }
-  const name = `loc_orders_${lastLocOrder.symbol}_${lastLocOrder.basis_close_date}.json`;
-  try {
-    const blob = new Blob([JSON.stringify(lastLocOrder, null, 2)], { type: "application/json" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
-    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1500);
-    showCopyToast(`✓ ${name} 저장됨 (다운로드 폴더)`, true);
-  } catch (e) { showCopyToast("저장 실패: " + e.message, false); }
-}
+//@@include lib:exportLocOrder
 
 /* ---------- 숫자 탭 복사 ---------- */
 async function copyText(text) {
@@ -395,19 +386,8 @@ async function copyText(text) {
     const ok = document.execCommand("copy"); document.body.removeChild(ta); return ok;
   } catch (e) { return false; }
 }
-function showCopyToast(msg, ok) {
-  let t = document.getElementById("copyToast");
-  if (!t) { t = document.createElement("div"); t.id = "copyToast"; document.body.appendChild(t); }
-  t.textContent = msg; t.className = "copy-toast show" + (ok ? "" : " fail");
-  clearTimeout(showCopyToast._tm); showCopyToast._tm = setTimeout(() => { t.className = "copy-toast"; }, 1600);
-}
-async function handleCopyTap(el) {
-  const text = el.dataset.copy, label = el.dataset.label || "값";
-  const ok = await copyText(text);
-  el.classList.add(ok ? "copied" : "copy-fail"); setTimeout(() => el.classList.remove("copied", "copy-fail"), 1200);
-  showCopyToast(ok ? `✓ ${label} ${text} 복사됨` : `복사 실패 — 길게 눌러 직접 복사하세요 (${text})`, ok);
-  if (ok && navigator.vibrate) navigator.vibrate(15);
-}
+//@@include lib:showCopyToast
+//@@include lib:handleCopyTap
 document.addEventListener("click", e => {
   const c = e.target.closest(".copyable[data-copy]"); if (c) handleCopyTap(c);
   if (e.target.closest("[data-export-loc]")) exportLocOrder();

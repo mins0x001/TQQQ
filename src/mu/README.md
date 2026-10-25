@@ -21,3 +21,4 @@
 - template.html 에는 `//@@include-file 경로` 로 연결됨. 빌드 결과는 모듈화 전과 바이트 동일.
 
 - qld.html(QLD평생): src/qld/template.html + src/qld/{market,streak,strategy,guide,shell,macro,trades,excel,sync}.js + src/calc/qld.js(계산 37개) → build_mu.py 가 함께 생성
+- src/lib/shared.js: 종목앱·QLD평생이 같이 쓰는 공통 함수(탭·백업·동기화 일부·배너·복사 등) — 한 곳만 고치면 양쪽 반영
