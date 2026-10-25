@@ -27,4 +27,12 @@ for n, c in CFG.items():
         same = rd(f"{n}.html") == s; bad += not same; print(("OK  " if same else "DIFF"), n)
     else:
         open(f"{ROOT}/{n}.html", "w", encoding="utf-8", newline="").write(s); print("built", n, len(s))
+# qld.html (QLD평생): 템플릿 + 모듈 포함만 (앱별 토큰 없음)
+Q = rd("src/qld/template.html")
+Q = re.sub(r"^//@@include-file (\S+)$", lambda m: rd(m.group(1))[:-1], Q, flags=re.M)
+Q = re.sub(r"^//@@include ([\w:]+)$", inc, Q, flags=re.M)
+if "--check" in sys.argv:
+    same = rd("qld.html") == Q; bad += not same; print(("OK  " if same else "DIFF"), "qld")
+else:
+    open(f"{ROOT}/qld.html", "w", encoding="utf-8", newline="").write(Q); print("built qld", len(Q))
 sys.exit(1 if bad else 0)
