@@ -14,3 +14,8 @@
 
 원복: GitHub 의 `backup/pre-modular-261025` 브랜치 = 모듈화 직전 상태.
 `tools/factor_mu.py` 는 이 구조를 처음 만들 때 쓴 1회용 스크립트입니다 (다시 돌리면 현재 HTML 기준으로 재생성).
+
+## 파일 구조 (include-file)
+- src/calc/*.js 계산(순수) · src/store/sync.js 저장·동기화 · src/service/*.js 증권사·봇·엑셀
+- src/view/{streak,seedsim,records,locguide,vol}.js 화면 카드 · src/shell/app.js 탭·백업·앱 뼈대
+- template.html 에는 `//@@include-file 경로` 로 연결됨. 빌드 결과는 모듈화 전과 바이트 동일.
