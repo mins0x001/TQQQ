@@ -35,12 +35,6 @@
   "tqqq": "      <div class=\"field\"><label for=\"seedSimSeed1\">시드 ($)</label><input type=\"number\" id=\"seedSimSeed1\" min=\"1\" step=\"any\" inputmode=\"decimal\" value=\"36000\"></div>\n      <div class=\"field\"><label for=\"seedSimSplits1\">분할 수</label><input type=\"number\" id=\"seedSimSplits1\" min=\"1\" step=\"1\" inputmode=\"numeric\" value=\"6\"></div>\n",
   "qldm": "      <div class=\"field\"><label for=\"seedSimSeed1\">시드 ($)</label><input type=\"number\" id=\"seedSimSeed1\" min=\"1\" step=\"any\" inputmode=\"decimal\" value=\"70000\"></div>\n      <div class=\"field\"><label for=\"seedSimSplits1\">분할 수</label><input type=\"number\" id=\"seedSimSplits1\" min=\"1\" step=\"1\" inputmode=\"numeric\" value=\"6\"></div>\n"
  },
- "s006": {
-  "line": 783,
-  "soxl": "      <div class=\"field\"><label for=\"seedSimTp1\">비교 익절 (%)</label><input type=\"number\" id=\"seedSimTp1\" min=\"0.5\" max=\"100\" step=\"0.5\" inputmode=\"decimal\" value=\"13\"></div>\n",
-  "tqqq": "      <div class=\"field\"><label for=\"seedSimTp1\">비교 익절 (%)</label><input type=\"number\" id=\"seedSimTp1\" min=\"0.5\" max=\"100\" step=\"0.5\" inputmode=\"decimal\" value=\"8\"></div>\n",
-  "qldm": "      <div class=\"field\"><label for=\"seedSimTp1\">비교 익절 (%)</label><input type=\"number\" id=\"seedSimTp1\" min=\"0.5\" max=\"100\" step=\"0.5\" inputmode=\"decimal\" value=\"8\"></div>\n"
- },
  "s007": {
   "line": 808,
   "soxl": "        <p><b>문제가 생기면:</b> [🔧 연결 점검]이 증권사 토큰·해외 잔고·주문가능금액·당일 주문·SOXL/TQQQ 시세·앱 주소를 하나씩 확인해, 막힌 곳과 고칠 방법(증권사 공식 응답 코드 기준 — 예: EGW00103 앱키 오류, 0760 해외주식 권한 없음)을 보여 줍니다. 봇이 결과를 남기지 못하고 멈춰도 ‘GitHub 실행’ 줄에 멈춘 단계와 로그 링크가 뜹니다.</p>\n",
@@ -94,18 +88,6 @@
   "soxl": "  const sellPct = (typeof sellPctOverride === \"number\" && sellPctOverride > 0) ? sellPctOverride : a.best.pct;   // VV0.67: 비교용 고정 익절%\n",
   "tqqq": "  const sellPct = (typeof sellPctOverride === \"number\" && sellPctOverride > 0) ? sellPctOverride : a.best.pct;   // VV0.40: 비교용 고정 익절%\n",
   "qldm": "  const sellPct = (typeof sellPctOverride === \"number\" && sellPctOverride > 0) ? sellPctOverride : a.best.pct;   // VV0.40: 비교용 고정 익절%\n"
- },
- "s016": {
-  "line": 1889,
-  "soxl": "/* ---------- VV0.67: 익절% 비교 백테스트 ----------\n",
-  "tqqq": "/* ---------- VV0.40: 익절% 비교 백테스트 ----------\n",
-  "qldm": "/* ---------- VV0.40: 익절% 비교 백테스트 ----------\n"
- },
- "s017": {
-  "line": 1892,
-  "soxl": "const SIM_TP_KEY = \"soxl_sim_tp_v1\";\nconst SIM_TP_DEFAULT = 13;\n",
-  "tqqq": "const SIM_TP_KEY = \"tqqq_sim_tp_v1\";\nconst SIM_TP_DEFAULT = 8;\n",
-  "qldm": "const SIM_TP_KEY = \"qldm_sim_tp_v1\";\nconst SIM_TP_DEFAULT = 8;\n"
  },
  "s018": {
   "line": 2032,
