@@ -1,89 +1,3 @@
-//@@fn findDownStreaks
-function findDownStreaks(hist) {
-  const streaks = [];
-  let i = 1;
-  while (i < hist.length) {
-    if (hist[i].y < hist[i - 1].y) {
-      const startIdx = i; let j = i;
-      while (j + 1 < hist.length && hist[j + 1].y < hist[j].y) j++;
-      streaks.push({ startIdx, endIdx: j, length: j - startIdx + 1, preIdx: startIdx - 1 });
-      i = j + 1;
-    } else i++;
-  }
-  return streaks;
-}
-//@@fn findUpStreaks
-function findUpStreaks(hist) {
-  const streaks = [];
-  let i = 1;
-  while (i < hist.length) {
-    if (hist[i].y > hist[i - 1].y) {
-      const startIdx = i; let j = i;
-      while (j + 1 < hist.length && hist[j + 1].y > hist[j].y) j++;
-      streaks.push({ startIdx, endIdx: j, length: j - startIdx + 1, preIdx: startIdx - 1 });
-      i = j + 1;
-    } else i++;
-  }
-  return streaks;
-}
-//@@fn computeStreakStatsForLength
-function computeStreakStatsForLength(streaks, totalStreaks, hist, k) {
-  const atLeastCount = streaks.filter(s => s.length >= k).length;
-  const probability = totalStreaks > 0 ? (atLeastCount / totalStreaks) * 100 : 0;
-  const exactStreaks = streaks.filter(s => s.length === k);
-  const returns = [];
-  let unresolved = 0;
-  exactStreaks.forEach(s => {
-    const buyPrices = hist.slice(s.startIdx, s.endIdx + 1).map(d => d.y);
-    const totalCost = buyPrices.reduce((a, b) => a + b, 0);
-    const peakPrice = hist[s.preIdx].y;
-    let recoveryIdx = -1;
-    for (let m = s.endIdx + 1; m < hist.length; m++) { if (hist[m].y >= peakPrice) { recoveryIdx = m; break; } }
-    if (recoveryIdx !== -1) returns.push((peakPrice * s.length - totalCost) / totalCost * 100);
-    else unresolved++;
-  });
-  const avgReturn = returns.length > 0 ? returns.reduce((a, b) => a + b, 0) / returns.length : null;
-  return { k, probability, sampleCount: exactStreaks.length, resolvedCount: returns.length, unresolved, avgReturn };
-}
-//@@fn computeStreakStats
-function computeStreakStats(hist) {
-  const streaks = findDownStreaks(hist);
-  if (streaks.length === 0) return null;
-  const maxLen = Math.max(...streaks.map(s => s.length));
-  const rows = [];
-  for (let k = 2; k <= maxLen; k++) rows.push(computeStreakStatsForLength(streaks, streaks.length, hist, k));
-  return { maxLen, totalStreaks: streaks.length, streaks, rows };
-}
-//@@fn computeDayChangeCounts
-function computeDayChangeCounts(hist) {
-  let downDays = 0, upFlatDays = 0;
-  for (let i = 1; i < hist.length; i++) { if (hist[i].y < hist[i - 1].y) downDays++; else upFlatDays++; }
-  return { downDays, upFlatDays };
-}
-//@@fn computeUpStreakStatsForLength
-function computeUpStreakStatsForLength(streaks, totalStreaks, hist, k) {
-  const atLeastCount = streaks.filter(s => s.length >= k).length;
-  const probability = totalStreaks > 0 ? (atLeastCount / totalStreaks) * 100 : 0;
-  const exactStreaks = streaks.filter(s => s.length === k);
-  const riseRates = exactStreaks.map(s => (hist[s.endIdx].y - hist[s.preIdx].y) / hist[s.preIdx].y * 100);
-  const avgRiseRate = riseRates.length > 0 ? riseRates.reduce((a, b) => a + b, 0) / riseRates.length : null;
-  return { k, probability, sampleCount: exactStreaks.length, avgRiseRate };
-}
-//@@fn computeUpStreakStats
-function computeUpStreakStats(hist) {
-  const streaks = findUpStreaks(hist);
-  if (streaks.length === 0) return null;
-  const maxLen = Math.max(...streaks.map(s => s.length));
-  const rows = [];
-  for (let k = 2; k <= maxLen; k++) rows.push(computeUpStreakStatsForLength(streaks, streaks.length, hist, k));
-  return { maxLen, totalStreaks: streaks.length, streaks, rows };
-}
-//@@fn computeUpDayChangeCounts
-function computeUpDayChangeCounts(hist) {
-  let upDays = 0, downFlatDays = 0;
-  for (let i = 1; i < hist.length; i++) { if (hist[i].y > hist[i - 1].y) upDays++; else downFlatDays++; }
-  return { upDays, downFlatDays };
-}
 //@@fn computeStreakSummary
 function computeStreakSummary(hist, isDown) {
   const streaks = isDown ? findDownStreaks(hist) : findUpStreaks(hist);
@@ -108,21 +22,6 @@ function computeCurrentQldStreakStatus(hist) {
   if (!streak) return { direction: "flat" };
   const preClose = hist[streak.preIdx].y, endClose = hist[streak.endIdx].y;
   return { direction, preDate: hist[streak.preIdx].x, preClose, startDate: hist[streak.startIdx].x, endDate: hist[streak.endIdx].x, length: streak.length, endClose, rate: (endClose - preClose) / preClose * 100 };
-}
-//@@fn trimmedMeanExcludingMinMax
-function trimmedMeanExcludingMinMax(values) {
-  if (!values || values.length === 0) return null;
-  if (values.length <= 2) return values.reduce((a, b) => a + b, 0) / values.length;
-  const maxV = Math.max(...values), minV = Math.min(...values);
-  let removedMax = false, removedMin = false;
-  const filtered = [];
-  for (const v of values) {
-    if (!removedMax && v === maxV) { removedMax = true; continue; }
-    if (!removedMin && v === minV) { removedMin = true; continue; }
-    filtered.push(v);
-  }
-  if (filtered.length === 0) return null;
-  return filtered.reduce((a, b) => a + b, 0) / filtered.length;
 }
 //@@fn findAccumulateBuys
 function findAccumulateBuys(hist, thresholdPct) {   // V0.22: 주중 아무 날이나 종가가 기준가 대비 −목표% 이하면 매수 · 주 1회까지
@@ -335,26 +234,11 @@ function locQtyFromBudget(budgetKrw, px) {
   const raw = budgetKrw / liveFx.rate / px;
   return { raw, qty: Math.floor(raw / LOC_LOT) * LOC_LOT };
 }
-//@@fn fmtShortDate
-function fmtShortDate(t) { return new Date(t).toLocaleDateString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit" }); }
-//@@fn fmtDateFull
-function fmtDateFull(t) { return new Date(t).toISOString().split("T")[0]; }
-//@@fn fmtPctSigned
-function fmtPctSigned(n, digits = 2) { return (n === null || n === undefined || isNaN(n)) ? "--" : (n >= 0 ? "+" : "") + n.toFixed(digits) + "%"; }
-//@@fn fmtPct1
-function fmtPct1(n) { return (n === null || n === undefined || isNaN(n)) ? "--" : n.toFixed(1) + "%"; }
 //@@fn fmtMoneySigned
 function fmtMoneySigned(n) {
   if (n === null || n === undefined || isNaN(n)) return "--";
   return (n >= 0 ? "+" : "-") + "$" + Math.abs(n).toFixed(2);
 }
-//@@fn fmtCompactDate
-function fmtCompactDate(t) {
-  const d = new Date(t), p = n => String(n).padStart(2, "0");
-  return `${String(d.getUTCFullYear()).slice(2)}.${p(d.getUTCMonth() + 1)}.${p(d.getUTCDate())}`;
-}
-//@@fn fmtUsd0
-function fmtUsd0(n) { return (n === null || n === undefined || isNaN(n)) ? "--" : "$" + Math.round(n).toLocaleString("en-US"); }
 //@@fn positionAt
 function positionAt(valid, untilDate, excludeId) {
   const ev = [];

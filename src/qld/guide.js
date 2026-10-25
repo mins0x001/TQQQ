@@ -79,9 +79,8 @@ function computeGuidePlan(ctx, valid) {
 }
 
 /* ============================ V0.15 추가 로직 ============================ */
-//@@include qld:fmtCompactDate
-//@@include qld:fmtUsd0
-
+//@@include format:fmtCompactDate
+//@@include format:fmtUsd0
 /* 날짜 기본값: 어제 (시세 조회 후에는 최근 확정 종가일 = 미국장 기준 어제 거래일) */
 function setDefaultGuideDate(force) {
   const el = document.getElementById("guideDate");

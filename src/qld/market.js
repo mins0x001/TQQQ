@@ -335,8 +335,7 @@ function findNearestBefore(hist, targetX) {
   for (const d of hist) { if (d.x <= targetX && (best === null || d.x > best.x)) best = d; }
   return best;
 }
-//@@include qld:fmtShortDate
-
+//@@include format:fmtShortDate
 function renderQqqTrend(hist) {
   const last = hist[hist.length - 1];
   let high = -Infinity, low = Infinity, highIdx = 0, lowIdx = 0;
