@@ -1,0 +1,38 @@
+{
+ "soxl": {
+  "LEV": "SOXL",
+  "lev": "soxl",
+  "Lev": "Soxl",
+  "BASE": "SOXX",
+  "base": "soxx",
+  "Base": "Soxx",
+  "API": "soxl",
+  "VER": "V1.23",
+  "VERU": "V1_23",
+  "DATE": "261024"
+ },
+ "tqqq": {
+  "LEV": "TQQQ",
+  "lev": "tqqq",
+  "Lev": "Tqqq",
+  "BASE": "QQQ",
+  "base": "qqq",
+  "Base": "Qqq",
+  "API": "tqqq",
+  "VER": "V1.24",
+  "VERU": "V1_24",
+  "DATE": "261024"
+ },
+ "qldm": {
+  "LEV": "QLD",
+  "lev": "qldm",
+  "Lev": "Tqqq",
+  "BASE": "QQQ",
+  "base": "qqq",
+  "Base": "Qqq",
+  "API": "qm",
+  "VER": "V1.26",
+  "VERU": "V1_26",
+  "DATE": "261024"
+ }
+}

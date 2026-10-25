@@ -1,0 +1,254 @@
+{
+ "s000": {
+  "line": 13,
+  "soxl": "<title>SOXL 무한매수 AI (V1.23 - 261024)</title>\n",
+  "tqqq": "<title>TQQQ 무한매수 AI (V1.24 - 261024)</title>\n",
+  "qldm": "<title>QLD 무한매수AI분석 (V1.26 - 261024)</title>\n"
+ },
+ "s001": {
+  "line": 582,
+  "soxl": "  /* V0.67: 익절% 비교 백테스트 */\n",
+  "tqqq": "  /* V0.40: 익절% 비교 백테스트 */\n",
+  "qldm": "  /* V0.40: 익절% 비교 백테스트 */\n"
+ },
+ "s002": {
+  "line": 668,
+  "soxl": "      <span class=\"version-badge\" id=\"appVersionBadge\">V0.58</span>\n",
+  "tqqq": "      <span class=\"version-badge\" id=\"appVersionBadge\">V0.31</span>\n",
+  "qldm": "      <span class=\"version-badge\" id=\"appVersionBadge\">V0.31</span>\n"
+ },
+ "s003": {
+  "line": 687,
+  "soxl": "    <div class=\"soxl-streak-banner hidden\" id=\"soxlStreakBanner\"></div>\n",
+  "tqqq": "    <div class=\"soxl-streak-banner hidden\" id=\"tqqqStreakBanner\"></div>\n",
+  "qldm": "    <div class=\"soxl-streak-banner hidden\" id=\"qldmStreakBanner\"></div>\n"
+ },
+ "s004": {
+  "line": 751,
+  "soxl": "  <button class=\"dl-btn\" id=\"downloadSelfBtn\" type=\"button\">⬇ 이 파일 저장 (<span id=\"dlName\">SOXL무한매수_V1_23_261024.HTML</span>)</button>\n  <div style=\"margin-bottom: 4px;\">시스템 버전: <code id=\"footerVersion\">V1.23 (261024)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>\n",
+  "tqqq": "  <button class=\"dl-btn\" id=\"downloadSelfBtn\" type=\"button\">⬇ 이 파일 저장 (<span id=\"dlName\">TQQQ무한매수_V1_24_261024.HTML</span>)</button>\n  <div style=\"margin-bottom: 4px;\">시스템 버전: <code id=\"footerVersion\">V1.24 (261024)</code> · SOXL판(V0.48)과 동일 기능 · TQQQ 변동성 최적화판</div>\n",
+  "qldm": "  <button class=\"dl-btn\" id=\"downloadSelfBtn\" type=\"button\">⬇ 이 파일 저장 (<span id=\"dlName\">QLD무한매수_V1_26_261024.HTML</span>)</button>\n  <div style=\"margin-bottom: 4px;\">시스템 버전: <code id=\"footerVersion\">V1.26 (261024)</code> · SOXL판(V0.48)과 동일 기능 · QLD 변동성 최적화판</div>\n"
+ },
+ "s005": {
+  "line": 778,
+  "soxl": "      <div class=\"field\"><label for=\"seedSimSeed1\">시드 ($)</label><input type=\"number\" id=\"seedSimSeed1\" min=\"1\" step=\"any\" inputmode=\"decimal\" value=\"36000\"></div>\n      <div class=\"field\"><label for=\"seedSimSplits1\">분할 수</label><input type=\"number\" id=\"seedSimSplits1\" min=\"1\" step=\"1\" inputmode=\"numeric\" value=\"8\"></div>\n",
+  "tqqq": "      <div class=\"field\"><label for=\"seedSimSeed1\">시드 ($)</label><input type=\"number\" id=\"seedSimSeed1\" min=\"1\" step=\"any\" inputmode=\"decimal\" value=\"36000\"></div>\n      <div class=\"field\"><label for=\"seedSimSplits1\">분할 수</label><input type=\"number\" id=\"seedSimSplits1\" min=\"1\" step=\"1\" inputmode=\"numeric\" value=\"6\"></div>\n",
+  "qldm": "      <div class=\"field\"><label for=\"seedSimSeed1\">시드 ($)</label><input type=\"number\" id=\"seedSimSeed1\" min=\"1\" step=\"any\" inputmode=\"decimal\" value=\"70000\"></div>\n      <div class=\"field\"><label for=\"seedSimSplits1\">분할 수</label><input type=\"number\" id=\"seedSimSplits1\" min=\"1\" step=\"1\" inputmode=\"numeric\" value=\"6\"></div>\n"
+ },
+ "s006": {
+  "line": 783,
+  "soxl": "      <div class=\"field\"><label for=\"seedSimTp1\">비교 익절 (%)</label><input type=\"number\" id=\"seedSimTp1\" min=\"0.5\" max=\"100\" step=\"0.5\" inputmode=\"decimal\" value=\"13\"></div>\n",
+  "tqqq": "      <div class=\"field\"><label for=\"seedSimTp1\">비교 익절 (%)</label><input type=\"number\" id=\"seedSimTp1\" min=\"0.5\" max=\"100\" step=\"0.5\" inputmode=\"decimal\" value=\"8\"></div>\n",
+  "qldm": "      <div class=\"field\"><label for=\"seedSimTp1\">비교 익절 (%)</label><input type=\"number\" id=\"seedSimTp1\" min=\"0.5\" max=\"100\" step=\"0.5\" inputmode=\"decimal\" value=\"8\"></div>\n"
+ },
+ "s007": {
+  "line": 808,
+  "soxl": "        <p><b>문제가 생기면:</b> [🔧 연결 점검]이 증권사 토큰·해외 잔고·주문가능금액·당일 주문·SOXL/TQQQ 시세·앱 주소를 하나씩 확인해, 막힌 곳과 고칠 방법(증권사 공식 응답 코드 기준 — 예: EGW00103 앱키 오류, 0760 해외주식 권한 없음)을 보여 줍니다. 봇이 결과를 남기지 못하고 멈춰도 ‘GitHub 실행’ 줄에 멈춘 단계와 로그 링크가 뜹니다.</p>\n",
+  "tqqq": "        <p><b>문제가 생기면:</b> [🔧 연결 점검]이 증권사 토큰·해외 잔고·주문가능금액·당일 주문·SOXL/TQQQ 시세·앱 주소를 하나씩 확인해, 막힌 곳과 고칠 방법(증권사 공식 응답 코드 기준 — 예: EGW00103 앱키 오류, 0760 해외주식 권한 없음)을 보여 줍니다. 봇이 결과를 남기지 못하고 멈춰도 ‘GitHub 실행’ 줄에 멈춘 단계와 로그 링크가 뜹니다.</p>\n",
+  "qldm": "        <p><b>문제가 생기면:</b> [🔧 연결 점검]이 증권사 토큰·해외 잔고·주문가능금액·당일 주문·SOXL/QLD 시세·앱 주소를 하나씩 확인해, 막힌 곳과 고칠 방법(증권사 공식 응답 코드 기준 — 예: EGW00103 앱키 오류, 0760 해외주식 권한 없음)을 보여 줍니다. 봇이 결과를 남기지 못하고 멈춰도 ‘GitHub 실행’ 줄에 멈춘 단계와 로그 링크가 뜹니다.</p>\n"
+ },
+ "s008": {
+  "line": 829,
+  "soxl": "        <p><b>토큰 만들기 (한 번만):</b> github.com → 오른쪽 위 프로필 → Settings → 맨 아래 Developer settings → Personal access tokens → <b>Tokens (classic)</b> → Generate new token (classic) → Note: 무한매수 동기화, Expiration: No expiration(또는 1년), 권한은 <b>gist 하나만</b> 체크 → Generate → <b>ghp_…</b> 복사. 같은 토큰을 PC와 폰의 이 카드에 각각 한 번씩 붙여넣고 [연결]을 누르면 끝입니다. SOXL에서 연결하면 같은 기기의 TQQQ도 자동으로 연결됩니다.</p>\n",
+  "tqqq": "        <p><b>토큰 만들기 (한 번만):</b> github.com → 오른쪽 위 프로필 → Settings → 맨 아래 Developer settings → Personal access tokens → <b>Tokens (classic)</b> → Generate new token (classic) → Note: 무한매수 동기화, Expiration: No expiration(또는 1년), 권한은 <b>gist 하나만</b> 체크 → Generate → <b>ghp_…</b> 복사. 같은 토큰을 PC와 폰의 이 카드에 각각 한 번씩 붙여넣고 [연결]을 누르면 끝입니다. SOXL에서 연결하면 같은 기기의 TQQQ도 자동으로 연결됩니다.</p>\n",
+  "qldm": "        <p><b>토큰 만들기 (한 번만):</b> github.com → 오른쪽 위 프로필 → Settings → 맨 아래 Developer settings → Personal access tokens → <b>Tokens (classic)</b> → Generate new token (classic) → Note: 무한매수 동기화, Expiration: No expiration(또는 1년), 권한은 <b>gist 하나만</b> 체크 → Generate → <b>ghp_…</b> 복사. 같은 토큰을 PC와 폰의 이 카드에 각각 한 번씩 붙여넣고 [연결]을 누르면 끝입니다. SOXL에서 연결하면 같은 기기의 QLD도 자동으로 연결됩니다.</p>\n"
+ },
+ "s009": {
+  "line": 846,
+  "soxl": "        <summary><span class=\"hi-ic\">🤖</span>SOXL 변동성 최적화 AI 엔진</summary>\n        <p>TQQQ 버전(V0.19)의 파라미터(6분할 · 2단계 주기 14일 · 손절모드 -12% — V0.72부터 2단계는 주기 대신 ×3 분할 연속 매수)는 TQQQ 일간σ 약 3.6%에 맞춰져 있습니다. 이 엔진은 SOXL의 실제 일간σ를 측정해 ① 변동성 배율로 파라미터를 환산한 \"규칙 기반 추천\"과 ② 분할 수(2단계는 대기 없이 ×3 고정) 조합을 최근 200봉에 전수 백테스트해 인접 조합 평균(과최적화 완화)이 가장 높은 \"백테스트 최적\"을 함께 제시합니다. 백테스트는 아래 시뮬레이션과 같은 \"평단&amp;전일종가 이하\" 매수 규칙을 사용하며, 버튼을 누르면 시뮬레이션과 LOC 가이드에 바로 적용됩니다.</p>\n",
+  "tqqq": "        <summary><span class=\"hi-ic\">🤖</span>TQQQ 변동성 최적화 AI 엔진</summary>\n        <p>기본 파라미터(6분할 · 2단계 주기 14일 · 손절모드 -12% — V0.72부터 2단계는 주기 대신 ×3 분할 연속 매수)는 TQQQ 평상시 일간σ 약 3.6%에 맞춰져 있습니다. 이 엔진은 조회 시점 TQQQ의 실제 일간σ를 측정해 ① 변동성 배율로 파라미터를 환산한 \"규칙 기반 추천\"과 ② 분할 수(2단계는 대기 없이 ×3 고정) 조합을 최근 200봉에 전수 백테스트해 인접 조합 평균(과최적화 완화)이 가장 높은 \"백테스트 최적\"을 함께 제시합니다. 백테스트는 아래 시뮬레이션과 같은 \"평단&amp;전일종가 이하\" 매수 규칙을 사용하며, 버튼을 누르면 시뮬레이션과 LOC 가이드에 바로 적용됩니다.</p>\n",
+  "qldm": "        <summary><span class=\"hi-ic\">🤖</span>QLD 변동성 최적화 AI 엔진</summary>\n        <p>기본 파라미터(6분할 · 2단계 주기 14일 · 손절모드 -12% — V0.72부터 2단계는 주기 대신 ×3 분할 연속 매수)는 QLD 평상시 일간σ 약 2.4%에 맞춰져 있습니다. 이 엔진은 조회 시점 QLD의 실제 일간σ를 측정해 ① 변동성 배율로 파라미터를 환산한 \"규칙 기반 추천\"과 ② 분할 수(2단계는 대기 없이 ×3 고정) 조합을 최근 200봉에 전수 백테스트해 인접 조합 평균(과최적화 완화)이 가장 높은 \"백테스트 최적\"을 함께 제시합니다. 백테스트는 아래 시뮬레이션과 같은 \"평단&amp;전일종가 이하\" 매수 규칙을 사용하며, 버튼을 누르면 시뮬레이션과 LOC 가이드에 바로 적용됩니다.</p>\n"
+ },
+ "s010": {
+  "line": 929,
+  "soxl": "/* ===================== SOXL 변동성 최적화 파라미터 =====================\n   기준: TQQQ V0.19 파라미터는 TQQQ 일간σ ≈ 3.6%에 맞춰 튜닝됨.\n   SOXL 일간σ는 통상 5.5~6.5%로 TQQQ의 약 1.6배(k ≈ 1.6).\n   ① 매도 목표 스윕: 가격 이동폭은 σ에 비례 → TQQQ 0.5~10% ×1.5 ≈ 1~15%, 간격 0.25 → 0.5%p\n   ② 손절모드 기준선: -12% × 1.6 ≈ -19.2% → -20% (평단×0.80)\n   ③ 분할 수: 낙폭 깊이가 σ에 비례, 자금 소진 방지 → 6 × √1.6 ≈ 7.6 → 8분할\n   ④ 2단계 주기: 같은 %가 움직이는 데 걸리는 시간 ∝ 1/σ² → 14 ÷ 1.6² ≈ 5.47 → 5일\n   ⑤ 변동성 보정계수 범위: SOXL은 국면 전환 폭이 커서 0.8~1.3 → 0.8~1.5\n   실제 SOXL σ는 조회 시점마다 AI 엔진 카드에서 다시 측정·환산된다. */\nconst SELL_SWEEP_MIN = 1, SELL_SWEEP_MAX = 15, SELL_SWEEP_STEP = 0.5;\nconst STRAT2_MODE_RATIO = 0.80;           // 손절모드/일반모드 전환 기준(평단가 대비 -20%)\nconst VOL_FACTOR_MIN = 0.8, VOL_FACTOR_MAX = 1.5;\nconst TQQQ_REF_SIGMA = 3.6;               // TQQQ V0.19 튜닝 기준 일간σ(%)\nconst TQQQ_BASE = { splits: 6, cycle: 14, stopModePct: 12 };\nconst ENGINE_SPLITS_GRID = [5, 6, 7, 8, 9, 10, 12];\nconst ENGINE_CYCLE_GRID = [3, 4, 6, 8, 10, 14];   // V0.71 이전 규칙(2단계 주기 대기) — 이제 비교용\n",
+  "tqqq": "/* ===================== TQQQ 변동성 최적화 파라미터 =====================\n   TQQQ 일간σ는 통상 3.5~4.0%로, 이 파일의 기준값(REF_SIGMA 3.6%)이 곧 TQQQ 자신의 평상시 변동성이다.\n   따라서 기본 파라미터(6분할 · 2단계 주기 14일 · 손절모드 -12% — V0.72부터 2단계는 주기 대신 ×3 분할 연속 매수)를 그대로 쓰고,\n   AI 엔진이 조회 시점의 실제 σ를 재서 k = σ ÷ 3.6 만큼 다시 환산한다.\n   SOXL판(일간σ 약 5.8%, k≈1.6)과 비교하면 TQQQ는 같은 %를 움직이는 데 시간이 더 걸리므로\n   ① 매도 목표를 낮고 촘촘하게, ② 손절선을 얕게, ③ 매수 주기를 길게 잡는다.\n   ① 매도 목표 스윕: 0.5~10%, 0.25%p 간격 (SOXL판 1~15% / 0.5%p)\n   ② 손절모드 기준선: 평단 -12% (평단×0.88) (SOXL판 -20%)\n   ③ 분할 수 기본값: 6분할 (SOXL판 8분할)\n   ④ 2단계 매수 주기: 14일 — 같은 % 이동에 걸리는 시간 ∝ 1/σ² (SOXL판 5일)\n   ⑤ 변동성 보정계수 범위: 0.8~1.3 — TQQQ는 국면 전환 폭이 SOXL보다 작다 (SOXL판 0.8~1.5) */\nconst SELL_SWEEP_MIN = 0.5, SELL_SWEEP_MAX = 10, SELL_SWEEP_STEP = 0.25;\nconst STRAT2_MODE_RATIO = 0.88;           // 손절모드/일반모드 전환 기준(평단가 대비 -12%)\nconst VOL_FACTOR_MIN = 0.8, VOL_FACTOR_MAX = 1.3;\nconst REF_SIGMA = 3.6;                    // 기본 파라미터가 맞춰진 기준 일간σ(%) = TQQQ 평상시 변동성\nconst BASE_PARAMS = { splits: 6, cycle: 14, stopModePct: 12 };\nconst ENGINE_SPLITS_GRID = [4, 5, 6, 7, 8, 10, 12];\nconst ENGINE_CYCLE_GRID = [5, 8, 10, 14, 20, 28];   // V0.71 이전 규칙(2단계 주기 대기) — 이제 비교용\n",
+  "qldm": "/* ===================== QLD 변동성 최적화 파라미터 =====================\n   QLD 일간σ는 통상 2.2~2.7%로, 이 파일의 기준값(REF_SIGMA 2.4%)이 곧 QLD 자신의 평상시 변동성이다.\n   따라서 기본 파라미터(6분할 · 2단계 주기 14일 · 손절모드 -12% — V0.72부터 2단계는 주기 대신 ×3 분할 연속 매수)를 그대로 쓰고,\n   AI 엔진이 조회 시점의 실제 σ를 재서 k = σ ÷ 2.4 만큼 다시 환산한다.\n   SOXL판(일간σ 약 5.8%, k≈1.6)과 비교하면 QLD는 같은 %를 움직이는 데 시간이 더 걸리므로\n   ① 매도 목표를 낮고 촘촘하게, ② 손절선을 얕게, ③ 매수 주기를 길게 잡는다.\n   ① 매도 목표 스윕: 0.5~10%, 0.25%p 간격 (SOXL판 1~15% / 0.5%p)\n   ② 손절모드 기준선: 평단 -12% (평단×0.88) (SOXL판 -20%)\n   ③ 분할 수 기본값: 6분할 (SOXL판 8분할)\n   ④ 2단계 매수 주기: 14일 — 같은 % 이동에 걸리는 시간 ∝ 1/σ² (SOXL판 5일)\n   ⑤ 변동성 보정계수 범위: 0.8~1.3 — QLD는 국면 전환 폭이 SOXL보다 작다 (SOXL판 0.8~1.5) */\nconst SELL_SWEEP_MIN = 0.5, SELL_SWEEP_MAX = 10, SELL_SWEEP_STEP = 0.25;\nconst STRAT2_MODE_RATIO = 0.88;           // 손절모드/일반모드 전환 기준(평단가 대비 -12%)\nconst VOL_FACTOR_MIN = 0.8, VOL_FACTOR_MAX = 1.3;\nconst REF_SIGMA = 2.4;                    // 기본 파라미터가 맞춰진 기준 일간σ(%) = QLD 평상시 변동성\nconst BASE_PARAMS = { splits: 6, cycle: 14, stopModePct: 12 };\nconst ENGINE_SPLITS_GRID = [4, 5, 6, 7, 8, 10, 12];\nconst ENGINE_CYCLE_GRID = [5, 8, 10, 14, 20, 28];   // V0.71 이전 규칙(2단계 주기 대기) — 이제 비교용\n"
+ },
+ "s011": {
+  "line": 946,
+  "soxl": "   예) 시드 $36,000 · 9분할 · AI 추천 5회 → 1단계 5회 × $4,000 + 2단계 최대 12회 × $1,333 = 시드 전액 (총 17회) */\n",
+  "tqqq": "   예) 시드 $36,000 · 9분할 · AI 추천 5회 → 1단계 5회 × $4,000 + 2단계 최대 12회 × $1,333 = 시드 전액 (총 17회) */\n",
+  "qldm": "   예) 시드 $70,000 · 7분할 · AI 추천 4회 → 1단계 4회 × $10,000 + 2단계 최대 9회 × $3,333 = 시드 전액 (총 17회) */\n"
+ },
+ "s012": {
+  "line": 955,
+  "soxl": "/* CCI(20)를 200봉 전체 구간에서 계산하려면 앞쪽에 19봉 여유분이 더 필요하다(200 + 19 = 219봉). */\n/* +1봉: 장중에는 Twelve Data가 \"오늘 진행 중인 봉\"을 최신 봉으로 주므로, 이를 제외해도 확정 종가 200봉(+CCI 여유 19봉)이 남도록 한다. */\n",
+  "tqqq": "",
+  "qldm": ""
+ },
+ "s013": {
+  "line": 1014,
+  "soxl": "let dataSrc = {};\n",
+  "tqqq": "let dataSrc = {};\n",
+  "qldm": "let dataSrc = {}, dataFull = {};\n"
+ },
+ "s014": {
+  "line": 1020,
+  "soxl": "",
+  "tqqq": "",
+  "qldm": "    if (j && Array.isArray(j.bars)) dataFull[symbol] = j.bars;   // 고점 계산용 1년치는 저장 파일이 하루 늦어도 사용 (최신 봉은 받은 시세로 덧붙임)\n"
+ },
+ "s015": {
+  "line": 1747,
+  "soxl": "  const sellPct = (typeof sellPctOverride === \"number\" && sellPctOverride > 0) ? sellPctOverride : a.best.pct;   // VV0.67: 비교용 고정 익절%\n",
+  "tqqq": "  const sellPct = (typeof sellPctOverride === \"number\" && sellPctOverride > 0) ? sellPctOverride : a.best.pct;   // VV0.40: 비교용 고정 익절%\n",
+  "qldm": "  const sellPct = (typeof sellPctOverride === \"number\" && sellPctOverride > 0) ? sellPctOverride : a.best.pct;   // VV0.40: 비교용 고정 익절%\n"
+ },
+ "s016": {
+  "line": 1889,
+  "soxl": "/* ---------- VV0.67: 익절% 비교 백테스트 ----------\n",
+  "tqqq": "/* ---------- VV0.40: 익절% 비교 백테스트 ----------\n",
+  "qldm": "/* ---------- VV0.40: 익절% 비교 백테스트 ----------\n"
+ },
+ "s017": {
+  "line": 1892,
+  "soxl": "const SIM_TP_KEY = \"soxl_sim_tp_v1\";\nconst SIM_TP_DEFAULT = 13;\n",
+  "tqqq": "const SIM_TP_KEY = \"tqqq_sim_tp_v1\";\nconst SIM_TP_DEFAULT = 8;\n",
+  "qldm": "const SIM_TP_KEY = \"qldm_sim_tp_v1\";\nconst SIM_TP_DEFAULT = 8;\n"
+ },
+ "s018": {
+  "line": 2032,
+  "soxl": "const BUY_RECORDS_KEY = \"soxl_buy_records_v1\";\n",
+  "tqqq": "const BUY_RECORDS_KEY = \"tqqq_buy_records_v2\";\n",
+  "qldm": "const BUY_RECORDS_KEY = \"qldm_buy_records_v2\";\n"
+ },
+ "s019": {
+  "line": 2067,
+  "soxl": "  /* 자동 매수가 결정 규칙 (V0.58)\n",
+  "tqqq": "  /* 자동 매수가 결정 규칙 (V0.31)\n",
+  "qldm": "  /* 자동 매수가 결정 규칙 (V0.31)\n"
+ },
+ "s020": {
+  "line": 2644,
+  "soxl": "  const buyBoxOff = !canBuyMore || (hasPosition && !inStage1 && !buyReady);\n",
+  "tqqq": "  const buyBoxOff = !canBuyMore || (hasPosition && !inStage1 && !buyReady);\n",
+  "qldm": "  const DD = ddGate(), buyOffBase = !canBuyMore || (hasPosition && !inStage1 && !buyReady), buyBoxOff = buyOffBase || !DD.ok;\n"
+ },
+ "s021": {
+  "line": 2652,
+  "soxl": "",
+  "tqqq": "",
+  "qldm": "  if (!DD.ok && !buyOffBase) buyNote = `⏸ 매수 대기 — 1년 고점 ${usd(DD.peak)} 대비 ${DD.now.toFixed(1)}% · -${DD.gate}% 이하일 때만 매수 (QLD 무한매수 조건) · ` + buyNote;\n"
+ },
+ "s022": {
+  "line": 2666,
+  "soxl": "    bot: { last_close: lastClose, sell_pct: sellPct, sell_pct_rule: sellPctRule, per_split: canBuyMore ? perSplit : sp.per2, qty_unit: LOC_QTY_UNIT, avg_exact: hasPosition ? avgPrice : null,\n",
+  "tqqq": "    bot: { last_close: lastClose, sell_pct: sellPct, sell_pct_rule: sellPctRule, per_split: canBuyMore ? perSplit : sp.per2, qty_unit: LOC_QTY_UNIT, avg_exact: hasPosition ? avgPrice : null,\n",
+  "qldm": "    bot: { last_close: lastClose, sell_pct: sellPct, sell_pct_rule: sellPctRule, dd_gate: DD.gate, dd_now: +DD.now.toFixed(2), dd_peak: DD.peak, dd_ok: DD.ok, dd_bars: DD.n, buy_off_base: !!buyOffBase, per_split: canBuyMore ? perSplit : sp.per2, qty_unit: LOC_QTY_UNIT, avg_exact: hasPosition ? avgPrice : null,\n"
+ },
+ "s023": {
+  "line": 2695,
+  "soxl": "    <div class=\"loc-pos\">📦 보유 <b>${hasPosition ? summary.totalQty.toLocaleString(\"en-US\") + \"주\" : \"없음\"}</b>${hasPosition ? ` · 평단 <b>${usd(avgPrice)}</b> · (<b style=\"color:${lastClose >= avgPrice ? \"var(--up)\" : \"var(--down)\"};\">${lastClose >= avgPrice ? \"+\" : \"\"}${((lastClose / avgPrice - 1) * 100).toFixed(2)}%</b>)` : \"\"} · 📍 ${canBuyMore ? `총 ${sp.maxRounds}회차 중 <b>${nextRound}</b>회차 진행 중` : `분할 소진 (총 ${sp.maxRounds}회차)`}</div>\n",
+  "tqqq": "    <div class=\"loc-pos\">📦 보유 <b>${hasPosition ? summary.totalQty.toLocaleString(\"en-US\") + \"주\" : \"없음\"}</b>${hasPosition ? ` · 평단 <b>${usd(avgPrice)}</b> · (<b style=\"color:${lastClose >= avgPrice ? \"var(--up)\" : \"var(--down)\"};\">${lastClose >= avgPrice ? \"+\" : \"\"}${((lastClose / avgPrice - 1) * 100).toFixed(2)}%</b>)` : \"\"} · 📍 ${canBuyMore ? `총 ${sp.maxRounds}회차 중 <b>${nextRound}</b>회차 진행 중` : `분할 소진 (총 ${sp.maxRounds}회차)`}</div>\n",
+  "qldm": "    <div class=\"loc-pos\">📦 보유 <b>${hasPosition ? summary.totalQty.toLocaleString(\"en-US\") + \"주\" : \"없음\"}</b>${hasPosition ? ` · 평단 <b>${usd(avgPrice)}</b> · (<b style=\"color:${lastClose >= avgPrice ? \"var(--up)\" : \"var(--down)\"};\">${lastClose >= avgPrice ? \"+\" : \"\"}${((lastClose / avgPrice - 1) * 100).toFixed(2)}%</b>)` : \"\"} · 📍 ${canBuyMore ? `총 ${sp.maxRounds}회차 중 <b>${nextRound}</b>회차 진행 중` : `분할 소진 (총 ${sp.maxRounds}회차)`} · 1년 고점 대비 <b style=\"color:${DD.ok ? \"var(--glow)\" : \"var(--text-dim)\"};\">${DD.now.toFixed(1)}%</b> (매수 -${DD.gate}% 이하 ${DD.ok ? \"✓\" : \"대기\"})</div>\n"
+ },
+ "s024": {
+  "line": 2856,
+  "soxl": "    <div class=\"kv-row\"><span class=\"k\">SOXX 일간σ (최근 ${ratioN}봉)</span><span class=\"v\">${bsSdText}</span></div>\n    <div class=\"kv-row\"><span class=\"k\">SOXL ÷ SOXX 변동성 배율</span><span class=\"v\">${ratioText}</span></div>\n    <div class=\"kv-row\"><span class=\"k\">TQQQ 대비 변동성 배율 (기준σ ${TQQQ_REF_SIGMA}%)</span><span class=\"v\">${(sd200 / TQQQ_REF_SIGMA).toFixed(2)}배</span></div>\n",
+  "tqqq": "    <div class=\"kv-row\"><span class=\"k\">QQQ 일간σ (최근 ${ratioN}봉)</span><span class=\"v\">${bsSdText}</span></div>\n    <div class=\"kv-row\"><span class=\"k\">TQQQ ÷ QQQ 변동성 배율</span><span class=\"v\">${ratioText}</span></div>\n    <div class=\"kv-row\"><span class=\"k\">기준σ(${REF_SIGMA}%) 대비 변동성 배율</span><span class=\"v\">${(sd200 / REF_SIGMA).toFixed(2)}배</span></div>\n",
+  "qldm": "    <div class=\"kv-row\"><span class=\"k\">QQQ 일간σ (최근 ${ratioN}봉)</span><span class=\"v\">${bsSdText}</span></div>\n    <div class=\"kv-row\"><span class=\"k\">QLD ÷ QQQ 변동성 배율</span><span class=\"v\">${ratioText}</span></div>\n    <div class=\"kv-row\"><span class=\"k\">기준σ(${REF_SIGMA}%) 대비 변동성 배율</span><span class=\"v\">${(sd200 / REF_SIGMA).toFixed(2)}배</span></div>\n"
+ },
+ "s025": {
+  "line": 2862,
+  "soxl": "    <p class=\"desc\" style=\"margin:10px 0 0;\">변동성 국면은 최근 20봉 σ ÷ 200봉 σ로 판정합니다(0.8 미만 저변동, 1.2 초과 고변동). 실제 손절모드 판정은 평단가×${STRAT2_MODE_RATIO.toFixed(2)}(고정, SOXL 기준 -20%)를 사용하며, 보정선(보정계수 ${VOL_FACTOR_MIN}~${VOL_FACTOR_MAX} 제한)은 고변동 국면에서 손절선을 더 넓게 볼지 판단하기 위한 참고값입니다. SOXL ÷ SOXX 배율은 이론상 3배에 가까워야 하므로, 크게 벗어나면 데이터 이상 여부를 확인하세요.</p>\n",
+  "tqqq": "    <p class=\"desc\" style=\"margin:10px 0 0;\">변동성 국면은 최근 20봉 σ ÷ 200봉 σ로 판정합니다(0.8 미만 저변동, 1.2 초과 고변동). 실제 손절모드 판정은 평단가×${STRAT2_MODE_RATIO.toFixed(2)}(고정, TQQQ 기준 -12%)를 사용하며, 보정선(보정계수 ${VOL_FACTOR_MIN}~${VOL_FACTOR_MAX} 제한)은 고변동 국면에서 손절선을 더 넓게 볼지 판단하기 위한 참고값입니다. TQQQ ÷ QQQ 배율은 이론상 3배에 가까워야 하므로, 크게 벗어나면 데이터 이상 여부를 확인하세요.</p>\n",
+  "qldm": "    <p class=\"desc\" style=\"margin:10px 0 0;\">변동성 국면은 최근 20봉 σ ÷ 200봉 σ로 판정합니다(0.8 미만 저변동, 1.2 초과 고변동). 실제 손절모드 판정은 평단가×${STRAT2_MODE_RATIO.toFixed(2)}(고정, QLD 기준 -12%)를 사용하며, 보정선(보정계수 ${VOL_FACTOR_MIN}~${VOL_FACTOR_MAX} 제한)은 고변동 국면에서 손절선을 더 넓게 볼지 판단하기 위한 참고값입니다. QLD ÷ QQQ 배율은 이론상 2배에 가까워야 하므로, 크게 벗어나면 데이터 이상 여부를 확인하세요.</p>\n"
+ },
+ "s026": {
+  "line": 2878,
+  "soxl": "  // ① 규칙 기반 환산 (TQQQ V0.19 기준 → SOXL 실측 σ)\n",
+  "tqqq": "  // ① 규칙 기반 환산 (TQQQ V0.19 기준 → TQQQ 실측 σ)\n",
+  "qldm": "  // ① 규칙 기반 환산 (QLD V0.19 기준 → QLD 실측 σ)\n"
+ },
+ "s027": {
+  "line": 2880,
+  "soxl": "  const k = sd200 / TQQQ_REF_SIGMA;\n  const ruleSplits = clamp(Math.round(TQQQ_BASE.splits * Math.sqrt(k)), 4, 12);\n  const ruleCycle = clamp(Math.round(TQQQ_BASE.cycle / (k * k)), 3, 14);\n  const ruleStopMode = clamp(TQQQ_BASE.stopModePct * k, 8, 35);\n",
+  "tqqq": "  const k = sd200 / REF_SIGMA;\n  const ruleSplits = clamp(Math.round(BASE_PARAMS.splits * Math.sqrt(k)), 4, 12);\n  const ruleCycle = clamp(Math.round(BASE_PARAMS.cycle / (k * k)), 3, 14);\n  const ruleStopMode = clamp(BASE_PARAMS.stopModePct * k, 8, 35);\n",
+  "qldm": "  const k = sd200 / REF_SIGMA;\n  const ruleSplits = clamp(Math.round(BASE_PARAMS.splits * Math.sqrt(k)), 4, 12);\n  const ruleCycle = clamp(Math.round(BASE_PARAMS.cycle / (k * k)), 3, 14);\n  const ruleStopMode = clamp(BASE_PARAMS.stopModePct * k, 8, 35);\n"
+ },
+ "s028": {
+  "line": 2887,
+  "soxl": "  const seed = seedInput > 0 ? seedInput : 36000;\n",
+  "tqqq": "  const seed = seedInput > 0 ? seedInput : 36000;\n",
+  "qldm": "  const seed = seedInput > 0 ? seedInput : 70000;\n"
+ },
+ "s029": {
+  "line": 2914,
+  "soxl": "  const tqqqRun = simulateSeedBacktest(hist, seed, TQQQ_BASE.splits, true, 1, undefined, TQQQ_BASE.cycle);\n  const tqqqRet = tqqqRun ? tqqqRun.grandTotal / seed * 100 : null;\n",
+  "tqqq": "  const tqqqRun = simulateSeedBacktest(hist, seed, BASE_PARAMS.splits, true, 1, undefined, BASE_PARAMS.cycle);\n  const tqqqRet = tqqqRun ? tqqqRun.grandTotal / seed * 100 : null;\n",
+  "qldm": "  const qldmRun = simulateSeedBacktest(hist, seed, BASE_PARAMS.splits, true, 1, undefined, BASE_PARAMS.cycle);\n  const qldmRet = qldmRun ? qldmRun.grandTotal / seed * 100 : null;\n"
+ },
+ "s030": {
+  "line": 2935,
+  "soxl": "      <div class=\"fg-badge\" style=\"color:var(--amber);border-color:rgba(245,165,36,0.5);background:rgba(245,165,36,0.08);\">SOXL σ ${sd200.toFixed(2)}% ÷ TQQQ 기준σ ${TQQQ_REF_SIGMA}%</div>\n",
+  "tqqq": "      <div class=\"fg-badge\" style=\"color:var(--amber);border-color:rgba(245,165,36,0.5);background:rgba(245,165,36,0.08);\">TQQQ σ ${sd200.toFixed(2)}% ÷ 기준σ ${REF_SIGMA}%</div>\n",
+  "qldm": "      <div class=\"fg-badge\" style=\"color:var(--amber);border-color:rgba(245,165,36,0.5);background:rgba(245,165,36,0.08);\">QLD σ ${sd200.toFixed(2)}% ÷ 기준σ ${REF_SIGMA}%</div>\n"
+ },
+ "s031": {
+  "line": 2958,
+  "soxl": "    <div class=\"kv-row\"><span class=\"k\">참고: TQQQ 원본 파라미터(6분할·14일) 그대로 적용 시</span><span class=\"v\" style=\"${col(tqqqRet)}\">${fmtPctSigned(tqqqRet)}</span></div>\n    <div class=\"kv-row\"><span class=\"k\">SOXL 매도 목표 탐색 구간</span><span class=\"v\">${SELL_SWEEP_MIN}~${SELL_SWEEP_MAX}% (${SELL_SWEEP_STEP}%p)</span></div>\n",
+  "tqqq": "    <div class=\"kv-row\"><span class=\"k\">참고: 기본 파라미터(6분할·14일) 적용 시</span><span class=\"v\" style=\"${col(tqqqRet)}\">${fmtPctSigned(tqqqRet)}</span></div>\n    <div class=\"kv-row\"><span class=\"k\">TQQQ 매도 목표 탐색 구간</span><span class=\"v\">${SELL_SWEEP_MIN}~${SELL_SWEEP_MAX}% (${SELL_SWEEP_STEP}%p)</span></div>\n",
+  "qldm": "    <div class=\"kv-row\"><span class=\"k\">참고: 기본 파라미터(6분할·14일) 적용 시</span><span class=\"v\" style=\"${col(qldmRet)}\">${fmtPctSigned(qldmRet)}</span></div>\n    <div class=\"kv-row\"><span class=\"k\">QLD 매도 목표 탐색 구간</span><span class=\"v\">${SELL_SWEEP_MIN}~${SELL_SWEEP_MAX}% (${SELL_SWEEP_STEP}%p)</span></div>\n"
+ },
+ "s032": {
+  "line": 2966,
+  "soxl": "    <p class=\"desc\" style=\"margin:12px 0 0;\">예시: SOXL σ가 5.8%라면 k = 5.8 ÷ 3.6 ≈ 1.61 → 분할 수 6×√1.61 ≈ 7.6 → 8분할, 2단계 주기 14 ÷ 1.61² ≈ 5.4 → 5일, 손절모드 12%×1.61 ≈ -19.3%. 분할 수는 낙폭 깊이(σ에 비례)를 버틸 자금 여유를, 주기는 같은 % 가격 이동에 걸리는 시간(1/σ²에 비례)을 반영합니다. 백테스트 최적은 분할 수 ${ENGINE_SPLITS_GRID.join(\"·\")} (2단계는 대기 없이 ×${STAGE2_MULT} 고정) = ${valid.length}개 조합을 최근 200봉에 돌린 뒤, 한 조합만 튀는 과최적화를 피하려고 상하좌우 인접 조합 수익률 평균이 가장 높은 조합을 고릅니다. 과거 200봉 기준 결과이므로 미래 성과를 보장하지 않습니다. V0.72부터 2단계는 주기 대기 대신 분할을 ×3로 잘게 나눠 조건이 맞을 때마다 매수합니다(위 14÷k² 주기는 옛 규칙 비교용).</p>\n",
+  "tqqq": "    <p class=\"desc\" style=\"margin:12px 0 0;\">예시: TQQQ σ가 4.3%라면 k = 4.3 ÷ 3.6 ≈ 1.19 → 분할 수 6×√1.19 ≈ 6.5 → 7분할, 2단계 주기 14 ÷ 1.19² ≈ 9.9 → 10일, 손절모드 12%×1.19 ≈ -14.3%. σ가 평상시(3.6%)면 k ≈ 1.00이라 기본값 6분할·14일이 그대로 나옵니다. 분할 수는 낙폭 깊이(σ에 비례)를 버틸 자금 여유를, 주기는 같은 % 가격 이동에 걸리는 시간(1/σ²에 비례)을 반영합니다. 백테스트 최적은 분할 수 ${ENGINE_SPLITS_GRID.join(\"·\")} (2단계는 대기 없이 ×${STAGE2_MULT} 고정) = ${valid.length}개 조합을 최근 200봉에 돌린 뒤, 한 조합만 튀는 과최적화를 피하려고 상하좌우 인접 조합 수익률 평균이 가장 높은 조합을 고릅니다. 과거 200봉 기준 결과이므로 미래 성과를 보장하지 않습니다. V0.72부터 2단계는 주기 대기 대신 분할을 ×3로 잘게 나눠 조건이 맞을 때마다 매수합니다(위 14÷k² 주기는 옛 규칙 비교용).</p>\n",
+  "qldm": "    <p class=\"desc\" style=\"margin:12px 0 0;\">예시: QLD σ가 2.9%라면 k = 2.9 ÷ 2.4 ≈ 1.21 → 분할 수 6×√1.19 ≈ 6.5 → 7분할, 2단계 주기 14 ÷ 1.19² ≈ 9.9 → 10일, 손절모드 12%×1.19 ≈ -14.3%. σ가 평상시(3.6%)면 k ≈ 1.00이라 기본값 6분할·14일이 그대로 나옵니다. 분할 수는 낙폭 깊이(σ에 비례)를 버틸 자금 여유를, 주기는 같은 % 가격 이동에 걸리는 시간(1/σ²에 비례)을 반영합니다. 백테스트 최적은 분할 수 ${ENGINE_SPLITS_GRID.join(\"·\")} (2단계는 대기 없이 ×${STAGE2_MULT} 고정) = ${valid.length}개 조합을 최근 200봉에 돌린 뒤, 한 조합만 튀는 과최적화를 피하려고 상하좌우 인접 조합 수익률 평균이 가장 높은 조합을 고릅니다. 과거 200봉 기준 결과이므로 미래 성과를 보장하지 않습니다. V0.72부터 2단계는 주기 대기 대신 분할을 ×3로 잘게 나눠 조건이 맞을 때마다 매수합니다(위 14÷k² 주기는 옛 규칙 비교용).</p>\n"
+ },
+ "s033": {
+  "line": 2980,
+  "soxl": "",
+  "tqqq": "",
+  "qldm": "  if (pm && pm.ddGate != null && pm.ddGate !== \"\" && parseFloat(pm.ddGate) >= 0) o.ddGate = String(pm.ddGate);\n"
+ },
+ "s034": {
+  "line": 2997,
+  "soxl": "",
+  "tqqq": "",
+  "qldm": "/* ⛳ QLD 무한매수 매수 조건: 최근 1년(252봉) 최고 종가 대비 -gate% 이하일 때만 매수 (기본 10% · params.ddGate)\n   평생매수(-15%부터) 조건이 안 오는 -10~-15% 구간을 메우는 역할 · 고점 = 매일 10:10 저장 일봉 + 오늘 받은 봉을 날짜로 합친 최근 252봉 (저장 파일이 하루 늦어도 항상 1년) */\nfunction ddGate() {\n  const g = parseFloat(loadParamMode().ddGate), gate = g >= 0 ? g : 10;\n  const m = new Map((dataFull[LEV_TICKER] || []).map(b => [b[0], b[4]])); lastTqqqHist.forEach(h => m.set(h.d, h.y));   // 저장 파일 + 오늘 받은 봉 (날짜로 합침)\n  const ys = [...m.entries()].sort((a, b) => a[0] < b[0] ? -1 : 1).map(e => e[1]).slice(-252);\n  const peak = Math.max(...ys), last = lastTqqqHist[lastTqqqHist.length - 1].y, now = (last / peak - 1) * 100;\n  return { gate, peak, now, ok: now <= -gate + 1e-9, n: Math.min(ys.length, 252) };\n}\n"
+ },
+ "s035": {
+  "line": 3014,
+  "soxl": "  if (core && !(parseFloat(core.sellPct) > 0)) delete next.sellPct;      // 다른 기기에서 ‘규칙 기반’으로 초기화\n",
+  "tqqq": "  if (core && !(parseFloat(core.sellPct) > 0)) delete next.sellPct;      // 다른 기기에서 ‘규칙 기반’으로 초기화\n",
+  "qldm": "  if (core && !(parseFloat(core.sellPct) > 0)) delete next.sellPct;\n  if (core && !(parseFloat(core.ddGate) >= 0)) delete next.ddGate;      // 다른 기기에서 ‘규칙 기반’으로 초기화\n"
+ },
+ "s036": {
+  "line": 3183,
+  "soxl": "   · ?embed=panel : 자동주문(해외) 앱의 SOXL·TQQQ 탭 안 → 📒 주문·사이클 화면만\n",
+  "tqqq": "   · ?embed=panel : 자동주문(해외) 앱의 SOXL·TQQQ 탭 안 → 📒 주문·사이클 화면만\n",
+  "qldm": "   · ?embed=panel : 자동주문(해외) 앱의 SOXL·QLD 탭 안 → 📒 주문·사이클 화면만\n"
+ },
+ "s037": {
+  "line": 3213,
+  "soxl": "  if (eng) eng.insertAdjacentHTML(\"afterbegin\", `<a class=\"solo-note\" href=\"api-soxl.html#pg-${LEV_TICKER.toLowerCase()}\">📒 ${LEV_TICKER} 주문·사이클·백업 → 자동주문 ›<small>이 앱은 AI 분석(엔진·가이드·통계·설명) 전용입니다. 기록·오늘의 LOC·자동주문은 자동주문(해외) 한 곳에서.</small></a>`);\n",
+  "tqqq": "  if (eng) eng.insertAdjacentHTML(\"afterbegin\", `<a class=\"solo-note\" href=\"api-tqqq.html#pg-${LEV_TICKER.toLowerCase()}\">📒 ${LEV_TICKER} 주문·사이클·백업 → 자동주문 ›<small>이 앱은 AI 분석(엔진·가이드·통계·설명) 전용입니다. 기록·오늘의 LOC·자동주문은 자동주문(해외) 한 곳에서.</small></a>`);\n",
+  "qldm": "  if (eng) eng.insertAdjacentHTML(\"afterbegin\", `<a class=\"solo-note\" href=\"api-qm.html#pg-${LEV_TICKER.toLowerCase()}\">📒 ${LEV_TICKER} 주문·사이클·백업 → 자동주문 ›<small>이 앱은 AI 분석(엔진·가이드·통계·설명) 전용입니다. 기록·오늘의 LOC·자동주문은 자동주문(해외) 한 곳에서.</small></a>`);\n"
+ },
+ "s038": {
+  "line": 3351,
+  "soxl": "",
+  "tqqq": "/* TQQQ 전용 봇으로 넘어갔으면(A 봇 symbols.TQQQ=false) 그 봇의 계좌·상태 파일을 읽음 */\nfunction tqF(g, a, t) { try { const c = JSON.parse(g.files[\"muhan-bot.json\"].content); return (c.symbols || {}).TQQQ === false && g.files[t] ? t : a; } catch (e) { return a; } }\n",
+  "qldm": ""
+ },
+ "s039": {
+  "line": 3353,
+  "soxl": "    const f = g && g.files && g.files[\"muhan-account.json\"];\n",
+  "tqqq": "    const f = g && g.files && g.files[tqF(g, \"muhan-account.json\", \"muhan-account-tqqq.json\")];\n",
+  "qldm": "    const f = g && g.files && g.files[\"muhan-account.json\"];\n"
+ },
+ "s040": {
+  "line": 3547,
+  "soxl": "      const g = await gh(\"/gists\", { method: \"POST\", body: JSON.stringify({ description: SYNC.desc, public: false, files: { \"soxl.json\": { content: init }, \"tqqq.json\": { content: init } } }) });\n",
+  "tqqq": "      const g = await gh(\"/gists\", { method: \"POST\", body: JSON.stringify({ description: SYNC.desc, public: false, files: { \"soxl.json\": { content: init }, \"tqqq.json\": { content: init } } }) });\n",
+  "qldm": "      const g = await gh(\"/gists\", { method: \"POST\", body: JSON.stringify({ description: SYNC.desc, public: false, files: { \"soxl.json\": { content: init }, \"qldm.json\": { content: init } } }) });\n"
+ },
+ "s041": {
+  "line": 3576,
+  "soxl": "  try { const f = g.files && g.files[\"muhan-bot.json\"]; if (f && f.content) BOT.cfg = JSON.parse(f.content); } catch (e) {}\n  try { const f = g.files && g.files[\"muhan-bot-status.json\"]; if (f && f.content) BOT.status = JSON.parse(f.content); } catch (e) {}\n",
+  "tqqq": "  try { const f = g.files && g.files[tqF(g, \"muhan-bot.json\", \"muhan-bot-tqqq.json\")]; if (f && f.content) BOT.cfg = JSON.parse(f.content); } catch (e) {}\n  try { const f = g.files && g.files[tqF(g, \"muhan-bot-status.json\", \"muhan-bot-tqqq-status.json\")]; if (f && f.content) BOT.status = JSON.parse(f.content); } catch (e) {}\n",
+  "qldm": "  try { const f = g.files && g.files[\"muhan-bot.json\"]; if (f && f.content) BOT.cfg = JSON.parse(f.content); } catch (e) {}\n  try { const f = g.files && g.files[\"muhan-bot-status.json\"]; if (f && f.content) BOT.status = JSON.parse(f.content); } catch (e) {}\n"
+ }
+}
