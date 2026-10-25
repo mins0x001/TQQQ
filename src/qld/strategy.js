@@ -37,12 +37,6 @@ function renderAccumulateCard(hist) {
     </tr>`;
   }).join("");
 
-  const buyRows = best.buys.map((b, idx) => {
-    const runningAvg = best.buys.slice(0, idx + 1).reduce((s, c) => s + c.y, 0) / (idx + 1);
-    const half = b.i < ai.halfBars ? "전반" : "후반";
-    return `<tr><td class="num">${idx + 1}</td><td>${fmtShortDate(b.x)}<span class="sub-price">${half}</span></td><td class="num">${usd(b.y)}</td><td class="num" style="color:var(--amber);">${usd(runningAvg)}</td></tr>`;
-  }).join("");
-
   el.innerHTML = `
     <div class="fg-meta-row" style="margin-top:0;">
       ${metaTile("채택 하락 목표", "-" + best.pct.toFixed(1) + "%", "var(--glow)")}
@@ -64,8 +58,6 @@ function renderAccumulateCard(hist) {
     ${tableWrap(`<table class="stat-table detail-table"><thead><tr><th>하락 목표</th><th class="num">매수</th><th class="num">전반</th><th class="num">후반</th><th class="num">${bars}봉</th></tr></thead><tbody>${candRows}</tbody></table>`)}
     <div class="note">전반·후반 수익률이 <b>둘 다 안정적으로 높은</b> 값이 좋은 후보입니다. 한쪽만 크게 높고 다른 쪽이 낮다면 그 시기에만 맞았던 값일 가능성이 큽니다.</div>
 
-    <div class="sub-title"><span class="n">≡</span>매수 날짜·매수가 상세<span class="tag">누적 평단 포함</span></div>
-    ${tableWrap(`<table class="stat-table detail-table"><thead><tr><th class="num">회</th><th>매수일</th><th class="num">매수가</th><th class="num">누적 평단</th></tr></thead><tbody>${buyRows}</tbody></table>`)}
     <div class="note">매도를 전제하지 않는 장기 누적 매수 시뮬레이션이며, 최근 ${bars}봉 과거 데이터 기준 참고값입니다.</div>`;
 }
 
