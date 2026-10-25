@@ -1,16 +1,15 @@
 /* ---------- 연속 하락/상승 구간 탐색 ---------- */
-//@@include qld:findDownStreaks
-//@@include qld:findUpStreaks
-
+//@@include streak:findDownStreaks
+//@@include streak:findUpStreaks
 function metaTile(label, value, color) {
   return `<div class="fg-meta-item"><div class="fg-meta-label">${label}</div><div class="fg-meta-value"${color ? ` style="color:${color};"` : ""}>${value}</div></div>`;
 }
 function tableWrap(inner) { return `<div class="table-wrap">${inner}</div>`; }
 
 /* ---------- QLD 연속 하락 통계 ---------- */
-//@@include qld:computeStreakStatsForLength
-//@@include qld:computeStreakStats
-//@@include qld:computeDayChangeCounts
+//@@include streak:computeStreakStatsForLength
+//@@include streak:computeStreakStats
+//@@include streak:computeDayChangeCounts
 function renderQldStreakStats(hist) {
   const container = document.getElementById("qldStreakContent");
   const { downDays, upFlatDays } = computeDayChangeCounts(hist);
@@ -41,9 +40,9 @@ function renderQldStreakStats(hist) {
 }
 
 /* ---------- QLD 연속 상승 통계 ---------- */
-//@@include qld:computeUpStreakStatsForLength
-//@@include qld:computeUpStreakStats
-//@@include qld:computeUpDayChangeCounts
+//@@include streak:computeUpStreakStatsForLength
+//@@include streak:computeUpStreakStats
+//@@include streak:computeUpDayChangeCounts
 function renderQldUpStreakStats(hist) {
   const container = document.getElementById("qldUpStreakStatsContent");
   if (!container) return;
@@ -75,8 +74,7 @@ function renderQldUpStreakStats(hist) {
 }
 
 /* ---------- 상세 내역 ---------- */
-//@@include qld:fmtDateFull
-
+//@@include format:fmtDateFull
 function buildStreakRows(hist, streaks) {
   return streaks.map(s => {
     const preClose = hist[s.preIdx].y, endClose = hist[s.endIdx].y;
@@ -114,8 +112,7 @@ function renderQldStreakBanner(hist) {
     </div>`;
 }
 
-//@@include qld:fmtPctSigned
-//@@include qld:fmtPct1
+//@@include format:fmtPctSigned
+//@@include format:fmtPct1
 //@@include qld:fmtMoneySigned
-//@@include qld:trimmedMeanExcludingMinMax
-
+//@@include stats:trimmedMeanExcludingMinMax

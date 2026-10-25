@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.29-261025-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.30-261025-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261022">
-<title>QLD 평생매수AI분석 (V1.29 - 261025)</title>
+<title>QLD 평생매수AI분석 (V1.30 - 261025)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -632,8 +632,8 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
   <div hidden><section id="card-excel"></section><button id="xlsxBtn"></button><div id="xlsxMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_29_261025.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.29 (261025)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_30_261025.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.30 (261025)</code></div>
   </footer>
 
   </div>
@@ -816,7 +816,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.29", RELEASE_DATE = "261025";
+const APP_VERSION = "V1.30", RELEASE_DATE = "261025";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
@@ -1239,8 +1239,9 @@ function findNearestBefore(hist, targetX) {
   for (const d of hist) { if (d.x <= targetX && (best === null || d.x > best.x)) best = d; }
   return best;
 }
-function fmtShortDate(t) { return new Date(t).toLocaleDateString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit" }); }
-
+function fmtShortDate(t) {
+  return new Date(t).toLocaleDateString("ko-KR", { year: "2-digit", month: "2-digit", day: "2-digit" });
+}
 function renderQqqTrend(hist) {
   const last = hist[hist.length - 1];
   let high = -Infinity, low = Infinity, highIdx = 0, lowIdx = 0;
@@ -1298,11 +1299,16 @@ function findDownStreaks(hist) {
   let i = 1;
   while (i < hist.length) {
     if (hist[i].y < hist[i - 1].y) {
-      const startIdx = i; let j = i;
+      const startIdx = i;
+      let j = i;
       while (j + 1 < hist.length && hist[j + 1].y < hist[j].y) j++;
-      streaks.push({ startIdx, endIdx: j, length: j - startIdx + 1, preIdx: startIdx - 1 });
+      const endIdx = j;
+      const preIdx = startIdx - 1;
+      streaks.push({ startIdx, endIdx, length: endIdx - startIdx + 1, preIdx });
       i = j + 1;
-    } else i++;
+    } else {
+      i++;
+    }
   }
   return streaks;
 }
@@ -1311,15 +1317,19 @@ function findUpStreaks(hist) {
   let i = 1;
   while (i < hist.length) {
     if (hist[i].y > hist[i - 1].y) {
-      const startIdx = i; let j = i;
+      const startIdx = i;
+      let j = i;
       while (j + 1 < hist.length && hist[j + 1].y > hist[j].y) j++;
-      streaks.push({ startIdx, endIdx: j, length: j - startIdx + 1, preIdx: startIdx - 1 });
+      const endIdx = j;
+      const preIdx = startIdx - 1;
+      streaks.push({ startIdx, endIdx, length: endIdx - startIdx + 1, preIdx });
       i = j + 1;
-    } else i++;
+    } else {
+      i++;
+    }
   }
   return streaks;
 }
-
 function metaTile(label, value, color) {
   return `<div class="fg-meta-item"><div class="fg-meta-label">${label}</div><div class="fg-meta-value"${color ? ` style="color:${color};"` : ""}>${value}</div></div>`;
 }
@@ -1329,32 +1339,51 @@ function tableWrap(inner) { return `<div class="table-wrap">${inner}</div>`; }
 function computeStreakStatsForLength(streaks, totalStreaks, hist, k) {
   const atLeastCount = streaks.filter(s => s.length >= k).length;
   const probability = totalStreaks > 0 ? (atLeastCount / totalStreaks) * 100 : 0;
+
   const exactStreaks = streaks.filter(s => s.length === k);
   const returns = [];
+  const recoveryDays = [];
   let unresolved = 0;
+
   exactStreaks.forEach(s => {
     const buyPrices = hist.slice(s.startIdx, s.endIdx + 1).map(d => d.y);
     const totalCost = buyPrices.reduce((a, b) => a + b, 0);
     const peakPrice = hist[s.preIdx].y;
     let recoveryIdx = -1;
-    for (let m = s.endIdx + 1; m < hist.length; m++) { if (hist[m].y >= peakPrice) { recoveryIdx = m; break; } }
-    if (recoveryIdx !== -1) returns.push((peakPrice * s.length - totalCost) / totalCost * 100);
-    else unresolved++;
+    for (let m = s.endIdx + 1; m < hist.length; m++) {
+      if (hist[m].y >= peakPrice) { recoveryIdx = m; break; }
+    }
+    if (recoveryIdx !== -1) {
+      const proceeds = peakPrice * s.length;
+      returns.push((proceeds - totalCost) / totalCost * 100);
+      recoveryDays.push(recoveryIdx - s.endIdx);
+    } else {
+      unresolved++;
+    }
   });
+
   const avgReturn = returns.length > 0 ? returns.reduce((a, b) => a + b, 0) / returns.length : null;
-  return { k, probability, sampleCount: exactStreaks.length, resolvedCount: returns.length, unresolved, avgReturn };
+  const minReturn = returns.length > 0 ? Math.min(...returns) : null;
+
+  return { k, probability, sampleCount: exactStreaks.length, resolvedCount: returns.length, unresolved, avgReturn, minReturn };
 }
 function computeStreakStats(hist) {
   const streaks = findDownStreaks(hist);
   if (streaks.length === 0) return null;
   const maxLen = Math.max(...streaks.map(s => s.length));
+  const totalStreaks = streaks.length;
   const rows = [];
-  for (let k = 2; k <= maxLen; k++) rows.push(computeStreakStatsForLength(streaks, streaks.length, hist, k));
-  return { maxLen, totalStreaks: streaks.length, streaks, rows };
+  for (let k = 2; k <= maxLen; k++) {
+    rows.push(computeStreakStatsForLength(streaks, totalStreaks, hist, k));
+  }
+  return { maxLen, totalStreaks, streaks, rows };
 }
 function computeDayChangeCounts(hist) {
   let downDays = 0, upFlatDays = 0;
-  for (let i = 1; i < hist.length; i++) { if (hist[i].y < hist[i - 1].y) downDays++; else upFlatDays++; }
+  for (let i = 1; i < hist.length; i++) {
+    if (hist[i].y < hist[i - 1].y) downDays++;
+    else upFlatDays++;
+  }
   return { downDays, upFlatDays };
 }
 function renderQldStreakStats(hist) {
@@ -1399,13 +1428,19 @@ function computeUpStreakStats(hist) {
   const streaks = findUpStreaks(hist);
   if (streaks.length === 0) return null;
   const maxLen = Math.max(...streaks.map(s => s.length));
+  const totalStreaks = streaks.length;
   const rows = [];
-  for (let k = 2; k <= maxLen; k++) rows.push(computeUpStreakStatsForLength(streaks, streaks.length, hist, k));
-  return { maxLen, totalStreaks: streaks.length, streaks, rows };
+  for (let k = 2; k <= maxLen; k++) {
+    rows.push(computeUpStreakStatsForLength(streaks, totalStreaks, hist, k));
+  }
+  return { maxLen, totalStreaks, streaks, rows };
 }
 function computeUpDayChangeCounts(hist) {
   let upDays = 0, downFlatDays = 0;
-  for (let i = 1; i < hist.length; i++) { if (hist[i].y > hist[i - 1].y) upDays++; else downFlatDays++; }
+  for (let i = 1; i < hist.length; i++) {
+    if (hist[i].y > hist[i - 1].y) upDays++;
+    else downFlatDays++;
+  }
   return { upDays, downFlatDays };
 }
 function renderQldUpStreakStats(hist) {
@@ -1439,8 +1474,9 @@ function renderQldUpStreakStats(hist) {
 }
 
 /* ---------- 상세 내역 ---------- */
-function fmtDateFull(t) { return new Date(t).toISOString().split("T")[0]; }
-
+function fmtDateFull(t) {
+  return new Date(t).toISOString().split("T")[0];
+}
 function buildStreakRows(hist, streaks) {
   return streaks.map(s => {
     const preClose = hist[s.preIdx].y, endClose = hist[s.endIdx].y;
@@ -1499,8 +1535,12 @@ function renderQldStreakBanner(hist) {
     </div>`;
 }
 
-function fmtPctSigned(n, digits = 2) { return (n === null || n === undefined || isNaN(n)) ? "--" : (n >= 0 ? "+" : "") + n.toFixed(digits) + "%"; }
-function fmtPct1(n) { return (n === null || n === undefined || isNaN(n)) ? "--" : n.toFixed(1) + "%"; }
+function fmtPctSigned(n, digits = 2) {
+  return (n === null || n === undefined || isNaN(n)) ? "--" : (n >= 0 ? "+" : "") + n.toFixed(digits) + "%";
+}
+function fmtPct1(n) {
+  return (n === null || n === undefined || isNaN(n)) ? "--" : n.toFixed(1) + "%";
+}
 function fmtMoneySigned(n) {
   if (n === null || n === undefined || isNaN(n)) return "--";
   return (n >= 0 ? "+" : "-") + "$" + Math.abs(n).toFixed(2);
@@ -1508,7 +1548,8 @@ function fmtMoneySigned(n) {
 function trimmedMeanExcludingMinMax(values) {
   if (!values || values.length === 0) return null;
   if (values.length <= 2) return values.reduce((a, b) => a + b, 0) / values.length;
-  const maxV = Math.max(...values), minV = Math.min(...values);
+  const maxV = Math.max(...values);
+  const minV = Math.min(...values);
   let removedMax = false, removedMin = false;
   const filtered = [];
   for (const v of values) {
@@ -1519,7 +1560,6 @@ function trimmedMeanExcludingMinMax(values) {
   if (filtered.length === 0) return null;
   return filtered.reduce((a, b) => a + b, 0) / filtered.length;
 }
-
 /* ---------- QLD 평생 매수 전략 (매도 없음) ---------- */
 function findAccumulateBuys(hist, thresholdPct) {   // V0.22: 주중 아무 날이나 종가가 기준가 대비 −목표% 이하면 매수 · 주 1회까지
   let peak = hist[0].y, lastWk = null;
@@ -1817,11 +1857,15 @@ function computeGuidePlan(ctx, valid) {
 
 /* ============================ V0.15 추가 로직 ============================ */
 function fmtCompactDate(t) {
-  const d = new Date(t), p = n => String(n).padStart(2, "0");
-  return `${String(d.getUTCFullYear()).slice(2)}.${p(d.getUTCMonth() + 1)}.${p(d.getUTCDate())}`;
+  // 모바일용 압축 날짜: 26.03.09
+  const d = new Date(t);
+  const p = n => String(n).padStart(2, "0");
+  return `${String(d.getFullYear()).slice(2)}.${p(d.getMonth() + 1)}.${p(d.getDate())}`;
 }
-function fmtUsd0(n) { return (n === null || n === undefined || isNaN(n)) ? "--" : "$" + Math.round(n).toLocaleString("en-US"); }
-
+function fmtUsd0(n) {
+  if (n === null || n === undefined || isNaN(n)) return "--";
+  return "$" + Number(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
+}
 /* 날짜 기본값: 어제 (시세 조회 후에는 최근 확정 종가일 = 미국장 기준 어제 거래일) */
 function setDefaultGuideDate(force) {
   const el = document.getElementById("guideDate");
