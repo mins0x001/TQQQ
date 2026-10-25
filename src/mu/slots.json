@@ -189,7 +189,7 @@
   "line": 2997,
   "soxl": "",
   "tqqq": "",
-  "qldm": "/* ⛳ QLD 무한매수 매수 조건: 최근 1년(252봉) 최고 종가 대비 -gate% 이하일 때만 매수 (기본 10% · params.ddGate)\n   평생매수(-15%부터) 조건이 안 오는 -10~-15% 구간을 메우는 역할 · 고점 = 매일 10:10 저장 일봉 + 오늘 받은 봉을 날짜로 합친 최근 252봉 (저장 파일이 하루 늦어도 항상 1년) */\nfunction ddGate() {\n  const g = parseFloat(loadParamMode().ddGate), gate = g >= 0 ? g : 10;\n  const m = new Map((dataFull[LEV_TICKER] || []).map(b => [b[0], b[4]])); lastTqqqHist.forEach(h => m.set(h.d, h.y));   // 저장 파일 + 오늘 받은 봉 (날짜로 합침)\n  const ys = [...m.entries()].sort((a, b) => a[0] < b[0] ? -1 : 1).map(e => e[1]).slice(-252);\n  const peak = Math.max(...ys), last = lastTqqqHist[lastTqqqHist.length - 1].y, now = (last / peak - 1) * 100;\n  return { gate, peak, now, ok: now <= -gate + 1e-9, n: Math.min(ys.length, 252) };\n}\n"
+  "qldm": "/* ⛳ QLD 무한매수 매수 조건: 최근 1년(252봉) 최고 종가 대비 -gate% 이하일 때만 매수 (기본 5% · params.ddGate)\n   평생매수(-15%부터) 조건이 안 오는 -5~-15% 구간을 메우는 역할 · 고점 = 매일 10:10 저장 일봉 + 오늘 받은 봉을 날짜로 합친 최근 252봉 (저장 파일이 하루 늦어도 항상 1년) */\nfunction ddGate() {\n  const g = parseFloat(loadParamMode().ddGate), gate = g >= 0 ? g : 5;\n  const m = new Map((dataFull[LEV_TICKER] || []).map(b => [b[0], b[4]])); lastTqqqHist.forEach(h => m.set(h.d, h.y));   // 저장 파일 + 오늘 받은 봉 (날짜로 합침)\n  const ys = [...m.entries()].sort((a, b) => a[0] < b[0] ? -1 : 1).map(e => e[1]).slice(-252);\n  const peak = Math.max(...ys), last = lastTqqqHist[lastTqqqHist.length - 1].y, now = (last / peak - 1) * 100;\n  return { gate, peak, now, ok: now <= -gate + 1e-9, n: Math.min(ys.length, 252) };\n}\n"
  },
  "s035": {
   "line": 3014,

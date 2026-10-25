@@ -27,7 +27,7 @@
   "last_close": 86.15,
   "sell_pct": 10,
   "sell_pct_rule": 10,
-  "dd_gate": 10,
+  "dd_gate": 5,
   "dd_now": -14.51,
   "dd_peak": 100.77,
   "dd_ok": true,
