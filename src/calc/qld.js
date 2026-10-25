@@ -108,18 +108,6 @@ function analyzeAiStrategy(hist) {
   return { rows, best, bestReturnOnly, rule, candidates: rows.length,
     bars: hist.length, halfBars: half, h1Range: [h1[0].x, h1[h1.length - 1].x], h2Range: [h2[0].x, h2[h2.length - 1].x] };
 }
-//@@fn computeCciSeries
-function computeCciSeries(hist, period) {
-  const out = [];
-  for (let i = period - 1; i < hist.length; i++) {
-    const w = hist.slice(i - period + 1, i + 1).map(d => d.y);
-    const sma = w.reduce((a, b) => a + b, 0) / period;
-    const meanDev = w.reduce((a, b) => a + Math.abs(b - sma), 0) / period;
-    const cci = meanDev === 0 ? 0 : (hist[i].y - sma) / (0.015 * meanDev);
-    out.push({ x: hist[i].x, y: cci });
-  }
-  return out;
-}
 //@@fn computeAthInfo
 function computeAthInfo(hist) {
   let ath = -Infinity, athIndex = 0;

@@ -993,17 +993,7 @@ async function tdFetchTimeSeries(symbol, outputsize) {
 //@@include time:dropIncompleteBar
 
 /* ---------- CCI(20, 종가 기준) ---------- */
-function computeCciSeries(hist, period) {
-  const out = [];
-  for (let i = period - 1; i < hist.length; i++) {
-    const window = hist.slice(i - period + 1, i + 1).map(d => d.y);
-    const sma = window.reduce((a, b) => a + b, 0) / period;
-    const meanDev = window.reduce((a, b) => a + Math.abs(b - sma), 0) / period;
-    const cci = meanDev === 0 ? 0 : (hist[i].y - sma) / (0.015 * meanDev);
-    out.push({ x: hist[i].x, y: cci });
-  }
-  return out;
-}
+//@@include lib:computeCciSeries
 
 async function fetch⟦Base⟧AthAndTrend() {
   const fullHist = await tdFetchTimeSeries(BASE_TICKER, BASE_FETCH_CANDLES);

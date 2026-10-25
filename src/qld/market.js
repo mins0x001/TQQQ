@@ -56,7 +56,7 @@ function dropIncompleteBar(bars) {
 }
 
 /* ---------- CCI(20, 종가 기준) ---------- */
-//@@include qld:computeCciSeries
+//@@include lib:computeCciSeries
 
 async function fetchQqqAthAndTrend() {
   const fullHist = await tdFetchTimeSeries("QQQ", QQQ_FETCH_CANDLES);
