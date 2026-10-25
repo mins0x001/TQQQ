@@ -199,7 +199,7 @@ function applyViewMode() {
   const tb = document.getElementById("tabbar"); if (tb) tb.style.gridTemplateColumns = `repeat(${tb.querySelectorAll(".tb").length},minmax(0,1fr))`;
   const eng = document.getElementById("pg-engine");
 ⟦@s037⟧  const cur = document.querySelector(".page.on");
-  if (!cur || cur.id === "pg-backup") goTab("pg-engine", { top: true });
+  if (!cur || cur.id === "pg-backup" || cur.id === "pg-order") goTab("pg-engine", { top: true });   // 종목 탭 삭제(261025): 저장된 탭이 종목이면 AI엔진으로
 }
 //@@include lib:initTabs
 /* 상단 시세 영역 접기/펼치기 (기기별 기억) */

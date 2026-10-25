@@ -1,0 +1,53 @@
+{
+ "schema": "loc-order/1",
+ "app": "QLD무한매수",
+ "version": "*",
+ "release": "*",
+ "symbol": "QLD",
+ "basis_close_date": "2026-10-23",
+ "generated_at": "*",
+ "stage": "2단계 ×3 (현재 4회 · 2/9회차 · 대기 없음)",
+ "avg_price": 86.5581,
+ "holding_qty": 189,
+ "orders": [
+  {
+   "side": "buy",
+   "type": "LOC",
+   "price": 86.15,
+   "qty": 45
+  },
+  {
+   "side": "sell",
+   "type": "LOC",
+   "price": 95.22,
+   "qty": 189
+  }
+ ],
+ "bot": {
+  "last_close": 86.15,
+  "sell_pct": 10,
+  "sell_pct_rule": 10,
+  "dd_gate": 10,
+  "dd_now": -14.51,
+  "dd_peak": 100.77,
+  "dd_ok": true,
+  "dd_bars": 252,
+  "buy_off_base": false,
+  "per_split": 3888.8888888888887,
+  "qty_unit": 1,
+  "avg_exact": 86.55814814814816,
+  "seed": 70000,
+  "splits": 6,
+  "mult": 3,
+  "stage1_n": 3,
+  "max_rounds": 12,
+  "per_split_1": 11666.666666666666,
+  "per_split_2": 3888.8888888888887,
+  "rounds": 4,
+  "recommended_n": 3,
+  "in_stop_mode": false,
+  "buy_off": false,
+  "records_src": "app",
+  "param_mode": "rule"
+ }
+}
