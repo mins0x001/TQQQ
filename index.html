@@ -222,7 +222,7 @@ async function authChangePw(a) {
 </script><script>if (typeof AUTHGATE === "function") AUTHGATE();</script>
   <header>
     <h1>무한매수 허브<span class="app-pill" id="appPill" hidden>앱</span></h1>
-    <p>자동주문(통합) · SOXL · TQQQ · QLD무한매수 · QLD평생매수 · 계좌는 봇마다 앱키로 자유 구성 <span class="ver" id="hubVer">· 허브 V2.24 (261025)</span></p>
+    <p>자동주문(통합) · SOXL · TQQQ · QLD무한매수 · QLD평생매수 · 계좌는 봇마다 앱키로 자유 구성 <span class="ver" id="hubVer">· 허브 V2.25 (261025)</span></p>
   </header>
 
   <section class="hc" id="health" aria-live="polite"></section>
@@ -299,7 +299,7 @@ async function authChangePw(a) {
   <p class="note">매수 기록은 자동주문 앱 🛠 설정 탭의 <b>☁️ 동기화</b>를 켜면 PC와 폰이 같은 기록을 씁니다. 이 목록은 이 기기에 마지막으로 맞춰진 기록입니다.</p>
 </div>
 <script>
-const HUB_VERSION = "V2.24", HUB_RELEASE = "261025";
+const HUB_VERSION = "V2.25", HUB_RELEASE = "261025";
 try { const hv = document.getElementById("hubVer"); if (hv) hv.textContent = `· 허브 ${HUB_VERSION} (${HUB_RELEASE})`; } catch (e) {}   // 화면 허브 버전 = 항상 HUB_VERSION
 function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
 function realized(tk, won){
@@ -370,9 +370,11 @@ function health(P) {
       if (!g || !g.files) { health(null); return; }
       const P = n => { try { return g.files[n] ? JSON.parse(g.files[n].content) : null; } catch (e) { return null; } };
       health(P);
-      const cfg = P("muhan-bot.json"), st = P("muhan-bot-status.json"); if (!cfg) return;
-      const t = st && st.run_at ? new Date(st.run_at).toLocaleString("ko-KR", { month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit" }) : "";
-      el.innerHTML = `<b>${cfg.mode === "live" ? "⏰ 자동 실전 " + (cfg.run_kst || "00:10") : "⏸ 자동 꺼짐"}</b>` + (st ? ` · 최근 ${t} ${OV[st.overall] || st.overall}` : "");
+      [["st-api", "muhan-bot"], ["st-api2", "muhan-bot-tqqq"]].forEach(([id, f]) => {   // SOXL 봇 · TQQQ 봇 각각 자동 실전 상태
+        const e = document.getElementById(id), cfg = P(f + ".json"), st = P(f + "-status.json"); if (!e || !cfg) return;
+        const t = st && st.run_at ? new Date(st.run_at).toLocaleString("ko-KR", { month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit" }) : "";
+        e.innerHTML = `<b>${cfg.mode === "live" ? "⏰ 자동 실전 " + (cfg.run_kst || "00:10") : "⏸ 자동 꺼짐"}</b>` + (st ? ` · 최근 ${t} ${OV[st.overall] || st.overall}` : "");
+      });
     }).catch(() => {});
 })();
 
