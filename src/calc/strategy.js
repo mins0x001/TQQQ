@@ -164,7 +164,7 @@ function simulateSeedBacktest(hist, seed, splits, requirePrevDown, mult, sellPct
   const trades = [];
   let i = 1;
   while (i < hist.length) {
-    if (!(hist[i].y < hist[i - 1].y)) { i++; continue; }
+    if (!(hist[i].y <= hist[i - 1].y)) { i++; continue; }   // 실제 LOC 주문(전일 종가 이하 체결)과 같게 '이하'
 
     const entryIdx = i;
     let shares = 0, cost = 0, rounds = 0, lastBuyIdx = i;
@@ -184,7 +184,7 @@ function simulateSeedBacktest(hist, seed, splits, requirePrevDown, mult, sellPct
       const c = hist[m].y;
       if (c >= avgNow * (1 + sellPct / 100)) { outcome = "profit"; exitIdx = m; break; }
       if (rounds >= maxRounds && stopPct !== null && c <= avgNow * (1 + stopPct / 100)) { outcome = "loss"; exitIdx = m; break; }
-      const conditionMet = c < avgNow && (!requirePrevDown || c < hist[m - 1].y);
+      const conditionMet = c <= avgNow && (!requirePrevDown || c <= hist[m - 1].y);   // 실제 LOC 주문(평단·전일 종가 이하 체결)과 같게 '이하'
       if (rounds < maxRounds && conditionMet) {
         if (!legacy || rounds < sp.n1) buy(m);                 // V0.72: 2단계도 대기 없이 (금액만 시드÷(분할×배수))
         else if ((m - lastBuyIdx) >= cycle) buy(m);           // 비교용 옛 규칙: 마지막 매수 후 주기 대기
