@@ -267,10 +267,6 @@ async function fetchAll() {
     errors.push("시세: " + e.message);
   }
 
-  await sleep(300);
-  btn.textContent = "CNN Fear & Greed 지수 불러오는 중…";
-
-  await sleep(900);
   btn.textContent = "원달러 환율 불러오는 중…";
   try { await fetchUsdKrw(); } catch (e) { errors.push("환율: " + e.message); }
 
