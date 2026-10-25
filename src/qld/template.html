@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.32-261025-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.33-261025-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261022">
-<title>QLD 평생매수AI분석 (V1.32 - 261025)</title>
+<title>QLD 평생매수AI분석 (V1.33 - 261025)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -580,7 +580,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 
 
 
-  <div class="page on" id="pg-order" role="tabpanel" aria-label="주문">
+  <div class="page" id="pg-order" role="tabpanel" aria-label="주문" aria-hidden="true">
   <section class="card today-card" id="card-today" style="--c:var(--glow);">
     <div class="card-head">
       <div class="card-icon">⚡</div>
@@ -632,15 +632,15 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
   <div hidden><section id="card-excel"></section><button id="xlsxBtn"></button><div id="xlsxMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_32_261025.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.32 (261025)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_33_261025.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.33 (261025)</code></div>
   </footer>
 
   </div>
 
   <div hidden><section id="card-fg"></section><div id="fgBanner"></div><div id="fgContent"></div><section id="card-fx"></section><div id="fxBanner"></div><div id="fxContent"></div><section id="card-cpi"></section><span id="cpiStamp"></span><button id="cpiFetchBtn"></button><div id="cpiBanner"></div><div id="cpiContent"></div><section id="card-ust"></section><span id="ustStamp"></span><button id="ustFetchBtn"></button><div id="ustBanner"></div><div id="ustContent"></div><section id="card-fed"></section><input id="fedMeetingDate"><input id="fedHikeInput"><input id="fedHoldInput"><input id="fedCutInput"><button id="fedSaveBtn"></button><button id="fedResetBtn"></button><div id="fedMsg"></div><div id="fedContent"></div></div>
 
-  <div class="page" id="pg-engine" role="tabpanel" aria-label="AI엔진">
+  <div class="page on" id="pg-engine" role="tabpanel" aria-label="AI엔진">
   <section class="card" id="card-seed" style="--c:var(--violet);">
     <div class="card-head">
       <div class="card-icon">🤖</div>
@@ -809,14 +809,13 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </div>
 
 <nav class="tabbar" id="tabbar" role="tablist" aria-label="화면 전환">
-  <button class="tb on" type="button" role="tab" data-p="pg-order" aria-selected="true"><span class="ic">⚡</span><span class="tx">주문</span></button>
-  <button class="tb" type="button" role="tab" data-p="pg-engine" aria-selected="false"><span class="ic">🤖</span><span class="tx">AI엔진</span></button>
+  <button class="tb on" type="button" role="tab" data-p="pg-engine" aria-selected="true"><span class="ic">🤖</span><span class="tx">AI엔진</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-guide" aria-selected="false"><span class="ic">🎯</span><span class="tx">가이드</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-help" aria-selected="false"><span class="ic">📖</span><span class="tx">설명</span></button>
 </nav>
 
 <script>
-const APP_VERSION = "V1.32", RELEASE_DATE = "261025";
+const APP_VERSION = "V1.33", RELEASE_DATE = "261025";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
