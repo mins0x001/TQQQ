@@ -1,0 +1,91 @@
+{
+ "schema": "loc-order/1",
+ "app": "QLD평생매수",
+ "version": "*",
+ "release": "*",
+ "symbol": "QLD",
+ "basis_close_date": "2026-10-23",
+ "generated_at": "*",
+ "stage": "평생매수 · 하락 목표 -15.0%",
+ "avg_price": 90.3467,
+ "holding_qty": 15,
+ "orders": [
+  {
+   "side": "buy",
+   "type": "LOC",
+   "price": 77.74,
+   "qty": 57
+  }
+ ],
+ "bot": {
+  "kind": "lifetime",
+  "last_close": 86.15,
+  "ref_peak": 91.46,
+  "pct": 15,
+  "loc_px": 77.74,
+  "qty_unit": 5,
+  "order_today": true,
+  "next_session": "2026-10-26",
+  "fx": null,
+  "records_src": "app",
+  "buy_count": 2,
+  "engine_amt": 4455.6,
+  "engine_mode": "opt",
+  "engine_w": [
+   10,
+   80,
+   10
+  ],
+  "engine_n": [
+   10,
+   1,
+   1
+  ],
+  "engine_tier": 1,
+  "engine_seed": 370000,
+  "engine_remain": 368645,
+  "engine_per": [
+   3700,
+   296000,
+   37000
+  ],
+  "engine_px": [
+   85.65,
+   72.8,
+   61.88
+  ],
+  "engine_round": 3,
+  "engine_N": 12,
+  "engine_rows": [
+   {
+    "from": 3,
+    "to": 10,
+    "tier": 1,
+    "px": 77.74,
+    "each": 4455.6,
+    "now": true
+   },
+   {
+    "from": 11,
+    "to": 11,
+    "tier": 2,
+    "px": 72.8,
+    "each": 327189.2,
+    "now": false
+   },
+   {
+    "from": 12,
+    "to": 12,
+    "tier": 3,
+    "px": 61.88,
+    "each": 37000,
+    "now": false
+   }
+  ],
+  "park": {
+   "reserve": 8911.2,
+   "state": 0,
+   "why": "평온 → QLD매수 3회차, 4회차 대기현금 필요"
+  }
+ }
+}

@@ -694,50 +694,16 @@ body.panel .sell-row{display:none !important;}
 
 
 
-  <div class="page on" id="pg-order" role="tabpanel" aria-label="주문·사이클">
-  <div hidden><section class="card today-card" id="card-today" style="--c:var(--glow);">
-    <div class="card-head">
-      <div class="card-icon">⚡</div>
-      <div><div class="card-kicker">00 · TODAY'S LOC</div><h2>오늘의 LOC 주문</h2></div>
-    </div>
-    <div class="bot-line" id="botLine" hidden></div>
-    <div class="rule-chip" data-rule-chip></div>
-    <div id="locHeroContent">
-      <div class="fg-empty">상단 '시세 불러오기'를 누르면 오늘 걸어 둘 LOC 매수·매도 가격과 수량이 표시됩니다.</div>
-    </div>
-  </section>
-  <section class="card" id="card-records" style="--c:var(--amber);">
-    <div class="card-head">
-      <div class="card-icon">📒</div>
-      <div><div class="card-kicker">01 · MY RECORDS</div><h2>나의 매수 기록</h2></div>
-    </div>
-    <div class="rule-chip" data-rule-chip></div>
-    <div id="apiRecStrip"></div>
-    <div class="form-grid">
-      <div class="field full"><label for="buyRecDate">최근 매수 날짜</label><input type="date" id="buyRecDate"></div>
-      <div class="field"><label for="buyRecQty">매수 수량 (주)</label><input type="number" id="buyRecQty" min="1" step="1" inputmode="numeric" placeholder="비우면 자동"></div>
-      <div class="field"><label for="buyRecPrice">매수가 ($, 선택)</label><input type="number" id="buyRecPrice" min="0" step="any" inputmode="decimal" placeholder="비우면 종가"></div>
-    </div>
-    <div class="buysim-actions">
-      <button class="buysim-btn save" id="buyRecSaveBtn" type="button">＋ 매수 기록 저장</button>
-      <button class="buysim-btn reset" id="buyRecResetBtn" type="button">초기화</button>
-    </div>
-    <div id="buyRecMsg" class="banner hidden" style="margin-top:10px;"></div>
-    <div id="buyRecordContent"></div>
-  </section></div>
-  <section class="card" id="card-cycle" style="--c:var(--up);">
-    <div class="card-head">
-      <div class="card-icon">🏁</div>
-      <div><div class="card-kicker">CYCLE LOG · LIFETIME</div><h2>사이클 기록</h2></div>
-    </div>
-    <div id="apiCyStrip"></div>
-    <div id="tradeSummary"></div>
-    <div id="tradeContent"></div>
-  </section>
+  <div class="page" id="pg-order" role="tabpanel" aria-label="주문·사이클" aria-hidden="true">
+  <!-- 종목 탭 삭제(261025): 화면은 없고, 자동주문(통합)이 앱을 숨겨 열어 LOC 주문을 만들 때 쓰는 자리표시자만 남김 -->
+  <div hidden>
+    <section id="card-today"><div id="botLine" hidden></div><div class="rule-chip" data-rule-chip></div><div id="locHeroContent"></div></section>
+    <section id="card-records"><div class="rule-chip" data-rule-chip></div><div id="apiRecStrip"></div><input id="buyRecDate"><input id="buyRecQty"><input id="buyRecPrice"><button id="buyRecSaveBtn" type="button"></button><button id="buyRecResetBtn" type="button"></button><div id="buyRecMsg" class="banner hidden"></div><div id="buyRecordContent"></div></section>
+    <section id="card-cycle"><div id="apiCyStrip"></div><div id="tradeSummary"></div><div id="tradeContent"></div></section>
+  </div>
   <div hidden><section id="card-trades"></section><input id="sellRecDate"><input id="sellRecPrice"><button id="sellRecSaveBtn"></button><div id="sellRecMsg"></div></div>
   <div hidden><section id="card-excel"></section><button id="xlsxBtn"></button><div id="xlsxMsg"></div></div>
   </div>
-
 
   <div class="page" id="pg-backup" role="tabpanel" aria-label="백업">
   <div hidden><section id="card-sync"></section><div id="syncState"></div><div id="syncSetup"></div><input id="syncToken"><button id="syncConnectBtn"></button><div id="syncOn"></div><button id="syncNowBtn"></button><button id="syncOffBtn"></button></div>
@@ -748,7 +714,7 @@ body.panel .sell-row{display:none !important;}
 
   </div>
 
-  <div class="page" id="pg-engine" role="tabpanel" aria-label="AI엔진">
+  <div class="page on" id="pg-engine" role="tabpanel" aria-label="AI엔진">
   <section class="card" id="card-engine" style="--c:var(--violet);">
     <div class="card-head">
       <div class="card-icon">🤖</div>
@@ -884,8 +850,7 @@ body.panel .sell-row{display:none !important;}
 
 
 <nav class="tabbar" id="tabbar" role="tablist" aria-label="화면 전환">
-  <button class="tb on" type="button" role="tab" data-p="pg-order" aria-selected="true"><span class="ic">📒</span><span class="tx">주문·사이클</span></button>
-  <button class="tb" type="button" role="tab" data-p="pg-engine" aria-selected="false"><span class="ic">🤖</span><span class="tx">AI엔진</span></button>
+  <button class="tb on" type="button" role="tab" data-p="pg-engine" aria-selected="true"><span class="ic">🤖</span><span class="tx">AI엔진</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-guide" aria-selected="false"><span class="ic">🎯</span><span class="tx">가이드</span></button>
   <button class="tb" type="button" role="tab" data-p="pg-help" aria-selected="false"><span class="ic">📖</span><span class="tx">설명</span></button>
 </nav>

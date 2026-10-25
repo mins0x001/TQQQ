@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.33-261025-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.34-261025-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261022">
-<title>QLD 평생매수AI분석 (V1.33 - 261025)</title>
+<title>QLD 평생매수AI분석 (V1.34 - 261025)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -581,49 +581,12 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 
 
   <div class="page" id="pg-order" role="tabpanel" aria-label="주문" aria-hidden="true">
-  <section class="card today-card" id="card-today" style="--c:var(--glow);">
-    <div class="card-head">
-      <div class="card-icon">⚡</div>
-      <div><div class="card-kicker">00 · TODAY'S LOC</div><h2>오늘의 LOC 주문</h2></div>
-    </div>
-    <div id="todayContent">
-      <div class="empty"><span class="ico">⚡</span>상단 '시세 불러오기'를 누르면 이번 주 걸어 둘 LOC 매수가와 수량이 여기에 표시됩니다.</div>
-    </div>
-  </section>
-  <section class="card" id="card-records" style="--c:var(--amber);">
-    <div class="card-head">
-      <div class="card-icon">📒</div>
-      <div><div class="card-kicker">01 · MY RECORDS</div><h2>나의 매수 기록</h2></div>
-    </div>
-    <div class="form-grid">
-      <div class="field full"><label for="guideDate">최근 매수 날짜</label><input type="date" id="guideDate"></div>
-      <div class="field"><label for="guideQty">매수 수량 (주)</label><input type="number" id="guideQty" min="0" step="any" inputmode="decimal" placeholder="비우면 자동"></div>
-      <div class="field"><label for="guidePrice">매수가 ($, 선택)</label><input type="number" id="guidePrice" min="0" step="any" inputmode="decimal" placeholder="비우면 종가"></div>
-    </div>
-    <div class="buysim-actions">
-      <button class="buysim-btn save" id="guideSaveBtn" type="button">＋ 매수 기록 저장</button>
-      <button class="buysim-btn reset" id="guideResetBtn" type="button">초기화</button>
-    </div>
-    <p class="form-msg" id="guideMsg"></p>
-    <div id="recordsContent"></div>
-  </section>
-  <section class="card" id="card-trades" style="--c:var(--up);">
-    <div class="card-head">
-      <div class="card-icon">💰</div>
-      <div><div class="card-kicker">02 · SELL &amp; P/L</div><h2>나의 매도 · 수익 기록</h2></div>
-    </div>
-    <div id="tradeSummary"></div>
-    <div class="form-grid" style="margin-top:12px;">
-      <div class="field full"><label for="sellRecDate">매도 날짜</label><input type="date" id="sellRecDate"></div>
-      <div class="field"><label for="sellRecQty">매도 수량 (주)</label><input type="number" id="sellRecQty" min="1" step="1" inputmode="numeric" placeholder="비우면 전량"></div>
-      <div class="field"><label for="sellRecPrice">매도가 ($, 선택)</label><input type="number" id="sellRecPrice" min="0" step="any" inputmode="decimal" placeholder="비우면 종가"></div>
-    </div>
-    <div class="buysim-actions">
-      <button class="buysim-btn save" id="sellRecSaveBtn" type="button">＋ 매도 기록 저장</button>
-    </div>
-    <div class="form-msg" id="sellRecMsg"></div>
-    <div id="tradeContent"></div>
-  </section>
+  <!-- 종목 탭 삭제(261025): 화면은 없고, 자동주문(통합)이 앱을 숨겨 열어 LOC 주문을 만들 때 쓰는 자리표시자만 남김 -->
+  <div hidden>
+    <section id="card-today"><div id="todayContent"></div></section>
+    <section id="card-records"><input type="date" id="guideDate"><input id="guideQty"><input id="guidePrice"><button id="guideSaveBtn" type="button"></button><button id="guideResetBtn" type="button"></button><p id="guideMsg"></p><div id="recordsContent"></div></section>
+    <section id="card-trades"><div id="tradeSummary"></div><input type="date" id="sellRecDate"><input id="sellRecQty"><input id="sellRecPrice"><button id="sellRecSaveBtn" type="button"></button><div id="sellRecMsg"></div><div id="tradeContent"></div></section>
+  </div>
   </div>
 
   <div class="page" id="pg-backup" role="tabpanel" aria-label="백업">
@@ -632,8 +595,8 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
   <div hidden><section id="card-excel"></section><button id="xlsxBtn"></button><div id="xlsxMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_33_261025.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.33 (261025)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_34_261025.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.34 (261025)</code></div>
   </footer>
 
   </div>
@@ -815,7 +778,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.33", RELEASE_DATE = "261025";
+const APP_VERSION = "V1.34", RELEASE_DATE = "261025";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */

@@ -1,0 +1,47 @@
+{
+ "schema": "loc-order/1",
+ "app": "SOXL무한매수",
+ "version": "*",
+ "release": "*",
+ "symbol": "SOXL",
+ "basis_close_date": "2026-10-23",
+ "generated_at": "*",
+ "stage": "2단계 ×3 (현재 3회 · 1/21회차 · 대기 없음)",
+ "avg_price": 87.531,
+ "holding_qty": 50,
+ "orders": [
+  {
+   "side": "buy",
+   "type": "LOC",
+   "price": 83.56,
+   "qty": 14
+  },
+  {
+   "side": "sell",
+   "type": "LOC",
+   "price": 100.67,
+   "qty": 50
+  }
+ ],
+ "bot": {
+  "last_close": 83.56,
+  "sell_pct": 15,
+  "sell_pct_rule": 15,
+  "per_split": 1200,
+  "qty_unit": 1,
+  "avg_exact": 87.53099999999999,
+  "seed": 36000,
+  "splits": 10,
+  "mult": 3,
+  "stage1_n": 3,
+  "max_rounds": 24,
+  "per_split_1": 3600,
+  "per_split_2": 1200,
+  "rounds": 3,
+  "recommended_n": 3,
+  "in_stop_mode": false,
+  "buy_off": false,
+  "records_src": "app",
+  "param_mode": "rule"
+ }
+}
