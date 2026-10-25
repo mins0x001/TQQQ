@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.28-261025-TQQQ-Panel-Unified">
+<meta name="version" content="V1.29-261025-TQQQ-Panel-Unified">
 <meta name="release-date" content="261022">
-<title>TQQQ 무한매수 AI (V1.28 - 261025)</title>
+<title>TQQQ 무한매수 AI (V1.29 - 261025)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -714,8 +714,8 @@ body.panel .sell-row{display:none !important;}
   <div hidden><section id="card-backup"></section><div id="backupPanel"></div><button id="bkCopyBtn"></button><button id="bkRestoreBtn"></button><textarea id="bkText"></textarea><div id="bkMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">TQQQ무한매수_V1_28_261025.HTML</span>)</button>
-  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.28 (261025)</code> · SOXL판(V0.48)과 동일 기능 · TQQQ 변동성 최적화판</div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">TQQQ무한매수_V1_29_261025.HTML</span>)</button>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.29 (261025)</code> · SOXL판(V0.48)과 동일 기능 · TQQQ 변동성 최적화판</div>
   </footer>
 
   </div>
@@ -737,7 +737,7 @@ body.panel .sell-row{display:none !important;}
   <section class="card" id="card-sim" style="--c:var(--amber);">
     <div class="card-head">
       <div class="card-icon">🧪</div>
-      <div><div class="card-kicker">04 · BACKTEST</div><h2>시드 분할매수 시뮬레이션 [평단&amp;전일종가 이하] (최근 200봉)</h2></div>
+      <div><div class="card-kicker">04 · BACKTEST</div><h2>시드 분할매수 시뮬레이션 [평단&amp;전일종가 이하]<br>(최근 200봉)</h2></div>
     </div>
     <div class="rule-chip" data-rule-chip></div>
     <div class="form-grid three">
@@ -821,7 +821,7 @@ body.panel .sell-row{display:none !important;}
         <div class="help-dyn" data-for="card-loc"></div>
       </details>
       <details class="help-item" open>
-        <summary><span class="hi-ic">🧪</span>시드 분할매수 시뮬레이션 [평단&amp;전일종가 이하] (최근 200봉)</summary>
+        <summary><span class="hi-ic">🧪</span>시드 분할매수 시뮬레이션 [평단&amp;전일종가 이하]<br>(최근 200봉)</summary>
         <p>시드를 N분할해 최근 200봉에 적용한 시뮬레이션입니다. 매수 규칙: ① 종가가 전일 종가보다 낮은 날 1분할 최초 매수, ② AI 추천 분할매수 회차까지는 이후 종가가 현재 평단보다 낮으면서 전일 종가보다도 낮은 날마다 1분할씩 추가 매수, ③ AI 추천 회차를 초과하면(2단계) 기다리지 않고 같은 조건이 맞는 날마다 <b>시드÷(분할×배수, 기본 ×3)</b>씩 추가 매수 — 예) 9분할·추천 5회면 1단계 5회 × 시드/9 + 2단계 최대 12회 × 시드/27 = 시드 전액(총 17회). 매도 규칙: 평단가 대비 목표% 도달 시 익절(아래 <b>비교 익절(%)</b>에 원하는 값을 넣으면 같은 규칙으로 익절%만 바꾼 결과를 나란히 보여주고, 주변 익절% 몇 개의 시드 대비 수익률도 함께 표시합니다), 시드를 모두 쓴 뒤(최대 회차) 손절선에 닿으면 손절합니다. 포지션은 한 번에 하나만 운용하며 청산 다음 거래일부터 새 진입을 탐색합니다.</p>
         <div class="help-dyn" data-for="card-sim"></div>
       </details>
@@ -870,7 +870,7 @@ body.panel .sell-row{display:none !important;}
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V1.28", RELEASE_DATE = "261025";
+const APP_VERSION = "V1.29", RELEASE_DATE = "261025";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
 const FINNHUB_API_KEY = "daik4m9r01qr9o8hnfj0daik4m9r01qr9o8hnfjg";

@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.34-261025-QLD-Lifetime-WeeklyOnce">
+<meta name="version" content="V1.35-261025-QLD-Lifetime-WeeklyOnce">
 <meta name="release-date" content="261022">
-<title>QLD 평생매수AI분석 (V1.34 - 261025)</title>
+<title>QLD 평생매수AI분석 (V1.35 - 261025)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -595,8 +595,8 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
   <div hidden><section id="card-excel"></section><button id="xlsxBtn"></button><div id="xlsxMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_34_261025.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.34 (261025)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_35_261025.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.35 (261025)</code></div>
   </footer>
 
   </div>
@@ -778,7 +778,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.34", RELEASE_DATE = "261025";
+const APP_VERSION = "V1.35", RELEASE_DATE = "261025";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
@@ -1636,12 +1636,6 @@ function renderAccumulateCard(hist) {
     </tr>`;
   }).join("");
 
-  const buyRows = best.buys.map((b, idx) => {
-    const runningAvg = best.buys.slice(0, idx + 1).reduce((s, c) => s + c.y, 0) / (idx + 1);
-    const half = b.i < ai.halfBars ? "전반" : "후반";
-    return `<tr><td class="num">${idx + 1}</td><td>${fmtShortDate(b.x)}<span class="sub-price">${half}</span></td><td class="num">${usd(b.y)}</td><td class="num" style="color:var(--amber);">${usd(runningAvg)}</td></tr>`;
-  }).join("");
-
   el.innerHTML = `
     <div class="fg-meta-row" style="margin-top:0;">
       ${metaTile("채택 하락 목표", "-" + best.pct.toFixed(1) + "%", "var(--glow)")}
@@ -1663,8 +1657,6 @@ function renderAccumulateCard(hist) {
     ${tableWrap(`<table class="stat-table detail-table"><thead><tr><th>하락 목표</th><th class="num">매수</th><th class="num">전반</th><th class="num">후반</th><th class="num">${bars}봉</th></tr></thead><tbody>${candRows}</tbody></table>`)}
     <div class="note">전반·후반 수익률이 <b>둘 다 안정적으로 높은</b> 값이 좋은 후보입니다. 한쪽만 크게 높고 다른 쪽이 낮다면 그 시기에만 맞았던 값일 가능성이 큽니다.</div>
 
-    <div class="sub-title"><span class="n">≡</span>매수 날짜·매수가 상세<span class="tag">누적 평단 포함</span></div>
-    ${tableWrap(`<table class="stat-table detail-table"><thead><tr><th class="num">회</th><th>매수일</th><th class="num">매수가</th><th class="num">누적 평단</th></tr></thead><tbody>${buyRows}</tbody></table>`)}
     <div class="note">매도를 전제하지 않는 장기 누적 매수 시뮬레이션이며, 최근 ${bars}봉 과거 데이터 기준 참고값입니다.</div>`;
 }
 
