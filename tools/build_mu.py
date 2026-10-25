@@ -17,6 +17,7 @@ def inc(m):
     k = m.group(1)
     if k not in FNS: raise SystemExit(f"include 없음: {k}")
     return FNS[k]
+T = re.sub(r"^//@@include-file (\S+)$", lambda m: rd(m.group(1))[:-1], T, flags=re.M)
 T = re.sub(r"^//@@include ([\w:]+)$", inc, T, flags=re.M)
 bad = 0
 for n, c in CFG.items():
