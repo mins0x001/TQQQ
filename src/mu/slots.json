@@ -1,9 +1,9 @@
 {
  "s000": {
   "line": 13,
-  "soxl": "<title>SOXL 무한매수 AI (V1.23 - 261024)</title>\n",
-  "tqqq": "<title>TQQQ 무한매수 AI (V1.24 - 261024)</title>\n",
-  "qldm": "<title>QLD 무한매수AI분석 (V1.26 - 261024)</title>\n"
+  "soxl": "<title>SOXL 무한매수 AI (⟦VER⟧ - ⟦DATE⟧)</title>\n",
+  "tqqq": "<title>TQQQ 무한매수 AI (⟦VER⟧ - ⟦DATE⟧)</title>\n",
+  "qldm": "<title>QLD 무한매수AI분석 (⟦VER⟧ - ⟦DATE⟧)</title>\n"
  },
  "s001": {
   "line": 582,
@@ -25,9 +25,9 @@
  },
  "s004": {
   "line": 751,
-  "soxl": "  <button class=\"dl-btn\" id=\"downloadSelfBtn\" type=\"button\">⬇ 이 파일 저장 (<span id=\"dlName\">SOXL무한매수_V1_23_261024.HTML</span>)</button>\n  <div style=\"margin-bottom: 4px;\">시스템 버전: <code id=\"footerVersion\">V1.23 (261024)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>\n",
-  "tqqq": "  <button class=\"dl-btn\" id=\"downloadSelfBtn\" type=\"button\">⬇ 이 파일 저장 (<span id=\"dlName\">TQQQ무한매수_V1_24_261024.HTML</span>)</button>\n  <div style=\"margin-bottom: 4px;\">시스템 버전: <code id=\"footerVersion\">V1.24 (261024)</code> · SOXL판(V0.48)과 동일 기능 · TQQQ 변동성 최적화판</div>\n",
-  "qldm": "  <button class=\"dl-btn\" id=\"downloadSelfBtn\" type=\"button\">⬇ 이 파일 저장 (<span id=\"dlName\">QLD무한매수_V1_26_261024.HTML</span>)</button>\n  <div style=\"margin-bottom: 4px;\">시스템 버전: <code id=\"footerVersion\">V1.26 (261024)</code> · SOXL판(V0.48)과 동일 기능 · QLD 변동성 최적화판</div>\n"
+  "soxl": "  <button class=\"dl-btn\" id=\"downloadSelfBtn\" type=\"button\">⬇ 이 파일 저장 (<span id=\"dlName\">SOXL무한매수_⟦VERU⟧_⟦DATE⟧.HTML</span>)</button>\n  <div style=\"margin-bottom: 4px;\">시스템 버전: <code id=\"footerVersion\">⟦VER⟧ (⟦DATE⟧)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>\n",
+  "tqqq": "  <button class=\"dl-btn\" id=\"downloadSelfBtn\" type=\"button\">⬇ 이 파일 저장 (<span id=\"dlName\">TQQQ무한매수_⟦VERU⟧_⟦DATE⟧.HTML</span>)</button>\n  <div style=\"margin-bottom: 4px;\">시스템 버전: <code id=\"footerVersion\">⟦VER⟧ (⟦DATE⟧)</code> · SOXL판(V0.48)과 동일 기능 · TQQQ 변동성 최적화판</div>\n",
+  "qldm": "  <button class=\"dl-btn\" id=\"downloadSelfBtn\" type=\"button\">⬇ 이 파일 저장 (<span id=\"dlName\">QLD무한매수_⟦VERU⟧_⟦DATE⟧.HTML</span>)</button>\n  <div style=\"margin-bottom: 4px;\">시스템 버전: <code id=\"footerVersion\">⟦VER⟧ (⟦DATE⟧)</code> · SOXL판(V0.48)과 동일 기능 · QLD 변동성 최적화판</div>\n"
  },
  "s005": {
   "line": 778,
