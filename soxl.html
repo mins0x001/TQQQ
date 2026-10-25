@@ -8,9 +8,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.25-261025-SOXL-Panel-Unified">
+<meta name="version" content="V1.26-261025-SOXL-Panel-Unified">
 <meta name="release-date" content="261022">
-<title>SOXL 무한매수 AI (V1.25 - 261025)</title>
+<title>SOXL 무한매수 AI (V1.26 - 261025)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -748,8 +748,8 @@ body.panel .sell-row{display:none !important;}
   <div hidden><section id="card-backup"></section><div id="backupPanel"></div><button id="bkCopyBtn"></button><button id="bkRestoreBtn"></button><textarea id="bkText"></textarea><div id="bkMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">SOXL무한매수_V1_25_261025.HTML</span>)</button>
-  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.25 (261025)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">SOXL무한매수_V1_26_261025.HTML</span>)</button>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.26 (261025)</code> · TQQQ V0.19 로직 기반 SOXL 변동성 최적화판</div>
   </footer>
 
   </div>
@@ -778,10 +778,6 @@ body.panel .sell-row{display:none !important;}
       <div class="field"><label for="seedSimSeed1">시드 ($)</label><input type="number" id="seedSimSeed1" min="1" step="any" inputmode="decimal" value="36000"></div>
       <div class="field"><label for="seedSimSplits1">분할 수</label><input type="number" id="seedSimSplits1" min="1" step="1" inputmode="numeric" value="8"></div>
       <div class="field"><label for="seedSimCycle1">2단계 분할 배수 (×)</label><input type="number" id="seedSimCycle1" min="1" max="10" step="1" inputmode="numeric" value="3"></div>
-    </div>
-    <div class="tp-cmp-bar" hidden>
-      <div class="field"><label for="seedSimTp1">비교 익절 (%)</label><input type="number" id="seedSimTp1" min="0.5" max="100" step="0.5" inputmode="decimal" value="13"></div>
-      <div class="tp-cmp-hint">AI 최적 익절과 <b>같은 매수·손절 규칙</b>으로 익절%만 바꿔 총 수익률을 비교합니다. 값을 바꾸면 바로 다시 계산되고 이 기기에 기억됩니다.</div>
     </div>
     <div id="seedSimContent1">
       <div class="fg-empty">데이터를 불러오면 시드 시뮬레이션 결과가 표시됩니다.</div>
@@ -909,7 +905,7 @@ body.panel .sell-row{display:none !important;}
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V1.25", RELEASE_DATE = "261025";
+const APP_VERSION = "V1.26", RELEASE_DATE = "261025";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
 const FINNHUB_API_KEY = "daik4m9r01qr9o8hnfj0daik4m9r01qr9o8hnfjg";
@@ -1872,8 +1868,6 @@ function renderSeedSimCard(n, requirePrevDown) {
       <div class="hl-item star"><div class="hl-label">총 수익금 (실현+평가)</div><div class="hl-value" style="${col(r.grandTotal)}">${fmtUsd0Signed(r.grandTotal)}</div></div>
       <div class="hl-item line"><div class="hl-label">시드 대비 수익률</div><div class="hl-value" style="${col(retOnSeed)}">${fmtPctSigned(retOnSeed)}</div></div>
     </div>
-    ${renderTpCompare(r, seed, splits, requirePrevDown, cycleDays)}
-    ${renderRuleCompare(r, seed, splits, requirePrevDown)}
     <div class="kv-row"><span class="k">적용 규칙</span><span class="v">최대 ${r.maxRounds}회 매수 · +${r.sellPct.toFixed(2)}% 익절 · ${r.stopPct !== null ? fmtPctSigned(r.stopPct) + " 손절" : "손절선 없음"}</span></div>
     <div class="kv-row"><span class="k">매매 결과</span><span class="v">익절 ${r.profit.length} · 손절 ${r.loss.length} · 보유중 ${r.open.length} (총 ${r.trades.length}건)</span></div>
     <div class="kv-row"><span class="k">1건 최대 투입금</span><span class="v">${fmtUsd0(r.maxInvested)} (시드의 ${(r.maxInvested / r.seed * 100).toFixed(1)}%)</span></div>
@@ -1886,14 +1880,6 @@ function renderSeedSimCard(n, requirePrevDown) {
 }
 
 
-/* ---------- VV0.67: 익절% 비교 백테스트 ----------
-   같은 200봉 · 같은 시드/분할/주기 · 같은 매수 규칙 · 같은 손절선에서 익절%만 바꿔 다시 돌린다.
-   → 두 결과의 차이는 순수하게 "익절 목표"의 효과. */
-const SIM_TP_KEY = "soxl_sim_tp_v1";
-const SIM_TP_DEFAULT = 13;
-function loadSimTp() {
-  try { const v = parseFloat(localStorage.getItem(SIM_TP_KEY)); return v > 0 ? v : SIM_TP_DEFAULT; } catch (e) { return SIM_TP_DEFAULT; }
-}
 function simTrades(hist, seed, splits, prevDown, cycleDays, tp) {
   const r = simulateSeedBacktest(hist, seed, splits, prevDown, cycleDays, tp);
   if (!r) return null;
@@ -1904,116 +1890,6 @@ function simTrades(hist, seed, splits, prevDown, cycleDays, tp) {
   r.winRate = (r.profit.length + r.loss.length) ? r.profit.length / (r.profit.length + r.loss.length) * 100 : null;
   return r;
 }
-/* V0.72 근거: 같은 200봉 · 같은 시드·분할 · 같은 익절·손절에서 '2단계 규칙'만 바꿔 비교 */
-function renderRuleCompare(rNew, seed, splits, prevDown) {
-  return "";   // 🧭 2단계 규칙 비교 카드 삭제 (사용자 요청 261022)
-  const oldCycle = (engineRecs && engineRecs.oldCycle) || 5;
-  const rOld = simulateSeedBacktest(lastSoxlHist, seed, splits, prevDown, 1, undefined, oldCycle);
-  if (!rOld || !rNew) return "";
-  const st = r => {
-    const closed = r.trades.filter(t => t.exitX), days = closed.map(t => (t.exitX - t.entryX) / 864e5), n = r.trades.length;
-    return { ret: r.grandTotal / r.seed * 100, days: days.length ? days.reduce((x, y) => x + y, 0) / days.length : null,
-             rounds: n ? r.trades.reduce((x, t) => x + t.rounds, 0) / n : null, inv: n ? r.trades.reduce((x, t) => x + t.cost, 0) / n : 0 };
-  };
-  const a = st(rNew), b = st(rOld);
-  const col = v => v >= 0 ? "color:var(--up);" : "color:var(--down);";
-  const row = (k, x, y) => `<tr><td>${k}</td><td>${x}</td><td>${y}</td></tr>`;
-  const win = rNew.grandTotal >= rOld.grandTotal, diff = rNew.grandTotal - rOld.grandTotal;
-  const dd = v => v === null ? "--" : v.toFixed(1) + "일";
-  return `
-    <div class="tp-cmp rule-cmp">
-      <div class="tp-cmp-title">🧭 2단계 규칙 비교 — 신규(대기 없음 · ×${rNew.mult}) vs 기존(${oldCycle}일 주기 대기)</div>
-      <table>
-        <thead><tr><th>항목</th><th class="${win ? "win" : ""}">신규 ${rNew.splits}분할 → ${rNew.splits * rNew.mult}분할${win ? " ★" : ""}</th><th class="${!win ? "win" : ""}">기존 ${oldCycle}일 대기${!win ? " ★" : ""}</th></tr></thead>
-        <tbody>
-          ${row("총 수익금", `<b style="${col(rNew.grandTotal)}">${fmtUsd0Signed(rNew.grandTotal)}</b>`, `<b style="${col(rOld.grandTotal)}">${fmtUsd0Signed(rOld.grandTotal)}</b>`)}
-          ${row("시드 대비", `<b style="${col(a.ret)}">${fmtPctSigned(a.ret)}</b>`, `<b style="${col(b.ret)}">${fmtPctSigned(b.ret)}</b>`)}
-          ${row("익절·손절·보유", `${rNew.profit.length}·${rNew.loss.length}·${rNew.open.length}`, `${rOld.profit.length}·${rOld.loss.length}·${rOld.open.length}`)}
-          ${row("사이클당 매수", a.rounds !== null ? a.rounds.toFixed(1) + "회" : "--", b.rounds !== null ? b.rounds.toFixed(1) + "회" : "--")}
-          ${row("사이클당 투입", fmtUsd0(a.inv), fmtUsd0(b.inv))}
-          ${row("1건 최대 투입", fmtUsd0(rNew.maxInvested), fmtUsd0(rOld.maxInvested))}
-          ${row("평균 보유", dd(a.days), dd(b.days))}
-        </tbody>
-      </table>
-      <div class="tp-cmp-verdict">신규 규칙은 기존 대비 총 수익 <b style="${col(diff)}">${fmtUsd0Signed(diff)}</b>(시드 대비 <b style="${col(a.ret - b.ret)}">${(a.ret - b.ret) >= 0 ? "+" : ""}${(a.ret - b.ret).toFixed(2)}%p</b>). 2단계에서 기다리지 않는 대신 1회 금액을 1/${rNew.mult}로 줄여, 하락이 길어질수록 평단을 더 촘촘히 낮추고 반등 초입에 바로 익절선에 닿게 합니다. 하락이 짧고 급반등하면 기존(큰 금액 몇 번)이 유리할 수 있습니다 — 아래 표의 실제 체결 흐름으로 확인하세요.</div>
-    </div>`;
-}
-function renderTpCompare(rAi, seed, splits, prevDown, cycleDays) {
-  return "";   // 익절 기준 비교 카드 제거 (V1.2x)
-  const inp = document.getElementById("seedSimTp1");
-  const tp = inp ? parseFloat(inp.value) : NaN;
-  if (!(tp > 0)) return `<div class="tp-cmp"><div class="tp-cmp-title">🎯 익절 기준 비교</div><div class="fg-empty">비교 익절(%)을 0보다 크게 입력하세요.</div></div>`;
-  const hist = lastSoxlHist;
-  const rFx = simTrades(hist, seed, splits, prevDown, cycleDays, tp);
-  if (!rFx) return "";
-  rAi.retOnSeed = rAi.grandTotal / rAi.seed * 100;
-  const closedAi = rAi.trades.filter(t => t.exitX).map(t => (t.exitX - t.entryX) / 86400000);
-  rAi.avgDays = closedAi.length ? closedAi.reduce((a, b) => a + b, 0) / closedAi.length : null;
-  rAi.winRate = (rAi.profit.length + rAi.loss.length) ? rAi.profit.length / (rAi.profit.length + rAi.loss.length) * 100 : null;
-
-  const col = v => v >= 0 ? "color:var(--up);" : "color:var(--down);";
-  const same = Math.abs(tp - rAi.sellPct) < 1e-9;
-  const aiWin = rAi.grandTotal >= rFx.grandTotal;
-  const row = (k, a, b) => `<tr><td>${k}</td><td>${a}</td><td>${b}</td></tr>`;
-  const pct = v => v === null ? "--" : v.toFixed(0) + "%";
-  const dd = v => v === null ? "--" : v.toFixed(1) + "일";
-  const diffAmt = rFx.grandTotal - rAi.grandTotal;
-  const diffPp = rFx.retOnSeed - rAi.retOnSeed;
-
-  // 주변 익절% 스윕 — 지금 고른 값이 어느 위치인지 한눈에
-  const step = SELL_SWEEP_STEP;
-  const cands = new Set([rAi.sellPct, tp]);
-  for (let k = -3; k <= 3; k++) { const v = Math.round((tp + k * step * 2) * 100) / 100; if (v > 0) cands.add(v); }
-  const sweep = [...cands].sort((a, b) => a - b).map(v => {
-    const r = v === tp ? rFx : (v === rAi.sellPct ? rAi : simTrades(hist, seed, splits, prevDown, cycleDays, v));
-    return r ? { v, ret: r.grandTotal / r.seed * 100 } : null;
-  }).filter(Boolean);
-  const bestSweep = sweep.reduce((a, b) => b.ret > a.ret ? b : a, sweep[0]);
-  const sweepHtml = sweep.map(x => `<span class="${x.v === tp ? "cur" : x.v === rAi.sellPct ? "ai" : ""}">+${x.v}% → <b style="${col(x.ret)}">${fmtPctSigned(x.ret)}</b>${x === bestSweep ? " ★" : ""}</span>`).join("");
-
-  const verdict = same
-    ? `비교 익절이 AI 최적(+${rAi.sellPct.toFixed(2)}%)과 같아 결과가 동일합니다. 다른 값을 넣어 비교해 보세요.`
-    : `<b>+${tp}% 고정</b>은 AI 최적 <b>+${rAi.sellPct.toFixed(2)}%</b> 대비 총 수익 <b style="${col(diffAmt)}">${fmtUsd0Signed(diffAmt)}</b> · 시드 대비 <b style="${col(diffPp)}">${diffPp >= 0 ? "+" : ""}${diffPp.toFixed(2)}%p</b> ${diffAmt > 0 ? "더 높습니다." : diffAmt < 0 ? "낮습니다." : "같습니다."}`
-      + ` 사이클 ${rAi.profit.length + rAi.loss.length}회 → ${rFx.profit.length + rFx.loss.length}회, 평균 ${dd(rAi.avgDays)} → ${dd(rFx.avgDays)}.`
-      + (rFx.open.length && !rAi.open.length ? ` 단, +${tp}%는 아직 보유 중인 건(평가손익 ${fmtUsd0Signed(rFx.unrealized)})이 포함돼 있습니다.` : "");
-
-  const fxRows = rFx.trades.map(t => {
-    const label = t.outcome === "profit" ? "익절" : t.outcome === "loss" ? "손절" : "보유중";
-    const lc = t.outcome === "profit" ? "var(--up)" : t.outcome === "loss" ? "var(--down)" : "var(--text-faint)";
-    return `<tr><td>${fmtCompactDate(t.entryX)} · ${t.rounds}회</td><td>${t.exitX ? fmtCompactDate(t.exitX) : "--"} <span style="color:${lc};">${label}</span></td><td style="${col(t.pnl)}">${fmtUsd0Signed(t.pnl)}<br><span style="font-size:11px;">${fmtPctSigned(t.pnlPct)}</span></td></tr>`;
-  }).join("");
-
-  return `
-    <div class="tp-cmp">
-      <div class="tp-cmp-title">🎯 익절 기준 비교 (같은 200봉 · 같은 매수·손절 규칙)</div>
-      <table>
-        <thead><tr><th>항목</th><th class="${aiWin ? "win" : ""}">AI 최적 +${rAi.sellPct.toFixed(2)}%${aiWin && !same ? " ★" : ""}</th><th class="${!aiWin ? "win" : ""}">고정 +${tp}%${!aiWin ? " ★" : ""}</th></tr></thead>
-        <tbody>
-          ${row("총 수익금", `<b style="${col(rAi.grandTotal)}">${fmtUsd0Signed(rAi.grandTotal)}</b>`, `<b style="${col(rFx.grandTotal)}">${fmtUsd0Signed(rFx.grandTotal)}</b>`)}
-          ${row("시드 대비", `<b style="${col(rAi.retOnSeed)}">${fmtPctSigned(rAi.retOnSeed)}</b>`, `<b style="${col(rFx.retOnSeed)}">${fmtPctSigned(rFx.retOnSeed)}</b>`)}
-          ${row("실현 손익", `<span style="${col(rAi.realizedTotal)}">${fmtUsd0Signed(rAi.realizedTotal)}</span>`, `<span style="${col(rFx.realizedTotal)}">${fmtUsd0Signed(rFx.realizedTotal)}</span>`)}
-          ${row("보유중 평가", `<span style="${col(rAi.unrealized)}">${fmtUsd0Signed(rAi.unrealized)}</span>`, `<span style="${col(rFx.unrealized)}">${fmtUsd0Signed(rFx.unrealized)}</span>`)}
-          ${row("익절·손절·보유", `${rAi.profit.length}·${rAi.loss.length}·${rAi.open.length}`, `${rFx.profit.length}·${rFx.loss.length}·${rFx.open.length}`)}
-          ${row("승률", pct(rAi.winRate), pct(rFx.winRate))}
-          ${row("평균 보유", dd(rAi.avgDays), dd(rFx.avgDays))}
-          ${row("1건 최대 투입", fmtUsd0(rAi.maxInvested), fmtUsd0(rFx.maxInvested))}
-        </tbody>
-      </table>
-      <div class="tp-cmp-verdict">${verdict}</div>
-      <div class="tp-cmp-sweep">${sweepHtml}</div>
-    </div>`;
-}
-(function () {
-  const inp = document.getElementById("seedSimTp1");
-  if (!inp) return;
-  inp.value = loadSimTp();
-  inp.addEventListener("input", () => {
-    const v = parseFloat(inp.value);
-    if (v > 0) { try { localStorage.setItem(SIM_TP_KEY, String(v)); } catch (e) {} }
-    renderSeedSimCard(1, true);
-  });
-})();
-
 function renderSeedSimCards() {
   renderSeedSimCard(1, true); // 종가 < 평단 그리고 종가 < 전일 종가
 }
