@@ -28,6 +28,8 @@ const CASES = function () {   // 브라우저 안에서 실행 — 결정적 가
     R['seedBt2' + k] = T(0, () => simulateSeedBacktest(h, 36000, 8, false, 3, 12, 14)); R['sim' + k] = T(0, () => simTrades(h, 36000, 8, true, 14, 13));
     R['sim2' + k] = T(0, () => simTrades(h, 70000, 10, false, 6, 8)); R['next' + k] = T(0, () => nextTradingDay(h[100].x, 3));
   }
+  R.tie = T(0, () => { const ys = [100, 98, 96, 96, 95, 95, 99, 101, 103, 110], h = ys.map((y, i) => ({ d: 'd' + i, x: Date.UTC(2025, 0, 2 + i), o: y, h: y, l: y, y }));   // 같은 값 마감일(평단·전일 종가와 동일)도 매수
+    const r = simulateSeedBacktest(h, 10000, 5, true, 3, 5); return r && r.trades.map(t => t.buys.map(b => b.price)); });
   R.stage = T(0, () => [stagePlan(36000, 10, 3, 3), stagePlan(70000, 8, 2, 4)]);
   R.fmt = T(0, () => [fmtUsd0(12345.678), fmtUsd0Signed(-987.6), fmtUsdCompact(1234567), fmtUsdCompact(-4321), fmtPctSigned(12.345), fmtPctSigned(-0.5, 1), fmtPct1(3.456), fmtCompactDate(Date.UTC(2026, 0, 13)), fmtShortDate(Date.UTC(2026, 1, 3)), fmtDateFull(Date.UTC(2026, 1, 3)), fmtKrDate('2026-02-03')]);
   return R;
