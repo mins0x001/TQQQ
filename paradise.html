@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.32-261023-FinancialRoadmap">
+<meta name="version" content="V1.33-261025-FinancialRoadmap">
 <meta name="release-date" content="261021">
-<title>QLD 파이낸셜 로드맵 (V1.32 - 261023)</title>
+<title>QLD 파이낸셜 로드맵 (V1.33 - 261025)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -191,7 +191,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.32", RELEASE_DATE = "261023";
+const APP_VERSION = "V1.33", RELEASE_DATE = "261025";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -496,10 +496,10 @@ function aiRates(m) {
   const u = m.ust && +m.ust.last; if (u > 0) set("postR", Math.min(9, Math.max(3, 0.5 * u + 0.5 * 6.5)), `국채 ${u.toFixed(1)}% · 배당주 6.5% 반반`);
   render();
 }
-/* 🗺 공격형 배분 + 운영 규칙 (자동): 레버리지 목표 75% → 은퇴 4년 전부터 매년 15%p씩 낮춰 은퇴 때 20%
-   레버리지 안 비율 고정: QLD평생 45 · SOXL무한 20 · TQQQ거치 10 (합 75) · 나머지 단기채·MMF · 은퇴 시점 = 🎯역산 년월(없으면 은퇴 시기) */
-const PF = [["QLD 평생매수", 45, "q", "3분의 2 즉시 매수 + 3분의 1 평생매수 엔진"], ["SOXL 무한매수", 20, "s", "21분할 · 익절 +15%"], ["TQQQ 거치", 10, "t", "한 번에 매수 후 보유"]];
-const levAt = r => { const y = Math.max(0, Math.ceil(r - 1e-9)); return y >= 5 ? 75 : Math.max(20, 75 - 15 * (5 - y)); };   // r = 은퇴까지 남은 해 (올림)
+/* 🗺 공격형 배분 + 운영 규칙 (자동): 레버리지 목표 80% → 은퇴 4년 전부터 매년 15%p씩 낮춰 은퇴 때 20%
+   레버리지 안 비율 고정: QLD평생 50 · SOXL무한 20 · TQQQ거치 10 (합 80) · 나머지 20% = 🅿 SPYM · 은퇴 시점 = 🎯역산 년월(없으면 은퇴 시기) */
+const PF = [["QLD 평생매수", 50, "q", "3분의 2 즉시 매수 + 3분의 1 평생매수 엔진"], ["SOXL 무한매수", 20, "s", "21분할 · 익절 +15%"], ["TQQQ 거치", 10, "t", "한 번에 매수 후 보유"]];
+const levAt = r => { const y = Math.max(0, Math.ceil(r - 1e-9)); return y >= 5 ? 80 : Math.max(20, 80 - 15 * (5 - y)); };   // r = 은퇴까지 남은 해 (올림)
 function pf() {
   const el = $("pf"), inp = $("pfAmt"); if (!el) return;
   const EX = +V.pfSafe > 0 ? +V.pfSafe : 0, sIn = $("pfSafe"); if (document.activeElement !== sIn) sIn.value = EX ? EX.toLocaleString("ko-KR") : "";
@@ -508,7 +508,7 @@ function pf() {
   $("pfAcct").checked = !!V.pfAcct; $("pfAmtL").textContent = act ? "실제 계좌" : "가상 투자금"; document.querySelectorAll(".pfx").forEach(x => x.style.display = V.pfAcct ? "" : "none");
   inp.readOnly = act; if (document.activeElement !== inp) inp.value = Math.round(A).toLocaleString("ko-KR");
   const g = ymParse(V.goalYM), now = new Date(), yl = g ? ((g.y - now.getFullYear()) * 12 + (g.mo - 1 - now.getMonth())) / 12 : Math.round(V.n);
-  const L = levAt(yl), k = L / 75, safe = 100 - L, up = Math.min(95, L + 10), lo = Math.max(10, L - 15);
+  const L = levAt(yl), k = L / 80, safe = 100 - L, up = Math.min(95, L + 10), lo = Math.max(10, L - 15);
   $("pfHint").innerHTML = `⏳ 은퇴까지 <b>${yl.toFixed(1)}년</b> ${g ? `(${g.y}.${String(g.mo).padStart(2, "0")})` : "(🎯역산에 년월을 넣으면 더 정확)"}` + (act ? ` · 🏦 실제 계좌 자동 (${LEV.d})` : V.pfAcct ? ` · 🏦 계좌 데이터 없음 → 가상 투자금으로 계산` : ` · ✎ 가상 투자금 (저장됨)`);
   const AV = { q: LEV && LEV.q, s: LEV && LEV.s, t: LEV && LEV.t }, acN = (x, tp) => act ? `<div class="pf-ac"><span>실제</span><b>$${Math.round(x).toLocaleString("en-US")}</b><small>₩ ${man(x * V.fx / 1e4)}</small><em class="${Math.abs(x * V.fx / 1e4 / A * 100 - tp) < 2 ? "" : x * V.fx / 1e4 / A * 100 > tp ? "hi" : "lo"}">${(x * V.fx / 1e4 / A * 100).toFixed(0)}%</em></div>` : "";
   const $u = m => "$" + Math.round(m * 1e4 / V.fx).toLocaleString("en-US"), amt2 = m => `${$u(m)}<small class="kw">₩ ${man(m)}</small>`;
@@ -523,8 +523,8 @@ function pf() {
         <div class="m">${need < 0 ? `🔴 <b>${up}% 초과</b> → 1월에 레버리지 <b>${man(-need)}원</b> 팔아 SPYM으로` : need > 0 ? `🟢 <b>${lo}% 미만</b> → 1월에 SPYM <b>${man(need)}원</b>으로 레버리지 사기` : `✅ 범위 안 (${lo}~${up}%) — 할 일 없음`}</div></div>`;
   let plan = "";
   if (act) {
-    const fx = V.fx / 1e4, cashM = LEV.cash * fx, LT = Math.max(0, A * L / 100 - cashM),   // 레버리지 목표에서 매수 대기 현금 몫을 뺀 나머지를 3종에 45:20:10
-      items = [["QLD", "QLD평생", LEV.q * fx, LT * 45 / 75], ["SOXL", "SOXL무한", LEV.s * fx, LT * 20 / 75], ["TQQQ", "TQQQ거치", LEV.t * fx, LT * 10 / 75], ["SAFE", "🅿 SPYM", SF, A * safe / 100]];
+    const fx = V.fx / 1e4, cashM = LEV.cash * fx, LT = Math.max(0, A * L / 100 - cashM),   // 레버리지 목표에서 매수 대기 현금 몫을 뺀 나머지를 3종에 50:20:10
+      items = [["QLD", "QLD평생", LEV.q * fx, LT * 50 / 80], ["SOXL", "SOXL무한", LEV.s * fx, LT * 20 / 80], ["TQQQ", "TQQQ거치", LEV.t * fx, LT * 10 / 80], ["SAFE", "🅿 SPYM", SF, A * safe / 100]];
     const go = need !== 0, sh = (sy, m) => PX[sy] ? ` · 약 <b>${Math.ceil(Math.abs(m) / fx / PX[sy])}주</b>` : "";
     const rows = items.map(([sy, nm, a, t]) => { const d = t - a, small = Math.abs(d) < A * 0.02;
       return `<tr><td>${nm}</td><td>${man(t)}</td><td>${man(a)}</td><td class="${!go || small ? "" : d < 0 ? "dn" : "up"}">${!go || small ? "유지" : d < 0 ? `팔기 ${man(-d)}${sy !== "SAFE" ? sh(sy, d) : ""}` : `사기 ${man(d)}${sy !== "SAFE" ? sh(sy, d) : ""}`}</td></tr>`; }).join("");
@@ -532,7 +532,7 @@ function pf() {
       <table><tr><th>자산</th><th>목표</th><th>실제</th><th>할 일</th></tr>${rows}</table>
       <div class="hint">${go ? "① <b>팔기</b> 먼저 → ② 그 돈으로 <b>사기</b> (계좌가 다르면 판 돈을 QLD평생 계좌로 이체) · 차이 2% 미만은 유지 · 매수 대기 현금 " + man(cashM) + "원은 무한·평생매수 몫이라 그대로" : `레버리지가 ${lo}~${up}% 범위 안이라 사고팔 필요 없음 · 1월 점검 때 다시 계산`} · 종가 기준 주수는 대략</div></div>`;
   }
-  el.innerHTML = st + plan + `<div class="pf-h"><span>올해 레버리지 목표</span><b>${L}%</b><small>안전 자산 ${safe}% · 나스닥 ${(55 * k).toFixed(0)}% · 반도체 ${(20 * k).toFixed(0)}%</small></div>
+  el.innerHTML = st + plan + `<div class="pf-h"><span>올해 레버리지 목표</span><b>${L}%</b><small>안전 자산 ${safe}% · 나스닥 ${(60 * k).toFixed(0)}% · 반도체 ${(20 * k).toFixed(0)}%</small></div>
     <div class="pf-l">${rows}</div>
     <div class="hint">🤖 AI 추천 · 은퇴 ${yl.toFixed(1)}년 전 기준 레버리지 ${L}% · 근거: QLD평생 백테스트 보수 연 ${AIV.lifeR ?? V.lifeR}% · 은퇴 후 명목 ${AIV.postR ?? V.postR}% − 물가 ${AIV.infl ?? V.infl}% (매일 자동)</div>
     <div class="pf-rules"><div class="t">📌 운영 규칙 · 1년에 한 번 1월</div>
