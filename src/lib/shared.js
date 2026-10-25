@@ -93,6 +93,12 @@ function hideBanner() {
   document.getElementById("errorBanner").classList.add("hidden");
 }
 //@@fn initTabs
+/* 주소의 #카드id 로 해당 탭을 열고 그 카드로 스크롤 (다른 앱/통합 앱에서 링크로 바로 이동) */
+function jumpToHash() {
+  const id = decodeURIComponent((location.hash || "").slice(1)); if (!/^card-[\w-]+$/.test(id)) return;
+  const el = document.getElementById(id), pg = el && el.closest(".page"); if (!pg) return;
+  goTab(pg.id); setTimeout(() => el.scrollIntoView({ block: "start", behavior: "smooth" }), 120);
+}
 function initTabs() {
   document.querySelectorAll("#tabbar .tb").forEach(b => b.addEventListener("click", () => {
     const already = b.classList.contains("on");
@@ -103,6 +109,7 @@ function initTabs() {
   try { saved = sessionStorage.getItem(TAB_SS_KEY); } catch (e) {}
   if (saved && document.getElementById(saved)) goTab(saved);
   applyViewMode();
+  jumpToHash();
   /* 카드가 다시 그려질 때 생기는 설명 문구(각주)를 📖설명 탭으로 옮김 + 주문 탭 알림 점 */
   const dynBox = {};
   document.querySelectorAll(".help-dyn").forEach(d => dynBox[d.dataset.for] = d);
