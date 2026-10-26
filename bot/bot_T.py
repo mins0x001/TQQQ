@@ -34,7 +34,7 @@ import urllib.parse
 import urllib.request
 from zoneinfo import ZoneInfo
 
-VERSION = "MUHANBOT V1.18 (261019)"
+VERSION = "MUHANBOT V1.19 (261026)"
 MERITZ_BASE = os.environ.get("MERITZ_BASE_URL", "https://openapi.imeritz.com:9443").rstrip("/")
 ET, KST = ZoneInfo("America/New_York"), ZoneInfo("Asia/Seoul")
 APP_PAGES = {"TQQQ": "tqqq.html"}
@@ -497,6 +497,23 @@ def exchange_and_close(api: Meritz, sym: str, exch: str, ymd: str):
         if closes:
             return ex, closes.get(ymd)
     return exch or EXCH_GUESS.get(sym, ["0537"])[0], None
+
+
+def manual_override(cfg: dict) -> bool:
+    """⚡ 바로 실행(수동 workflow_dispatch) + 앱이 방금 쓴 manual_until 이 아직 유효할 때만 V7 자동 한도를 면제한다 — 예약(cron) 실행은 절대 면제하지 않음"""
+    if os.environ.get("GITHUB_EVENT_NAME") != "workflow_dispatch":
+        return False
+    try:
+        t = dt.datetime.fromisoformat(str(cfg.get("manual_until") or "").replace("Z", "+00:00"))
+        now = dt.datetime.now(dt.timezone.utc)
+        return t.tzinfo is not None and now <= t <= now + dt.timedelta(minutes=30)
+    except Exception:
+        return False
+
+
+def hard_cap(cfg: dict) -> float:
+    """수동 실행이어도 넘을 수 없는 절대 한도 — 설정 max_order_usd (기본 $20,000)"""
+    return float(cfg.get("max_order_usd") or 20000)
 
 
 def auto_limit(plan: dict, cfg: dict) -> float:
@@ -969,7 +986,10 @@ def run() -> int:
                     amt = o["price"] * o["qty"]
                     lim = auto_limit(plan, cfg)
                     if amt > lim + 0.01:
-                        c.fail(f"V7 매수 ${amt:,.0f} > 자동 한도 ${lim:,.0f} (1회 매수금 × 2 · 평생매수는 엔진 금액)", "buy")
+                        if manual_override(cfg) and amt <= hard_cap(cfg):
+                            c.ok(f"V7 수동 실행 — 자동 한도 ${lim:,.0f} 면제 (매수 ${amt:,.0f} ≤ 절대 한도 ${hard_cap(cfg):,.0f})")
+                        else:
+                            c.fail(f"V7 매수 ${amt:,.0f} > 자동 한도 ${lim:,.0f} (1회 매수금 × 2 · 평생매수는 엔진 금액)", "buy")
                     try:
                         cash = api.usd_orderable()
                         if cash is not None:
