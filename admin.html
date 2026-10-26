@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://api.github.com https://gist.githubusercontent.com https://raw.githubusercontent.com https://api.twelvedata.com https://finnhub.io https://www.alphavantage.co https://production.dataviz.cnn.io https://openapi.imeritz.com https://api.telegram.org https://ntfy.sh https://api.cron-job.org https://www.cmegroup.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="version" content="V1.05-261025-Admin">
-<meta name="release-date" content="261025">
+<meta name="version" content="V1.05-261026-Admin">
+<meta name="release-date" content="261026">
 <meta name="robots" content="noindex">
-<title>사용자 관리 (V1.05 - 261025)</title>
+<title>사용자 관리 (V1.05 - 261026)</title>
 <style>
   :root{--bg:#070B16;--panel:#111A2E;--panel-2:#0B1224;--border:#24345A;--text:#E6EDF7;--dim:#B7C2D6;--faint:#8E9AB0;--glow:#5EEAD4;--amber:#F5A524;--up:#38D98C;--dn:#FF8A8A;}
   *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--text);font:14px/1.6 -apple-system,BlinkMacSystemFont,"Pretendard","Noto Sans KR",sans-serif;}
@@ -27,7 +27,7 @@
 <body>
 <div class="wrap">
   <h1>🛡 사용자 관리 <a class="btn" href="./" style="text-decoration:none;font-size:12px;">🏠 허브</a></h1>
-  <div class="ver">V1.05 (261025) · 아이디별 계좌(토큰·Gist) · 비밀번호는 저장 안 함 — 초기화만 가능</div>
+  <div class="ver">V1.05 (261026) · 아이디별 계좌(토큰·Gist) · 비밀번호는 저장 안 함 — 초기화만 가능</div>
   <div id="msg"></div>
   <section class="card" id="lock"><h2>🔒 관리자 확인</h2>
     <input class="inp" type="password" id="adPw" placeholder="내 비밀번호 (관리자 금고 열기)" autocomplete="current-password">
@@ -49,7 +49,7 @@
   </div>
 </div>
 <script id="auth-inline">
-/* 무한매수 로그인 V1.05 (261025)
+/* 무한매수 로그인 V1.05 (261026)
    · 아이디마다 GitHub 토큰·Gist(=서버 저장소)를 따로 → 기록·설정·봇은 모두 아이디별 Gist 가 메인, 기기는 임시 캐시
    · 비밀번호는 어디에도 저장하지 않음: PBKDF2-SHA256 60만 회 → AES-GCM-256 으로 각자 정보를 잠금 (관리자도 볼 수 없음 · 초기화만)
    · auth/users.json(공개 저장소)에는 아이디 해시 + 암호문만 · 관리자 금고(전체 목록)는 무작위 키 K 로 잠그고 K 는 관리자 비밀번호로만 열림
