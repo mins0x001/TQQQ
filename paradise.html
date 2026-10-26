@@ -5,9 +5,9 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://api.github.com https://gist.githubusercontent.com https://raw.githubusercontent.com https://api.twelvedata.com https://finnhub.io https://www.alphavantage.co https://production.dataviz.cnn.io https://openapi.imeritz.com https://api.telegram.org https://ntfy.sh https://api.cron-job.org https://www.cmegroup.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.36-261026-FinancialRoadmap">
+<meta name="version" content="V1.37-261026-FinancialRoadmap">
 <meta name="release-date" content="261021">
-<title>QLD 파이낸셜 로드맵 (V1.36 - 261026)</title>
+<title>QLD 파이낸셜 로드맵 (V1.37 - 261026)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -96,7 +96,7 @@
   .pf-l{display:grid;gap:6px;margin-top:10px;} .pf-r{display:grid;grid-template-columns:1fr auto 46px;gap:8px;align-items:center;padding:10px 11px;border-radius:12px;background:var(--panel-2);border:1px solid var(--border);border-left-width:4px;}
   .pf-r .n{font-weight:800;font-size:13.5px;line-height:1.3;} .pf-r .n small{display:block;font-weight:600;font-size:11px;color:var(--text-faint);} .pf-r b{font:900 15px var(--f-mono);} .pf-r em{font:800 13px var(--f-mono);font-style:normal;text-align:right;color:var(--text-dim);}
   .pf-rb2{grid-column:1/-1;display:grid;grid-template-columns:1fr auto;gap:5px 10px;align-items:center;margin-top:7px;padding-top:7px;border-top:1px dashed rgba(255,255,255,.08);font-size:12.5px;}
-  .pf-rb2 .cg{color:var(--text-dim);font-weight:700;} .pf-rb2 .cg b{font:900 13px var(--f-mono);color:var(--text);} .pf-rb2 .cg b.ch{color:var(--amber);}
+  .pf-rb2 .cg{color:var(--text-dim);font-weight:700;} .pf-rb2 .cg b{font:900 13px var(--f-mono);color:var(--text);} .pf-rb2 input.tg{width:46px;margin:0 2px;padding:3px 5px;border-radius:8px;border:1px solid var(--amber);background:var(--panel-2);color:var(--text);font:900 13px var(--f-mono);text-align:right;}
   .pf-rb2 .adj{display:flex;gap:6px;align-items:center;} .pf-rb2 .adj button{width:34px;height:30px;border-radius:9px;border:1px solid var(--border);background:var(--panel);color:var(--text);font:900 17px var(--f-mono);cursor:pointer;line-height:1;}
   .pf-rb2 .td{grid-column:1/-1;font-weight:800;} .pf-rb2 .td small{color:var(--text-faint);font-weight:600;font-size:11px;} .pf-rb2 .td .dn{color:#FF8A8A;} .pf-rb2 .td .up{color:#38D98C;} .pf-rb2 .td .ok{color:var(--text-faint);}
   .pf-rs{margin-top:10px;font-size:12px;font-weight:800;color:var(--amber);} .pf-rs.off{color:var(--text-faint);font-weight:600;} .pf-rs button,.pf-b2{margin-left:6px;padding:3px 9px;border-radius:8px;border:1px solid var(--border);background:var(--panel);color:var(--text);font:800 11.5px inherit;cursor:pointer;}
@@ -148,9 +148,6 @@
     <div class="pf-in"><label for="pfAmt" id="pfAmtL">가상 투자금</label><div class="u"><input id="pfAmt" inputmode="numeric" placeholder="100,000" autocomplete="off"><span>만원</span></div>
       <label for="pfSafe" class="pfx">밖 안전자산</label><div class="u pfx"><input id="pfSafe" inputmode="numeric" placeholder="없으면 비워 두기" autocomplete="off"><span>만원</span></div></div>
     <div class="hint pf-hn"><span id="pfHint"></span><span class="pfx"><br>계좌 안 SPYM(S&P 500)은 <b>자동</b> · 다른 은행 예금·MMF만 직접 입력 (선택)</span></div>
-    <details class="pf-set"><summary>⚙ 기본 비중 설정 · 평생 저장</summary>
-      <div class="pf-sg"><label>QLD평생<input id="pfBq" inputmode="numeric" autocomplete="off"></label><label>SOXL<input id="pfBs" inputmode="numeric" autocomplete="off"></label><label>TQQQ<input id="pfBt" inputmode="numeric" autocomplete="off"></label><span>%</span></div>
-      <div class="hint"><span id="pfBmsg">합 80% → SPYM 20% (나머지 자동 · 합은 10~95%)</span> · 모든 기기에 동기화 <button type="button" id="pfBreset" class="pf-b2">기본값 50/20/10</button></div></details>
     <div id="pf"></div></section>
 
   <section class="card" data-tab="goal"><div class="kick">STEP 1 · 자산 목표</div><h2>은퇴 시점 내 자산은?</h2>
@@ -203,7 +200,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.36", RELEASE_DATE = "261026";
+const APP_VERSION = "V1.37", RELEASE_DATE = "261026";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -511,33 +508,33 @@ function aiRates(m) {
 /* 🗺 공격형 배분 + 운영 규칙 (자동): 레버리지 목표 80% → 은퇴 4년 전부터 매년 15%p씩 낮춰 은퇴 때 20%
    레버리지 안 비율 고정: QLD평생 50 · SOXL무한 20 · TQQQ거치 10 (합 80) · 나머지 20% = 🅿 SPYM · 은퇴 시점 = 🎯역산 년월(없으면 은퇴 시기) */
 const PF = [["QLD 평생매수", 50, "q", "3분의 2 즉시 매수 + 3분의 1 평생매수 엔진"], ["SOXL 무한매수", 20, "s", "21분할 · 익절 +15%"], ["TQQQ 거치", 10, "t", "한 번에 매수 후 보유"]];
-const BASE_DEF = { q: 50, s: 20, t: 10 };   // 기본 비중 (⚙ 설정에서 바꾸면 평생 저장 · 모든 기기 동기화)
-const baseW = () => { const b = Object.assign({}, BASE_DEF, V.pfBase || {}); return b; };
-let ADJ = { q: 0, s: 0, t: 0 };               // 가상 조정(%p) — 저장 안 함 · 새로고침하면 기본값
+const BASE_DEF = { q: 50, s: 20, t: 10 };   // 자동(글라이드) 기본 비중 — 목표를 직접 넣지 않았을 때만 사용
+let ADJ = { q: 0, s: 0, t: 0 }, TGT_K = 1;               // 가상 조정(%p) = '현재' 보유 비중을 바꿔 봄 (목표는 그대로 · 저장 안 함)
+const tgtSaved = () => { const t = V.pfTgt; return t && ["q", "s", "t"].every(x => isFinite(+t[x]) && +t[x] >= 0) && +t.q + +t.s + +t.t <= 100 ? { q: +t.q, s: +t.s, t: +t.t } : null; };
 const levAt = (r, top) => { top = top || 80; const y = Math.max(0, Math.ceil(r - 1e-9)); return y >= 5 ? top : Math.max(Math.min(20, top), top - 15 * (5 - y)); };   // r = 은퇴까지 남은 해 (올림)
 function pf() {
   const el = $("pf"), inp = $("pfAmt"); if (!el) return;
   const EX = +V.pfSafe > 0 ? +V.pfSafe : 0, sIn = $("pfSafe"); if (document.activeElement !== sIn) sIn.value = EX ? EX.toLocaleString("ko-KR") : "";
   const autoS = LEV ? LEV.safe * V.fx / 1e4 : 0, SF = autoS + EX;
   const levM = LEV ? LEV.usd * V.fx / 1e4 : 0, act = !!V.pfAcct && !!LEV, A = act ? levM + SF : (+V.pfAmt > 0 ? +V.pfAmt : 100000);
-  { const b0 = baseW(); ['q', 's', 't'].forEach(x => { const i = $('pfB' + x); if (i && document.activeElement !== i) i.value = b0[x]; }); }
   $("pfAcct").checked = !!V.pfAcct; $("pfAmtL").textContent = act ? "실제 계좌" : "가상 투자금"; document.querySelectorAll(".pfx").forEach(x => x.style.display = V.pfAcct ? "" : "none");
   inp.readOnly = act; if (document.activeElement !== inp) inp.value = Math.round(A).toLocaleString("ko-KR");
   const g = ymParse(V.goalYM), now = new Date(), yl = g ? ((g.y - now.getFullYear()) * 12 + (g.mo - 1 - now.getMonth())) / 12 : Math.round(V.n);
-  const BW = baseW(), TOP = BW.q + BW.s + BW.t, L = levAt(yl, TOP), k = L / TOP, safe = 100 - L, up = Math.min(95, L + 10), lo = Math.max(10, L - 15);
+  const BW = BASE_DEF, TOP = BW.q + BW.s + BW.t, L = levAt(yl, TOP), k = L / TOP; TGT_K = k; const safe = 100 - L, up = Math.min(95, L + 10), lo = Math.max(10, L - 15);
   $("pfHint").innerHTML = `⏳ 은퇴까지 <b>${yl.toFixed(1)}년</b> ${g ? `(${g.y}.${String(g.mo).padStart(2, "0")})` : "(🎯역산에 년월을 넣으면 더 정확)"}` + (act ? ` · 🏦 실제 계좌 자동 (${LEV.d})` : V.pfAcct ? ` · 🏦 계좌 데이터 없음 → 가상 투자금으로 계산` : ` · ✎ 가상 투자금 (저장됨)`);
   const AV = { q: LEV && LEV.q, s: LEV && LEV.s, t: LEV && LEV.t }, acN = (x, tp) => act ? `<div class="pf-ac"><span>실제</span><b>$${Math.round(x).toLocaleString("en-US")}</b><small>₩ ${man(x * V.fx / 1e4)}</small><em class="${Math.abs(x * V.fx / 1e4 / A * 100 - tp) < 2 ? "" : x * V.fx / 1e4 / A * 100 > tp ? "hi" : "lo"}">${(x * V.fx / 1e4 / A * 100).toFixed(0)}%</em></div>` : "";
   const $u = m => "$" + Math.round(m * 1e4 / V.fx).toLocaleString("en-US"), amt2 = m => `${$u(m)}<small class="kw">₩ ${man(m)}</small>`;
   /* 🔁 카드별 현재 → 목표 · 매도/매수 주수 (계산은 rebal.js · 여기서는 값만 넘김) */
   const fxm = V.fx / 1e4, cashM = act ? LEV.cash * fxm : 0, RB = A - cashM;       // 매수 대기 현금은 무한·평생매수 몫 → 비중 계산에서 제외
-  const defP = { q: BW.q * k, s: BW.s * k, t: BW.t * k }, tgtP = Rebal.targets(defP, ADJ, "p");
+  const defP = { q: BW.q * k, s: BW.s * k, t: BW.t * k }, ts = tgtSaved(), tgtP = Rebal.targets(ts || defP, null, "p");     // 목표 = 직접 넣은 % (없으면 자동 비중)
   const curA = act ? { q: LEV.q * fxm, s: LEV.s * fxm, t: LEV.t * fxm, p: SF } : { q: RB * defP.q / 100, s: RB * defP.s / 100, t: RB * defP.t / 100, p: RB * safe / 100 };
+  { const sa = ADJ.q + ADJ.s + ADJ.t; ["q", "s", "t"].forEach(x => curA[x] = Math.max(0, curA[x] + RB * ADJ[x] / 100)); curA.p = Math.max(0, curA.p - RB * sa / 100); }   // ＋− = 현재 값만 가상으로 이동 (SPYM 이 나머지)
   const tgtA = {}; Object.keys(tgtP).forEach(x => tgtA[x] = RB * tgtP[x] / 100);
   const RBR = {}; Rebal.plan({ keys: ["q", "s", "t", "p"], base: RB, cur: curA, tgt: tgtA, px: { q: PX.QLD, s: PX.SOXL, t: PX.TQQQ, p: PX.SPYM }, toUsd: 1e4 / V.fx }).forEach(r => RBR[r.key] = r);
   const adjd = ADJ.q || ADJ.s || ADJ.t, SYM = { q: "QLD", s: "SOXL", t: "TQQQ", p: "SPYM" };
-  const rbBlock = c => { const r = RBR[c], tp = tgtP[c], ch = Math.abs(tp - r.curPct) >= 0.05;
+  const rbBlock = c => { const r = RBR[c], tp = tgtP[c];
     const todo = r.act === "hold" ? `<span class="ok">✅ 유지</span>` : `<span class="${r.act === "sell" ? "dn" : "up"}">${r.act === "sell" ? "🔴 매도" : "🟢 매수"} <b>${r.shares == null ? "≈ $" + Math.round(r.usd).toLocaleString("en-US") : r.shares.toLocaleString("en-US") + "주"}</b>${r.shares == null ? "" : ` <small>≈ $${Math.round(r.cost).toLocaleString("en-US")} · ${SYM[c]} 종가 $${r.px.toFixed(2)}</small>`}</span>`;
-    return `<div class="pf-rb2"><span class="cg">현재 <b>${r.curPct.toFixed(0)}%</b> → 목표 <b class="${ch ? "ch" : ""}">${tp.toFixed(0)}%</b></span>${c === "p" ? `<span class="adj"><small>나머지 자동</small></span>` : `<span class="adj"><button type="button" data-adj="${c}:-1" aria-label="${SYM[c]} 비중 1%p 내리기">−</button><button type="button" data-adj="${c}:1" aria-label="${SYM[c]} 비중 1%p 올리기">+</button></span>`}<span class="td">${todo}</span></div>`; };
+    return `<div class="pf-rb2"><span class="cg">현재 <b>${r.curPct.toFixed(0)}%</b> → 목표 ${c === "p" ? `<b>${tp.toFixed(0)}%</b>` : `<input class="tg" data-tgt="${c}" inputmode="numeric" value="${tp.toFixed(0)}" aria-label="${SYM[c]} 목표 비중 %">%`}</span>${c === "p" ? `<span class="adj"><small>나머지 자동</small></span>` : `<span class="adj"><button type="button" data-adj="${c}:-1" aria-label="${SYM[c]} 현재 비중 1%p 내리기">−</button><button type="button" data-adj="${c}:1" aria-label="${SYM[c]} 현재 비중 1%p 올리기">+</button></span>`}<span class="td">${todo}</span></div>`; };
   const rows = PF.map(([nm, w, c, how]) => { const pct = BW[c] * k, m = A * pct / 100;
       const sub = c === "q" ? `<span class="sp"><i>⚡ 즉시 매수</i><b>${$u(m * 2 / 3)}</b><small>₩ ${man(m * 2 / 3)}</small></span><span class="sp"><i>🤖 평생매수 엔진</i><b>${$u(m / 3)}</b><small>₩ ${man(m / 3)}</small></span>` : "";
       return `<div class="pf-r ${c}"><span class="n">${nm}<small>${c === "q" ? "즉시 2/3 + 엔진 1/3 (하락 때 매수)" : how}</small></span><b>${amt2(m)}</b><em>${pct.toFixed(0)}%</em>${sub ? `<div class="pf-sp">${sub}</div>` : ""}${acN(AV[c] || 0, pct)}${rbBlock(c)}</div>`; }).join("")
@@ -559,7 +556,7 @@ function pf() {
       <div class="hint">${go ? "① <b>팔기</b> 먼저 → ② 그 돈으로 <b>사기</b> (계좌가 다르면 판 돈을 QLD평생 계좌로 이체) · 차이 2% 미만은 유지 · 매수 대기 현금 " + man(cashM) + "원은 무한·평생매수 몫이라 그대로" : `레버리지가 ${lo}~${up}% 범위 안이라 사고팔 필요 없음 · 1월 점검 때 다시 계산`} · 종가 기준 주수는 대략</div></div>`;
   }
   el.innerHTML = st + plan + `<div class="pf-h"><span>올해 레버리지 목표</span><b>${L}%</b><small>안전 자산 ${safe}% · 나스닥 ${((BW.q + BW.t) * k).toFixed(0)}% · 반도체 ${(BW.s * k).toFixed(0)}%</small></div>
-    ${adjd ? `<div class="pf-rs">🧪 가상 비중 조정 중 (저장 안 됨) <button type="button" data-adj="reset">↺ 기본값</button></div>` : `<div class="pf-rs off">＋ − 로 가상 비중을 바꾸면 종목별 매도·매수 주수가 나옵니다 (종가 기준 · 대략)</div>`}
+    <div class="pf-rs${adjd || ts ? "" : " off"}">${adjd ? `🧪 현재 비중 가상 조정 중 (저장 안 됨) <button type="button" data-adj="reset">↺ 현재 되돌리기</button>` : `목표 %는 직접 입력(평생 저장) · ＋ − 는 현재 보유 비중을 가상으로 바꿔 봅니다`}${ts ? ` <button type="button" data-tgt-reset="1">↺ 목표 자동 비중으로</button>` : ""}</div>
     <div class="pf-l">${rows}</div>
     <div class="hint">🤖 AI 추천 · 은퇴 ${yl.toFixed(1)}년 전 기준 레버리지 ${L}% · 근거: QLD평생 백테스트 보수 연 ${AIV.lifeR ?? V.lifeR}% · 은퇴 후 명목 ${AIV.postR ?? V.postR}% − 물가 ${AIV.infl ?? V.infl}% (매일 자동)</div>
     <div class="pf-rules"><div class="t">📌 운영 규칙 · 1년에 한 번 1월</div>
@@ -570,18 +567,17 @@ function pf() {
 document.addEventListener("input", e => { if (e.target.id !== "pfAmt") return; const v = Math.round(+e.target.value.replace(/[^\d]/g, "")); if (!(v >= 100 && v <= 10000000)) return; V.pfAmt = v; pf(); save(); });
 document.addEventListener("change", e => { if (e.target.id !== "pfAcct") return; V.pfAcct = e.target.checked; pf(); save(); });
 document.addEventListener("input", e => { if (e.target.id !== "pfSafe") return; const t = e.target.value.replace(/[^\d]/g, ""); V.pfSafe = t === "" ? null : Math.min(10000000, +t); pf(); save(); });
-/* ＋ − 가상 비중 조정(저장 안 함) · ↺ 기본값 · ⚙ 기본 비중 설정(평생 저장) */
+/* ＋ − = 현재 보유 비중 가상 조정(저장 안 함) · 목표 % 입력 = 평생 저장 */
+document.addEventListener("click", e => { const t = e.target.closest && e.target.closest("[data-tgt-reset]"); if (!t) return; V.pfTgt = null; pf(); save(); });
 document.addEventListener("click", e => { const b = e.target.closest && e.target.closest("[data-adj]"); if (!b) return;
   if (b.dataset.adj === "reset") ADJ = { q: 0, s: 0, t: 0 };
-  else { const [c, d] = b.dataset.adj.split(":"), BW = baseW(), TOP = BW.q + BW.s + BW.t, yl0 = (() => { const g = ymParse(V.goalYM), n = new Date(); return g ? ((g.y - n.getFullYear()) * 12 + (g.mo - 1 - n.getMonth())) / 12 : Math.round(V.n); })(), kk = levAt(yl0, TOP) / TOP;
-    const nx = Object.assign({}, ADJ, { [c]: ADJ[c] + +d }), tot = ["q", "s", "t"].reduce((a, x) => a + BW[x] * kk + nx[x], 0);
-    if (BW[c] * kk + nx[c] < 0 || tot > 100) return; ADJ = nx; }
+  else { const [c, d] = b.dataset.adj.split(":"); ADJ = Object.assign({}, ADJ, { [c]: ADJ[c] + +d }); }
   pf(); });
-document.addEventListener("input", e => { const id = e.target.id; if (!/^pfB[qst]$/.test(id)) return;
-  const nb = Object.assign({}, baseW()); ["q", "s", "t"].forEach(x => { const v = Math.round(+($("pfB" + x).value || 0)); nb[x] = v >= 0 && v <= 95 ? v : nb[x]; });
-  const sum = nb.q + nb.s + nb.t; $("pfBmsg").textContent = sum >= 10 && sum <= 95 ? `SPYM 시작 비중 ${100 - sum}% (나머지 자동)` : "합은 10~95% 로 넣어 주세요";
-  if (sum < 10 || sum > 95) return; V.pfBase = nb; ADJ = { q: 0, s: 0, t: 0 }; pf(); save(); });
-document.addEventListener("click", e => { if (e.target.id !== "pfBreset") return; V.pfBase = null; ["q", "s", "t"].forEach(x => $("pfB" + x).value = BASE_DEF[x]); $("pfBmsg").textContent = "기본값 50/20/10 으로 되돌림"; ADJ = { q: 0, s: 0, t: 0 }; pf(); save(); });
+document.addEventListener("change", e => { const i = e.target; if (!i.dataset || !i.dataset.tgt) return;     // Enter·포커스 이동 때 저장 (입력 중 화면이 다시 그려지지 않게)
+  const cur = tgtSaved() || (() => { const k0 = TGT_K; return { q: Math.round(BASE_DEF.q * k0), s: Math.round(BASE_DEF.s * k0), t: Math.round(BASE_DEF.t * k0) }; })(), v = Math.round(+String(i.value).replace(/[^\d.]/g, ""));
+  const nx = Object.assign({}, cur, { [i.dataset.tgt]: v });
+  if (!(v >= 0 && v <= 100) || nx.q + nx.s + nx.t > 100) { pf(); return; }       // 범위 밖 · 합 100 초과 → 원래 값으로
+  V.pfTgt = nx; pf(); save(); });
 document.addEventListener("change", e => { if (e.target.id === "pfAmt" && !e.target.readOnly) { e.target.value = (+V.pfAmt || 100000).toLocaleString("ko-KR"); } });
 /* 저장: 이 기기 + ☁️ Gist(paradise.json, 동기화 켜져 있으면) */
 let saveT = 0, TOUCH = {}; try { TOUCH = JSON.parse(localStorage.getItem(KEY + "_t") || "{}"); } catch (e) {}
@@ -652,7 +648,7 @@ async function pull() {
     const r = await fetch("https://api.github.com/gists/" + g, { headers: { Authorization: "Bearer " + t }, cache: "no-store" }); if (!r.ok) return;
     const fs = (await r.json()).files || {}, J = n => { try { return fs[n] ? JSON.parse(fs[n].content) : null; } catch (e) { return null; } };
     const p = J(GFILE); if (p) { const local = (() => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } })();
-      if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; } }); if (p.plan && p.histV === 2) V.plan = p.plan; if (p.goalYM != null) V.goalYM = p.goalYM; if (p.wdY !== undefined) V.wdY = p.wdY; if (p.wdStart !== undefined) V.wdStart = p.wdStart; if (p.pfAmt) V.pfAmt = p.pfAmt; if (p.pfAcct !== undefined) V.pfAcct = p.pfAcct; if (p.pfSafe !== undefined) V.pfSafe = p.pfSafe; if (p.pfBase !== undefined) V.pfBase = p.pfBase; V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
+      if (!local.at || p.at > local.at) { ALL.forEach(f => { if (p[f[0]] != null) { V[f[0]] = p[f[0]]; if (p.touched) TOUCH = p.touched; $("i_" + f[0]).value = V[f[0]]; } }); if (p.plan && p.histV === 2) V.plan = p.plan; if (p.goalYM != null) V.goalYM = p.goalYM; if (p.wdY !== undefined) V.wdY = p.wdY; if (p.wdStart !== undefined) V.wdStart = p.wdStart; if (p.pfAmt) V.pfAmt = p.pfAmt; if (p.pfAcct !== undefined) V.pfAcct = p.pfAcct; if (p.pfSafe !== undefined) V.pfSafe = p.pfSafe; if (p.pfTgt !== undefined) V.pfTgt = p.pfTgt; V.at = p.at; BT && (BT.k = ""); try { localStorage.setItem(KEY, JSON.stringify(V)); localStorage.setItem(KEY + "_t", JSON.stringify(TOUCH)); } catch (e) {} } }
     if (p && p.histV === 2) { V.hist = mergeHist(V.hist, p.hist); if (!V.plan && p.plan) V.plan = p.plan; }
     const q = J("qld.json"), qm = J("qldm.json");
     setAuto("life", q && q.seed && q.seed.v, "통합 앱");
