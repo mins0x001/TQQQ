@@ -5,9 +5,9 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://api.github.com https://gist.githubusercontent.com https://raw.githubusercontent.com https://api.twelvedata.com https://finnhub.io https://www.alphavantage.co https://production.dataviz.cnn.io https://openapi.imeritz.com https://api.telegram.org https://ntfy.sh https://api.cron-job.org https://www.cmegroup.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="version" content="V1.37-261026-FinancialRoadmap">
+<meta name="version" content="V1.38-261026-FinancialRoadmap">
 <meta name="release-date" content="261021">
-<title>QLD 파이낸셜 로드맵 (V1.37 - 261026)</title>
+<title>QLD 파이낸셜 로드맵 (V1.38 - 261026)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
@@ -200,7 +200,7 @@
   </section>
 </div>
 <script>
-const APP_VERSION = "V1.37", RELEASE_DATE = "261026";
+const APP_VERSION = "V1.38", RELEASE_DATE = "261026";
 const KEY = "paradise_v1", GFILE = "paradise.json";
 /* 입력 정의: [키, 이름, 단위, 최소, 최대, 단계, 기본값, 설명] */
 const F1 = [
@@ -547,7 +547,8 @@ function pf() {
   let plan = "";
   if (act) {
     const fx = V.fx / 1e4, cashM = LEV.cash * fx, LT = Math.max(0, A * L / 100 - cashM),   // 레버리지 목표에서 매수 대기 현금 몫을 뺀 나머지를 3종에 50:20:10
-      items = [["QLD", "QLD평생", LEV.q * fx, LT * BW.q / TOP], ["SOXL", "SOXL무한", LEV.s * fx, LT * BW.s / TOP], ["TQQQ", "TQQQ거치", LEV.t * fx, LT * BW.t / TOP], ["SAFE", "🅿 SPYM", SF, A * safe / 100]];
+      items = ts ? [["QLD", "QLD평생", LEV.q * fx, tgtA.q], ["SOXL", "SOXL무한", LEV.s * fx, tgtA.s], ["TQQQ", "TQQQ거치", LEV.t * fx, tgtA.t], ["SAFE", "🅿 SPYM", SF, tgtA.p]]   // 직접 입력한 목표 %
+        : [["QLD", "QLD평생", LEV.q * fx, LT * BW.q / TOP], ["SOXL", "SOXL무한", LEV.s * fx, LT * BW.s / TOP], ["TQQQ", "TQQQ거치", LEV.t * fx, LT * BW.t / TOP], ["SAFE", "🅿 SPYM", SF, A * safe / 100]];
     const go = need !== 0, sh = (sy, m) => PX[sy] ? ` · 약 <b>${Math.ceil(Math.abs(m) / fx / PX[sy])}주</b>` : "";
     const rows = items.map(([sy, nm, a, t]) => { const d = t - a, small = Math.abs(d) < A * 0.02;
       return `<tr><td>${nm}</td><td>${man(t)}</td><td>${man(a)}</td><td class="${!go || small ? "" : d < 0 ? "dn" : "up"}">${!go || small ? "유지" : d < 0 ? `팔기 ${man(-d)}${sy !== "SAFE" ? sh(sy, d) : ""}` : `사기 ${man(d)}${sy !== "SAFE" ? sh(sy, d) : ""}`}</td></tr>`; }).join("");
