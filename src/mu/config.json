@@ -7,8 +7,8 @@
   "base": "soxx",
   "Base": "Soxx",
   "API": "soxl",
-  "VER": "V1.32",
-  "VERU": "V1_32",
+  "VER": "V1.33",
+  "VERU": "V1_33",
   "DATE": "261025"
  },
  "tqqq": {
@@ -19,8 +19,8 @@
   "base": "qqq",
   "Base": "Qqq",
   "API": "tqqq",
-  "VER": "V1.33",
-  "VERU": "V1_33",
+  "VER": "V1.34",
+  "VERU": "V1_34",
   "DATE": "261025"
  },
  "qldm": {
@@ -31,8 +31,8 @@
   "base": "qqq",
   "Base": "Qqq",
   "API": "qm",
-  "VER": "V1.36",
-  "VERU": "V1_36",
+  "VER": "V1.37",
+  "VERU": "V1_37",
   "DATE": "261025"
  }
 }
