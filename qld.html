@@ -9,9 +9,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.40-261025-QLD-Lifetime-WeeklyOnce">
-<meta name="release-date" content="261022">
-<title>QLD 평생매수AI분석 (V1.40 - 261025)</title>
+<meta name="version" content="V1.40-261026-QLD-Lifetime-WeeklyOnce">
+<meta name="release-date" content="261026">
+<title>QLD 평생매수AI분석 (V1.40 - 261026)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -583,7 +583,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 
 
   <div class="page" id="pg-order" role="tabpanel" aria-label="주문" aria-hidden="true">
-  <!-- 종목 탭 삭제(261025): 화면은 없고, 자동주문(통합)이 앱을 숨겨 열어 LOC 주문을 만들 때 쓰는 자리표시자만 남김 -->
+  <!-- 종목 탭 삭제(261026): 화면은 없고, 자동주문(통합)이 앱을 숨겨 열어 LOC 주문을 만들 때 쓰는 자리표시자만 남김 -->
   <div hidden>
     <section id="card-today"><div id="todayContent"></div></section>
     <section id="card-records"><input type="date" id="guideDate"><input id="guideQty"><input id="guidePrice"><button id="guideSaveBtn" type="button"></button><button id="guideResetBtn" type="button"></button><p id="guideMsg"></p><div id="recordsContent"></div></section>
@@ -597,8 +597,8 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
   <div hidden><section id="card-excel"></section><button id="xlsxBtn"></button><div id="xlsxMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_40_261025.HTML</span>)</button>
-  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.40 (261025)</code></div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD평생매수AI분석_V1_40_261026.HTML</span>)</button>
+  <div style="margin-bottom:4px;">시스템 버전: <code id="footerVersion">V1.40 (261026)</code></div>
   </footer>
 
   </div>
@@ -780,7 +780,7 @@ body.panel #todayContent .hero-order,body.panel #todayContent .copy-hint,body.pa
 </nav>
 
 <script>
-const APP_VERSION = "V1.40", RELEASE_DATE = "261025";
+const APP_VERSION = "V1.40", RELEASE_DATE = "261026";
 const FILE_NAME = `QLD평생매수AI분석_${APP_VERSION.replace(".", "_")}_${RELEASE_DATE}.HTML`;
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
@@ -3398,7 +3398,7 @@ syncRender();
 syncSchedule(400);
 </script>
 <script id="auto-tab">
-/* 탭 정리 V1.06 (261025): 🔌 자동주문 탭은 영구 삭제 (자동주문은 자동주문(통합) 앱에서) · 📖 설명 탭 → 설명서 파일 다운로드 · 📒 종목 탭은 AI엔진 옆
+/* 탭 정리 V1.06 (261026): 🔌 자동주문 탭은 영구 삭제 (자동주문은 자동주문(통합) 앱에서) · 📖 설명 탭 → 설명서 파일 다운로드 · 📒 종목 탭은 AI엔진 옆
    다른 앱 안에 들어간 화면(?embed=)에서는 실행 안 함 */
 (function () {
   if (/[?&]embed=/.test(location.search)) return;
