@@ -58,6 +58,9 @@ function renderLocGuideCard() {
     avg_price: hasPosition ? Number(avgPrice.toFixed(4)) : null,
     holding_qty: hasPosition ? summary.totalQty : 0,
     orders: exportOrders,
+    /* 🛡 분할 손절 자동 매도(봇 ☑손절 ON 일 때만 사용) — 1일차·2일차 매도 지시 원자료. 봇이 평단·종가·보유로 다시 검증 */
+    stop: (SPLAN && (SPLAN.state === "day1" || SPLAN.state === "day2")) ? { day: SPLAN.day, sell_qty: SPLAN.sellQty, next_qty: SPLAN.day === 1 && summary.rows.length > 1 ? summary.rows[summary.rows.length - 2].qty : 0,
+      ref_price: Number(SPLAN.refPrice.toFixed(2)), ratio: SPLAN.ratio, rounds: SPLAN.rounds, total: SPLAN.total, since: summary.rows[0].date } : null,
     /* 자동주문 봇이 같은 공식으로 다시 계산해 대조(검수 V2)하는 원자료 */
 ⟦@s022⟧           seed, splits, mult: sp.mult, stage1_n: sp.n1, max_rounds: sp.maxRounds, per_split_1: sp.per1, per_split_2: sp.per2,
            rounds, recommended_n: recommendedN, in_stop_mode: !!inStopMode, buy_off: !!buyBoxOff,

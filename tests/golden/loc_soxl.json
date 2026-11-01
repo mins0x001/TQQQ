@@ -18,6 +18,7 @@
      "qty": 77
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -61,6 +62,7 @@
      "qty": 120
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -110,6 +112,7 @@
      "qty": 40
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -159,6 +162,7 @@
      "qty": 40
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -208,6 +212,7 @@
      "qty": 93
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -257,6 +262,7 @@
      "qty": 93
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -306,6 +312,7 @@
      "qty": 135
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -355,6 +362,7 @@
      "qty": 135
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -404,6 +412,7 @@
      "qty": 188
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -453,6 +462,7 @@
      "qty": 188
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -502,6 +512,7 @@
      "qty": 246
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -551,6 +562,7 @@
      "qty": 246
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -594,6 +606,7 @@
      "qty": 1180
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -637,6 +650,7 @@
      "qty": 1180
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -680,6 +694,7 @@
      "qty": 2765
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -723,6 +738,7 @@
      "qty": 2765
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -772,6 +788,7 @@
      "qty": 86
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -821,6 +838,7 @@
      "qty": 86
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 57.9347,
     "sell_pct": 15,
@@ -864,6 +882,7 @@
      "qty": 176
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -907,6 +926,7 @@
      "qty": 275
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -956,6 +976,7 @@
      "qty": 40
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1005,6 +1026,7 @@
      "qty": 40
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1054,6 +1076,7 @@
      "qty": 93
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1103,6 +1126,7 @@
      "qty": 93
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1152,6 +1176,7 @@
      "qty": 135
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1201,6 +1226,7 @@
      "qty": 135
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1250,6 +1276,7 @@
      "qty": 188
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1299,6 +1326,7 @@
      "qty": 188
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1348,6 +1376,7 @@
      "qty": 246
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1397,6 +1426,7 @@
      "qty": 246
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1440,6 +1470,7 @@
      "qty": 1180
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1483,6 +1514,7 @@
      "qty": 1180
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1526,6 +1558,7 @@
      "qty": 2765
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1569,6 +1602,7 @@
      "qty": 2765
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1618,6 +1652,7 @@
      "qty": 86
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,
@@ -1667,6 +1702,7 @@
      "qty": 86
     }
    ],
+   "stop": null,
    "bot": {
     "last_close": 25.4509,
     "sell_pct": 4.5,

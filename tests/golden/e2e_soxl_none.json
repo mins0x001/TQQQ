@@ -17,6 +17,7 @@
    "qty": 46
   }
  ],
+ "stop": null,
  "bot": {
   "last_close": 77.05,
   "sell_pct": 15,
