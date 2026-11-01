@@ -2,14 +2,14 @@
 const { chromium } = require("playwright");
 /* 서버(Gist)에만 저장되거나 일부러 저장하지 않는 칸 = 오프라인 테스트에서 유지 안 되는 게 정상 */
 const EXPECT = { "api-all": ["code", "aRm", "aRn", "tgChat", "aTime"], index: ["agId", "agAuto", "agPw"], macro: ["fedMd", "fedHk", "fedHd", "fedCt"] };
-const PAGES = ["soxl", "tqqq", "qldm", "qld", "api-all", "paradise", "macro", "backtest", "index"];
+const PAGES = ["soxl", "tqqq", "qldm", "qld", "usd", "api-all", "paradise", "macro", "backtest", "index"];
 const base = process.env.BASE || "http://localhost:8765/";
 (async () => {
   const b = await chromium.launch(); let bad = 0;
   for (const pg of PAGES) {
     const ctx = await b.newContext(), p = await ctx.newPage();
     await p.route(/^https?:\/\/(?!localhost)/, r => r.abort());          // 외부망 차단 (동기화·시세 호출 없음)
-    const url = base + pg + ".html" + (/^(soxl|tqqq|qldm|qld)$/.test(pg) ? "?embed=api" : "");
+    const url = base + pg + ".html" + (/^(soxl|tqqq|qldm|qld|usd)$/.test(pg) ? "?embed=api" : "");
     await p.goto(url); await p.waitForTimeout(1200);
     const list = await p.evaluate(() => [...document.querySelectorAll("input,select,textarea")].map((e, i) => { if (!e.id) e.id = "__pt" + i; return e; }).filter(e => !e.disabled && !e.readOnly && !e.closest("[hidden],[aria-hidden=true]")
       && !["password", "file", "button", "submit", "hidden"].includes(e.type)).map(e => ({ id: e.id, type: e.type || e.tagName.toLowerCase(), tag: e.tagName })));

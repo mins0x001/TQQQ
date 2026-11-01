@@ -1,5 +1,5 @@
-# 미국 ETF 일봉 + 시장 지표 자동 저장 V1.06 (261021) — 매일 한국 10:10 (+10:40 예비)
-# 앱(SOXL·TQQQ·QLD 무한매수 / QLD 평생매수)은 이 파일(data/<심볼>.json)을 먼저 읽고, 최신이 아니면 시세 API로 받습니다.
+# 미국 ETF 일봉 + 시장 지표 자동 저장 V1.07 (261101) — 매일 한국 10:10 (+10:40 예비)
+# 앱(SOXL·TQQQ·QLD 무한매수 / QLD·USD 평생매수)은 이 파일(data/<심볼>.json)을 먼저 읽고, 최신이 아니면 시세 API로 받습니다.
 # 데이터: Twelve Data 일봉(앱과 같은 출처) → 실패 시 Yahoo. 바뀐 게 없으면 커밋하지 않음(주말·휴장일).
 name: 미국 시세 저장
 
@@ -32,7 +32,7 @@ jobs:
           import json, os, time, urllib.request, urllib.parse
           from datetime import datetime, timedelta, timezone
           from zoneinfo import ZoneInfo
-          SYMS = ["QQQ", "TQQQ", "QLD", "SOXX", "SOXL", "SPYM"]   # SPYM = QLD평생 대기 시드 파킹 (S&P 500)
+          SYMS = ["QQQ", "TQQQ", "QLD", "SOXX", "SOXL", "USD", "SPYM"]   # SPYM = QLD평생 대기 시드 파킹 (S&P 500) · USD = USD평생(반도체 2배, 기준지수 SOXX)
           N = 600
           KEY = os.environ.get("TWELVE_DATA_KEY") or "7382ca9c267944f49ae850dbbdb7545f"
           NY = ZoneInfo("America/New_York")
@@ -48,7 +48,7 @@ jobs:
                       last = e
               raise last
           def twelve(sym):
-              d = get("https://api.twelvedata.com/time_series?" + urllib.parse.urlencode({"symbol": sym, "interval": "1day", "outputsize": N, "apikey": KEY}))
+              d = get("https://api.twelvedata.com/time_series?" + urllib.parse.urlencode({"symbol": sym, "interval": "1day", "outputsize": N, "apikey": KEY, **({"mic_code": "ARCX"} if sym == "USD" else {})}))   # USD = 통화와 겹치는 이름 → NYSE Arca ETF 로 지정
               if d.get("status") == "error" or not d.get("values"):
                   raise RuntimeError(d.get("message", "no values"))
               return [[v["datetime"][:10], *(round(float(v[k]), 4) for k in ("open", "high", "low", "close"))] for v in reversed(d["values"])]
