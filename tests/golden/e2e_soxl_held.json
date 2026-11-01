@@ -4,32 +4,32 @@
  "version": "*",
  "release": "*",
  "symbol": "SOXL",
- "basis_close_date": "2026-10-23",
+ "basis_close_date": "2026-10-30",
  "generated_at": "*",
  "stage": "2단계 ×3 (현재 3회 · 1/21회차 · 대기 없음)",
- "avg_price": 87.531,
- "holding_qty": 50,
+ "avg_price": 82.55,
+ "holding_qty": 52,
  "orders": [
   {
    "side": "buy",
    "type": "LOC",
-   "price": 83.56,
-   "qty": 14
+   "price": 77.05,
+   "qty": 15
   },
   {
    "side": "sell",
    "type": "LOC",
-   "price": 100.67,
-   "qty": 50
+   "price": 94.94,
+   "qty": 52
   }
  ],
  "bot": {
-  "last_close": 83.56,
+  "last_close": 77.05,
   "sell_pct": 15,
   "sell_pct_rule": 15,
   "per_split": 1200,
   "qty_unit": 1,
-  "avg_exact": 87.53099999999999,
+  "avg_exact": 82.55000000000001,
   "seed": 36000,
   "splits": 10,
   "mult": 3,

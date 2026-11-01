@@ -4,40 +4,40 @@
  "version": "*",
  "release": "*",
  "symbol": "QLD",
- "basis_close_date": "2026-10-23",
+ "basis_close_date": "2026-10-30",
  "generated_at": "*",
- "stage": "평생매수 · 하락 목표 -15.0%",
+ "stage": "평생매수 · 하락 목표 -18.0%",
  "avg_price": null,
  "holding_qty": 0,
  "orders": [
   {
    "side": "buy",
    "type": "LOC",
-   "price": 85.65,
-   "qty": 43
+   "price": 82.63,
+   "qty": 1791
   }
  ],
  "bot": {
   "kind": "lifetime",
-  "last_close": 86.15,
+  "last_close": 82.59,
   "ref_peak": 100.77,
-  "pct": 15,
-  "loc_px": 85.65,
+  "pct": 18,
+  "loc_px": 82.63,
   "qty_unit": 5,
   "order_today": true,
-  "next_session": "2026-10-26",
+  "next_session": "2026-11-02",
   "fx": null,
   "records_src": "app",
   "buy_count": 0,
-  "engine_amt": 3700,
+  "engine_amt": 148000,
   "engine_mode": "opt",
   "engine_w": [
-   10,
    80,
+   10,
    10
   ],
   "engine_n": [
-   10,
+   2,
    1,
    1
   ],
@@ -45,47 +45,47 @@
   "engine_seed": 370000,
   "engine_remain": 370000,
   "engine_per": [
-   3700,
-   296000,
+   148000,
+   37000,
    37000
   ],
   "engine_px": [
-   85.65,
-   72.8,
-   61.88
+   82.63,
+   67.75,
+   55.56
   ],
   "engine_round": 1,
-  "engine_N": 12,
+  "engine_N": 4,
   "engine_rows": [
    {
     "from": 1,
-    "to": 10,
+    "to": 2,
     "tier": 1,
-    "px": 85.65,
-    "each": 3700,
+    "px": 82.63,
+    "each": 148000,
     "now": true
    },
    {
-    "from": 11,
-    "to": 11,
+    "from": 3,
+    "to": 3,
     "tier": 2,
-    "px": 72.8,
-    "each": 329300,
+    "px": 67.75,
+    "each": 185000,
     "now": false
    },
    {
-    "from": 12,
-    "to": 12,
+    "from": 4,
+    "to": 4,
     "tier": 3,
-    "px": 61.88,
+    "px": 55.56,
     "each": 37000,
     "now": false
    }
   ],
   "park": {
-   "reserve": 7400,
-   "state": 0,
-   "why": "평온 → QLD매수 1회차, 2회차 대기현금 필요"
+   "reserve": 370000,
+   "state": 1,
+   "why": "매수 구간 → QLD매수 1회차, 2회차 + 3회차 절반 대기현금 필요"
   }
  }
 }
