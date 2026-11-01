@@ -28,7 +28,18 @@ for name in ["bot_A", "bot_T"]:
     # 신호 없음 + 원장 없음 → 아무것도 안 건드림
     o, imm, c = run({"bot": {}, "stop": None}); assert o == [{"side": "buy"}, {"side": "sell"}] and imm is None; n += 1
     # 같은 사이클 재발동 금지 (끝난 원장) · 2일차인데 원장 없음 → 거부
-    o, imm, c = run(plan(), ent={"since": "2026-09-01", "n": 2, "date": D1}, today=D3); assert o == [] and not any(x.get("stop") for x in o); n += 1
+    # 반복(4일차~): 끝난 순서 뒤에도 손절선 아래 + 지난 손절가보다 낮음 → 새 1일차 (cnt 2번째)
+    fin = {"since": "2026-09-01", "n": 2, "date": D1, "cnt": 1, "ref": 85.0, "avg": 100.0}
+    o, imm, c = run(plan(b={"rounds": 5}), ent=fin, today=D3); assert len(o) == 1 and o[0]["stop_ent"]["cnt"] == 2 and o[0]["stop_ent"]["n"] == 1 and o[0]["stop_ent"]["next_qty"] == 6; n += 1
+    o, imm, c = run(plan(b={"rounds": 5}, st={"next_qty": 500}), ent=fin, today=D3); assert o[0]["stop_ent"]["next_qty"] == 10; n += 1      # 2일차 수량은 1일차의 2배까지
+    for lab, e, p in [("3번째까지 완료", dict(fin, cnt=3), plan(b={"rounds": 5})), ("반등(지난 손절가 이상)", dict(fin, ref=70.0), plan(b={"rounds": 5})),
+                      ("평단 급변(새 사이클)", dict(fin, avg=60.0), plan(b={"rounds": 5})), ("손절선 위", fin, plan(b={"rounds": 5, "last_close": 90.0})),
+                      ("보유 1회뿐", fin, plan(b={"rounds": 1}))]:
+        o, imm, c = run(p, ent=e, today=D3); assert o == [] and not c.block_sell, (lab, o); n += 1
+    o, imm, c = run(plan(b={"rounds": 5}), ent=fin, today=D1); assert o == [] and imm is None; n += 1                        # 같은 날 재실행
+    o, imm, c = run(plan(b={"rounds": 5}), ent=fin, today=D2); assert o == [] and not c.block_sell; n += 1                   # 3일차(하루 뒤)는 평소 매수일
+    o, imm, c = run(plan(b={"rounds": 5}), ent=dict(fin, date="2026-10-01"), today=D3); assert o == [] and c.block_sell; n += 1   # 20일 지나면 첫 발동 규칙(소진 필요)
+    o, imm, c = run(plan(), ent=dict(fin, date="2026-10-01"), today=D3); assert len(o) == 1 and o[0]["stop_ent"]["cnt"] == 1; n += 1
     o, imm, c = run(plan(day=2)); assert o == [] and c.block_sell; n += 1
     # 같은 날 재실행: 1일차 이미 처리 → 주문 없음(매수 정지 유지)
     ent1 = {"since": "2026-09-01", "n": 1, "date": T, "next_qty": 6}

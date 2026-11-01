@@ -7,8 +7,8 @@
     "base": "soxx",
     "Base": "Soxx",
     "API": "soxl",
-    "VER": "V1.36",
-    "VERU": "V1_36",
+    "VER": "V1.37",
+    "VERU": "V1_37",
     "DATE": "261101",
     "STOPSPLIT": "true"
   },
@@ -20,8 +20,8 @@
     "base": "qqq",
     "Base": "Qqq",
     "API": "tqqq",
-    "VER": "V1.37",
-    "VERU": "V1_37",
+    "VER": "V1.38",
+    "VERU": "V1_38",
     "DATE": "261101",
     "STOPSPLIT": "true"
   },
@@ -33,8 +33,8 @@
     "base": "qqq",
     "Base": "Qqq",
     "API": "qm",
-    "VER": "V1.40",
-    "VERU": "V1_40",
+    "VER": "V1.41",
+    "VERU": "V1_41",
     "DATE": "261101",
     "STOPSPLIT": "false"
   }

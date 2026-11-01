@@ -13,7 +13,7 @@ function paramsCore(pm) {
   const o = { mode: (pm && pm.mode) || "rule", seed: String((pm && pm.seed) || "") };
   if (o.mode === "manual") { o.splits = String(pm.splits || ""); o.mult = String(pm.mult || ""); }
   if (pm && parseFloat(pm.sellPct) > 0) o.sellPct = String(pm.sellPct);
-  if (pm && pm.stop && +pm.stop.n > 0) o.stop = { n: +pm.stop.n, date: String(pm.stop.date || ""), since: String(pm.stop.since || "") };   // 🛡 분할 손절 진행 상태 (기기 간 동기화)
+  if (pm && pm.stop && +pm.stop.n > 0) o.stop = { n: +pm.stop.n, date: String(pm.stop.date || ""), since: String(pm.stop.since || ""), k: +pm.stop.k > 0 ? Math.floor(+pm.stop.k) : 1, ref: +pm.stop.ref > 0 ? +pm.stop.ref : 0 };   // 🛡 분할 손절 진행 상태 (기기 간 동기화)
 ⟦@s033⟧  return o;
 }
 

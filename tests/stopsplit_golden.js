@@ -17,8 +17,20 @@ assert.strictEqual(r.state, "day2"); assert.strictEqual(r.sellQty, 10); assert.s
 const seq2 = { n: 2, date: T2, since: "2026-01-02" };
 r = S(rows(10), sp, 60, 0.88, seq2, T2); assert.strictEqual(r.state, "wait3"); assert.ok(r.buyHold);                      // 같은 날 = 3일차 대기
 r = S(rows(10), sp, 60, 0.88, seq2, T3); assert.strictEqual(r.state, "wait"); assert.strictEqual(r.buyHold, false);        // 3일차 = 평소 규칙 매수 (10회 < 12)
-r = S(rows(12), sp, low, 0.88, seq2, T3); assert.strictEqual(r.state, "day1");                                             // 다시 소진 · 손절선 → 새 순서
+const T5 = "2026-03-10";
+r = S(rows(12), sp, low, 0.88, seq2, T3); assert.strictEqual(r.state, "hold");                                             // 3일차(평소 매수일)에는 반복 안 함
+r = S(rows(12), sp, low, 0.88, seq2, T5); assert.strictEqual(r.state, "day1"); assert.strictEqual(r.seqNo, 2);          // 4일차~ 반복: 손절선 아래 → 새 순서(2번째)
+const rep = { n: 2, date: T2, since: "2026-01-02", k: 1, ref: 80 };
+r = S(rows(10), sp, 70, 0.88, rep, T5); assert.strictEqual(r.state, "day1"); assert.strictEqual(r.seqNo, 2); const withBuy = [...rows(10), { qty: 10, price: 70, date: T3 }];
+r = S(withBuy, sp, 70, 0.88, rep, T3); assert.strictEqual(r.state, "wait");                                               // 3일차 매수 당일은 아직
+r = S(withBuy, sp, 70, 0.88, rep, "2026-03-05"); assert.strictEqual(r.state, "day1");                                    // 3일차 매수 다음 날 = 4일차 → 반복
+               // 소진 아니어도 · 지난 손절가(80)보다 낮음 → 반복
+r = S(rows(10), sp, 80, 0.88, rep, T5); assert.strictEqual(r.state, "wait"); assert.strictEqual(r.k, 1);                   // 반등(지난 손절가 이상) → 쉼
+r = S(rows(10), sp, 95, 0.88, rep, T5); assert.strictEqual(r.state, "wait");                                              // 손절선 위 → 평소
+r = S(rows(10), sp, 70, 0.88, { ...rep, k: 3 }, T5); assert.strictEqual(r.state, "wait");                                 // 3번 완료 → 더 반복 안 함
+r = S(rows(10), sp, 70, 0.88, { ...rep, date: "2026-01-20" }, T5); assert.strictEqual(r.state, "wait");                   // 20일 지나면 잊음 → 소진 필요
+r = S(rows(1), sp, 40, 0.88, rep, T5); assert.strictEqual(r.state, "wait");                                               // 보유 1회뿐이면 반복 안 함
 r = S(rows(11), sp, low, 0.88, { n: 1, date: T1, since: "2025-12-01" }, T2); assert.strictEqual(r.state, "wait");          // 다른 사이클의 낡은 상태 무시
 r = S(rows(1), { maxRounds: 1, n1: 1, per1: 1000, per2: 333 }, 50, 0.88, null, T1); assert.strictEqual(r.afterRounds, 0); assert.strictEqual(r.keepAvg, null);
 assert.strictEqual(S([], sp, 80, 0.88, null, T1).state, "none");
-console.log("OK   stoploss: 18개 통과");
+console.log("OK   stoploss: 통과");
