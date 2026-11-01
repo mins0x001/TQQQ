@@ -34,7 +34,7 @@ import urllib.parse
 import urllib.request
 from zoneinfo import ZoneInfo
 
-VERSION = "MUHANBOT V1.20 (261101)"
+VERSION = "MUHANBOT V1.21 (261101)"
 MERITZ_BASE = os.environ.get("MERITZ_BASE_URL", "https://openapi.imeritz.com:9443").rstrip("/")
 ET, KST = ZoneInfo("America/New_York"), ZoneInfo("Asia/Seoul")
 APP_PAGES = {"SOXL": "soxl.html", "TQQQ": "tqqq.html"}
@@ -528,6 +528,7 @@ def auto_limit(plan: dict, cfg: dict) -> float:
 
 # ───────────────────────────────────────────── 🛡 분할 손절 자동 매도 (통합앱 ☑손절 ON 일 때만 · 기본 OFF)
 STOP_MAX_FRAC = 0.40        # 손절 1회 매도량 ≤ 계좌 보유의 40% (1회분 = 보통 5~15%) — 계산 오류로 전량 매도되는 사고 차단
+STOP_MAX_SEQ = 3            # 한 사이클에서 손절 순서(1·2일차) 최대 반복 횟수 (4일차~ 반복 포함)
 STOP_EXPIRE_DAYS = 6        # 1일차 뒤 이 일수가 지나도록 2일차를 못 냈으면 순서 폐기 (낡은 지시로 늦게 파는 일 방지)
 
 
@@ -575,8 +576,8 @@ def apply_stop(plan: dict, sym: str, acct: dict, orders: list, ent, today: str, 
         return [{"side": "sell", "price": 0.0, "qty": q, "src": f"🛡 손절 2일차 · {q}주 MOC", "stop": True, "stop_ent": new}], immediate
     if not st:
         return orders, immediate
-    if ent.get("since") and ent.get("since") == st.get("since"):
-        c.ok("S 같은 사이클의 손절 순서는 이미 끝남 — 다시 발동하지 않음")
+    if ent.get("n") == 2 and str(ent.get("date", "")) >= today:
+        c.ok("S 손절 순서 오늘 이미 끝남 — 매수 정지 유지")
         return orders, immediate
     if int(st.get("day") or 0) != 1:
         return bad("앱은 2일차인데 봇 원장에 1일차 기록이 없음 — 앱 [손절 순서]에서 직접 처리")
@@ -590,14 +591,35 @@ def apply_stop(plan: dict, sym: str, acct: dict, orders: list, ent, today: str, 
         return bad("1일차 보류 — 앞선 검수 실패(" + c.block_sell[0][:50] + ")")
     if not (0.5 <= ratio <= 0.95):
         return bad(f"1일차 손절 비율 {ratio:g} 이상 (0.5~0.95)")
-    if rounds < mx:
+    cnt, age = 0, 999
+    if ent.get("n") == 2:
+        try:
+            age = (td - dt.date.fromisoformat(ent["date"])).days
+        except (KeyError, ValueError):
+            age = 999
+        cnt = int(ent.get("cnt") or 1) if age <= 20 else 0           # 20일 지난 끝난 순서는 잊음 → 새로 첫 발동 규칙
+    if cnt:                                                          # 반복(4일차~): 3일 순서 뒤에도 손절선 아래 · 지난 손절가보다 낮을 때만 · 최대 3번
+        ref, pavg = float(ent.get("ref") or 0), float(ent.get("avg") or 0)
+        if age < 2:
+            c.ok("S 3일차(평소 매수일) — 반복 손절은 4일차부터")
+            return orders, immediate
+        if cnt >= STOP_MAX_SEQ:
+            c.ok(f"S 손절 {cnt}/{STOP_MAX_SEQ}번 완료 — 더 반복하지 않음 (평소 규칙)")
+            return orders, immediate
+        if not (rounds >= 2 and last <= avg * ratio + 1e-9 and (ref <= 0 or last < ref) and (pavg <= 0 or 0.7 <= avg / pavg <= 1.3)):
+            c.ok(f"S 반복 손절 조건 아님 — 종가 {fp(last)} · 손절선 {fp(avg * ratio)} · 지난 손절가 {fp(ref) if ref else '-'}")
+            return orders, immediate
+    elif rounds < mx:
         return bad(f"1일차 분할 소진 아님 ({rounds}/{mx}회)")
     if not st.get("since") or not (last <= avg * ratio + 1e-9):
         return bad(f"1일차 손절선 미도달: 전일종가 {fp(last)} > 평단 {fp(avg)} × {ratio:g} = {fp(avg * ratio)}")
     if q < 1 or q > sellable or q > qty_acct * STOP_MAX_FRAC + 1e-9:
         return bad(f"1일차 수량 {q}주 — 계좌 매도가능 {sellable}주 · 보유 {qty_acct:g}주의 {STOP_MAX_FRAC:.0%} 한도 초과")
-    new = {"since": st["since"], "n": 1, "date": today, "next_qty": max(0, int(st.get("next_qty") or 0)), "ref": round(last, 2)}
-    c.ok(f"S 손절 1일차 검증 통과 — 분할 소진 {rounds}/{mx} · 종가 {fp(last)} ≤ 손절선 {fp(avg * ratio)} · {q}주 = 보유의 {q / qty_acct:.0%}")
+    nq = max(0, int(st.get("next_qty") or 0))
+    if cnt:
+        nq = min(nq, 2 * q)                                          # 증권사 기록이 합쳐져 '다음 회분'이 크게 보여도 2일차는 1일차의 2배까지만
+    new = {"since": st["since"], "n": 1, "date": today, "next_qty": nq, "ref": round(last, 2), "avg": round(avg, 4), "cnt": cnt + 1, "q1": q}
+    c.ok(f"S 손절 {cnt + 1}번째 1일차 검증 통과 — " + (f"반복 · 종가 {fp(last)} < 지난 손절가" if cnt else f"분할 소진 {rounds}/{mx}") + f" · 종가 ≤ 손절선 {fp(avg * ratio)} · {q}주 = 보유의 {q / qty_acct:.0%}")
     return [{"side": "sell", "price": 0.0, "qty": q, "src": f"🛡 손절 1일차 · 마지막 1회분 {q}주 MOC", "stop": True, "stop_ent": new}], immediate
 
 
@@ -830,6 +852,13 @@ def account_snapshot(api: Meritz) -> dict:
 
 def account_sync(api: Meritz, gist: "Gist") -> dict:
     snap = account_snapshot(api)
+    try:                                                # 🛡 봇 손절 원장을 스냅숏에 실어 앱이 순서를 따라가게 함
+        led = json.loads(gist.files().get(STOP_FILE) or "{}")
+        for sym, v in snap["symbols"].items():
+            if isinstance(led.get(sym), dict):
+                v["stop"] = led[sym]
+    except Exception:  # noqa: BLE001
+        pass
     gist.write(ACCOUNT_FILE, snap)
     for sym, v in snap["symbols"].items():
         log(f"  계좌 {sym} {v['qty']:g}주 @{fp(v['avg']) if v['avg'] else '-'} · 사이클 {len(v['cycles'])}건 · 이번 사이클 매수 {len(v['current']['records'])}건"

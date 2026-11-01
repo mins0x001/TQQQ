@@ -32,7 +32,7 @@ function renderLocGuideCard() {
   const stopPct = strategy.stopLossByRound ? strategy.stopLossByRound.worstDrawdown : null;
 
   const summary = computeBuyRecordsSummary();
-  const SPLAN = STOP_SPLIT_ON ? stopSplitPlan(summary.rows, sp, last⟦Lev⟧Hist[last⟦Lev⟧Hist.length - 1].y, STRAT2_MODE_RATIO, loadParamMode().stop || null, nyNowParts().date) : null;   // 🛡 분할 손절 순서
+  const SPLAN = STOP_SPLIT_ON ? stopSplitPlan(summary.rows, sp, last⟦Lev⟧Hist[last⟦Lev⟧Hist.length - 1].y, STRAT2_MODE_RATIO, stopSeqNow(summary.rows), nyNowParts().date) : null;   // 🛡 분할 손절 순서
   const { rounds, hasPosition, avgPrice, lastRecord, lastClose, lastCloseDate, nextRound, inStage1, canBuyMore, perSplit, buyBasisPrice, buyBasisLabel, bindingLabel, rawBuyQty, buyQty, cycleStatusText, buyReady, cycleInfo, canSell, sellPrice, sellQty, inStopMode, stageLabel } = locPlanCore(last⟦Lev⟧Hist, sp, summary, sellPct, !!(SPLAN && SPLAN.buyHold));
   const stageColor = !hasPosition ? "var(--text-dim)" : (inStage1 ? "var(--glow)" : "var(--amber)");
   const stageBg = !hasPosition ? "rgba(75,90,115,0.14)" : (inStage1 ? "rgba(94,234,212,0.12)" : "rgba(245,165,36,0.12)");
@@ -60,7 +60,7 @@ function renderLocGuideCard() {
     orders: exportOrders,
     /* 🛡 분할 손절 자동 매도(봇 ☑손절 ON 일 때만 사용) — 1일차·2일차 매도 지시 원자료. 봇이 평단·종가·보유로 다시 검증 */
     stop: (SPLAN && (SPLAN.state === "day1" || SPLAN.state === "day2")) ? { day: SPLAN.day, sell_qty: SPLAN.sellQty, next_qty: SPLAN.day === 1 && summary.rows.length > 1 ? summary.rows[summary.rows.length - 2].qty : 0,
-      ref_price: Number(SPLAN.refPrice.toFixed(2)), ratio: SPLAN.ratio, rounds: SPLAN.rounds, total: SPLAN.total, since: summary.rows[0].date } : null,
+      ref_price: Number(SPLAN.refPrice.toFixed(2)), ratio: SPLAN.ratio, rounds: SPLAN.rounds, total: SPLAN.total, since: summary.rows[0].date, k: SPLAN.k, seq_no: SPLAN.seqNo, max_seq: SPLAN.maxSeq } : null,
     /* 자동주문 봇이 같은 공식으로 다시 계산해 대조(검수 V2)하는 원자료 */
 ⟦@s022⟧           seed, splits, mult: sp.mult, stage1_n: sp.n1, max_rounds: sp.maxRounds, per_split_1: sp.per1, per_split_2: sp.per2,
            rounds, recommended_n: recommendedN, in_stop_mode: !!inStopMode, buy_off: !!buyBoxOff,
@@ -124,22 +124,34 @@ function renderLocGuideCard() {
   `;
 }
 
+/* 🛡 손절 순서 상태: 증권사 연동 중이면 봇 원장(계좌 스냅숏 symbols.X.stop)이 기준(1·2일차 매도는 봇이 냄) · 아니면 이 앱에 저장한 값 */
+function stopSeqNow(rows) {
+  try {
+    if (typeof apiActive === "function" && apiActive() && rows && rows.length) {
+      const e = (acctSym() || {}).stop;
+      if (e && +e.n > 0) return { n: +e.n, date: String(e.date || ""), since: rows[0].date, k: +e.cnt > 0 ? +e.cnt : 1, ref: +e.ref > 0 ? +e.ref : 0 };
+    }
+  } catch (x) {}
+  return loadParamMode().stop || null;
+}
 /* 🛡 분할 손절 매도 안내 카드 (계산 = stopSplitPlan · 여기서는 문구·버튼만) — 1일차 손절 매도 → 2일차 손절 매도 → 3일차 평소 무한매수 규칙 매수 */
 function stopSplitHtml(P) {
   if (P.state === "none") return "";
   const u = v => fmtUsd0(v), px = v => "$" + v.toFixed(2), head = `<div class="kv-row"><span class="k">🛡 분할 손절 매도 (총 ${P.total}회)</span>`;
+  if (P.state === "wait" && P.k > 0) return `${head}<span class="v">손절 ${P.k}/${P.maxSeq}번 완료 · 평소 규칙 진행 중 — 종가가 손절선 ${px(P.line)} 이하이고${P.ref ? ` 지난 손절가 ${px(P.ref)}보다 낮으면` : ""} 다시 1일차부터 (최대 ${P.maxSeq}번)</span></div>`;
   if (P.state === "wait") return `${head}<span class="v">소진 뒤 손절선 ${px(P.line)} 이하 → 1일차·2일차 손절 매도 → 3일차 평소 매수 (지금 ${P.rounds}/${P.total}회)</span></div>`;
+  if (P.state === "hold" && P.k > 0) return `${head}<span class="v">손절 ${P.k}/${P.maxSeq}번 완료 · 종가 &gt; 손절선 ${px(P.line)} (또는 반등 중) → 익절 대기</span></div>`;
   if (P.state === "hold") return `${head}<span class="v">분할 소진 · 종가 &gt; 손절선 ${px(P.line)} → 익절 대기</span></div>`;
   const box = inner => `<div style="margin:8px 0;padding:10px 11px;border-radius:12px;border:1px solid rgba(240,71,90,0.5);background:rgba(240,71,90,0.08);font-size:12.5px;line-height:1.6;">${inner}</div>`;
   if (P.state === "wait2") return box(`<b style="color:var(--down);">🛡 분할 손절 · 1일차 매도 완료</b> — 다음 거래일 <b>2일차: 다음 1회분 손절 매도</b> (그동안 매수 멈춤)`);
   if (P.state === "wait3") return box(`<b style="color:var(--down);">🛡 분할 손절 · 2일차 매도 완료</b> — 다음 거래일 <b>3일차: 평소 무한매수 규칙으로 매수</b> (그동안 매수 멈춤)`);
-  const col = P.realized >= 0 ? "var(--up)" : "var(--down)", why = P.day === 1 ? `분할 소진(${P.rounds}/${P.total}회) + 종가 ≤ 손절선 ${px(P.line)}` : "1일차에 이어 계속";
+  const col = P.realized >= 0 ? "var(--up)" : "var(--down)", why = P.day === 1 ? (P.k > 0 ? `${P.seqNo}번째 손절 · 3일 순서 후에도 종가 ≤ 손절선 ${px(P.line)} · 지난 손절가보다 낮음` : `분할 소진(${P.rounds}/${P.total}회) + 종가 ≤ 손절선 ${px(P.line)}`) : "1일차에 이어 계속";
   return box(`<b style="color:var(--down);">🔴 분할 손절 ${P.day}일차</b> · ${why}<br>
     ① 마지막 1회분 <b>${P.sellQty.toLocaleString("en-US")}주</b> 매도 (기준 ${px(P.refPrice)} · 약 ${u(P.proceeds)} · 손익 <b style="color:${col};">${fmtUsd0Signed(P.realized)}</b>)<br>
     ② 남는 ${P.keepQty.toLocaleString("en-US")}주${P.keepAvg ? ` · 평단 ${px(P.keepAvg)}` : ""} · 회차 ${P.afterRounds}/${P.total}<br>
     ③ ${P.day === 1 ? "내일 2일차: 다음 1회분 손절 매도 → 그다음 3일차" : "다음 거래일 3일차"}: 평소 규칙(평단 &amp; 전일 종가 이하 LOC)으로 <b>${P.buyRound}회차 ${u(P.rebuyAmt)}</b> 매수
-    <button type="button" data-stopstep="${P.day}" style="margin-top:6px;padding:7px 12px;border-radius:9px;border:1px solid rgba(240,71,90,0.6);background:rgba(240,71,90,0.15);color:var(--text);font-weight:700;cursor:pointer;">✅ ${P.day}일차 손절 매도 완료</button>
-    <div style="margin-top:4px;color:var(--text-dim);font-size:11.5px;">직접 매도(MOC·LOC 낮은 가격)한 뒤 누르세요 · 마지막 매수 기록이 지워져 평단·회차가 다시 계산되고 매수는 3일차까지 멈춥니다 (증권사 연동 중이면 기록은 체결로 자동 반영) · 자동주문 봇은 아직 손절 매도를 내지 않음</div>`);
+    <button type="button" data-stopstep="${P.day}" data-ref="${P.refPrice.toFixed(2)}" style="margin-top:6px;padding:7px 12px;border-radius:9px;border:1px solid rgba(240,71,90,0.6);background:rgba(240,71,90,0.15);color:var(--text);font-weight:700;cursor:pointer;">✅ ${P.day}일차 손절 매도 완료</button>
+    <div style="margin-top:4px;color:var(--text-dim);font-size:11.5px;">직접 매도(MOC·LOC 낮은 가격)한 뒤 누르세요 · 마지막 매수 기록이 지워져 평단·회차가 다시 계산되고 매수는 3일차까지 멈춥니다 (증권사 연동 중이면 기록은 체결로 자동 반영) · 통합 앱 🛡손절 ☑ 이면 봇이 대신 매도합니다</div>`);
 }
 /* 엔진 카드(①규칙 기반 적용 중 ↗)에 넣는 분할 손절 안내 — 지금 적용 중인 시드·분할 수 기준으로 계산 */
 function stopSplitLive() {
@@ -147,13 +159,15 @@ function stopSplitLive() {
   const seed = parseFloat(document.getElementById("seedSimSeed1").value), splits = parseInt(document.getElementById("seedSimSplits1").value, 10), mult = parseInt(document.getElementById("seedSimCycle1").value, 10) || STAGE2_MULT;
   const a = getSellAnalysis(h); if (!(seed > 0) || !(splits >= 1) || !a || !a.recommendedN) return "";
   const sp = stagePlan(seed, splits, a.recommendedN, mult);
-  return stopSplitHtml(stopSplitPlan(computeBuyRecordsSummary().rows, sp, h[h.length - 1].y, STRAT2_MODE_RATIO, loadParamMode().stop || null, nyNowParts().date));
+  const rows = computeBuyRecordsSummary().rows;
+  return stopSplitHtml(stopSplitPlan(rows, sp, h[h.length - 1].y, STRAT2_MODE_RATIO, stopSeqNow(rows), nyNowParts().date));
 }
 document.addEventListener("click", e => {
   const b = e.target.closest && e.target.closest("[data-stopstep]"); if (!b) return;
   const day = +b.dataset.stopstep, recs = sortedBuyRecords(), last = recs[recs.length - 1]; if (!last) return;
   if (!confirm(`${day}일차 손절 매도를 마쳤나요?\n마지막 매수 기록(${last.qty}주 @ $${(+last.price).toFixed(2)})을 지우고, 매수는 3일차까지 멈춥니다.`)) return;
-  saveParamMode({ stop: { n: day, date: nyNowParts().date, since: recs[0].date } });
+  const prevS = loadParamMode().stop, same = prevS && prevS.since === recs[0].date, k0 = same && +prevS.k > 0 ? Math.floor(+prevS.k) : (same ? 1 : 0);
+  saveParamMode({ stop: { n: day, date: nyNowParts().date, since: recs[0].date, k: day === 1 ? k0 + 1 : Math.max(1, k0), ref: day === 1 ? (+b.dataset.ref || 0) : (same ? +prevS.ref || 0 : 0) } });
   if (last.api && typeof apiActive === "function" && apiActive()) showCopyToast("💼 증권사 연동 중 — 매도 체결이 반영되면 기록이 자동으로 맞춰집니다", true);
   else deleteBuyRecord(last.id);
   renderLocGuideCard(); try { renderVolEngineCard(last⟦Lev⟧Hist); } catch (x) {}
