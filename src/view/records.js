@@ -183,10 +183,12 @@ function autoRecordYesterdayBuy() {
   const hist = last⟦Lev⟧Hist;
   if (!hist || hist.length < 3) return null;
   if (typeof apiActive === "function" && apiActive()) { lastAutoRecordInfo = apiInfoLine(); return null; }
+  if ((loadParamMode().stop || {}).n === 1 && STOP_SPLIT_ON) { lastAutoRecordInfo = "🛡 분할 손절 2일차 대기 — 2일차 매도 후 자동 저장 재개"; return null; }
   let records = sortedBuyRecords();
   const trades = loadTrades();
   const lastSell = trades.length ? trades.reduce((x, t) => t.sellDate > x ? t.sellDate : x, "") : "";
-  const anchor = records.length ? records[records.length - 1].date : lastSell;
+  const stopD = String((loadParamMode().stop || {}).date || "");   // 🛡 분할 손절일 이전은 다시 재생하지 않음 (지운 매수 기록이 되살아나지 않게)
+  let anchor = records.length ? records[records.length - 1].date : lastSell; if (stopD > anchor) anchor = stopD;
   if (!anchor) { lastAutoRecordInfo = "기록이 없는 신규 진입 전이라 자동 저장하지 않습니다 (첫 매수는 직접 저장)"; return null; }
   const seed = parseFloat(document.getElementById("seedSimSeed1").value);
   const splits = parseInt(document.getElementById("seedSimSplits1").value, 10);
