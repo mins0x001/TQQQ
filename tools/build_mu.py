@@ -48,6 +48,7 @@ for k, v in keep.items(): U = U.replace(k, v)
 for a, b in (("QLD", "USD"), ("Qld", "Usd"), ("qld", "usd"), ("QQQ", "SOXX"), ("Qqq", "Soxx"), ("qqq", "soxx")): U = U.replace(a, b)
 for k, v in keep.items(): U = U.replace(v, k)
 U = U.replace("/*@usd-mic*/", 'if (symbol === "USD") url.searchParams.set("mic_code", "ARCX");   // USD = 통화와 겹치는 이름 → NYSE Arca ETF')
+assert "SIG_BASE = 2.5" in U; U = U.replace("SIG_BASE = 2.5", "SIG_BASE = 3.5")   # σ 기준: QLD 2.5(장기 σ 2.78%의 0.9배) → USD 장기 σ 3.9%(SOXL×2/3 환산 2010~)의 0.9배
 U = U.replace("USD(2배)", "USD(반도체 2배)")
 if "--check" in sys.argv:
     same = rd("usd.html") == U; bad += not same; print(("OK  " if same else "DIFF"), "usd")

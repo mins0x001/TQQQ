@@ -4,38 +4,38 @@
  "version": "*",
  "release": "*",
  "symbol": "QLD",
- "basis_close_date": "2026-10-23",
+ "basis_close_date": "2026-10-30",
  "generated_at": "*",
  "stage": "2단계 ×3 (현재 4회 · 2/9회차 · 대기 없음)",
- "avg_price": 86.5581,
- "holding_qty": 189,
+ "avg_price": 87.3661,
+ "holding_qty": 188,
  "orders": [
   {
    "side": "buy",
    "type": "LOC",
-   "price": 86.15,
-   "qty": 45
+   "price": 82.59,
+   "qty": 47
   },
   {
    "side": "sell",
    "type": "LOC",
-   "price": 95.22,
-   "qty": 189
+   "price": 96.11,
+   "qty": 188
   }
  ],
  "bot": {
-  "last_close": 86.15,
+  "last_close": 82.59,
   "sell_pct": 10,
   "sell_pct_rule": 10,
   "dd_gate": 5,
-  "dd_now": -14.51,
+  "dd_now": -18.04,
   "dd_peak": 100.77,
   "dd_ok": true,
   "dd_bars": 252,
   "buy_off_base": false,
   "per_split": 3888.8888888888887,
   "qty_unit": 1,
-  "avg_exact": 86.55814814814816,
+  "avg_exact": 87.36606382978724,
   "seed": 70000,
   "splits": 6,
   "mult": 3,

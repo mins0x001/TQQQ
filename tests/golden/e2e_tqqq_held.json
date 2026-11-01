@@ -4,32 +4,32 @@
  "version": "*",
  "release": "*",
  "symbol": "TQQQ",
- "basis_close_date": "2026-10-23",
+ "basis_close_date": "2026-10-30",
  "generated_at": "*",
  "stage": "2단계 ×3 (현재 4회 · 2/9회차 · 대기 없음)",
- "avg_price": 66.9568,
+ "avg_price": 67.7422,
  "holding_qty": 129,
  "orders": [
   {
    "side": "buy",
    "type": "LOC",
-   "price": 66.29,
-   "qty": 30
+   "price": 62.01,
+   "qty": 32
   },
   {
    "side": "sell",
    "type": "LOC",
-   "price": 73.66,
+   "price": 74.52,
    "qty": 129
   }
  ],
  "bot": {
-  "last_close": 66.29,
+  "last_close": 62.01,
   "sell_pct": 10,
   "sell_pct_rule": 10,
   "per_split": 2000,
   "qty_unit": 1,
-  "avg_exact": 66.95682170542636,
+  "avg_exact": 67.74217054263568,
   "seed": 36000,
   "splits": 6,
   "mult": 3,

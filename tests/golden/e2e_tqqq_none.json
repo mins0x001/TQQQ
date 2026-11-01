@@ -4,7 +4,7 @@
  "version": "*",
  "release": "*",
  "symbol": "TQQQ",
- "basis_close_date": "2026-10-23",
+ "basis_close_date": "2026-10-30",
  "generated_at": "*",
  "stage": "신규 진입 전",
  "avg_price": null,
@@ -13,12 +13,12 @@
   {
    "side": "buy",
    "type": "LOC",
-   "price": 66.29,
-   "qty": 90
+   "price": 62.01,
+   "qty": 96
   }
  ],
  "bot": {
-  "last_close": 66.29,
+  "last_close": 62.01,
   "sell_pct": 10,
   "sell_pct_rule": 10,
   "per_split": 6000,
