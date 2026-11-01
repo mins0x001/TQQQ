@@ -1,38 +1,41 @@
 {
- "soxl": {
-  "LEV": "SOXL",
-  "lev": "soxl",
-  "Lev": "Soxl",
-  "BASE": "SOXX",
-  "base": "soxx",
-  "Base": "Soxx",
-  "API": "soxl",
-  "VER": "V1.33",
-  "VERU": "V1_33",
-  "DATE": "261026"
- },
- "tqqq": {
-  "LEV": "TQQQ",
-  "lev": "tqqq",
-  "Lev": "Tqqq",
-  "BASE": "QQQ",
-  "base": "qqq",
-  "Base": "Qqq",
-  "API": "tqqq",
-  "VER": "V1.34",
-  "VERU": "V1_34",
-  "DATE": "261026"
- },
- "qldm": {
-  "LEV": "QLD",
-  "lev": "qldm",
-  "Lev": "Tqqq",
-  "BASE": "QQQ",
-  "base": "qqq",
-  "Base": "Qqq",
-  "API": "qm",
-  "VER": "V1.37",
-  "VERU": "V1_37",
-  "DATE": "261026"
- }
+  "soxl": {
+    "LEV": "SOXL",
+    "lev": "soxl",
+    "Lev": "Soxl",
+    "BASE": "SOXX",
+    "base": "soxx",
+    "Base": "Soxx",
+    "API": "soxl",
+    "VER": "V1.34",
+    "VERU": "V1_34",
+    "DATE": "261101",
+    "STOPSPLIT": "true"
+  },
+  "tqqq": {
+    "LEV": "TQQQ",
+    "lev": "tqqq",
+    "Lev": "Tqqq",
+    "BASE": "QQQ",
+    "base": "qqq",
+    "Base": "Qqq",
+    "API": "tqqq",
+    "VER": "V1.35",
+    "VERU": "V1_35",
+    "DATE": "261101",
+    "STOPSPLIT": "true"
+  },
+  "qldm": {
+    "LEV": "QLD",
+    "lev": "qldm",
+    "Lev": "Tqqq",
+    "BASE": "QQQ",
+    "base": "qqq",
+    "Base": "Qqq",
+    "API": "qm",
+    "VER": "V1.38",
+    "VERU": "V1_38",
+    "DATE": "261101",
+    "STOPSPLIT": "false"
+  }
 }

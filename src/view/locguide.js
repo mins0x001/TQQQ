@@ -115,9 +115,26 @@ function renderLocGuideCard() {
     <div class="kv-row"><span class="k">이번 회차 1회 매수금</span><span class="v">${canBuyMore ? fmtUsd0(perSplit) + (inStage1 ? " (1단계)" : " (2단계)") : "시드 소진"}</span></div>
     ${hasPosition ? `<div class="kv-row"><span class="k">현재 평단가 / 보유 수량</span><span class="v">${usd(avgPrice)} · ${summary.totalQty.toLocaleString("en-US")}주</span></div>` : ""}
     ${hasPosition ? `<div class="kv-row"><span class="k">손절모드 기준가 (평단×${STRAT2_MODE_RATIO.toFixed(2)})</span><span class="v" style="color:var(--down);">${usd(avgPrice * STRAT2_MODE_RATIO)}</span></div>` : ""}
+    ${STOP_SPLIT_ON ? stopSplitHtml(summary, sp, lastClose) : ""}
     ${stopPct !== null && hasPosition && !canBuyMore ? `<div class="kv-row"><span class="k">손절 참고선 (평단가 대비)</span><span class="v" style="color:var(--down);">${fmtPctSigned(stopPct)}</span></div>` : ""}
     <p class="desc" style="margin:12px 0 0;">LOC(지정가-종가) 주문은 지정한 가격보다 유리하거나 같은 종가가 형성될 때만 체결됩니다. 매수 LOC는 표시된 가격 이하로 종가가 형성될 때, 매도 LOC는 표시된 가격 이상으로 종가가 형성될 때 체결되도록 예약하는 용도입니다. 매수 예약가는 평단가와 전일 확정 종가 중 더 낮은 값이며(평단 &amp; 전일종가 이하 조건), 매수 회차·단계 판정은 "나의 매수 기록" 카드에 저장된 실제 매수 내역을, 시드·분할 수·2단계 배수(대기 없이 조건 충족 시마다 시드÷(분할×배수)씩)는 시드 분할매수 시뮬레이션의 입력값을 사용합니다.</p>
   `;
+}
+
+/* 🛡 분할 손절 매도 안내 카드 (계산 = stopSplitPlan · 여기서는 문구만 · 안내용 — 실제 주문·기록은 직접) */
+function stopSplitHtml(summary, sp, lastClose) {
+  const P = stopSplitPlan(summary.rows, sp, lastClose, STRAT2_MODE_RATIO, STOP_SELL_ROUNDS);
+  if (P.state === "none") return "";
+  const u = v => fmtUsd0(v), px = v => "$" + v.toFixed(2), head = `<div class="kv-row"><span class="k">🛡 분할 손절 매도 (총 ${P.total}회)</span>`;
+  if (P.state === "wait") return `${head}<span class="v">분할 소진 후 · 손절선 ${px(P.line)} 이하 시 마지막 ${P.nSell}회분 매도 (지금 ${P.rounds}/${P.total}회)</span></div>`;
+  if (P.state === "hold") return `${head}<span class="v">분할 소진 · 종가 ${px(lastClose)} &gt; 손절선 ${px(P.line)} → 익절 대기</span></div>`;
+  const col = P.realized >= 0 ? "var(--up)" : "var(--down)";
+  return `<div style="margin:8px 0;padding:10px 11px;border-radius:12px;border:1px solid rgba(240,71,90,0.5);background:rgba(240,71,90,0.08);font-size:12.5px;line-height:1.6;">
+    <b style="color:var(--down);">🔴 분할 손절 발동</b> · 분할 소진(${P.rounds}/${P.total}회) + 종가 ${px(lastClose)} ≤ 손절선 ${px(P.line)}<br>
+    ① 마지막 ${P.nSell}회분 <b>${P.sellQty.toLocaleString("en-US")}주</b> 매도 (기준 ${px(P.refPrice)} · 약 ${u(P.proceeds)} · 손익 <b style="color:${col};">${fmtUsd0Signed(P.realized)}</b>)<br>
+    ② 남는 ${P.keepQty.toLocaleString("en-US")}주${P.keepAvg ? ` · 평단 ${px(P.keepAvg)}` : ""} · 회차 ${P.afterRounds}/${P.total}<br>
+    ③ 판 돈 ${u(P.proceeds)}로 ${P.nextRound}회차 1회분 ${u(P.rebuyAmt)} ${P.rebuyOk ? "<b>재매수 가능 ✓</b> — 평소 매수 조건(평단 &amp; 전일 종가 이하 LOC)대로 진행" : "<b style='color:var(--down);'>금액 부족 ✗</b> — 부족분은 시드에서"}
+    <div style="margin-top:4px;color:var(--text-dim);font-size:11.5px;">안내만 합니다 · 직접 매도한 뒤 📒 기록에서 마지막 ${P.nSell}회차 매수 기록을 지우면 평단·회차가 자동으로 다시 계산됩니다 (자동주문 봇은 아직 손절 매도를 내지 않음)</div></div>`;
 }
 
 /* ---------- 자동주문 파일 저장 (Termux 봇 연동) ---------- */
