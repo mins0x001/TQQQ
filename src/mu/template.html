@@ -1093,7 +1093,7 @@ function update⟦Lev⟧Header(price, hist, ⟦lev⟧Cci) {
 
 //@@include-file src/view/seedsim.js
 //@@include-file src/view/records.js
-const STOP_SPLIT_ON = ⟦STOPSPLIT⟧, STOP_SELL_ROUNDS = 2;   // 🛡 분할 손절 매도: 분할 소진 후 손절선 도달 시 마지막 2회분 매도 (SOXL·TQQQ만 켬 · 계산은 stoploss.js)
+const STOP_SPLIT_ON = ⟦STOPSPLIT⟧, STOP_SELL_DAYS = 2;   // 🛡 분할 손절 매도: 분할 소진 후 손절선 도달 시 1일차·2일차 매도 → 3일차 평소 매수 (SOXL·TQQQ만 켬 · 계산은 stoploss.js)
 //@@include stoploss:stopSplitPlan
 //@@include-file src/view/locguide.js
 //@@include-file src/view/vol.js

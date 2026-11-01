@@ -3,8 +3,8 @@
 
 //@@fn locPlanCore
 /* 오늘의 LOC 주문 핵심 계산 (화면·저장소 접근 없음): 보유 기록 + 시드 계획 → 회차·기준가·수량·매도가·단계 문구
-   입력: lastHist(확정 종가 포함 봉 배열) · sp(stagePlan 결과) · summary(computeBuyRecordsSummary 결과) · sellPct(적용 익절 %) */
-function locPlanCore(lastHist, sp, summary, sellPct) {
+   입력: lastHist(확정 종가 포함 봉 배열) · sp(stagePlan 결과) · summary(computeBuyRecordsSummary 결과) · sellPct(적용 익절 %) · buyHold(분할 손절 중 매수 멈춤) */
+function locPlanCore(lastHist, sp, summary, sellPct, buyHold) {
   const rounds = summary.rows.length;
   const hasPosition = rounds > 0;
   const avgPrice = summary.avgPrice;
@@ -14,7 +14,7 @@ function locPlanCore(lastHist, sp, summary, sellPct) {
 
   const nextRound = rounds + 1;
   const inStage1 = nextRound <= sp.n1;
-  const canBuyMore = rounds < sp.maxRounds;
+  const canBuyMore = rounds < sp.maxRounds && !buyHold;   // buyHold = 🛡 분할 손절 1·2일차에는 매수 멈춤
   const perSplit = perOfRound(sp, nextRound);   // 이번 회차 1회 매수금: 1단계 시드÷분할 · 2단계 시드÷(분할×배수)
 
   /* LOC 매수 기준가 = "평단 & 전일종가 이하" (시드 분할매수 시뮬레이션 매수 조건과 동일)
@@ -50,7 +50,7 @@ function locPlanCore(lastHist, sp, summary, sellPct) {
   // ⟦LEV⟧ 손절모드 판정: 평단가 × STRAT2_MODE_RATIO(0.80) 이하이면 손절모드 경고
   const inStopMode = hasPosition && lastClose <= avgPrice * STRAT2_MODE_RATIO;
 
-  const stageLabel = !canBuyMore ? `분할 소진 (${rounds}/${sp.maxRounds}회 · 시드 전액)`
+  const stageLabel = !canBuyMore && buyHold ? "🛡 분할 손절 진행 중 (매수 멈춤 · 1·2일차 매도 → 3일차 평소 규칙)" : !canBuyMore ? `분할 소진 (${rounds}/${sp.maxRounds}회 · 시드 전액)`
     : !hasPosition ? "신규 진입 전"
     : (inStage1 ? `1단계 (AI 추천 ${sp.n1}회 이내, 현재 ${rounds}회)` : `2단계 ×${sp.mult} (현재 ${rounds}회 · ${nextRound - sp.n1}/${sp.maxRounds - sp.n1}회차 · 대기 없음)`);
   return { rounds, hasPosition, avgPrice, lastRecord, lastClose, lastCloseDate, nextRound, inStage1, canBuyMore, perSplit, buyBasisPrice, buyBasisLabel, bindingLabel, rawBuyQty, buyQty, cycleStatusText, buyReady, cycleInfo, canSell, sellPrice, sellQty, inStopMode, stageLabel };

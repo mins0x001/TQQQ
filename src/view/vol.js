@@ -128,7 +128,7 @@ function renderVolEngineCard(hist) {
         <div class="eb-line"><span>분할 수 (6×√k)</span><span>${ruleSplits}분할</span></div>
         <div class="eb-line"><span>2단계 (대기 없음)</span><span>×${STAGE2_MULT} → ${ruleSplits * STAGE2_MULT}분할</span></div>
         <div class="eb-line"><span>손절모드 (12%×k)</span><span>-${ruleStopMode.toFixed(1)}%</span></div>
-        ${stopTot ? `<div class="eb-line"><span>분할 소진 시 (총 ${stopTot}회)</span><span>손절선 도달 → 마지막 ${STOP_SELL_ROUNDS}회분 손절 · 재매수</span></div>` : ""}
+        ${stopTot ? `<div class="eb-line"><span>분할 소진 시 (총 ${stopTot}회)</span><span>손절선 도달 → 1일차·2일차 손절 매도 → 3일차 평소 매수</span></div>` : ""}
         <div class="eb-ret" style="${col(ruleRet)}">${fmtPctSigned(ruleRet)}</div>
       </div>
       <div class="engine-box bt">
@@ -143,6 +143,7 @@ function renderVolEngineCard(hist) {
       <button class="buysim-btn amber" type="button" data-engine-apply="rule" onclick="applyEngineRec('rule')">① 규칙 적용</button>
       <button class="buysim-btn save" type="button" data-engine-apply="bt" onclick="applyEngineRec('bt')">② 최적 적용</button>
     </div>
+    ${stopSplitLive()}
     <div class="kv-row" style="margin-top:8px;"><span class="k">규칙 비교 · ${ruleSplits}분할: 신규 ×${STAGE2_MULT} 연속 / 기존 ${ruleCycle}일 대기</span><span class="v"><b style="${col(ruleRet)}">${fmtPctSigned(ruleRet)}</b> / <span style="${col(ruleOldRet)}">${fmtPctSigned(ruleOldRet)}</span></span></div>
 ⟦@s031⟧    <div class="kv-row"><span class="k">AI 최적 매도 목표 / 추천 분할매수 회차</span><span class="v">${a ? "+" + a.best.pct.toFixed(2) + "%" : "--"} / ${a && a.recommendedN ? a.recommendedN + "회" : "--"}</span></div>
     <div class="buysim-sub-title">견고성 상위 5개 조합 (시드 ${fmtUsd0(seed)}, 평단&전일종가 이하 규칙)</div>
