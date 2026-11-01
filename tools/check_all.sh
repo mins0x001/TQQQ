@@ -3,6 +3,7 @@
 cd "$(dirname "$0")/.." || exit 1
 python3 tools/build_mu.py --check || exit 1
 python3 tests/bot_manual.py || exit 1
+python3 tests/bot_stop.py || exit 1
 node tests/rebal_golden.js && node tests/alloc_golden.js && node tests/stopsplit_golden.js && NODE_PATH=$(npm root -g) node tests/calc_golden.js && NODE_PATH=$(npm root -g) node tests/loc_golden.js && NODE_PATH=$(npm root -g) node tests/qld_golden.js && NODE_PATH=$(npm root -g) node tests/e2e_order.js && NODE_PATH=$(npm root -g) node tests/iframe_eval.js && {
   python3 -m http.server 8799 >/dev/null 2>&1 & SRV=$!
   sleep 1; BASE=http://localhost:8799/ NODE_PATH=$(npm root -g) node tests/persist_inputs.js; R=$?

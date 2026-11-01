@@ -34,11 +34,12 @@ import urllib.parse
 import urllib.request
 from zoneinfo import ZoneInfo
 
-VERSION = "MUHANBOT V1.19 (261026)"
+VERSION = "MUHANBOT V1.20 (261101)"
 MERITZ_BASE = os.environ.get("MERITZ_BASE_URL", "https://openapi.imeritz.com:9443").rstrip("/")
 ET, KST = ZoneInfo("America/New_York"), ZoneInfo("Asia/Seoul")
 APP_PAGES = {"TQQQ": "tqqq.html"}
 CONFIG_FILE, STATUS_FILE, ACCOUNT_FILE = "muhan-bot-tqqq.json", "muhan-bot-tqqq-status.json", "muhan-account-tqqq.json"
+STOP_FILE = "muhan-bot-tqqq-stop.json"        # 🛡 손절 순서 원장 (봇 전용)
 DEFAULT_CONFIG = {"mode": "dry", "symbols": {"TQQQ": True}, "max_order_usd": 20000, "app_base": "",
                   "sides": {"SOXL": {"buy": True, "sell": True}, "TQQQ": {"buy": True, "sell": True}}}
 # 거래소: 주문용 벤더코드 ↔ 시세용 2자리 코드
@@ -525,6 +526,81 @@ def auto_limit(plan: dict, cfg: dict) -> float:
     return per * 2 if per > 0 else float(cfg.get("max_order_usd") or 20000)
 
 
+# ───────────────────────────────────────────── 🛡 분할 손절 자동 매도 (통합앱 ☑손절 ON 일 때만 · 기본 OFF)
+STOP_MAX_FRAC = 0.40        # 손절 1회 매도량 ≤ 계좌 보유의 40% (1회분 = 보통 5~15%) — 계산 오류로 전량 매도되는 사고 차단
+STOP_EXPIRE_DAYS = 6        # 1일차 뒤 이 일수가 지나도록 2일차를 못 냈으면 순서 폐기 (낡은 지시로 늦게 파는 일 방지)
+
+
+def apply_stop(plan: dict, sym: str, acct: dict, orders: list, ent, today: str, c: Checks):
+    """☑손절 ON 인 종목의 1·2일차 손절 매도 결정. 반환 (주문 목록, 즉시 저장할 원장 항목|None).
+    원장 ent = {since, n(1=1일차 완료·2=끝), date(ET), next_qty} — 봇만 쓰는 파일(STOP_FILE)이라 앱·사람이 못 바꿈.
+    · 손절 신호(plan.stop)가 있거나 순서 진행 중이면 평소 매수·매도 주문은 모두 뺀다(1·2일차 매수 정지 · 전량 LOC 매도와 겹침 방지)
+    · 1일차: 앱 신호를 봇이 독립 검증 — 분할 소진(rounds ≥ max_rounds) · 전일종가 ≤ 평단×ratio · 수량 ≤ 보유 40% · 계좌 매도가능 이내 · 같은 사이클 재발동 금지
+    · 2일차: 원장에 1일차 기록 + 날짜가 지난 뒤에만 · 수량은 원장 값 (앱 기록이 증권사 체결로 바뀌어도 영향 없음)"""
+    st = plan.get("stop") or {}
+    b = plan.get("bot") or {}
+    ent = dict(ent or {})
+    td = dt.date.fromisoformat(today)
+    immediate = None
+    if ent.get("n") == 1:
+        try:
+            if (td - dt.date.fromisoformat(ent["date"])).days > STOP_EXPIRE_DAYS:
+                c.warn(f"S 손절 순서 폐기 — 1일차({ent['date']}) 후 {STOP_EXPIRE_DAYS}일 초과")
+                ent["n"] = 2
+                immediate = ent
+        except (KeyError, ValueError):
+            ent, immediate = {}, None
+    pend = ent.get("n") == 1
+    active = bool(st) or pend or (ent.get("n") == 2 and ent.get("date") == today)
+    if active:
+        orders = []                                              # 평소 매수·매도 정지
+    qty_acct, sellable = float(acct.get("qty") or 0), int(math.floor(float(acct.get("sellable") or 0) + 1e-9))
+    def bad(msg):
+        c.fail("S " + msg, "sell")
+        return orders, immediate
+    if pend and ent.get("date") == today:
+        c.ok(f"S 손절 1일차 오늘 이미 처리({ent.get('date')}) — 매수 정지 유지")
+        return orders, immediate
+    if pend:                                                      # 2일차
+        q = int(ent.get("next_qty") or 0)
+        if q < 1:
+            c.warn("S 손절 2일차 — 매도할 수량 없음 → 순서 종료")
+            return orders, dict(ent, n=2, date=today)
+        if c.block_sell:
+            return bad("2일차 매도 보류 — 앞선 검수 실패(" + c.block_sell[0][:50] + ")")
+        if q > sellable or q > qty_acct * STOP_MAX_FRAC + 1e-9:
+            return bad(f"2일차 수량 {q}주 — 계좌 매도가능 {sellable}주 · 보유 {qty_acct:g}주의 {STOP_MAX_FRAC:.0%} 한도 초과")
+        new = dict(ent, n=2, date=today)
+        c.ok(f"S 손절 2일차 매도 {q}주 (원장 {ent['date']} 1일차 다음 날 · 보유 {qty_acct:g}주의 {q / qty_acct:.0%})")
+        return [{"side": "sell", "price": 0.0, "qty": q, "src": f"🛡 손절 2일차 · {q}주 MOC", "stop": True, "stop_ent": new}], immediate
+    if not st:
+        return orders, immediate
+    if ent.get("since") and ent.get("since") == st.get("since"):
+        c.ok("S 같은 사이클의 손절 순서는 이미 끝남 — 다시 발동하지 않음")
+        return orders, immediate
+    if int(st.get("day") or 0) != 1:
+        return bad("앱은 2일차인데 봇 원장에 1일차 기록이 없음 — 앱 [손절 순서]에서 직접 처리")
+    try:
+        q, ratio = int(st["sell_qty"]), float(st["ratio"])
+        rounds, mx = int(b["rounds"]), int(b["max_rounds"])
+        avg, last = float(b["avg_exact"]), float(b["last_close"])
+    except (KeyError, TypeError, ValueError):
+        return bad("1일차 검증 자료 부족(bot.rounds·max_rounds·avg_exact·last_close)")
+    if c.block_sell:
+        return bad("1일차 보류 — 앞선 검수 실패(" + c.block_sell[0][:50] + ")")
+    if not (0.5 <= ratio <= 0.95):
+        return bad(f"1일차 손절 비율 {ratio:g} 이상 (0.5~0.95)")
+    if rounds < mx:
+        return bad(f"1일차 분할 소진 아님 ({rounds}/{mx}회)")
+    if not st.get("since") or not (last <= avg * ratio + 1e-9):
+        return bad(f"1일차 손절선 미도달: 전일종가 {fp(last)} > 평단 {fp(avg)} × {ratio:g} = {fp(avg * ratio)}")
+    if q < 1 or q > sellable or q > qty_acct * STOP_MAX_FRAC + 1e-9:
+        return bad(f"1일차 수량 {q}주 — 계좌 매도가능 {sellable}주 · 보유 {qty_acct:g}주의 {STOP_MAX_FRAC:.0%} 한도 초과")
+    new = {"since": st["since"], "n": 1, "date": today, "next_qty": max(0, int(st.get("next_qty") or 0)), "ref": round(last, 2)}
+    c.ok(f"S 손절 1일차 검증 통과 — 분할 소진 {rounds}/{mx} · 종가 {fp(last)} ≤ 손절선 {fp(avg * ratio)} · {q}주 = 보유의 {q / qty_acct:.0%}")
+    return [{"side": "sell", "price": 0.0, "qty": q, "src": f"🛡 손절 1일차 · 마지막 1회분 {q}주 MOC", "stop": True, "stop_ent": new}], immediate
+
+
 def build_orders(plan: dict, sides: dict, acct: dict, c: Checks) -> list:
     """☑매수·☑매도 체크에 따라 최종 주문을 만든다.
     · 매수: 앱 계획에 있으면 그대로, 규칙상 매수 없음(분할 소진 등)이어도 체크돼 있으면 같은 공식으로 계산해 주문
@@ -934,24 +1010,29 @@ def run() -> int:
 
         app_base = (cfg.get("app_base") or os.environ.get("APP_BASE") or "").rstrip("/") + "/"
         sides_cfg = cfg.get("sides") or {}
+        try:
+            stop_led = json.loads(files.get(STOP_FILE) or "{}")
+            stop_led = stop_led if isinstance(stop_led, dict) else {}
+        except ValueError:
+            stop_led = {}
         any_block = False
         for sym in APP_PAGES:
             sides = {"buy": True, "sell": True, **(sides_cfg.get(sym) or {})}
             if not (cfg.get("symbols") or {}).get(sym, True):
                 sides = {"buy": False, "sell": False}
-            if not (sides["buy"] or sides["sell"]):
+            if not (sides["buy"] or sides["sell"] or sides.get("stop")):
                 continue
             res = {"state": "", "summary": "", "orders": [], "checks": [], "sides": sides}
             status["results"][sym] = res
             c = Checks()
-            log(f"── {sym} (매수 {'☑' if sides['buy'] else '☐'} · 매도 {'☑' if sides['sell'] else '☐'})")
+            log(f"── {sym} (매수 {'☑' if sides['buy'] else '☐'} · 매도 {'☑' if sides['sell'] else '☐'} · 손절 {'☑' if sides.get('stop') else '☐'})")
             try:
                 plan = plan_from_app(app_base + APP_PAGES[sym], os.environ["MUHAN_TOKEN"], os.environ["GIST_ID"])
             except Exception as e:  # noqa: BLE001
                 res.update(state="error", summary=f"앱 실행 실패: {str(e)[:200]}")
                 any_block = True
                 continue
-            res["plan"] = {k: plan.get(k) for k in ("basis_close_date", "stage", "avg_price", "holding_qty", "orders", "version", "bot")}
+            res["plan"] = {k: plan.get(k) for k in ("basis_close_date", "stage", "avg_price", "holding_qty", "orders", "version", "bot", "stop")}
             verify_plan(plan, sym, expect_basis, cfg, now_utc, c)              # V1 최신 · V2 앱 계산 재검산
             try:
                 acct = account_info(api, sym)
@@ -981,6 +1062,11 @@ def run() -> int:
             else:
                 c.warn("V3 메리츠 일봉에서 전일 종가를 찾지 못해 대조 생략")
             orders = build_orders(plan, sides, acct, c) if not any(not x["ok"] and "V2 재계산 정보" in x["msg"] for x in c.items) else []
+            if sides.get("stop"):                                   # 🛡 ☑손절 ON 일 때만 — 손절 매도 결정 + 1·2일차 평소 주문 정지
+                orders, imm = apply_stop(plan, sym, acct, orders, stop_led.get(sym), today.isoformat(), c)
+                if imm is not None and mode == "live":
+                    stop_led[sym] = imm
+                    gist.write(STOP_FILE, stop_led)
             for o in orders:
                 if o["side"] == "buy":
                     amt = o["price"] * o["qty"]
@@ -1018,8 +1104,9 @@ def run() -> int:
 
             for o in orders:
                 side, kr = o["side"], ("매수" if o["side"] == "buy" else "매도")
-                item = {"side": side, "price": 0.0 if ocode in MARKET_CODES else o["price"], "qty": o["qty"], "state": "", "why": "", "src": o.get("src", ""),
-                        "how": cname}
+                ocode_o, cname_o = ("34", ORDER_CODES["34"]) if o.get("stop") else (ocode, cname)      # 🛡 손절 매도는 MOC(장마감 시장가) — 체결 보장
+                item = {"side": side, "price": 0.0 if ocode_o in MARKET_CODES else o["price"], "qty": o["qty"], "state": "", "why": "", "src": o.get("src", ""),
+                        "how": cname_o}
                 res["orders"].append(item)
                 blocks = [b for b in (c.block_buy if side == "buy" else c.block_sell) if b.startswith(("V7", "V8"))]
                 if blocks:
@@ -1033,15 +1120,18 @@ def run() -> int:
                     item.update(state="dup", why=f"중복 — 메리츠에 이미 주문 있음 (주문번호 {d0.get('oder_no')} · {num(d0.get('ovrs_stck_oder_prc')):.2f} × {int(num(d0.get('odqt')))}주) → 다시 내지 않음")
                     continue
                 if mode != "live":
-                    item.update(state="dry", why=f"리허설 — 실전이면 {cname} 바로 주문")
+                    item.update(state="dry", why=f"리허설 — 실전이면 {cname_o} 바로 주문")
                     continue
-                r = api.place_order(side, sym, exch, ocode, float(item["price"]), int(o["qty"]))
+                r = api.place_order(side, sym, exch, ocode_o, float(item["price"]), int(o["qty"]))
                 if not r["ok"]:
                     item.update(state="rejected", why=f"주문 실패 — {r['why']}")
                     any_block = True
                     continue
-                item.update(state="placed", oder_no=r.get("oder_no"), why=f"{cname} 주문 실행 완료 · 주문번호 {r.get('oder_no')} (MTS 정정/취소에 표시)")
+                item.update(state="placed", oder_no=r.get("oder_no"), why=f"{cname_o} 주문 실행 완료 · 주문번호 {r.get('oder_no')} (MTS 정정/취소에 표시)")
                 log(f"  {kr} {item['price']} × {o['qty']} → {item['state']} {item['why']}")
+                if o.get("stop"):                                   # 🛡 순서 원장 기록 (주문 접수 성공 시에만 — 같은 날 재실행해도 두 번 못 냄)
+                    stop_led[sym] = o["stop_ent"]
+                    gist.write(STOP_FILE, stop_led)
 
             icon = {"placed": "✅", "dup": "🔁", "exists": "☑", "dry": "◎", "blocked": "⛔", "rejected": "✖", "cancelled": "↩", "placed?": "❔"}
             res["summary"] = " · ".join(f"{icon.get(i['state'], '')} {'매수' if i['side'] == 'buy' else '매도'} {i['how']} {i['price']:.2f}×{i['qty']}" for i in res["orders"])
