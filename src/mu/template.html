@@ -10,7 +10,7 @@
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="version" content="⟦VER⟧-⟦DATE⟧-⟦LEV⟧-Panel-Unified">
-<meta name="release-date" content="261026">
+<meta name="release-date" content="⟦DATE⟧">
 ⟦@s000⟧<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -1093,6 +1093,8 @@ function update⟦Lev⟧Header(price, hist, ⟦lev⟧Cci) {
 
 //@@include-file src/view/seedsim.js
 //@@include-file src/view/records.js
+const STOP_SPLIT_ON = ⟦STOPSPLIT⟧, STOP_SELL_ROUNDS = 2;   // 🛡 분할 손절 매도: 분할 소진 후 손절선 도달 시 마지막 2회분 매도 (SOXL·TQQQ만 켬 · 계산은 stoploss.js)
+//@@include stoploss:stopSplitPlan
 //@@include-file src/view/locguide.js
 //@@include-file src/view/vol.js
 //@@include-file src/shell/app.js

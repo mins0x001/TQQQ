@@ -116,6 +116,7 @@ function renderVolEngineCard(hist) {
   `).join("");
 
   const a = getSellAnalysis(hist);
+  const stopTot = STOP_SPLIT_ON && a && a.recommendedN ? stagePlan(seed, ruleSplits, a.recommendedN, STAGE2_MULT).maxRounds : 0;   // 규칙 기반 총 회차
 
   el.innerHTML = `
     <div class="fg-header-row">
@@ -127,6 +128,7 @@ function renderVolEngineCard(hist) {
         <div class="eb-line"><span>분할 수 (6×√k)</span><span>${ruleSplits}분할</span></div>
         <div class="eb-line"><span>2단계 (대기 없음)</span><span>×${STAGE2_MULT} → ${ruleSplits * STAGE2_MULT}분할</span></div>
         <div class="eb-line"><span>손절모드 (12%×k)</span><span>-${ruleStopMode.toFixed(1)}%</span></div>
+        ${stopTot ? `<div class="eb-line"><span>분할 소진 시 (총 ${stopTot}회)</span><span>손절선 도달 → 마지막 ${STOP_SELL_ROUNDS}회분 손절 · 재매수</span></div>` : ""}
         <div class="eb-ret" style="${col(ruleRet)}">${fmtPctSigned(ruleRet)}</div>
       </div>
       <div class="engine-box bt">

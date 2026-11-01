@@ -9,9 +9,9 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="version" content="V1.37-261026-QLD-Panel-Unified">
-<meta name="release-date" content="261026">
-<title>QLD 무한매수AI분석 (V1.37 - 261026)</title>
+<meta name="version" content="V1.38-261101-QLD-Panel-Unified">
+<meta name="release-date" content="261101">
+<title>QLD 무한매수AI분석 (V1.38 - 261101)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
@@ -716,8 +716,8 @@ body.panel .sell-row{display:none !important;}
   <div hidden><section id="card-backup"></section><div id="backupPanel"></div><button id="bkCopyBtn"></button><button id="bkRestoreBtn"></button><textarea id="bkText"></textarea><div id="bkMsg"></div></div>
   <a class="hub-link" href="./">🏠 허브로 · 홈 화면 앱 설치는 허브에서</a>
   <footer class="page-foot">
-  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD무한매수_V1_37_261026.HTML</span>)</button>
-  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.37 (261026)</code> · SOXL판(V0.48)과 동일 기능 · QLD 변동성 최적화판</div>
+  <button class="dl-btn" id="downloadSelfBtn" type="button">⬇ 이 파일 저장 (<span id="dlName">QLD무한매수_V1_38_261101.HTML</span>)</button>
+  <div style="margin-bottom: 4px;">시스템 버전: <code id="footerVersion">V1.38 (261101)</code> · SOXL판(V0.48)과 동일 기능 · QLD 변동성 최적화판</div>
   </footer>
 
   </div>
@@ -872,7 +872,7 @@ body.panel .sell-row{display:none !important;}
 <script>
 /* 파일 저장 버튼용: 화면 렌더링 전 원본 HTML (개인 매수 기록이 섞이지 않도록 가장 먼저 캡처) */
 const __PRISTINE_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-const APP_VERSION = "V1.37", RELEASE_DATE = "261026";
+const APP_VERSION = "V1.38", RELEASE_DATE = "261101";
 
 /* Finnhub: 실시간 시세(quote)만 사용 — 무료 티어에서 정상 동작 */
 const FINNHUB_API_KEY = "daik4m9r01qr9o8hnfj0daik4m9r01qr9o8hnfjg";
@@ -2392,6 +2392,29 @@ function renderBuyRecords() {
   `;
 }
 
+const STOP_SPLIT_ON = false, STOP_SELL_ROUNDS = 2;   // 🛡 분할 손절 매도: 분할 소진 후 손절선 도달 시 마지막 2회분 매도 (SOXL·TQQQ만 켬 · 계산은 stoploss.js)
+/* 분할 손절 매도 규칙 (규칙 기반 총 회차 = sp.maxRounds, 예: SOXL 24회 · TQQQ 12회)
+   ① 분할 소진 (rounds ≥ 총 회차) 이고 ② 종가가 손절선(평단 × ratio) 이하 → 마지막 nSell 회차(기본 2회)분 수량을 매도
+   ③ 판 돈으로 '1회분 매수 금액'이 다시 생기면 → 회차가 nSell 만큼 줄어, 평소 매수 조건(평단 & 전일 종가 이하)대로 1회분 재매수
+   입력: rows(매수 기록 배열 {qty, price}, 오래된 순) · sp(stagePlan 결과) · lastClose · ratio(손절선 비율) · nSell(한 번에 손절할 회차 수)
+   출력: 발동 여부(active)·상태 문구와 함께 매도 수량·예상 금액·매도 후 평단/회차·재매수 가능 여부 (실제 주문은 만들지 않음 — 안내용) */
+function stopSplitPlan(rows, sp, lastClose, ratio, nSell) {
+  const n = rows.length, N = Math.max(1, Math.floor(nSell) || 2);
+  const out = { total: sp.maxRounds, rounds: n, nSell: N, ratio, exhausted: n >= sp.maxRounds, line: 0, active: false, state: "none" };
+  if (n === 0 || !(lastClose > 0)) return out;
+  const qty = rows.reduce((a, r) => a + r.qty, 0), cost = rows.reduce((a, r) => a + r.qty * r.price, 0), avg = cost / qty;
+  out.line = Math.floor(avg * ratio * 100 + 1e-6) / 100;                     // 손절선 (센트 단위 내림)
+  out.avg = avg; out.qty = qty;
+  if (!out.exhausted) { out.state = "wait"; return out; }                    // 아직 분할이 남음 → 평소 매수
+  if (lastClose > avg * ratio) { out.state = "hold"; return out; }           // 소진됐지만 손절선 위 → 익절 대기
+  const k = Math.min(N, n), sold = rows.slice(n - k), keep = rows.slice(0, n - k);
+  const sQty = sold.reduce((a, r) => a + r.qty, 0), sCost = sold.reduce((a, r) => a + r.qty * r.price, 0);
+  const proceeds = sQty * lastClose, kQty = qty - sQty, kCost = cost - sCost, nextRound = n - k + 1;
+  const rebuyAmt = typeof perOfRound === "function" ? perOfRound(sp, nextRound) : 0;  // 재매수 1회분 금액 (그 회차 기준)
+  Object.assign(out, { active: true, state: "sell", sellRows: sold.map(r => ({ qty: r.qty, price: r.price })), sellQty: sQty, refPrice: lastClose,
+    proceeds, realized: proceeds - sCost, keepQty: kQty, keepAvg: kQty > 0 ? kCost / kQty : null, afterRounds: n - k, nextRound, rebuyAmt, rebuyOk: proceeds >= rebuyAmt });
+  return out;
+}
 /* ---------- 📌 LOC 매수/매도 예약 가이드 ---------- */
 /* ---------- 2단계 주기: 예상 재개일 ---------- */
 function nextTradingDay(fromTs, n) {
@@ -2573,9 +2596,26 @@ function renderLocGuideCard() {
     <div class="kv-row"><span class="k">이번 회차 1회 매수금</span><span class="v">${canBuyMore ? fmtUsd0(perSplit) + (inStage1 ? " (1단계)" : " (2단계)") : "시드 소진"}</span></div>
     ${hasPosition ? `<div class="kv-row"><span class="k">현재 평단가 / 보유 수량</span><span class="v">${usd(avgPrice)} · ${summary.totalQty.toLocaleString("en-US")}주</span></div>` : ""}
     ${hasPosition ? `<div class="kv-row"><span class="k">손절모드 기준가 (평단×${STRAT2_MODE_RATIO.toFixed(2)})</span><span class="v" style="color:var(--down);">${usd(avgPrice * STRAT2_MODE_RATIO)}</span></div>` : ""}
+    ${STOP_SPLIT_ON ? stopSplitHtml(summary, sp, lastClose) : ""}
     ${stopPct !== null && hasPosition && !canBuyMore ? `<div class="kv-row"><span class="k">손절 참고선 (평단가 대비)</span><span class="v" style="color:var(--down);">${fmtPctSigned(stopPct)}</span></div>` : ""}
     <p class="desc" style="margin:12px 0 0;">LOC(지정가-종가) 주문은 지정한 가격보다 유리하거나 같은 종가가 형성될 때만 체결됩니다. 매수 LOC는 표시된 가격 이하로 종가가 형성될 때, 매도 LOC는 표시된 가격 이상으로 종가가 형성될 때 체결되도록 예약하는 용도입니다. 매수 예약가는 평단가와 전일 확정 종가 중 더 낮은 값이며(평단 &amp; 전일종가 이하 조건), 매수 회차·단계 판정은 "나의 매수 기록" 카드에 저장된 실제 매수 내역을, 시드·분할 수·2단계 배수(대기 없이 조건 충족 시마다 시드÷(분할×배수)씩)는 시드 분할매수 시뮬레이션의 입력값을 사용합니다.</p>
   `;
+}
+
+/* 🛡 분할 손절 매도 안내 카드 (계산 = stopSplitPlan · 여기서는 문구만 · 안내용 — 실제 주문·기록은 직접) */
+function stopSplitHtml(summary, sp, lastClose) {
+  const P = stopSplitPlan(summary.rows, sp, lastClose, STRAT2_MODE_RATIO, STOP_SELL_ROUNDS);
+  if (P.state === "none") return "";
+  const u = v => fmtUsd0(v), px = v => "$" + v.toFixed(2), head = `<div class="kv-row"><span class="k">🛡 분할 손절 매도 (총 ${P.total}회)</span>`;
+  if (P.state === "wait") return `${head}<span class="v">분할 소진 후 · 손절선 ${px(P.line)} 이하 시 마지막 ${P.nSell}회분 매도 (지금 ${P.rounds}/${P.total}회)</span></div>`;
+  if (P.state === "hold") return `${head}<span class="v">분할 소진 · 종가 ${px(lastClose)} &gt; 손절선 ${px(P.line)} → 익절 대기</span></div>`;
+  const col = P.realized >= 0 ? "var(--up)" : "var(--down)";
+  return `<div style="margin:8px 0;padding:10px 11px;border-radius:12px;border:1px solid rgba(240,71,90,0.5);background:rgba(240,71,90,0.08);font-size:12.5px;line-height:1.6;">
+    <b style="color:var(--down);">🔴 분할 손절 발동</b> · 분할 소진(${P.rounds}/${P.total}회) + 종가 ${px(lastClose)} ≤ 손절선 ${px(P.line)}<br>
+    ① 마지막 ${P.nSell}회분 <b>${P.sellQty.toLocaleString("en-US")}주</b> 매도 (기준 ${px(P.refPrice)} · 약 ${u(P.proceeds)} · 손익 <b style="color:${col};">${fmtUsd0Signed(P.realized)}</b>)<br>
+    ② 남는 ${P.keepQty.toLocaleString("en-US")}주${P.keepAvg ? ` · 평단 ${px(P.keepAvg)}` : ""} · 회차 ${P.afterRounds}/${P.total}<br>
+    ③ 판 돈 ${u(P.proceeds)}로 ${P.nextRound}회차 1회분 ${u(P.rebuyAmt)} ${P.rebuyOk ? "<b>재매수 가능 ✓</b> — 평소 매수 조건(평단 &amp; 전일 종가 이하 LOC)대로 진행" : "<b style='color:var(--down);'>금액 부족 ✗</b> — 부족분은 시드에서"}
+    <div style="margin-top:4px;color:var(--text-dim);font-size:11.5px;">안내만 합니다 · 직접 매도한 뒤 📒 기록에서 마지막 ${P.nSell}회차 매수 기록을 지우면 평단·회차가 자동으로 다시 계산됩니다 (자동주문 봇은 아직 손절 매도를 내지 않음)</div></div>`;
 }
 
 /* ---------- 자동주문 파일 저장 (Termux 봇 연동) ---------- */
@@ -2779,6 +2819,7 @@ function renderVolEngineCard(hist) {
   `).join("");
 
   const a = getSellAnalysis(hist);
+  const stopTot = STOP_SPLIT_ON && a && a.recommendedN ? stagePlan(seed, ruleSplits, a.recommendedN, STAGE2_MULT).maxRounds : 0;   // 규칙 기반 총 회차
 
   el.innerHTML = `
     <div class="fg-header-row">
@@ -2791,6 +2832,7 @@ function renderVolEngineCard(hist) {
         <div class="eb-line"><span>분할 수 (6×√k)</span><span>${ruleSplits}분할</span></div>
         <div class="eb-line"><span>2단계 (대기 없음)</span><span>×${STAGE2_MULT} → ${ruleSplits * STAGE2_MULT}분할</span></div>
         <div class="eb-line"><span>손절모드 (12%×k)</span><span>-${ruleStopMode.toFixed(1)}%</span></div>
+        ${stopTot ? `<div class="eb-line"><span>분할 소진 시 (총 ${stopTot}회)</span><span>손절선 도달 → 마지막 ${STOP_SELL_ROUNDS}회분 손절 · 재매수</span></div>` : ""}
         <div class="eb-ret" style="${col(ruleRet)}">${fmtPctSigned(ruleRet)}</div>
       </div>
       <div class="engine-box bt">
