@@ -1,7 +1,7 @@
 // LOC 주문 카드 골든 테스트: 여러 보유 상태(없음·1단계·2단계·소진·손절모드)에서 카드 HTML 과 봇용 주문 데이터가 저장된 값과 같은지 확인
 // 사용: node tests/loc_golden.js [--update]
 const { chromium } = require('playwright'); const http = require('http'); const fs = require('fs'); const path = require('path');
-const ROOT = path.resolve(__dirname, '..'), UPDATE = process.argv.includes('--update'), APPS = { soxl: 'lastSoxlHist', tqqq: 'lastTqqqHist', qldm: 'lastTqqqHist' };
+const ROOT = path.resolve(__dirname, '..'), UPDATE = process.argv.includes('--update'), APPS = { soxl: 'lastSoxlHist', tqqq: 'lastTqqqHist', qldm: 'lastTqqqHist', usdm: 'lastTqqqHist' };
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json' };
 const srv = http.createServer((q, r) => { const f = path.join(ROOT, decodeURIComponent(q.url.split('?')[0]) || 'index.html'); fs.readFile(f, (e, b) => { if (e) { r.writeHead(404); r.end(); } else { r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'application/octet-stream' }); r.end(b); } }); });
 const RUN = async function (histName) {

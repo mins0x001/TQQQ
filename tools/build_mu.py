@@ -19,10 +19,11 @@ def inc(m):
     return FNS[k]
 T = re.sub(r"^//@@include-file (\S+)$", lambda m: rd(m.group(1))[:-1], T, flags=re.M)
 T = re.sub(r"^//@@include ([\w:]+)$", inc, T, flags=re.M)
-bad = 0
+bad = 0; BUILT = {}
 for n, c in CFG.items():
     s = re.sub(r"⟦@(s\d+)⟧", lambda m: SL[m.group(1)][n], T)
     for k, v in c.items(): s = s.replace(f"⟦{k}⟧", v)
+    BUILT[n] = s
     if "--check" in sys.argv:
         same = rd(f"{n}.html") == s; bad += not same; print(("OK  " if same else "DIFF"), n)
     else:
@@ -54,4 +55,21 @@ if "--check" in sys.argv:
     same = rd("usd.html") == U; bad += not same; print(("OK  " if same else "DIFF"), "usd")
 else:
     open(f"{ROOT}/usd.html", "w", encoding="utf-8", newline="").write(U); print("built usd", len(U))
+# usdm.html (USD무한매수): 빌드된 qldm.html 을 같은 방식으로 치환 (QLD→USD · QQQ→SOXX · 저장 키·파일명 USD 전용)
+UM = json.loads(rd("src/usd/config_m.json")); X = BUILT["qldm"]
+m = re.search(r'APP_VERSION = "(V[\d.]+)", RELEASE_DATE = "(\d+)"', X); qv, qd = m.group(1), m.group(2)
+for a, b in ((f"{qv}-{qd}", f"{UM['VER']}-{UM['DATE']}"), (f"({qv} - {qd})", f"({UM['VER']} - {UM['DATE']})"), (f"_{qv.replace('.', '_')}_{qd}.", f"_{UM['VER'].replace('.', '_')}_{UM['DATE']}."),
+             (f"{qv} ({qd})", f"{UM['VER']} ({UM['DATE']})"), (f'APP_VERSION = "{qv}", RELEASE_DATE = "{qd}"', f'APP_VERSION = "{UM["VER"]}", RELEASE_DATE = "{UM["DATE"]}"'), (f'content="{qd}"', f'content="{UM["DATE"]}"')):
+    assert a in X, a; X = X.replace(a, b)
+keep = {"TQQQ": "\x01A", "tqqq": "\x01B", "Tqqq": "\x01C"}
+for k, v in keep.items(): X = X.replace(k, v)
+for a, b in (("QLD", "USD"), ("Qld", "Usd"), ("qld", "usd"), ("QQQ", "SOXX"), ("Qqq", "Soxx"), ("qqq", "soxx")): X = X.replace(a, b)
+for k, v in keep.items(): X = X.replace(v, k)
+X = X.replace("USD 변동성 최적화판", "QLD무한 구조 · USD(반도체 2배) 적용판")
+a = '  url.searchParams.set("apikey", TWELVE_DATA_API_KEY);\n'; assert X.count(a) == 1
+X = X.replace(a, a + '  if (symbol === "USD") url.searchParams.set("mic_code", "ARCX");   // USD = 통화와 겹치는 이름 → NYSE Arca ETF\n')
+if "--check" in sys.argv:
+    same = rd("usdm.html") == X; bad += not same; print(("OK  " if same else "DIFF"), "usdm")
+else:
+    open(f"{ROOT}/usdm.html", "w", encoding="utf-8", newline="").write(X); print("built usdm", len(X))
 sys.exit(1 if bad else 0)
