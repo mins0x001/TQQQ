@@ -6,7 +6,7 @@ const srv = http.createServer((q, r) => { const f = path.join(ROOT, decodeURICom
   await new Promise(r => srv.listen(0, '127.0.0.1', r)); const port = srv.address().port;
   const br = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox'] }), p = await br.newPage(); let bad = 0;
   await p.route(/^https?:\/\/(?!127\.0\.0\.1)/, r => r.abort()); await p.goto(`http://127.0.0.1:${port}/api-all.html`);
-  for (const a of ['soxl', 'tqqq', 'qldm', 'qld']) {
+  for (const a of ['soxl', 'tqqq', 'qldm', 'qld', 'usd']) {
     const r = await p.evaluate(async a => { const f = document.createElement('iframe'); f.src = a + '.html?embed=api'; document.body.appendChild(f);
       await new Promise(r => f.addEventListener('load', r)); await new Promise(r => setTimeout(r, 800));
       try { return f.contentWindow.eval("typeof syncMeta+'/'+typeof lastLocOrder"); } catch (e) { return 'ERR ' + e.message.slice(0, 60); } }, a);

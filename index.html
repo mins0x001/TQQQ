@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://api.github.com https://gist.githubusercontent.com https://raw.githubusercontent.com https://api.twelvedata.com https://finnhub.io https://www.alphavantage.co https://production.dataviz.cnn.io https://openapi.imeritz.com https://api.telegram.org https://ntfy.sh https://api.cron-job.org https://www.cmegroup.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A1120">
-<meta name="release-date" content="261026">
+<meta name="release-date" content="261101">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="무한매수">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -223,7 +223,7 @@ async function authChangePw(a) {
 </script><script>if (typeof AUTHGATE === "function") AUTHGATE();</script>
   <header>
     <h1>무한매수 허브<span class="app-pill" id="appPill" hidden>앱</span></h1>
-    <p>자동주문(통합) · SOXL · TQQQ · QLD무한매수 · QLD평생매수 · 계좌는 봇마다 앱키로 자유 구성 <span class="ver" id="hubVer">· 허브 V2.37 (261026)</span></p>
+    <p>자동주문(통합) · SOXL · TQQQ · QLD무한매수 · QLD평생매수 · USD평생매수 · 계좌는 봇마다 앱키로 자유 구성 <span class="ver" id="hubVer">· 허브 V2.38 (261101)</span></p>
   </header>
 
   <section class="hc" id="health" aria-live="polite"></section>
@@ -260,6 +260,11 @@ async function authChangePw(a) {
   <a class="dash" href="qld.html" style="--c:var(--violet);">
     <span class="tk" >QLD</span>
     <span class="info"><span class="nm">QLD 평생매수 <small>V1.40</small></span><span class="st" id="st-qld">기록 확인 중…</span><span class="st st2" id="st-apiqld">⏰ 주 1회 LOC · 🤖 시드 엔진</span></span>
+    <span class="go">›</span>
+  </a>
+  <a class="dash" href="usd.html" style="--c:#A78BFA;">
+    <span class="tk" >USD</span>
+    <span class="info"><span class="nm">USD 평생매수 <small>V1.00</small></span><span class="st" id="st-usd">기록 확인 중…</span><span class="st st2">⏰ 주 1회 LOC · 🤖 시드 엔진 · 반도체 2배 (봇 준비 중)</span></span>
     <span class="go">›</span>
   </a>
 
@@ -300,7 +305,7 @@ async function authChangePw(a) {
   <p class="note">매수 기록은 자동주문 앱 🛠 설정 탭의 <b>☁️ 동기화</b>를 켜면 PC와 폰이 같은 기록을 씁니다. 이 목록은 이 기기에 마지막으로 맞춰진 기록입니다.</p>
 </div>
 <script>
-const HUB_VERSION = "V2.37", HUB_RELEASE = "261026";
+const HUB_VERSION = "V2.38", HUB_RELEASE = "261101";
 try { const hv = document.getElementById("hubVer"); if (hv) hv.textContent = `· 허브 ${HUB_VERSION} (${HUB_RELEASE})`; } catch (e) {}   // 화면 허브 버전 = 항상 HUB_VERSION
 function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
 function summary(records, won){
@@ -317,6 +322,7 @@ function renderSummary(){
   el("st-tqqq", summary(readJSON("tqqq_buy_records_v2")));
   el("st-qldm", summary(readJSON("qldm_buy_records_v2")));
   el("st-qld", summary((readJSON("qldLifeBuyState_v1") || {}).records));
+  el("st-usd", summary((readJSON("usdLifeBuyState_v1") || {}).records));
 }
 renderSummary();
 /* 🔌 자동주문: 모드·최근 결과 (동기화 Gist에서 직접 — 모든 기기 공통) */

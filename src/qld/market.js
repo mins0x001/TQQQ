@@ -29,6 +29,7 @@ async function tdFetchTimeSeries(symbol, outputsize) {
   url.searchParams.set("interval", "1day");
   url.searchParams.set("outputsize", outputsize);
   url.searchParams.set("apikey", TWELVE_DATA_API_KEY);
+  /*@usd-mic*/
   const res = await fetchRetry(url.toString());
   if (!res.ok) throw new Error(`HTTP 오류 (${res.status})`);
   const data = await res.json();

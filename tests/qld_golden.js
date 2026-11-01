@@ -1,7 +1,7 @@
 // QLD평생(qld.html) 계산 골든 테스트: 같은 가짜 시세를 넣었을 때 결과가 저장된 값과 같은지 확인
 // 사용: node tests/calc_golden.js [--update]   (Playwright 필요: NODE_PATH=$(npm root -g))
 const { chromium } = require('playwright'); const http = require('http'); const fs = require('fs'); const path = require('path');
-const ROOT = path.resolve(__dirname, '..'), UPDATE = process.argv.includes('--update'), APPS = ['qld'];
+const ROOT = path.resolve(__dirname, '..'), UPDATE = process.argv.includes('--update'), APPS = ['qld', 'usd'];
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json' };
 const srv = http.createServer((q, r) => { const f = path.join(ROOT, decodeURIComponent(q.url.split('?')[0]) || 'index.html'); fs.readFile(f, (e, b) => { if (e) { r.writeHead(404); r.end(); } else { r.writeHead(200, { 'content-type': MIME[path.extname(f)] || 'application/octet-stream' }); r.end(b); } }); });
 const CASES = function () {
