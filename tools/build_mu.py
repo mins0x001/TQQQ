@@ -67,10 +67,10 @@ for a, b in (("QLD", "USD"), ("Qld", "Usd"), ("qld", "usd"), ("QQQ", "SOXX"), ("
 for k, v in keep.items(): X = X.replace(v, k)
 X = X.replace("USD 변동성 최적화판", "QLD무한 구조 · USD(반도체 2배) 적용판")
 # USD 변동성 보정: 실제 USD 2007~ 롤링 200봉 백테스트(120구간) — 일간σ 중앙값 3.57%(10%분위 2.3 · 90%분위 5.8) = TQQQ 평상시(3.6%)와 같음 → 기준σ·기본 파라미터를 TQQQ판 값으로
-for a0, b0 in (("const REF_SIGMA = 2.4;", "const REF_SIGMA = 3.6;"), ("= USD 평상시 변동성", "= USD 평상시 변동성 (2007~ 롤링 200봉 σ 중앙값 3.57%)"),
-               ("USD 일간σ는 통상 2.2~2.7%로, 이 파일의 기준값(REF_SIGMA 2.4%)이 곧", "USD 일간σ는 중앙값 3.6%(2007~ 롤링 200봉: 10%분위 2.3 · 90%분위 5.8)로, 이 파일의 기준값(REF_SIGMA 3.6%)이 곧"),
-               ("k = σ ÷ 2.4 만큼", "k = σ ÷ 3.6 만큼"), ("일간σ 약 2.4%에 맞춰져", "일간σ 약 3.6%에 맞춰져"),
-               ("예시: USD σ가 2.9%라면 k = 2.9 ÷ 2.4 ≈ 1.21", "예시: USD σ가 4.3%라면 k = 4.3 ÷ 3.6 ≈ 1.19")):
+for a0, b0 in (("const REF_SIGMA = 2.4;", "const REF_SIGMA = 4.2;"), ("= USD 평상시 변동성", "= USD 평상시 변동성 (2007~ 롤링 200봉 σ 중앙값 3.57% · 최근 5년 4.90%의 중간)"),
+               ("USD 일간σ는 통상 2.2~2.7%로, 이 파일의 기준값(REF_SIGMA 2.4%)이 곧", "USD 일간σ는 2007~ 롤링 200봉 중앙값 3.6%·최근 5년 중앙값 4.9%이고, 이 파일의 기준값(REF_SIGMA 4.2%, 둘의 중간)이 곧"),
+               ("k = σ ÷ 2.4 만큼", "k = σ ÷ 4.2 만큼"), ("일간σ 약 2.4%에 맞춰져", "일간σ 약 4.2%에 맞춰져"),
+               ("예시: USD σ가 2.9%라면 k = 2.9 ÷ 2.4 ≈ 1.21", "예시: USD σ가 5.0%라면 k = 5.0 ÷ 4.2 ≈ 1.19")):
     assert a0 in X, a0; X = X.replace(a0, b0)
 a = '  url.searchParams.set("apikey", TWELVE_DATA_API_KEY);\n'; assert X.count(a) == 1
 X = X.replace(a, a + '  if (symbol === "USD") url.searchParams.set("mic_code", "ARCX");   // USD = 통화와 겹치는 이름 → NYSE Arca ETF\n')
